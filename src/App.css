@@ -169,7 +169,7 @@
   position: absolute;
   inset: 0;
   background: linear-gradient(135deg, #2a2520 0%, #1a1815 100%);
-  background-image: url('https://images.unsplash.com/photo-1509631179647-0177331693ae?w=1200&q=80');
+  background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuCDvOcrN3spetTUnhDXrkEwO3BBjKb3O53j8GyOEkhmgqg-aKtT3mJwwc2b_gpl4g-yAeL3VTc_oKbP8wa4_O0lMsKBOUXNs8vckNE6oV-0OI0yRL1Mmrdex-zgm5_dF3gPeC7NY40of4UCep5cIibjP0n_oyITAZsb2RKCRpQUbJ1LQztpa40nZ1owNEGthsd7Qg2Q7kE4aLfjR5X3nt6enZsXmOTVNkoNwLoAdjuhRbta96DIpDqu16rrs59fOZOtkDo_O7AU0U0');
   background-size: cover;
   background-position: center;
   transition: transform 0.7s;
