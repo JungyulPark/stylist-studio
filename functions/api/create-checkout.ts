@@ -26,18 +26,18 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
     const polarToken = context.env.Polar_API_KEY
 
     if (!polarToken) {
-      // API 토큰이 없으면 직접 checkout link URL 반환
+      // API 토큰이 없으면 직접 checkout link URL 반환 (Sandbox)
       return new Response(
         JSON.stringify({
-          url: `https://buy.polar.sh/${productId}`,
+          url: `https://sandbox.polar.sh/checkout/${productId}`,
           fallback: true
         }),
         { status: 200, headers: { 'Content-Type': 'application/json', ...corsHeaders } }
       )
     }
 
-    // Polar Checkout Session API 호출
-    const response = await fetch('https://api.polar.sh/v1/checkouts/', {
+    // Polar Checkout Session API 호출 (Sandbox 환경)
+    const response = await fetch('https://sandbox-api.polar.sh/v1/checkouts/', {
       method: 'POST',
       headers: {
         'Authorization': `Bearer ${polarToken}`,

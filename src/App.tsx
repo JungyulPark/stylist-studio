@@ -595,12 +595,12 @@ function App() {
   const fashionPhotoRef = useRef<HTMLInputElement>(null)
   const t = translations[lang]
 
-  // Polar Checkout Configuration
+  // Polar Checkout Configuration (Sandbox 환경)
   // Product ID: 6f37a6b9-b3bf-413e-9221-182c61711ecc
-  // Polar 대시보드에서 체크아웃 링크를 생성한 후 아래 URL을 업데이트하세요
-  // Create a checkout link in Polar dashboard and update the URL below
-  // URL format: https://buy.polar.sh/polar_cl_xxx
-  const POLAR_CHECKOUT_URL = 'https://buy.polar.sh/6f37a6b9-b3bf-413e-9221-182c61711ecc'
+  // Polar Sandbox 대시보드에서 체크아웃 링크를 생성한 후 아래 URL을 업데이트하세요
+  // Create a checkout link in Polar sandbox dashboard and update the URL below
+  // Sandbox URL format: https://sandbox.polar.sh/checkout/polar_cl_xxx
+  const POLAR_CHECKOUT_URL = 'https://sandbox.polar.sh/checkout/6f37a6b9-b3bf-413e-9221-182c61711ecc'
 
   // 뒤로가기 지원을 위한 페이지 변경 함수
   const setPage = useCallback((newPage: Page) => {
