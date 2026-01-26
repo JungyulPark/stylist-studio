@@ -1,5 +1,5 @@
 interface Env {
-  Polar_API_KEY?: string
+  POLAR_API_KEY?: string
 }
 
 interface RequestBody {
@@ -23,7 +23,7 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
     const successUrl = body.successUrl || `${new URL(context.request.url).origin}/#result`
 
     // Polar API로 체크아웃 세션 생성
-    const polarToken = context.env.Polar_API_KEY
+    const polarToken = context.env.POLAR_API_KEY
 
     if (!polarToken) {
       // API 토큰이 없으면 에러 반환 - Cloudflare 환경변수 설정 필요
