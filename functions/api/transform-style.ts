@@ -57,15 +57,20 @@ const fashionStyles = {
   ]
 }
 
+interface TransformResult {
+  imageUrl: string | null
+  error?: string
+}
+
 async function transformWithGemini(
   photo: string,
   type: 'hairstyle' | 'fashion',
   stylePrompt: string,
   apiKey: string
-): Promise<string | null> {
+): Promise<TransformResult> {
   try {
     const base64Match = photo.match(/^data:image\/(\w+);base64,(.+)$/)
-    if (!base64Match) return null
+    if (!base64Match) return { imageUrl: null, error: 'Invalid photo format' }
 
     const mimeType = `image/${base64Match[1]}`
     const base64Data = base64Match[2]
@@ -137,8 +142,9 @@ ONLY change the clothes/outfit. Generate the edited photo.`
     }
 
     if (!response.ok) {
-      console.error('Gemini error:', response.status)
-      return null
+      const errorText = await response.text()
+      console.error('Gemini error:', response.status, errorText)
+      return { imageUrl: null, error: `Gemini API error ${response.status}: ${errorText.substring(0, 200)}` }
     }
 
     const data = await response.json() as {
@@ -151,14 +157,14 @@ ONLY change the clothes/outfit. Generate the edited photo.`
 
     for (const part of data.candidates?.[0]?.content?.parts || []) {
       if (part.inlineData?.data) {
-        return `data:${part.inlineData.mimeType};base64,${part.inlineData.data}`
+        return { imageUrl: `data:${part.inlineData.mimeType};base64,${part.inlineData.data}` }
       }
     }
 
-    return null
+    return { imageUrl: null, error: 'No image in response' }
   } catch (error) {
     console.error('Transform error:', error)
-    return null
+    return { imageUrl: null, error: `Exception: ${error}` }
   }
 }
 
@@ -200,12 +206,13 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
       )
     }
 
-    const imageUrl = await transformWithGemini(photo, type, selectedStyle.prompt, apiKey)
+    const result = await transformWithGemini(photo, type, selectedStyle.prompt, apiKey)
 
     return new Response(
       JSON.stringify({
-        success: !!imageUrl,
-        imageUrl,
+        success: !!result.imageUrl,
+        imageUrl: result.imageUrl,
+        error: result.error,
         style: {
           id: selectedStyle.id,
           label: language === 'ko' ? selectedStyle.ko : selectedStyle.en
