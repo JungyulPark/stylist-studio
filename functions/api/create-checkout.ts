@@ -1,5 +1,5 @@
 interface Env {
-  POLAR_ACCESS_TOKEN?: string
+  Polar_API_KEY?: string
 }
 
 interface RequestBody {
@@ -23,7 +23,7 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
     const successUrl = body.successUrl || `${new URL(context.request.url).origin}/#result`
 
     // Polar API로 체크아웃 세션 생성
-    const polarToken = context.env.POLAR_ACCESS_TOKEN
+    const polarToken = context.env.Polar_API_KEY
 
     if (!polarToken) {
       // API 토큰이 없으면 직접 checkout link URL 반환
