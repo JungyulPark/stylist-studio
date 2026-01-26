@@ -596,11 +596,9 @@ function App() {
   const t = translations[lang]
 
   // Polar Checkout Configuration (Sandbox 환경)
-  // Product ID: 6f37a6b9-b3bf-413e-9221-182c61711ecc
-  // Polar Sandbox 대시보드에서 체크아웃 링크를 생성한 후 아래 URL을 업데이트하세요
-  // Create a checkout link in Polar sandbox dashboard and update the URL below
-  // Sandbox URL format: https://sandbox.polar.sh/checkout/polar_cl_xxx
-  const POLAR_CHECKOUT_URL = 'https://sandbox.polar.sh/checkout/6f37a6b9-b3bf-413e-9221-182c61711ecc'
+  // Product ID: cca7d48e-6758-4e83-a375-807ab70615ea
+  // Sandbox URL format: https://sandbox.polar.sh/checkout/[product-id]
+  const POLAR_CHECKOUT_URL = 'https://sandbox.polar.sh/checkout/cca7d48e-6758-4e83-a375-807ab70615ea'
 
   // 뒤로가기 지원을 위한 페이지 변경 함수
   const setPage = useCallback((newPage: Page) => {
