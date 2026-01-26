@@ -94,7 +94,7 @@ ONLY change the clothes/outfit. Generate the edited photo.`
 
     // Use Gemini 3 Flash for image editing
     let response = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/gemini-3-flash:generateContent?key=${apiKey}`,
+      `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-image:generateContent?key=${apiKey}`,
       {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
