@@ -26,13 +26,13 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
     const polarToken = context.env.Polar_API_KEY
 
     if (!polarToken) {
-      // API 토큰이 없으면 직접 checkout link URL 반환 (Sandbox)
+      // API 토큰이 없으면 에러 반환 - Cloudflare 환경변수 설정 필요
       return new Response(
         JSON.stringify({
-          url: `https://sandbox.polar.sh/checkout/${productId}`,
-          fallback: true
+          error: 'Payment not configured',
+          message: 'Polar API key not set. Please configure Polar_API_KEY in environment variables.'
         }),
-        { status: 200, headers: { 'Content-Type': 'application/json', ...corsHeaders } }
+        { status: 503, headers: { 'Content-Type': 'application/json', ...corsHeaders } }
       )
     }
 

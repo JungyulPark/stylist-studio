@@ -597,8 +597,7 @@ function App() {
 
   // Polar Checkout Configuration (Sandbox 환경)
   // Product ID: cca7d48e-6758-4e83-a375-807ab70615ea
-  // Sandbox URL format: https://sandbox.polar.sh/checkout/[product-id]
-  const POLAR_CHECKOUT_URL = 'https://sandbox.polar.sh/checkout/cca7d48e-6758-4e83-a375-807ab70615ea'
+  // 체크아웃은 /api/create-checkout API를 통해 동적으로 생성됨
 
   // 뒤로가기 지원을 위한 페이지 변경 함수
   const setPage = useCallback((newPage: Page) => {
@@ -678,28 +677,21 @@ function App() {
     setIsProcessingPayment(true)
     try {
       // 백엔드 API로 체크아웃 URL 가져오기
-      let checkoutUrl = POLAR_CHECKOUT_URL
-
-      try {
-        const checkoutResponse = await fetch('/api/create-checkout', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            successUrl: `${window.location.origin}/#result`
-          })
+      const checkoutResponse = await fetch('/api/create-checkout', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          successUrl: `${window.location.origin}/#result`
         })
+      })
 
-        if (checkoutResponse.ok) {
-          const checkoutData = await checkoutResponse.json()
-          if (checkoutData.url) {
-            checkoutUrl = checkoutData.url
-          }
-        }
-      } catch (apiError) {
-        console.log('Using fallback checkout URL')
+      const checkoutData = await checkoutResponse.json()
+
+      if (!checkoutResponse.ok || !checkoutData.url) {
+        throw new Error(checkoutData.message || 'Failed to create checkout session')
       }
 
-      const checkout = await PolarEmbedCheckout.create(checkoutUrl, {
+      const checkout = await PolarEmbedCheckout.create(checkoutData.url, {
         theme: 'dark',
         onLoaded: () => {
           console.log('Polar checkout loaded')
@@ -721,7 +713,7 @@ function App() {
     } catch (error) {
       console.error('Payment error:', error)
       setIsProcessingPayment(false)
-      setError('Payment failed. Please try again.')
+      setError(lang === 'ko' ? '결제 설정 오류. 잠시 후 다시 시도해주세요.' : 'Payment configuration error. Please try again later.')
     }
   }
 
