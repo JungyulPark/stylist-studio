@@ -3,7 +3,7 @@ import './App.css'
 
 type Language = 'ko' | 'en' | 'ja' | 'zh' | 'es'
 type Gender = 'male' | 'female' | 'other' | null
-type Page = 'landing' | 'input' | 'loading' | 'result' | 'hair-selection' | 'hair-result'
+type Page = 'landing' | 'input' | 'loading' | 'result' | 'hair-selection' | 'hair-result' | 'fashion-selection' | 'fashion-result'
 
 // 헤어스타일 상황 옵션
 interface HairOccasion {
@@ -37,6 +37,25 @@ const hairVibes: HairVibe[] = [
   { id: 'natural', icon: '🌿', labelKo: '자연스러운', labelEn: 'Natural' },
   { id: 'trendy', icon: '🔥', labelKo: '트렌디', labelEn: 'Trendy' },
   { id: 'classic', icon: '👑', labelKo: '클래식', labelEn: 'Classic' },
+]
+
+// 패션 상황 옵션
+interface FashionOccasion {
+  id: string
+  icon: string
+  labelKo: string
+  labelEn: string
+}
+
+const fashionOccasions: FashionOccasion[] = [
+  { id: 'luxury', icon: '💎', labelKo: '럭셔리', labelEn: 'Luxury' },
+  { id: 'interview', icon: '💼', labelKo: '면접', labelEn: 'Interview' },
+  { id: 'date', icon: '💕', labelKo: '데이트', labelEn: 'Date' },
+  { id: 'business', icon: '🏢', labelKo: '비즈니스', labelEn: 'Business' },
+  { id: 'casual', icon: '☕', labelKo: '캐주얼', labelEn: 'Casual' },
+  { id: 'party', icon: '🎉', labelKo: '파티', labelEn: 'Party' },
+  { id: 'travel', icon: '✈️', labelKo: '여행', labelEn: 'Travel' },
+  { id: 'sports', icon: '🏃', labelKo: '스포츠', labelEn: 'Sports' },
 ]
 
 const translations: Record<Language, {
@@ -96,6 +115,13 @@ const translations: Record<Language, {
   selectedOptions: string
   recommendedStyles: string
   tryAnother: string
+  fashionSelectTitle: string
+  fashionSelectDesc: string
+  selectFashionOccasion: string
+  getFashionRecommendation: string
+  fashionResultTitle: string
+  fashionResultDesc: string
+  recommendedOutfits: string
 }> = {
   ko: {
     title: 'AI STYLIST',
@@ -153,7 +179,14 @@ const translations: Record<Language, {
     hairResultDesc: '선택하신 상황과 느낌에 맞는 헤어스타일입니다',
     selectedOptions: '선택 옵션',
     recommendedStyles: '추천 스타일',
-    tryAnother: '다른 스타일 찾기'
+    tryAnother: '다른 스타일 찾기',
+    fashionSelectTitle: '상황별 패션 큐레이션',
+    fashionSelectDesc: '상황을 선택하면 AI가 맞춤 패션을 추천해드립니다',
+    selectFashionOccasion: '어떤 상황인가요?',
+    getFashionRecommendation: '패션 추천받기',
+    fashionResultTitle: '맞춤 패션 추천',
+    fashionResultDesc: '선택하신 상황에 맞는 스타일링입니다',
+    recommendedOutfits: '추천 코디'
   },
   en: {
     title: 'AI STYLIST',
@@ -211,7 +244,14 @@ const translations: Record<Language, {
     hairResultDesc: 'Hairstyles matching your selected occasion and vibe',
     selectedOptions: 'Selected Options',
     recommendedStyles: 'Recommended Styles',
-    tryAnother: 'Try Another Style'
+    tryAnother: 'Try Another Style',
+    fashionSelectTitle: 'Fashion Curation by Occasion',
+    fashionSelectDesc: 'Select the occasion and AI will recommend personalized fashion',
+    selectFashionOccasion: 'What\'s the occasion?',
+    getFashionRecommendation: 'Get Fashion Recommendations',
+    fashionResultTitle: 'Personalized Fashion Recommendations',
+    fashionResultDesc: 'Styling that matches your selected occasion',
+    recommendedOutfits: 'Recommended Outfits'
   },
   ja: {
     title: 'AI STYLIST',
@@ -269,7 +309,14 @@ const translations: Record<Language, {
     hairResultDesc: '選択されたシーンと雰囲気に合うヘアスタイルです',
     selectedOptions: '選択オプション',
     recommendedStyles: 'おすすめスタイル',
-    tryAnother: '別のスタイルを探す'
+    tryAnother: '別のスタイルを探す',
+    fashionSelectTitle: 'シーン別ファッションキュレーション',
+    fashionSelectDesc: 'シーンを選んで、AIがおすすめファッションをご提案します',
+    selectFashionOccasion: 'どんなシーンですか？',
+    getFashionRecommendation: 'ファッションを提案する',
+    fashionResultTitle: 'おすすめファッション',
+    fashionResultDesc: '選択されたシーンに合うスタイリングです',
+    recommendedOutfits: 'おすすめコーデ'
   },
   zh: {
     title: 'AI STYLIST',
@@ -327,7 +374,14 @@ const translations: Record<Language, {
     hairResultDesc: '符合您选择的场合和感觉的发型',
     selectedOptions: '已选选项',
     recommendedStyles: '推荐发型',
-    tryAnother: '尝试其他风格'
+    tryAnother: '尝试其他风格',
+    fashionSelectTitle: '场合时尚策划',
+    fashionSelectDesc: '选择场合，AI将为您推荐个性化时尚',
+    selectFashionOccasion: '什么场合？',
+    getFashionRecommendation: '获取时尚推荐',
+    fashionResultTitle: '个性化时尚推荐',
+    fashionResultDesc: '符合您选择场合的搭配',
+    recommendedOutfits: '推荐搭配'
   },
   es: {
     title: 'AI STYLIST',
@@ -385,7 +439,14 @@ const translations: Record<Language, {
     hairResultDesc: 'Peinados que coinciden con tu ocasión y estilo seleccionados',
     selectedOptions: 'Opciones Seleccionadas',
     recommendedStyles: 'Estilos Recomendados',
-    tryAnother: 'Probar Otro Estilo'
+    tryAnother: 'Probar Otro Estilo',
+    fashionSelectTitle: 'Moda por Ocasión',
+    fashionSelectDesc: 'Selecciona la ocasión y la IA recomendará moda personalizada',
+    selectFashionOccasion: '¿Cuál es la ocasión?',
+    getFashionRecommendation: 'Obtener Recomendaciones',
+    fashionResultTitle: 'Recomendaciones de Moda',
+    fashionResultDesc: 'Estilismo que coincide con tu ocasión',
+    recommendedOutfits: 'Outfits Recomendados'
   }
 }
 
@@ -428,6 +489,8 @@ function App() {
   const [selectedOccasion, setSelectedOccasion] = useState<string | null>(null)
   const [selectedVibe, setSelectedVibe] = useState<string | null>(null)
   const [hairRecommendations, setHairRecommendations] = useState<string[]>([])
+  const [selectedFashionOccasion, setSelectedFashionOccasion] = useState<string | null>(null)
+  const [fashionRecommendations, setFashionRecommendations] = useState<{title: string, items: string[]}[]>([])
   const fileInputRef = useRef<HTMLInputElement>(null)
   const t = translations[lang]
 
@@ -560,6 +623,8 @@ function App() {
     setSelectedOccasion(null)
     setSelectedVibe(null)
     setHairRecommendations([])
+    setSelectedFashionOccasion(null)
+    setFashionRecommendations([])
     setPage('landing')
   }
 
@@ -683,6 +748,210 @@ function App() {
     return recommendations[langKey]?.[key] || recommendations[langKey]?.['daily-natural'] || []
   }
 
+  // 패션 추천 핸들러
+  const handleFashionRecommendation = async () => {
+    if (!selectedFashionOccasion) return
+
+    setPage('loading')
+
+    try {
+      const response = await fetch('/api/fashion-recommend', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          occasion: selectedFashionOccasion,
+          gender: profile.gender,
+          language: lang
+        })
+      })
+
+      if (response.ok) {
+        const data = await response.json()
+        setFashionRecommendations(data.recommendations || [])
+      } else {
+        const demoRecommendations = getFashionDemoRecommendations(selectedFashionOccasion, profile.gender, lang)
+        setFashionRecommendations(demoRecommendations)
+      }
+      setPage('fashion-result')
+    } catch {
+      const demoRecommendations = getFashionDemoRecommendations(selectedFashionOccasion, profile.gender, lang)
+      setFashionRecommendations(demoRecommendations)
+      setPage('fashion-result')
+    }
+  }
+
+  // 데모용 패션 추천
+  const getFashionDemoRecommendations = (occasion: string, gender: Gender, language: string): {title: string, items: string[]}[] => {
+    const isMale = gender === 'male'
+    const isKo = language === 'ko'
+
+    const recommendations: Record<string, {ko: {title: string, items: string[]}[], en: {title: string, items: string[]}[]}> = {
+      luxury: {
+        ko: isMale ? [
+          { title: '럭셔리 수트 룩', items: ['맞춤 더블브레스트 수트', '실크 타이', '이탈리안 레더 옥스포드', '골드 커프링크스'] },
+          { title: '프리미엄 캐주얼', items: ['캐시미어 코트', '하이엔드 니트', '프리미엄 울 슬랙스', '명품 로퍼'] },
+          { title: '하이엔드 이브닝', items: ['턱시도 재킷', '실크 셔츠', '벨벳 슬리퍼', '다이아몬드 시계'] },
+        ] : [
+          { title: '럭셔리 이브닝 드레스', items: ['실크 이브닝 가운', '스테이트먼트 주얼리', '새틴 클러치', '스트랩 힐'] },
+          { title: '프리미엄 비즈니스', items: ['캐시미어 코트', '디자이너 블라우스', '하이웨이스트 슬랙스', '명품 펌프스'] },
+          { title: '시크 럭셔리', items: ['트위드 재킷', '실크 스커트', '진주 액세서리', '퀼팅 백'] },
+        ],
+        en: isMale ? [
+          { title: 'Luxury Suit Look', items: ['Custom Double-Breasted Suit', 'Silk Tie', 'Italian Leather Oxfords', 'Gold Cufflinks'] },
+          { title: 'Premium Casual', items: ['Cashmere Coat', 'High-End Knitwear', 'Premium Wool Slacks', 'Designer Loafers'] },
+          { title: 'High-End Evening', items: ['Tuxedo Jacket', 'Silk Shirt', 'Velvet Slippers', 'Diamond Watch'] },
+        ] : [
+          { title: 'Luxury Evening Dress', items: ['Silk Evening Gown', 'Statement Jewelry', 'Satin Clutch', 'Strappy Heels'] },
+          { title: 'Premium Business', items: ['Cashmere Coat', 'Designer Blouse', 'High-Waist Slacks', 'Designer Pumps'] },
+          { title: 'Chic Luxury', items: ['Tweed Jacket', 'Silk Skirt', 'Pearl Accessories', 'Quilted Bag'] },
+        ]
+      },
+      interview: {
+        ko: isMale ? [
+          { title: '클래식 면접룩', items: ['네이비 싱글 수트', '화이트 드레스 셔츠', '버건디 넥타이', '블랙 옥스포드'] },
+          { title: '모던 비즈니스', items: ['차콜 그레이 수트', '라이트 블루 셔츠', '심플 타이바', '브라운 더비'] },
+          { title: '스마트 캐주얼', items: ['네이비 블레이저', '화이트 셔츠', '베이지 치노', '로퍼'] },
+        ] : [
+          { title: '프로페셔널 정장', items: ['테일러드 재킷', '화이트 블라우스', '펜슬 스커트', '누드 펌프스'] },
+          { title: '모던 비즈니스', items: ['네이비 팬츠 수트', '실크 블라우스', '미니멀 액세서리', '포인티드 힐'] },
+          { title: '스마트 캐주얼', items: ['스트럭처드 블레이저', '심플 니트', '슬림 팬츠', '로우힐 펌프스'] },
+        ],
+        en: isMale ? [
+          { title: 'Classic Interview Look', items: ['Navy Single Suit', 'White Dress Shirt', 'Burgundy Necktie', 'Black Oxfords'] },
+          { title: 'Modern Business', items: ['Charcoal Gray Suit', 'Light Blue Shirt', 'Simple Tie Bar', 'Brown Derby'] },
+          { title: 'Smart Casual', items: ['Navy Blazer', 'White Shirt', 'Beige Chinos', 'Loafers'] },
+        ] : [
+          { title: 'Professional Suit', items: ['Tailored Jacket', 'White Blouse', 'Pencil Skirt', 'Nude Pumps'] },
+          { title: 'Modern Business', items: ['Navy Pants Suit', 'Silk Blouse', 'Minimal Accessories', 'Pointed Heels'] },
+          { title: 'Smart Casual', items: ['Structured Blazer', 'Simple Knit', 'Slim Pants', 'Low-Heel Pumps'] },
+        ]
+      },
+      date: {
+        ko: isMale ? [
+          { title: '로맨틱 캐주얼', items: ['니트 스웨터', '슬림 청바지', '화이트 스니커즈', '심플 시계'] },
+          { title: '세미 포멀', items: ['네이비 블레이저', '화이트 티', '치노 팬츠', '로퍼'] },
+          { title: '시크 데이트룩', items: ['터틀넥 니트', '블랙 슬랙스', '첼시 부츠', '레더 팔찌'] },
+        ] : [
+          { title: '로맨틱 페미닌', items: ['플로럴 원피스', '카디건', '스트랩 샌들', '미니 백'] },
+          { title: '시크 캐주얼', items: ['새틴 블라우스', 'A라인 스커트', '앵클부츠', '골드 액세서리'] },
+          { title: '러블리 데이트룩', items: ['니트 탑', '플리츠 스커트', '메리제인', '진주 이어링'] },
+        ],
+        en: isMale ? [
+          { title: 'Romantic Casual', items: ['Knit Sweater', 'Slim Jeans', 'White Sneakers', 'Simple Watch'] },
+          { title: 'Semi Formal', items: ['Navy Blazer', 'White Tee', 'Chino Pants', 'Loafers'] },
+          { title: 'Chic Date Look', items: ['Turtleneck Knit', 'Black Slacks', 'Chelsea Boots', 'Leather Bracelet'] },
+        ] : [
+          { title: 'Romantic Feminine', items: ['Floral Dress', 'Cardigan', 'Strappy Sandals', 'Mini Bag'] },
+          { title: 'Chic Casual', items: ['Satin Blouse', 'A-Line Skirt', 'Ankle Boots', 'Gold Accessories'] },
+          { title: 'Lovely Date Look', items: ['Knit Top', 'Pleated Skirt', 'Mary Janes', 'Pearl Earrings'] },
+        ]
+      },
+      business: {
+        ko: isMale ? [
+          { title: '클래식 비즈니스', items: ['차콜 수트', '화이트 셔츠', '실크 타이', '레더 벨트'] },
+          { title: '모던 오피스', items: ['그레이 블레이저', '드레스 셔츠', '슬림 슬랙스', '더비 슈즈'] },
+          { title: '비즈니스 캐주얼', items: ['네이비 블레이저', '버튼다운 셔츠', '치노 팬츠', '로퍼'] },
+        ] : [
+          { title: '파워 수트', items: ['테일러드 팬츠 수트', '실크 셔츠', '구조적인 토트백', '스틸레토 힐'] },
+          { title: '엘레강스 오피스', items: ['시스 드레스', '벨티드 블레이저', '펌프스', '심플 주얼리'] },
+          { title: '모던 워킹', items: ['와이드 팬츠', '터틀넥', '로퍼', '미니멀 워치'] },
+        ],
+        en: isMale ? [
+          { title: 'Classic Business', items: ['Charcoal Suit', 'White Shirt', 'Silk Tie', 'Leather Belt'] },
+          { title: 'Modern Office', items: ['Gray Blazer', 'Dress Shirt', 'Slim Slacks', 'Derby Shoes'] },
+          { title: 'Business Casual', items: ['Navy Blazer', 'Button-Down Shirt', 'Chino Pants', 'Loafers'] },
+        ] : [
+          { title: 'Power Suit', items: ['Tailored Pants Suit', 'Silk Shirt', 'Structured Tote', 'Stiletto Heels'] },
+          { title: 'Elegant Office', items: ['Sheath Dress', 'Belted Blazer', 'Pumps', 'Simple Jewelry'] },
+          { title: 'Modern Working', items: ['Wide Pants', 'Turtleneck', 'Loafers', 'Minimal Watch'] },
+        ]
+      },
+      casual: {
+        ko: isMale ? [
+          { title: '데일리 캐주얼', items: ['크루넥 티셔츠', '슬림 청바지', '화이트 스니커즈', '캡모자'] },
+          { title: '릴렉스드 스타일', items: ['오버핏 맨투맨', '조거팬츠', '러닝화', '크로스백'] },
+          { title: '스트릿 캐주얼', items: ['그래픽 티', '카고 팬츠', '하이탑 스니커즈', '볼캡'] },
+        ] : [
+          { title: '이지 캐주얼', items: ['오버핏 티셔츠', '데님 팬츠', '캔버스 스니커즈', '토트백'] },
+          { title: '컴피 시크', items: ['니트 가디건', '레깅스', '슬립온', '미니 백팩'] },
+          { title: '걸리시 캐주얼', items: ['크롭 탑', 'A라인 스커트', '플랫폼 스니커즈', '버킷햇'] },
+        ],
+        en: isMale ? [
+          { title: 'Daily Casual', items: ['Crew Neck T-Shirt', 'Slim Jeans', 'White Sneakers', 'Cap'] },
+          { title: 'Relaxed Style', items: ['Oversized Sweatshirt', 'Jogger Pants', 'Running Shoes', 'Crossbody Bag'] },
+          { title: 'Street Casual', items: ['Graphic Tee', 'Cargo Pants', 'High-Top Sneakers', 'Ball Cap'] },
+        ] : [
+          { title: 'Easy Casual', items: ['Oversized T-Shirt', 'Denim Pants', 'Canvas Sneakers', 'Tote Bag'] },
+          { title: 'Comfy Chic', items: ['Knit Cardigan', 'Leggings', 'Slip-Ons', 'Mini Backpack'] },
+          { title: 'Girly Casual', items: ['Crop Top', 'A-Line Skirt', 'Platform Sneakers', 'Bucket Hat'] },
+        ]
+      },
+      party: {
+        ko: isMale ? [
+          { title: '클럽 파티', items: ['블랙 블레이저', '실크 셔츠', '스키니 팬츠', '체인 액세서리'] },
+          { title: '칵테일 파티', items: ['벨벳 재킷', '블랙 터틀넥', '드레스 팬츠', '레더 로퍼'] },
+          { title: '캐주얼 파티', items: ['패턴 셔츠', '블랙 진', '첼시부츠', '실버 링'] },
+        ] : [
+          { title: '글램 파티', items: ['시퀸 드레스', '스트랩 힐', '클러치백', '스테이트먼트 이어링'] },
+          { title: '칵테일 룩', items: ['미니 드레스', '포인티드 힐', '박스 클러치', '골드 뱅글'] },
+          { title: '시크 파티', items: ['점프수트', '스틸레토', '체인백', '볼드 립'] },
+        ],
+        en: isMale ? [
+          { title: 'Club Party', items: ['Black Blazer', 'Silk Shirt', 'Skinny Pants', 'Chain Accessories'] },
+          { title: 'Cocktail Party', items: ['Velvet Jacket', 'Black Turtleneck', 'Dress Pants', 'Leather Loafers'] },
+          { title: 'Casual Party', items: ['Pattern Shirt', 'Black Jeans', 'Chelsea Boots', 'Silver Rings'] },
+        ] : [
+          { title: 'Glam Party', items: ['Sequin Dress', 'Strappy Heels', 'Clutch Bag', 'Statement Earrings'] },
+          { title: 'Cocktail Look', items: ['Mini Dress', 'Pointed Heels', 'Box Clutch', 'Gold Bangles'] },
+          { title: 'Chic Party', items: ['Jumpsuit', 'Stilettos', 'Chain Bag', 'Bold Lip'] },
+        ]
+      },
+      travel: {
+        ko: isMale ? [
+          { title: '에어포트 룩', items: ['캐시미어 카디건', '조거팬츠', '컴포트 스니커즈', '캐리어'] },
+          { title: '시티 트래블', items: ['라이트 재킷', '치노 팬츠', '워킹화', '크로스백'] },
+          { title: '리조트 스타일', items: ['린넨 셔츠', '쇼츠', '에스파드리유', '선글라스'] },
+        ] : [
+          { title: '에어포트 시크', items: ['오버사이즈 코트', '레깅스', '플랫 슈즈', '캐리온'] },
+          { title: '시티 투어', items: ['트렌치코트', '와이드팬츠', '스니커즈', '숄더백'] },
+          { title: '리조트 룩', items: ['린넨 원피스', '스트로 햇', '샌들', '라탄백'] },
+        ],
+        en: isMale ? [
+          { title: 'Airport Look', items: ['Cashmere Cardigan', 'Jogger Pants', 'Comfort Sneakers', 'Carry-On'] },
+          { title: 'City Travel', items: ['Light Jacket', 'Chino Pants', 'Walking Shoes', 'Crossbody Bag'] },
+          { title: 'Resort Style', items: ['Linen Shirt', 'Shorts', 'Espadrilles', 'Sunglasses'] },
+        ] : [
+          { title: 'Airport Chic', items: ['Oversized Coat', 'Leggings', 'Flat Shoes', 'Carry-On'] },
+          { title: 'City Tour', items: ['Trench Coat', 'Wide Pants', 'Sneakers', 'Shoulder Bag'] },
+          { title: 'Resort Look', items: ['Linen Dress', 'Straw Hat', 'Sandals', 'Rattan Bag'] },
+        ]
+      },
+      sports: {
+        ko: isMale ? [
+          { title: '짐 웨어', items: ['드라이핏 티', '트레이닝 팬츠', '러닝화', '스포츠 워치'] },
+          { title: '러닝 스타일', items: ['테크 탱크탑', '쇼츠', '쿠셔닝 러닝화', '스포츠 밴드'] },
+          { title: '애슬레저', items: ['후디', '조거', '라이프스타일 스니커즈', '볼캡'] },
+        ] : [
+          { title: '요가 웨어', items: ['스포츠 브라탑', '레깅스', '필라테스 삭스', '요가 매트백'] },
+          { title: '러닝 스타일', items: ['테크 탱크탑', '러닝 쇼츠', '쿠셔닝화', '헤어밴드'] },
+          { title: '애슬레저 룩', items: ['크롭 후디', '바이커 쇼츠', '청키 스니커즈', '벨트백'] },
+        ],
+        en: isMale ? [
+          { title: 'Gym Wear', items: ['Dry-Fit Tee', 'Training Pants', 'Running Shoes', 'Sports Watch'] },
+          { title: 'Running Style', items: ['Tech Tank Top', 'Shorts', 'Cushioned Runners', 'Sports Band'] },
+          { title: 'Athleisure', items: ['Hoodie', 'Joggers', 'Lifestyle Sneakers', 'Ball Cap'] },
+        ] : [
+          { title: 'Yoga Wear', items: ['Sports Bra Top', 'Leggings', 'Pilates Socks', 'Yoga Mat Bag'] },
+          { title: 'Running Style', items: ['Tech Tank', 'Running Shorts', 'Cushioned Shoes', 'Headband'] },
+          { title: 'Athleisure Look', items: ['Crop Hoodie', 'Biker Shorts', 'Chunky Sneakers', 'Belt Bag'] },
+        ]
+      }
+    }
+
+    const langKey = isKo ? 'ko' : 'en'
+    return recommendations[occasion]?.[langKey] || recommendations.casual[langKey]
+  }
+
   const isFormValid = profile.photo && profile.height && profile.weight && profile.gender
 
   // Landing Page
@@ -776,7 +1045,7 @@ function App() {
                 </div>
               </div>
             </div>
-            <div className="path-card" onClick={() => setPage('input')}>
+            <div className="path-card" onClick={() => setPage('fashion-selection')}>
               <div className="path-image path-image-2"></div>
               <div className="path-overlay"></div>
               <div className="path-content">
@@ -1099,6 +1368,168 @@ function App() {
               setSelectedVibe(null)
               setHairRecommendations([])
               setPage('hair-selection')
+            }}>
+              {t.tryAnother}
+            </button>
+            <button className="btn-dark" onClick={handleRestart}>
+              {t.backToHome}
+            </button>
+          </div>
+        </div>
+      </div>
+    )
+  }
+
+  // Fashion Selection Page
+  if (page === 'fashion-selection') {
+    const getFashionOccasionLabel = (o: FashionOccasion) => lang === 'ko' ? o.labelKo : o.labelEn
+
+    return (
+      <div className="app-container">
+        <header className="app-header">
+          <div className="logo" onClick={handleRestart} style={{ cursor: 'pointer' }}>
+            <div className="logo-icon">
+              <svg viewBox="0 0 48 48" fill="currentColor">
+                <path d="M39.5563 34.1455V13.8546C39.5563 15.708 36.8773 17.3437 32.7927 18.3189C30.2914 18.916 27.263 19.2655 24 19.2655C20.737 19.2655 17.7086 18.916 15.2073 18.3189C11.1227 17.3437 8.44365 15.708 8.44365 13.8546V34.1455C8.44365 35.9988 11.1227 37.6346 15.2073 38.6098C17.7086 39.2069 20.737 39.5564 24 39.5564C27.1288 39.5564 30.2914 39.2069 32.7927 38.6098C36.8773 37.6346 39.5563 35.9988 39.5563 34.1455Z"/>
+              </svg>
+            </div>
+            <span className="logo-text">{t.title}</span>
+          </div>
+          <button className="back-btn" onClick={() => setPage('landing')}>
+            ← {t.backToHome}
+          </button>
+        </header>
+
+        <div className="hair-selection-content">
+          <div className="hair-hero">
+            <span className="input-tag">FASHION CURATION</span>
+            <h1 className="input-title">{t.fashionSelectTitle}</h1>
+            <p className="input-desc">{t.fashionSelectDesc}</p>
+          </div>
+
+          <div className="hair-selection-form">
+            <div className="selection-section">
+              <h3 className="selection-title">{t.selectFashionOccasion}</h3>
+              <div className="fashion-option-grid">
+                {fashionOccasions.map((occasion) => (
+                  <button
+                    key={occasion.id}
+                    className={`option-card ${selectedFashionOccasion === occasion.id ? 'active' : ''}`}
+                    onClick={() => setSelectedFashionOccasion(occasion.id)}
+                  >
+                    <span className="option-icon">{occasion.icon}</span>
+                    <span className="option-label">{getFashionOccasionLabel(occasion)}</span>
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            <div className="gender-selection">
+              <h3 className="selection-title">{t.gender}</h3>
+              <div className="gender-options">
+                <button
+                  type="button"
+                  className={`gender-btn ${profile.gender === 'male' ? 'active' : ''}`}
+                  onClick={() => setProfile(prev => ({ ...prev, gender: 'male' }))}
+                >
+                  {t.male}
+                </button>
+                <button
+                  type="button"
+                  className={`gender-btn ${profile.gender === 'female' ? 'active' : ''}`}
+                  onClick={() => setProfile(prev => ({ ...prev, gender: 'female' }))}
+                >
+                  {t.female}
+                </button>
+                <button
+                  type="button"
+                  className={`gender-btn ${profile.gender === 'other' ? 'active' : ''}`}
+                  onClick={() => setProfile(prev => ({ ...prev, gender: 'other' }))}
+                >
+                  {t.other}
+                </button>
+              </div>
+            </div>
+
+            <button
+              className="btn-gold submit-btn"
+              onClick={handleFashionRecommendation}
+              disabled={!selectedFashionOccasion}
+            >
+              {t.getFashionRecommendation}
+            </button>
+          </div>
+        </div>
+      </div>
+    )
+  }
+
+  // Fashion Result Page
+  if (page === 'fashion-result') {
+    const selectedFashionData = fashionOccasions.find(o => o.id === selectedFashionOccasion)
+    const getFashionOccasionLabel = (o: FashionOccasion) => lang === 'ko' ? o.labelKo : o.labelEn
+
+    return (
+      <div className="app-container result-container">
+        <header className="app-header">
+          <div className="logo" onClick={handleRestart} style={{ cursor: 'pointer' }}>
+            <div className="logo-icon">
+              <svg viewBox="0 0 48 48" fill="currentColor">
+                <path d="M39.5563 34.1455V13.8546C39.5563 15.708 36.8773 17.3437 32.7927 18.3189C30.2914 18.916 27.263 19.2655 24 19.2655C20.737 19.2655 17.7086 18.916 15.2073 18.3189C11.1227 17.3437 8.44365 15.708 8.44365 13.8546V34.1455C8.44365 35.9988 11.1227 37.6346 15.2073 38.6098C17.7086 39.2069 20.737 39.5564 24 39.5564C27.1288 39.5564 30.2914 39.2069 32.7927 38.6098C36.8773 37.6346 39.5563 35.9988 39.5563 34.1455Z"/>
+              </svg>
+            </div>
+            <span className="logo-text">{t.title}</span>
+          </div>
+          <h1 className="page-title">{t.fashionResultTitle}</h1>
+          <div className="lang-selector">
+            {(Object.keys(languageNames) as Language[]).map((code) => (
+              <button
+                key={code}
+                className={`lang-btn-sm ${lang === code ? 'active' : ''}`}
+                onClick={() => setLang(code)}
+              >
+                {languageNames[code]}
+              </button>
+            ))}
+          </div>
+        </header>
+
+        <div className="hair-result-content">
+          <div className="selected-options-card">
+            <h3>{t.selectedOptions}</h3>
+            <div className="selected-tags">
+              {selectedFashionData && (
+                <span className="selected-tag">
+                  {selectedFashionData.icon} {getFashionOccasionLabel(selectedFashionData)}
+                </span>
+              )}
+            </div>
+          </div>
+
+          <div className="fashion-recommendations">
+            <h3>{t.recommendedOutfits}</h3>
+            <div className="fashion-grid">
+              {fashionRecommendations.map((outfit, index) => (
+                <div key={index} className="fashion-card">
+                  <div className="fashion-card-header">
+                    <span className="fashion-number">{index + 1}</span>
+                    <h4>{outfit.title}</h4>
+                  </div>
+                  <ul className="fashion-items">
+                    {outfit.items.map((item, idx) => (
+                      <li key={idx}>{item}</li>
+                    ))}
+                  </ul>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <div className="result-actions">
+            <button className="btn-outline" onClick={() => {
+              setSelectedFashionOccasion(null)
+              setFashionRecommendations([])
+              setPage('fashion-selection')
             }}>
               {t.tryAnother}
             </button>
