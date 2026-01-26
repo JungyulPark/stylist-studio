@@ -10,11 +10,11 @@ interface RequestBody {
   language: 'ko' | 'en' | 'ja' | 'zh' | 'es'
 }
 
-// TODO: 결제 연동 후 true로 변경
-const ENABLE_API = false
+// API 활성화
+const ENABLE_API = true
 
 // 사용할 모델 설정
-const MODEL = 'gpt-5-mini'
+const MODEL = 'gpt-4o-mini'
 
 const languagePrompts: Record<string, string> = {
   ko: '한국어로 답변해주세요.',
