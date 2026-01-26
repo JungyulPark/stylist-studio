@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html class="light" lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>Style Consultation Wizard | ELÉGANCE AI</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@200;300;400;500;600;700;800&display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400;1,500;1,600&display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+    <script>
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#c9a227",
+                        "primary-light": "#d4b84a",
+                        "background-light": "#faf9f6",
+                        "background-dark": "#1f1c13",
+                        "charcoal": "#1a1a1a",
+                        "muted-gold": "#9a9078",
+                        "cream": "#f5f3ef",
+                        "soft-gray": "#e8e6e1",
+                    },
+                    fontFamily: {
+                        "display": ["Manrope", "sans-serif"],
+                        "serif": ["Playfair Display", "serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "2xl": "1rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+    <style>
+        .ai-pulse {
+            animation: pulse-ring 2.5s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        }
+        @keyframes pulse-ring {
+            0%, 100% {
+                box-shadow: 0 0 0 0 rgba(201, 162, 39, 0.3),
+                            0 0 0 8px rgba(201, 162, 39, 0.1);
+            }
+            50% {
+                box-shadow: 0 0 0 12px rgba(201, 162, 39, 0.1),
+                            0 0 0 24px rgba(201, 162, 39, 0.05);
+            }
+        }
+        .scan-line {
+            animation: scan 2s ease-in-out infinite;
+        }
+        @keyframes scan {
+            0%, 100% { transform: translateY(-50%); opacity: 0.5; }
+            50% { transform: translateY(50%); opacity: 1; }
+        }
+        .gradient-bg {
+            background: linear-gradient(180deg, #f5f3ef 0%, #eae7e0 100%);
+        }
+        .card-hover {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .card-hover:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 20px 40px -12px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+</head>
+<body class="bg-background-light font-display text-charcoal antialiased">
+
+<!-- Top Navigation Bar -->
+<header class="sticky top-0 z-50 bg-white/90 backdrop-blur-lg border-b border-soft-gray px-6 lg:px-20 py-4 flex items-center justify-between">
+    <div class="flex items-center gap-3">
+        <div class="size-6 text-primary">
+            <svg fill="currentColor" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+                <path clip-rule="evenodd" d="M24 4H42V17.3333V30.6667H24V44H6V30.6667V17.3333H24V4Z" fill-rule="evenodd"></path>
+            </svg>
+        </div>
+        <h2 class="text-charcoal text-base font-bold tracking-[0.2em] uppercase">ELÉGANCE AI</h2>
+    </div>
+    <nav class="hidden md:flex items-center gap-12">
+        <a class="text-xs font-semibold tracking-[0.15em] uppercase text-charcoal/70 hover:text-primary transition-colors" href="#">Collections</a>
+        <a class="text-xs font-semibold tracking-[0.15em] uppercase text-charcoal/70 hover:text-primary transition-colors" href="#">Magazine</a>
+        <a class="text-xs font-semibold tracking-[0.15em] uppercase text-charcoal/70 hover:text-primary transition-colors" href="#">Consultation</a>
+    </nav>
+    <div class="flex items-center gap-4">
+        <button class="hidden sm:block text-xs font-semibold tracking-[0.1em] uppercase px-6 py-2.5 border border-charcoal/20 rounded-full hover:bg-charcoal hover:text-white transition-all duration-300">
+            Sign In
+        </button>
+        <div class="size-10 rounded-full bg-charcoal/5 flex items-center justify-center cursor-pointer hover:bg-charcoal/10 transition-colors">
+            <span class="material-symbols-outlined text-charcoal/60">account_circle</span>
+        </div>
+    </div>
+</header>
+
+<main>
+
+    <!-- Hero Section -->
+    <section class="relative bg-charcoal text-white overflow-hidden">
+        <!-- Background Image with Overlay -->
+        <div class="absolute inset-0">
+            <img src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?auto=format&fit=crop&q=80&w=1920"
+                 alt="Fashion model"
+                 class="w-full h-full object-cover object-center opacity-60"/>
+            <div class="absolute inset-0 bg-gradient-to-r from-charcoal via-charcoal/80 to-transparent"></div>
+        </div>
+
+        <div class="relative z-10 max-w-6xl mx-auto px-6 lg:px-12 py-32 lg:py-44">
+            <div class="max-w-2xl">
+                <span class="text-primary text-xs font-bold tracking-[0.3em] uppercase mb-6 block">알고리즘</span>
+                <h1 class="text-4xl md:text-6xl lg:text-7xl font-light leading-[1.1] mb-8">
+                    개인 우아함의<br/>
+                    <span class="font-serif italic text-primary">미래</span>
+                </h1>
+                <p class="text-white/70 text-lg leading-relaxed mb-12 max-w-lg">
+                    우리의 AI는 딥 뉴럴 네트워크와 하이패션 전문성을 결합하여 당신만의 룩을 큐레이팅합니다. 트렌드를 따르는 것이 아니라, 당신의 미적 잠재력을 계산합니다.
+                </p>
+                <button class="group inline-flex items-center gap-3 bg-primary hover:bg-primary-light text-charcoal h-14 px-10 rounded-lg font-semibold text-sm uppercase tracking-[0.15em] transition-all duration-300 shadow-xl shadow-primary/25">
+                    스타일 분석 시작
+                    <span class="material-symbols-outlined text-xl group-hover:translate-x-1 transition-transform">arrow_forward</span>
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="bg-cream py-24 lg:py-32">
+        <div class="max-w-6xl mx-auto px-6 lg:px-12">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <!-- Feature 1: 정밀 분석 -->
+                <div class="group bg-white rounded-2xl p-8 border border-soft-gray hover:border-primary/30 hover:shadow-xl transition-all duration-300 card-hover">
+                    <div class="size-14 rounded-xl bg-primary/10 flex items-center justify-center mb-6 group-hover:bg-primary/20 transition-colors">
+                        <span class="material-symbols-outlined text-primary text-2xl">face_retouching_natural</span>
+                    </div>
+                    <h3 class="text-lg font-semibold mb-3 tracking-wide">정밀 분석</h3>
+                    <p class="text-charcoal/50 text-sm leading-relaxed">
+                        완벽한 테일러링 핏을 위한 고급 얼굴 매핑 및 체형 추적.
+                    </p>
+                </div>
+
+                <!-- Feature 2: 큐레이팅 팔레트 -->
+                <div class="group bg-white rounded-2xl p-8 border border-soft-gray hover:border-primary/30 hover:shadow-xl transition-all duration-300 card-hover">
+                    <div class="size-14 rounded-xl bg-primary/10 flex items-center justify-center mb-6 group-hover:bg-primary/20 transition-colors">
+                        <span class="material-symbols-outlined text-primary text-2xl">palette</span>
+                    </div>
+                    <h3 class="text-lg font-semibold mb-3 tracking-wide">큐레이팅 팔레트</h3>
+                    <p class="text-charcoal/50 text-sm leading-relaxed">
+                        당신의 피부톤과 환경 조명에 최적화된 색채 과학.
+                    </p>
+                </div>
+
+                <!-- Feature 3: 글로벌 트렌드 -->
+                <div class="group bg-white rounded-2xl p-8 border border-soft-gray hover:border-primary/30 hover:shadow-xl transition-all duration-300 card-hover">
+                    <div class="size-14 rounded-xl bg-primary/10 flex items-center justify-center mb-6 group-hover:bg-primary/20 transition-colors">
+                        <span class="material-symbols-outlined text-primary text-2xl">public</span>
+                    </div>
+                    <h3 class="text-lg font-semibold mb-3 tracking-wide">글로벌 트렌드</h3>
+                    <p class="text-charcoal/50 text-sm leading-relaxed">
+                        파리, 밀라노, 도쿄 패션위크의 런웨이 데이터 실시간 반영.
+                    </p>
+                </div>
+
+                <!-- Feature 4: 독점 액세스 -->
+                <div class="group bg-white rounded-2xl p-8 border border-soft-gray hover:border-primary/30 hover:shadow-xl transition-all duration-300 card-hover">
+                    <div class="size-14 rounded-xl bg-primary/10 flex items-center justify-center mb-6 group-hover:bg-primary/20 transition-colors">
+                        <span class="material-symbols-outlined text-primary text-2xl">diamond</span>
+                    </div>
+                    <h3 class="text-lg font-semibold mb-3 tracking-wide">독점 액세스</h3>
+                    <p class="text-charcoal/50 text-sm leading-relaxed">
+                        당신의 프로필에 맞춤 큐레이팅된 한정판 디자이너 콜라보레이션.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Consultation Wizard Section -->
+    <section class="max-w-5xl mx-auto px-6 py-16 lg:py-24">
+
+    <!-- Step Indicator & Progress -->
+    <div class="max-w-2xl mx-auto mb-20">
+        <div class="flex justify-between items-end mb-5">
+            <div>
+                <span class="text-primary text-[11px] font-bold tracking-[0.2em] uppercase">Step 01 of 04</span>
+                <h3 class="text-xl font-light mt-2 tracking-wide">Face Shape Analysis</h3>
+            </div>
+            <p class="text-muted-gold text-sm font-medium">25% Complete</p>
+        </div>
+        <div class="w-full bg-soft-gray h-[3px] rounded-full overflow-hidden">
+            <div class="bg-primary h-full w-1/4 transition-all duration-700 rounded-full"></div>
+        </div>
+        <p class="text-muted-gold text-xs mt-5 tracking-wide">Discovering your unique geometry and bone structure...</p>
+    </div>
+
+    <!-- Section 1: AI Face Analysis -->
+    <section class="flex flex-col items-center justify-center mb-32">
+        <h1 class="text-4xl md:text-5xl font-light tracking-tight text-center mb-16">
+            Aligning your <span class="font-serif italic text-charcoal">Aesthetic Essence</span>
+        </h1>
+
+        <!-- Central Scanning Frame -->
+        <div class="relative">
+            <div class="size-72 md:size-80 rounded-full ai-pulse flex items-center justify-center overflow-hidden bg-white shadow-[0_8px_60px_-12px_rgba(0,0,0,0.15)]">
+                <div class="size-64 md:size-72 rounded-full bg-center bg-cover border-[6px] border-white shadow-inner"
+                     style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuCHZEMtIIqo910Q1cGGTzsgGRxc5C8gbQkMmduXgsB-cD1rmnatCyxw__zeI5BBOFzYOMyx0InZMcz-tMw-_6mCuBgatiJV2_f6R903YFRcPr60Ccv1pkl6zcABX7w5gwEqNwRH9g2RQnxe9ob8bKJfD0gGQzQB-MADFYkk-xkPM19X-arD7WSwOZUnSGVPe0nVIxXk7lNxO9adiKitqV7mCest1CGOsPz1HgXFD9jkNxog-wQqG5Y-zbV6gZW0wtpQ5XidXsMoVAFI");'>
+                </div>
+            </div>
+
+            <div class="absolute -bottom-5 left-1/2 -translate-x-1/2 bg-primary text-white text-[10px] font-bold px-5 py-2 rounded-full uppercase tracking-[0.15em] shadow-lg shadow-primary/30">
+                AI Scanning
+            </div>
+        </div>
+
+        <div class="mt-16 text-center max-w-lg">
+            <p class="text-charcoal/50 text-[15px] leading-relaxed">
+                Position your face within the frame. Our AI is currently analyzing 128 biometric points to determine your facial geometry.
+            </p>
+            <div class="mt-10 flex gap-4 justify-center">
+                <button class="px-8 py-4 bg-charcoal text-white font-semibold text-xs uppercase tracking-[0.15em] rounded-lg hover:bg-charcoal/90 transition-all shadow-lg">
+                    Re-scan Face
+                </button>
+                <button class="px-8 py-4 bg-charcoal text-white font-semibold text-xs uppercase tracking-[0.15em] rounded-lg hover:bg-charcoal/90 transition-all shadow-lg">
+                    Next Step
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Section 2: Body Architecture -->
+    <section class="border-t border-soft-gray pt-24 mb-32">
+        <div class="text-center mb-14">
+            <h2 class="text-2xl font-light tracking-[0.15em] mb-3 uppercase">Body Architecture</h2>
+            <p class="text-muted-gold text-sm tracking-wide">Define your silhouette to tailor garment proportions</p>
+        </div>
+
+        <div class="grid grid-cols-2 md:grid-cols-5 gap-5">
+            <!-- Hourglass -->
+            <div class="group cursor-pointer card-hover">
+                <div class="aspect-[3/4] bg-cream border border-soft-gray rounded-2xl flex flex-col items-center justify-center p-6 transition-all hover:border-primary/40 hover:bg-primary/5">
+                    <div class="size-16 mb-5 flex items-center justify-center opacity-50 group-hover:opacity-100 transition-opacity">
+                        <svg viewBox="0 0 40 60" fill="none" class="h-14 text-primary">
+                            <path d="M8 8 Q20 20 32 8 L32 24 Q20 32 8 24 Z" stroke="currentColor" stroke-width="1.5" fill="none"/>
+                            <path d="M8 36 Q20 28 32 36 L32 52 Q20 40 8 52 Z" stroke="currentColor" stroke-width="1.5" fill="none"/>
+                        </svg>
+                    </div>
+                    <h4 class="text-[11px] font-bold uppercase tracking-[0.1em] mb-1.5 text-center">Hourglass</h4>
+                    <p class="text-[10px] text-muted-gold text-center leading-relaxed">Balanced bust and hips</p>
+                </div>
+            </div>
+
+            <!-- Rectangle - Selected -->
+            <div class="group cursor-pointer">
+                <div class="aspect-[3/4] bg-primary/10 border-2 border-primary rounded-2xl flex flex-col items-center justify-center p-6 relative shadow-lg shadow-primary/10">
+                    <div class="absolute top-3 right-3">
+                        <div class="size-5 bg-primary rounded-full flex items-center justify-center">
+                            <span class="material-symbols-outlined text-white text-sm" style="font-size: 14px;">check</span>
+                        </div>
+                    </div>
+                    <div class="size-16 mb-5 flex items-center justify-center text-primary">
+                        <svg viewBox="0 0 40 60" fill="none" class="h-14">
+                            <rect x="10" y="8" width="20" height="44" rx="2" stroke="currentColor" stroke-width="2" fill="none"/>
+                        </svg>
+                    </div>
+                    <h4 class="text-[11px] font-bold uppercase tracking-[0.1em] mb-1.5 text-center text-primary">Rectangle</h4>
+                    <p class="text-[10px] text-muted-gold text-center leading-relaxed">Straight shoulder and hip line</p>
+                </div>
+            </div>
+
+            <!-- Inverted Triangle -->
+            <div class="group cursor-pointer card-hover">
+                <div class="aspect-[3/4] bg-cream border border-soft-gray rounded-2xl flex flex-col items-center justify-center p-6 transition-all hover:border-primary/40 hover:bg-primary/5">
+                    <div class="size-16 mb-5 flex items-center justify-center opacity-50 group-hover:opacity-100 transition-opacity">
+                        <svg viewBox="0 0 40 60" fill="none" class="h-14 text-primary">
+                            <path d="M6 12 L34 12 L26 52 L14 52 Z" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linejoin="round"/>
+                        </svg>
+                    </div>
+                    <h4 class="text-[11px] font-bold uppercase tracking-[0.1em] mb-1.5 text-center">Inverted Triangle</h4>
+                    <p class="text-[10px] text-muted-gold text-center leading-relaxed">Broad shoulders, narrow hips</p>
+                </div>
+            </div>
+
+            <!-- Pear Shape -->
+            <div class="group cursor-pointer card-hover">
+                <div class="aspect-[3/4] bg-cream border border-soft-gray rounded-2xl flex flex-col items-center justify-center p-6 transition-all hover:border-primary/40 hover:bg-primary/5">
+                    <div class="size-16 mb-5 flex items-center justify-center opacity-50 group-hover:opacity-100 transition-opacity">
+                        <svg viewBox="0 0 40 60" fill="none" class="h-14 text-primary">
+                            <path d="M14 12 L26 12 L34 52 L6 52 Z" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linejoin="round"/>
+                        </svg>
+                    </div>
+                    <h4 class="text-[11px] font-bold uppercase tracking-[0.1em] mb-1.5 text-center">Pear Shape</h4>
+                    <p class="text-[10px] text-muted-gold text-center leading-relaxed">Fuller hips, narrow bust</p>
+                </div>
+            </div>
+
+            <!-- Apple Shape -->
+            <div class="group cursor-pointer card-hover">
+                <div class="aspect-[3/4] bg-cream border border-soft-gray rounded-2xl flex flex-col items-center justify-center p-6 transition-all hover:border-primary/40 hover:bg-primary/5">
+                    <div class="size-16 mb-5 flex items-center justify-center opacity-50 group-hover:opacity-100 transition-opacity">
+                        <svg viewBox="0 0 40 60" fill="none" class="h-14 text-primary">
+                            <ellipse cx="20" cy="28" rx="14" ry="16" stroke="currentColor" stroke-width="1.5" fill="none"/>
+                            <path d="M14 44 L14 52 M26 44 L26 52" stroke="currentColor" stroke-width="1.5"/>
+                        </svg>
+                    </div>
+                    <h4 class="text-[11px] font-bold uppercase tracking-[0.1em] mb-1.5 text-center">Apple Shape</h4>
+                    <p class="text-[10px] text-muted-gold text-center leading-relaxed">Fuller midsection, slim legs</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Section 3: Style Mood Board Grid -->
+    <section class="border-t border-soft-gray pt-24 mb-24">
+        <div class="text-center mb-14">
+            <h2 class="text-2xl font-light tracking-[0.15em] mb-3 uppercase">Curate Your Aesthetic</h2>
+            <p class="text-muted-gold text-sm tracking-wide">Tap the images that resonate with your personal vision</p>
+        </div>
+
+        <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
+            <!-- Image 1 -->
+            <div class="relative group cursor-pointer overflow-hidden rounded-xl aspect-square card-hover">
+                <img class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBnbTFtBpfYUvGv1V4ErbUVZngZJNncQGNk3_cNmm_naTwY7dcAZjwfGVspgvMgq_iT0XeaZgczaDV4Jcnj_N55nQHXdKodD4ZhMNBbFTb5L3Uh2cfcTkxMTpxmXjTeV4R1AJIm2U-sR3rpl8A-VmZhCFw3vx__RIzwDmfqSs1v8ic_NBn8w-A9Hec_FRHrDyy_weQtn-yVXugnWMGaVrwowd1L3n_kOGZ4A9LPvCv_ejXp8pzX8tuDHq7UibbiIECSIgGwUev_ir8" alt="Luxury fashion bag"/>
+                <div class="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-300"></div>
+                <div class="absolute bottom-4 left-4 right-4 flex justify-between items-center opacity-0 group-hover:opacity-100 transition-all duration-300">
+                    <span class="text-white text-xs font-medium">Classic Elegance</span>
+                    <span class="material-symbols-outlined text-white text-xl">favorite_border</span>
+                </div>
+            </div>
+
+            <!-- Image 2 -->
+            <div class="relative group cursor-pointer overflow-hidden rounded-xl aspect-square card-hover">
+                <img class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC_MOQTtv-Txa1RXj0HxRQ7fXTVkXpYNvfBPNFbvbChfRT21GJm7EzDHO5imbgQETaHDp_9wgas6SC9RrFi3_joStp9ElRfDyPTZLuwkrbQH643AluTpOEbTDkIEH6K-wLiagnDRz-JBOX1qtFR85r3lPMZAmLkU6-c8YN67KfT4-_bGFcapq1SEwOTrW5w1fBEdc1QmcAvXK6dxdcY4vFJzk8_xt8z2sEkBndkkkRR_Zx015O8Ls7NeVzjxX2mnnCighEchogmqek" alt="Fashion editorial"/>
+                <div class="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-300"></div>
+                <div class="absolute bottom-4 left-4 right-4 flex justify-between items-center opacity-0 group-hover:opacity-100 transition-all duration-300">
+                    <span class="text-white text-xs font-medium">Modern Minimal</span>
+                    <span class="material-symbols-outlined text-white text-xl">favorite_border</span>
+                </div>
+            </div>
+
+            <!-- Image 3 - Selected -->
+            <div class="relative group cursor-pointer overflow-hidden rounded-xl aspect-square ring-2 ring-primary ring-offset-2 shadow-xl">
+                <img class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDrT5n0xhWTI__w1k78WK-LX7yw04IsjqYie14fmBd89Y1FinCiNDomQ0PLwyqeKFYFfo5u1k7ZpD6BtHGOZK5LPI5E--R7Ce7-2GwjVGmbvkzEdQD-N65Sd9eCol5_w9LnnoTJ2KCpxGSxc0BiEHbx4x6fwIhSjuU2OZO8wtt2aYC1N_p--Zddgx-dRh87w2eq4b3PgXUwe0DbMU31KlouGdYnfgW_Y6mSzIcuLo0G9Ml-PRa9I76gRhUPN6bWhxbSi9aDzbcvEaQ" alt="Architectural fashion"/>
+                <div class="absolute top-3 right-3 size-6 bg-primary rounded-full flex items-center justify-center shadow-lg">
+                    <span class="material-symbols-outlined text-white" style="font-size: 16px;">check</span>
+                </div>
+            </div>
+
+            <!-- Image 4 -->
+            <div class="relative group cursor-pointer overflow-hidden rounded-xl aspect-square card-hover">
+                <img class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBC6evBlbVVqfU_O1BH0AMAgcJ-MyU7tIgSrSB36J1ogEs6-DLAB2b0Q1M6LTmRUILvxeYASNuwYhV_Z2y_2YJwZ1tcD4o_C4wuto7zrlT1LTj6N0cLAyt33bnDTVZyxfarOGZAfKu49NeWWdKguABCBqTzjoWdc4UfUFNF_dd0M1EJPiG3_ZQtYZ8sItO6vEAsq56Wc0JT07I28KMHcnLx03CPvpu6qgESUsBCHU2uT6AJD1fffnpJU0cSrhnxwU6gPSIPwu6lAGM" alt="Luxury accessories"/>
+                <div class="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-300"></div>
+                <div class="absolute bottom-4 left-4 right-4 flex justify-between items-center opacity-0 group-hover:opacity-100 transition-all duration-300">
+                    <span class="text-white text-xs font-medium">Timeless Luxury</span>
+                    <span class="material-symbols-outlined text-white text-xl">favorite_border</span>
+                </div>
+            </div>
+
+            <!-- Image 5 -->
+            <div class="relative group cursor-pointer overflow-hidden rounded-xl aspect-square card-hover">
+                <img class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDmhJL10Urr2Rk2BV4xazRh5LB7gUDUqPHTyacQ74Hch_O0IjcfMT8FvxXvNLY-Vw-OAXKozv4XFocvUdREcdDhsTV_u5xdyx-JsFjlXtAv7mmp8hzBE802EG5DjUmW179xtQatFwjCWjlfKsnr1e87N8juebns1qsYDRg12vcOm4xFRdElPb8fvU0gdQGdhF9vhMIwdiZkYh_3CuQoeOPNtcD9JYOB9DNzU4StufW6hFEVvGpPzvaTtzj62tdDsT1X8GP2vJEOw_o" alt="Editorial fashion"/>
+                <div class="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-300"></div>
+                <div class="absolute bottom-4 left-4 right-4 flex justify-between items-center opacity-0 group-hover:opacity-100 transition-all duration-300">
+                    <span class="text-white text-xs font-medium">Avant Garde</span>
+                    <span class="material-symbols-outlined text-white text-xl">favorite_border</span>
+                </div>
+            </div>
+
+            <!-- Image 6 -->
+            <div class="relative group cursor-pointer overflow-hidden rounded-xl aspect-square card-hover">
+                <img class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBc3RBFIC7hzuRJmViEsZqJEKlro_bNIQuuAoI88V8h1l0twSOj97pDHI59di0O6-YvvlnePggUOOUcLsvO8QndqqORgEnQSNT1vtsIymyYMCTIC-pDTzKulzxTO5BHMJyHLB9Rc-J6Q04zgneLQ9DyCZBUciZBky-QzDgfzukC_N7QbjLM71mwhE3LDT09-SBkbwb85arsOGdBC7VQn-lVjRp7kBKO_Tl8G8oceDI0S2KgwDpiEI4E9D-nocfBqGoVstLgV95BTZM" alt="Professional style"/>
+                <div class="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-300"></div>
+                <div class="absolute bottom-4 left-4 right-4 flex justify-between items-center opacity-0 group-hover:opacity-100 transition-all duration-300">
+                    <span class="text-white text-xs font-medium">Power Dressing</span>
+                    <span class="material-symbols-outlined text-white text-xl">favorite_border</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Final CTA / Preview -->
+    <section class="relative gradient-bg rounded-3xl p-12 md:p-16 text-center overflow-hidden border border-soft-gray">
+        <!-- Decorative elements -->
+        <div class="absolute top-0 right-0 w-64 h-64 bg-gradient-to-bl from-primary/10 to-transparent rounded-full blur-3xl"></div>
+        <div class="absolute bottom-0 left-0 w-48 h-48 bg-gradient-to-tr from-primary/5 to-transparent rounded-full blur-2xl"></div>
+
+        <div class="relative z-10">
+            <span class="text-primary text-[11px] font-bold uppercase tracking-[0.3em] mb-5 block">Almost Tailored</span>
+            <h3 class="text-3xl md:text-4xl font-light mb-6 tracking-tight">Your Report is Generating</h3>
+            <p class="text-charcoal/50 text-[15px] max-w-md mx-auto mb-10 leading-relaxed">
+                Based on your face shape, body type, and style preferences, our AI is curating a 15-page personal style manifesto just for you.
+            </p>
+            <button class="inline-flex items-center justify-center bg-primary hover:bg-primary-light text-white h-14 px-10 rounded-lg font-semibold text-sm uppercase tracking-[0.15em] transition-all duration-300 shadow-xl shadow-primary/25 hover:shadow-2xl hover:shadow-primary/30 hover:-translate-y-0.5">
+                Generate Personalized Lookbook
+            </button>
+            <p class="mt-8 text-[10px] uppercase tracking-[0.2em] text-muted-gold">Processing results with Elegance AI Engine v4.2</p>
+        </div>
+    </section>
+
+    </section>
+</main>
+
+<footer class="px-6 lg:px-20 py-14 border-t border-soft-gray flex flex-col md:flex-row justify-between items-center gap-8 bg-cream">
+    <div class="flex items-center gap-3">
+        <div class="size-5 text-charcoal/40">
+            <svg fill="currentColor" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+                <path clip-rule="evenodd" d="M24 4H42V17.3333V30.6667H24V44H6V30.6667V17.3333H24V4Z" fill-rule="evenodd"></path>
+            </svg>
+        </div>
+        <h2 class="text-charcoal/40 text-sm font-bold tracking-[0.15em] uppercase">ELÉGANCE AI</h2>
+    </div>
+    <nav class="flex gap-10 text-[10px] font-semibold uppercase tracking-[0.15em] text-muted-gold">
+        <a class="hover:text-primary transition-colors" href="#">Privacy Policy</a>
+        <a class="hover:text-primary transition-colors" href="#">Terms of Service</a>
+        <a class="hover:text-primary transition-colors" href="#">Contact Expert</a>
+    </nav>
+    <div class="text-[10px] text-muted-gold/60 tracking-wide">
+        © 2024 ELÉGANCE AI. ALL RIGHTS RESERVED.
+    </div>
+</footer>
+
+</body>
+</html>
