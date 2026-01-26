@@ -24,18 +24,36 @@ const languagePrompts: Record<string, string> = {
   es: 'Por favor responde en español.'
 }
 
-const systemPrompt = `You are an expert personal stylist and fashion consultant.
+// 사진이 있을 때 시스템 프롬프트 (얼굴/헤어스타일 분석 포함)
+const systemPromptWithPhoto = `You are an expert personal stylist, fashion consultant, and hair stylist.
 Analyze the user's photo and body information to provide personalized style recommendations.
 
 Your report should include:
-1. Body Type Analysis - Identify body shape and proportions
-2. Color Analysis - Recommend colors that suit their skin tone and features
+1. Face Shape Analysis - Identify face shape and facial features
+2. Hairstyle Recommendations - Suggest hairstyles that complement their face shape, hair texture, and features (include 3-5 specific hairstyle suggestions with descriptions)
+3. Body Type Analysis - Identify body shape and proportions
+4. Color Analysis - Recommend colors that suit their skin tone, hair color, and features
+5. Style Recommendations - Suggest clothing styles, cuts, and fits that flatter their body type
+6. Wardrobe Essentials - List must-have items for their wardrobe
+7. Complete Look Ideas - 3-5 complete outfit + hairstyle combinations
+
+Be specific, practical, and encouraging. Focus on enhancing their natural features.`
+
+// 사진이 없을 때 시스템 프롬프트 (일반적인 추천)
+const systemPromptNoPhoto = `You are an expert personal stylist and fashion consultant.
+Based on the user's body information, provide personalized style recommendations.
+
+Your report should include:
+1. Body Type Analysis - Analyze body proportions based on height, weight, and gender
+2. Color Recommendations - Suggest colors that generally work well
 3. Style Recommendations - Suggest clothing styles, cuts, and fits
 4. Wardrobe Essentials - List must-have items for their wardrobe
 5. Styling Tips - Specific tips to enhance their appearance
 6. Outfit Ideas - 3-5 complete outfit suggestions
 
-Be specific, practical, and encouraging. Focus on enhancing their natural features.`
+Note: For more personalized hairstyle and color recommendations based on your face shape and skin tone, please upload a photo.
+
+Be specific, practical, and encouraging.`
 
 // Mock 응답 (API 비활성화 시 사용)
 const mockResponses: Record<string, string> = {
@@ -176,7 +194,7 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
     const body: RequestBody = await context.request.json()
     const { photo, height, weight, gender, language } = body
 
-    if (!photo || !height || !weight || !gender) {
+    if (!height || !weight || !gender) {
       return new Response(
         JSON.stringify({ error: 'Missing required fields' }),
         { status: 400, headers: { 'Content-Type': 'application/json', ...corsHeaders } }
@@ -212,7 +230,10 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
     // === 아래는 결제 연동 후 활성화 ===
     const genderText = { male: 'male', female: 'female', other: 'person' }[gender]
 
-    const userMessage = `Please analyze this ${genderText}'s photo and provide a comprehensive style consultation report.
+    const hasPhoto = photo && photo.length > 0
+
+    const userMessage = hasPhoto
+      ? `Please analyze this ${genderText}'s photo and provide a comprehensive style consultation report.
 
 Body Information:
 - Height: ${height} cm
@@ -222,8 +243,25 @@ Body Information:
 ${languagePrompts[language] || languagePrompts.en}
 
 Provide a detailed, personalized style report based on the photo and body information.`
+      : `Please provide a comprehensive style consultation report based on the following body information.
+
+Body Information:
+- Height: ${height} cm
+- Weight: ${weight} kg
+- Gender: ${genderText}
+
+${languagePrompts[language] || languagePrompts.en}
+
+Provide a detailed, personalized style report with general recommendations based on body type and proportions.`
 
     // OpenAI Chat Completions API 호출
+    const userContent = hasPhoto
+      ? [
+          { type: 'text', text: userMessage },
+          { type: 'image_url', image_url: { url: photo, detail: 'high' } }
+        ]
+      : userMessage
+
     const response = await fetch('https://api.openai.com/v1/chat/completions', {
       method: 'POST',
       headers: {
@@ -233,13 +271,10 @@ Provide a detailed, personalized style report based on the photo and body inform
       body: JSON.stringify({
         model: MODEL,
         messages: [
-          { role: 'system', content: systemPrompt },
+          { role: 'system', content: hasPhoto ? systemPromptWithPhoto : systemPromptNoPhoto },
           {
             role: 'user',
-            content: [
-              { type: 'text', text: userMessage },
-              { type: 'image_url', image_url: { url: photo, detail: 'high' } }
-            ]
+            content: userContent
           }
         ],
         max_completion_tokens: 4096,

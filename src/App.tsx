@@ -622,6 +622,9 @@ function App() {
     const paymentSuccess = urlParams.get('payment')
 
     if (customerSessionToken || paymentSuccess === 'success') {
+      // 결제 성공 - 재분석 할인 자격 저장 (이후 50% 할인)
+      localStorage.setItem('paidCustomer', 'true')
+
       // 결제 성공 - 저장된 폼 데이터 복원
       const savedData = localStorage.getItem('pendingAnalysis')
       if (savedData) {
@@ -718,12 +721,16 @@ function App() {
       }
       localStorage.setItem('pendingAnalysis', JSON.stringify(dataToSave))
 
+      // 재분석 고객인지 확인 (50% 할인 적용)
+      const isRepeatCustomer = localStorage.getItem('paidCustomer') === 'true'
+
       // 백엔드 API로 체크아웃 URL 가져오기
       const checkoutResponse = await fetch('/api/create-checkout', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          successUrl: `${window.location.origin}/?payment=success`
+          successUrl: `${window.location.origin}/?payment=success`,
+          isRepeatCustomer  // 재분석 시 할인 자동 적용
         })
       })
 

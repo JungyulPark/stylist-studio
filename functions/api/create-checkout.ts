@@ -5,10 +5,15 @@ interface Env {
 interface RequestBody {
   productId: string
   successUrl?: string
+  isRepeatCustomer?: boolean  // 재분석 고객 여부
+  discountCode?: string       // 할인 코드
 }
 
 // Polar Product ID (Sandbox)
 const PRODUCT_ID = 'cca7d48e-6758-4e83-a375-807ab70615ea'
+
+// 재분석 할인 코드 (Polar에서 생성 필요 - 50% 할인)
+const REPEAT_DISCOUNT_CODE = 'COMEBACK50'
 
 export const onRequestPost: PagesFunction<Env> = async (context) => {
   const corsHeaders = {
@@ -36,18 +41,28 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
       )
     }
 
+    // 할인 코드 결정 (재분석 고객이면 자동 적용)
+    const discountCode = body.discountCode || (body.isRepeatCustomer ? REPEAT_DISCOUNT_CODE : undefined)
+
     // Polar Checkout Session API 호출 (Sandbox 환경)
+    const checkoutBody: Record<string, unknown> = {
+      products: [productId],
+      success_url: successUrl,
+      embed_origin: new URL(context.request.url).origin
+    }
+
+    // 할인 코드가 있으면 추가
+    if (discountCode) {
+      checkoutBody.discount_code = discountCode
+    }
+
     const response = await fetch('https://sandbox-api.polar.sh/v1/checkouts/', {
       method: 'POST',
       headers: {
         'Authorization': `Bearer ${polarToken}`,
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({
-        products: [productId],
-        success_url: successUrl,
-        embed_origin: new URL(context.request.url).origin
-      })
+      body: JSON.stringify(checkoutBody)
     })
 
     if (!response.ok) {
