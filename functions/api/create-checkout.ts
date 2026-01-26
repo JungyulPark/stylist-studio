@@ -7,8 +7,8 @@ interface RequestBody {
   successUrl?: string
 }
 
-// Polar Product ID
-const PRODUCT_ID = '6f37a6b9-b3bf-413e-9221-182c61711ecc'
+// Polar Product ID (Sandbox)
+const PRODUCT_ID = 'cca7d48e-6758-4e83-a375-807ab70615ea'
 
 export const onRequestPost: PagesFunction<Env> = async (context) => {
   const corsHeaders = {
