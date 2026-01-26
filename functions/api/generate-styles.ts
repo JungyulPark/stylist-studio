@@ -90,7 +90,7 @@ async function analyzePhotoForStyling(photo: string, apiKey: string): Promise<st
     const base64Data = base64Match[2]
 
     const response = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/gemini-3.0-pro-image:generateContent?key=${apiKey}`,
+      `https://generativelanguage.googleapis.com/v1beta/models/gemini-3-pro-image-preview:generateContent?key=${apiKey}`,
       {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -215,7 +215,7 @@ async function generateImageWithGemini(prompt: string, apiKey: string): Promise<
 
     // Fallback to Gemini 2.0 Flash
     const fallbackResponse = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/gemini-3.0-pro-image:generateContent?key=${apiKey}`,
+      `https://generativelanguage.googleapis.com/v1beta/models/gemini-3-pro-image-preview:generateContent?key=${apiKey}`,
       {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
