@@ -794,6 +794,7 @@ function App() {
             height: profileData.height,
             weight: profileData.weight,
             gender: profileData.gender,
+            photo: profileData.photo,
             language: lang
           })
         })
@@ -846,6 +847,7 @@ function App() {
             height: profile.height,
             weight: profile.weight,
             gender: profile.gender,
+            photo: profile.photo,
             language: lang
           })
         }).catch(() => null)
@@ -893,6 +895,7 @@ function App() {
           height: profile.height,
           weight: profile.weight,
           gender: profile.gender,
+          photo: profile.photo,
           language: lang
         })
       })
