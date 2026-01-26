@@ -3,7 +3,41 @@ import './App.css'
 
 type Language = 'ko' | 'en' | 'ja' | 'zh' | 'es'
 type Gender = 'male' | 'female' | 'other' | null
-type Page = 'landing' | 'input' | 'loading' | 'result'
+type Page = 'landing' | 'input' | 'loading' | 'result' | 'hair-selection' | 'hair-result'
+
+// 헤어스타일 상황 옵션
+interface HairOccasion {
+  id: string
+  icon: string
+  labelKo: string
+  labelEn: string
+}
+
+// 헤어스타일 느낌 옵션
+interface HairVibe {
+  id: string
+  icon: string
+  labelKo: string
+  labelEn: string
+}
+
+const hairOccasions: HairOccasion[] = [
+  { id: 'daily', icon: '☀️', labelKo: '데일리', labelEn: 'Daily' },
+  { id: 'date', icon: '💕', labelKo: '데이트', labelEn: 'Date' },
+  { id: 'interview', icon: '💼', labelKo: '면접', labelEn: 'Interview' },
+  { id: 'party', icon: '🎉', labelKo: '파티', labelEn: 'Party' },
+  { id: 'wedding', icon: '💒', labelKo: '결혼식', labelEn: 'Wedding' },
+  { id: 'vacation', icon: '🏖️', labelKo: '휴가', labelEn: 'Vacation' },
+]
+
+const hairVibes: HairVibe[] = [
+  { id: 'elegant', icon: '✨', labelKo: '우아한', labelEn: 'Elegant' },
+  { id: 'cute', icon: '🎀', labelKo: '귀여운', labelEn: 'Cute' },
+  { id: 'chic', icon: '🖤', labelKo: '시크한', labelEn: 'Chic' },
+  { id: 'natural', icon: '🌿', labelKo: '자연스러운', labelEn: 'Natural' },
+  { id: 'trendy', icon: '🔥', labelKo: '트렌디', labelEn: 'Trendy' },
+  { id: 'classic', icon: '👑', labelKo: '클래식', labelEn: 'Classic' },
+]
 
 const translations: Record<Language, {
   title: string
@@ -51,6 +85,17 @@ const translations: Record<Language, {
   generatingStyles: string
   demoMode: string
   backToHome: string
+  hairStyling: string
+  hairSelectTitle: string
+  hairSelectDesc: string
+  selectOccasion: string
+  selectVibe: string
+  getRecommendation: string
+  hairResultTitle: string
+  hairResultDesc: string
+  selectedOptions: string
+  recommendedStyles: string
+  tryAnother: string
 }> = {
   ko: {
     title: 'AI STYLIST',
@@ -97,7 +142,18 @@ const translations: Record<Language, {
     styleGalleryDesc: '상황별 맞춤 스타일을 AI가 제안합니다',
     generatingStyles: '스타일 이미지 생성 중...',
     demoMode: '데모 모드 - 실제 이미지는 API 설정 후 제공됩니다',
-    backToHome: '홈으로 돌아가기'
+    backToHome: '홈으로 돌아가기',
+    hairStyling: '헤어 스타일링',
+    hairSelectTitle: '나만의 헤어스타일 찾기',
+    hairSelectDesc: '상황과 원하는 느낌을 선택하면 AI가 맞춤 헤어스타일을 추천해드립니다',
+    selectOccasion: '어떤 상황인가요?',
+    selectVibe: '어떤 느낌을 원하세요?',
+    getRecommendation: '헤어스타일 추천받기',
+    hairResultTitle: '맞춤 헤어스타일 추천',
+    hairResultDesc: '선택하신 상황과 느낌에 맞는 헤어스타일입니다',
+    selectedOptions: '선택 옵션',
+    recommendedStyles: '추천 스타일',
+    tryAnother: '다른 스타일 찾기'
   },
   en: {
     title: 'AI STYLIST',
@@ -144,7 +200,18 @@ const translations: Record<Language, {
     styleGalleryDesc: 'AI suggests personalized styles for different occasions',
     generatingStyles: 'Generating style images...',
     demoMode: 'Demo mode - Real images available after API setup',
-    backToHome: 'Back to Home'
+    backToHome: 'Back to Home',
+    hairStyling: 'Hair Styling',
+    hairSelectTitle: 'Find Your Perfect Hairstyle',
+    hairSelectDesc: 'Select your occasion and desired vibe, and AI will recommend personalized hairstyles',
+    selectOccasion: 'What\'s the occasion?',
+    selectVibe: 'What vibe do you want?',
+    getRecommendation: 'Get Hair Recommendations',
+    hairResultTitle: 'Personalized Hair Recommendations',
+    hairResultDesc: 'Hairstyles matching your selected occasion and vibe',
+    selectedOptions: 'Selected Options',
+    recommendedStyles: 'Recommended Styles',
+    tryAnother: 'Try Another Style'
   },
   ja: {
     title: 'AI STYLIST',
@@ -191,7 +258,18 @@ const translations: Record<Language, {
     styleGalleryDesc: 'シーン別のおすすめスタイルをAIがご提案します',
     generatingStyles: 'スタイル画像を生成中...',
     demoMode: 'デモモード - 実際の画像はAPI設定後に表示されます',
-    backToHome: 'ホームに戻る'
+    backToHome: 'ホームに戻る',
+    hairStyling: 'ヘアスタイリング',
+    hairSelectTitle: 'あなたにぴったりのヘアスタイル',
+    hairSelectDesc: 'シーンと雰囲気を選んで、AIがおすすめのヘアスタイルをご提案します',
+    selectOccasion: 'どんなシーンですか？',
+    selectVibe: 'どんな雰囲気がお好みですか？',
+    getRecommendation: 'ヘアスタイルを提案する',
+    hairResultTitle: 'おすすめヘアスタイル',
+    hairResultDesc: '選択されたシーンと雰囲気に合うヘアスタイルです',
+    selectedOptions: '選択オプション',
+    recommendedStyles: 'おすすめスタイル',
+    tryAnother: '別のスタイルを探す'
   },
   zh: {
     title: 'AI STYLIST',
@@ -238,7 +316,18 @@ const translations: Record<Language, {
     styleGalleryDesc: 'AI为您推荐不同场合的穿搭风格',
     generatingStyles: '正在生成风格图片...',
     demoMode: '演示模式 - 设置API后显示真实图片',
-    backToHome: '返回首页'
+    backToHome: '返回首页',
+    hairStyling: '发型设计',
+    hairSelectTitle: '找到您的完美发型',
+    hairSelectDesc: '选择场合和想要的感觉，AI将为您推荐个性化发型',
+    selectOccasion: '什么场合？',
+    selectVibe: '想要什么感觉？',
+    getRecommendation: '获取发型推荐',
+    hairResultTitle: '个性化发型推荐',
+    hairResultDesc: '符合您选择的场合和感觉的发型',
+    selectedOptions: '已选选项',
+    recommendedStyles: '推荐发型',
+    tryAnother: '尝试其他风格'
   },
   es: {
     title: 'AI STYLIST',
@@ -285,7 +374,18 @@ const translations: Record<Language, {
     styleGalleryDesc: 'La IA sugiere estilos personalizados para diferentes ocasiones',
     generatingStyles: 'Generando imágenes de estilo...',
     demoMode: 'Modo demo - Imágenes reales disponibles después de configurar API',
-    backToHome: 'Volver al inicio'
+    backToHome: 'Volver al inicio',
+    hairStyling: 'Estilismo Capilar',
+    hairSelectTitle: 'Encuentra Tu Peinado Perfecto',
+    hairSelectDesc: 'Selecciona la ocasión y el estilo deseado, y la IA recomendará peinados personalizados',
+    selectOccasion: '¿Cuál es la ocasión?',
+    selectVibe: '¿Qué estilo deseas?',
+    getRecommendation: 'Obtener Recomendaciones',
+    hairResultTitle: 'Recomendaciones Personalizadas',
+    hairResultDesc: 'Peinados que coinciden con tu ocasión y estilo seleccionados',
+    selectedOptions: 'Opciones Seleccionadas',
+    recommendedStyles: 'Estilos Recomendados',
+    tryAnother: 'Probar Otro Estilo'
   }
 }
 
@@ -325,6 +425,9 @@ function App() {
   const [isDragging, setIsDragging] = useState(false)
   const [styleImages, setStyleImages] = useState<StyleImage[]>([])
   const [isGeneratingStyles, setIsGeneratingStyles] = useState(false)
+  const [selectedOccasion, setSelectedOccasion] = useState<string | null>(null)
+  const [selectedVibe, setSelectedVibe] = useState<string | null>(null)
+  const [hairRecommendations, setHairRecommendations] = useState<string[]>([])
   const fileInputRef = useRef<HTMLInputElement>(null)
   const t = translations[lang]
 
@@ -454,7 +557,130 @@ function App() {
     setError('')
     setStyleImages([])
     setIsGeneratingStyles(false)
+    setSelectedOccasion(null)
+    setSelectedVibe(null)
+    setHairRecommendations([])
     setPage('landing')
+  }
+
+  const handleHairRecommendation = async () => {
+    if (!selectedOccasion || !selectedVibe) return
+
+    setPage('loading')
+
+    try {
+      const response = await fetch('/api/hair-recommend', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          occasion: selectedOccasion,
+          vibe: selectedVibe,
+          gender: profile.gender,
+          language: lang
+        })
+      })
+
+      if (response.ok) {
+        const data = await response.json()
+        setHairRecommendations(data.recommendations || [])
+      } else {
+        // 데모 모드: API 없이도 추천 제공
+        const demoRecommendations = getHairDemoRecommendations(selectedOccasion, selectedVibe, lang)
+        setHairRecommendations(demoRecommendations)
+      }
+      setPage('hair-result')
+    } catch {
+      // 데모 모드
+      const demoRecommendations = getHairDemoRecommendations(selectedOccasion, selectedVibe, lang)
+      setHairRecommendations(demoRecommendations)
+      setPage('hair-result')
+    }
+  }
+
+  // 데모용 헤어스타일 추천
+  const getHairDemoRecommendations = (occasion: string, vibe: string, language: string): string[] => {
+    const recommendations: Record<string, Record<string, string[]>> = {
+      ko: {
+        'daily-elegant': ['클래식 웨이브 롱헤어', '단정한 로우번', '볼륨 레이어드컷'],
+        'daily-cute': ['볼륨 단발머리', '리본 포니테일', '부드러운 C컬 단발'],
+        'daily-chic': ['슬릭백 포니테일', '웨트룩 숏컷', '미니멀 스트레이트'],
+        'daily-natural': ['내추럴 웨이브', '에어리 레이어드', '소프트 히피펌'],
+        'daily-trendy': ['울프컷', '허쉬컷', '페이스 프레이밍 레이어'],
+        'daily-classic': ['클래식 밥컷', '우아한 시니용', '타임리스 롱 레이어'],
+        'date-elegant': ['로맨틱 웨이브', '반묶음 하프업', '공주머리 스타일'],
+        'date-cute': ['트윈 번 스타일', '리본 하프업', '볼륨 뱅헤어'],
+        'date-chic': ['슬릭 포니테일', '센터파팅 스트레이트', '젖은 머리 스타일링'],
+        'date-natural': ['비치 웨이브', '루즈한 브레이드', '자연스러운 컬'],
+        'date-trendy': ['텍스쳐드 밥', 'Y2K 스타일', '페이스 레이어드'],
+        'date-classic': ['헐리웃 웨이브', '프렌치 트위스트', '엘레강스 업스타일'],
+        'interview-elegant': ['단정한 로우번', '깔끔한 포니테일', '프로페셔널 밥컷'],
+        'interview-cute': ['소프트 웨이브 단발', '단정한 하프업', '깔끔한 내추럴 컬'],
+        'interview-chic': ['슬릭 로우번', '미니멀 스트레이트', '파워 밥컷'],
+        'interview-natural': ['내추럴 스트레이트', '소프트 레이어드', '깔끔한 웨이브'],
+        'interview-trendy': ['모던 밥컷', '클린 레이어드', '프레시 미디움'],
+        'interview-classic': ['클래식 시니용', '프렌치 롤', '엘레강트 업두'],
+        'party-elegant': ['글램 웨이브', '크리스탈 업스타일', '할리우드 컬'],
+        'party-cute': ['스파클 트윈테일', '글리터 번', '페스티벌 브레이드'],
+        'party-chic': ['슬릭백 하이포니', '젖은 머리 룩', '에지 언더컷 스타일'],
+        'party-natural': ['비치 웨이브', '보헤미안 브레이드', '루즈한 컬'],
+        'party-trendy': ['네온 하이라이트', 'Y2K 업두', '글로시 스트레이트'],
+        'party-classic': ['올드 할리우드 웨이브', '빈티지 업두', '레트로 컬'],
+        'wedding-elegant': ['브라이덜 업두', '로맨틱 사이드번', '진주 헤어피스 스타일'],
+        'wedding-cute': ['플라워 크라운 스타일', '소프트 컬 다운두', '리본 하프업'],
+        'wedding-chic': ['슬릭 시니용', '모던 로우번', '미니멀 업스타일'],
+        'wedding-natural': ['가든 웨이브', '루즈한 브레이드 업두', '보헤미안 다운스타일'],
+        'wedding-trendy': ['글래스 헤어', '페이스 프레이밍 업두', '모던 하프업'],
+        'wedding-classic': ['클래식 시니용', '빈티지 롤 업두', '엘레강트 프렌치 트위스트'],
+        'vacation-elegant': ['비치 웨이브', '실크 스카프 랩', '리조트 업스타일'],
+        'vacation-cute': ['피그테일 브레이드', '버킷햇 스타일 웨이브', '선샤인 포니테일'],
+        'vacation-chic': ['웨트룩 스타일', '슬릭 로우번', '미니멀 비치 스타일'],
+        'vacation-natural': ['솔트 스프레이 웨이브', '자연스러운 컬', '에어드라이 스타일'],
+        'vacation-trendy': ['Y2K 클립 스타일', '버터플라이 클립 룩', '레이어드 반다나'],
+        'vacation-classic': ['그레이스 켈리 스카프룩', '클래식 비치 웨이브', '타임리스 포니테일'],
+      },
+      en: {
+        'daily-elegant': ['Classic Wave Long Hair', 'Neat Low Bun', 'Volume Layered Cut'],
+        'daily-cute': ['Volume Bob', 'Ribbon Ponytail', 'Soft C-Curl Bob'],
+        'daily-chic': ['Slicked Back Ponytail', 'Wet Look Short Cut', 'Minimal Straight'],
+        'daily-natural': ['Natural Wave', 'Airy Layered', 'Soft Hippie Perm'],
+        'daily-trendy': ['Wolf Cut', 'Hush Cut', 'Face Framing Layers'],
+        'daily-classic': ['Classic Bob Cut', 'Elegant Chignon', 'Timeless Long Layers'],
+        'date-elegant': ['Romantic Waves', 'Half-Up Half-Down', 'Princess Style'],
+        'date-cute': ['Twin Bun Style', 'Ribbon Half-Up', 'Volume Bangs'],
+        'date-chic': ['Sleek Ponytail', 'Center Part Straight', 'Wet Hair Styling'],
+        'date-natural': ['Beach Waves', 'Loose Braid', 'Natural Curls'],
+        'date-trendy': ['Textured Bob', 'Y2K Style', 'Face Layered'],
+        'date-classic': ['Hollywood Waves', 'French Twist', 'Elegance Upstyle'],
+        'interview-elegant': ['Neat Low Bun', 'Clean Ponytail', 'Professional Bob'],
+        'interview-cute': ['Soft Wave Bob', 'Neat Half-Up', 'Clean Natural Curl'],
+        'interview-chic': ['Sleek Low Bun', 'Minimal Straight', 'Power Bob'],
+        'interview-natural': ['Natural Straight', 'Soft Layered', 'Clean Waves'],
+        'interview-trendy': ['Modern Bob', 'Clean Layered', 'Fresh Medium'],
+        'interview-classic': ['Classic Chignon', 'French Roll', 'Elegant Updo'],
+        'party-elegant': ['Glam Waves', 'Crystal Upstyle', 'Hollywood Curls'],
+        'party-cute': ['Sparkle Twin Tails', 'Glitter Bun', 'Festival Braids'],
+        'party-chic': ['Slicked High Pony', 'Wet Look', 'Edgy Undercut Style'],
+        'party-natural': ['Beach Waves', 'Bohemian Braids', 'Loose Curls'],
+        'party-trendy': ['Neon Highlights', 'Y2K Updo', 'Glossy Straight'],
+        'party-classic': ['Old Hollywood Waves', 'Vintage Updo', 'Retro Curls'],
+        'wedding-elegant': ['Bridal Updo', 'Romantic Side Bun', 'Pearl Hairpiece Style'],
+        'wedding-cute': ['Flower Crown Style', 'Soft Curl Down-do', 'Ribbon Half-Up'],
+        'wedding-chic': ['Sleek Chignon', 'Modern Low Bun', 'Minimal Upstyle'],
+        'wedding-natural': ['Garden Waves', 'Loose Braid Updo', 'Bohemian Down Style'],
+        'wedding-trendy': ['Glass Hair', 'Face Framing Updo', 'Modern Half-Up'],
+        'wedding-classic': ['Classic Chignon', 'Vintage Roll Updo', 'Elegant French Twist'],
+        'vacation-elegant': ['Beach Waves', 'Silk Scarf Wrap', 'Resort Upstyle'],
+        'vacation-cute': ['Pigtail Braids', 'Bucket Hat Wave', 'Sunshine Ponytail'],
+        'vacation-chic': ['Wet Look Style', 'Sleek Low Bun', 'Minimal Beach Style'],
+        'vacation-natural': ['Salt Spray Waves', 'Natural Curls', 'Air Dry Style'],
+        'vacation-trendy': ['Y2K Clip Style', 'Butterfly Clip Look', 'Layered Bandana'],
+        'vacation-classic': ['Grace Kelly Scarf Look', 'Classic Beach Waves', 'Timeless Ponytail'],
+      }
+    }
+
+    const key = `${occasion}-${vibe}`
+    const langKey = language === 'ko' ? 'ko' : 'en'
+    return recommendations[langKey]?.[key] || recommendations[langKey]?.['daily-natural'] || []
   }
 
   const isFormValid = profile.photo && profile.height && profile.weight && profile.gender
@@ -536,7 +762,7 @@ function App() {
           <h2 className="section-title">{t.pathTitle}</h2>
           <div className="section-divider"></div>
           <div className="path-grid">
-            <div className="path-card" onClick={() => setPage('input')}>
+            <div className="path-card" onClick={() => setPage('hair-selection')}>
               <div className="path-image path-image-1"></div>
               <div className="path-overlay"></div>
               <div className="path-content">
@@ -697,6 +923,189 @@ function App() {
           <button className="btn-dark" onClick={handleRestart}>
             {t.restart}
           </button>
+        </div>
+      </div>
+    )
+  }
+
+  // Hair Selection Page
+  if (page === 'hair-selection') {
+    const getOccasionLabel = (o: HairOccasion) => lang === 'ko' ? o.labelKo : o.labelEn
+    const getVibeLabel = (v: HairVibe) => lang === 'ko' ? v.labelKo : v.labelEn
+
+    return (
+      <div className="app-container">
+        <header className="app-header">
+          <div className="logo" onClick={handleRestart} style={{ cursor: 'pointer' }}>
+            <div className="logo-icon">
+              <svg viewBox="0 0 48 48" fill="currentColor">
+                <path d="M39.5563 34.1455V13.8546C39.5563 15.708 36.8773 17.3437 32.7927 18.3189C30.2914 18.916 27.263 19.2655 24 19.2655C20.737 19.2655 17.7086 18.916 15.2073 18.3189C11.1227 17.3437 8.44365 15.708 8.44365 13.8546V34.1455C8.44365 35.9988 11.1227 37.6346 15.2073 38.6098C17.7086 39.2069 20.737 39.5564 24 39.5564C27.1288 39.5564 30.2914 39.2069 32.7927 38.6098C36.8773 37.6346 39.5563 35.9988 39.5563 34.1455Z"/>
+              </svg>
+            </div>
+            <span className="logo-text">{t.title}</span>
+          </div>
+          <button className="back-btn" onClick={() => setPage('landing')}>
+            ← {t.backToHome}
+          </button>
+        </header>
+
+        <div className="hair-selection-content">
+          <div className="hair-hero">
+            <span className="input-tag">HAIR STYLING</span>
+            <h1 className="input-title">{t.hairSelectTitle}</h1>
+            <p className="input-desc">{t.hairSelectDesc}</p>
+          </div>
+
+          <div className="hair-selection-form">
+            <div className="selection-section">
+              <h3 className="selection-title">{t.selectOccasion}</h3>
+              <div className="option-grid">
+                {hairOccasions.map((occasion) => (
+                  <button
+                    key={occasion.id}
+                    className={`option-card ${selectedOccasion === occasion.id ? 'active' : ''}`}
+                    onClick={() => setSelectedOccasion(occasion.id)}
+                  >
+                    <span className="option-icon">{occasion.icon}</span>
+                    <span className="option-label">{getOccasionLabel(occasion)}</span>
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            <div className="selection-section">
+              <h3 className="selection-title">{t.selectVibe}</h3>
+              <div className="option-grid">
+                {hairVibes.map((vibe) => (
+                  <button
+                    key={vibe.id}
+                    className={`option-card ${selectedVibe === vibe.id ? 'active' : ''}`}
+                    onClick={() => setSelectedVibe(vibe.id)}
+                  >
+                    <span className="option-icon">{vibe.icon}</span>
+                    <span className="option-label">{getVibeLabel(vibe)}</span>
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            <div className="gender-selection">
+              <h3 className="selection-title">{t.gender}</h3>
+              <div className="gender-options">
+                <button
+                  type="button"
+                  className={`gender-btn ${profile.gender === 'male' ? 'active' : ''}`}
+                  onClick={() => setProfile(prev => ({ ...prev, gender: 'male' }))}
+                >
+                  {t.male}
+                </button>
+                <button
+                  type="button"
+                  className={`gender-btn ${profile.gender === 'female' ? 'active' : ''}`}
+                  onClick={() => setProfile(prev => ({ ...prev, gender: 'female' }))}
+                >
+                  {t.female}
+                </button>
+                <button
+                  type="button"
+                  className={`gender-btn ${profile.gender === 'other' ? 'active' : ''}`}
+                  onClick={() => setProfile(prev => ({ ...prev, gender: 'other' }))}
+                >
+                  {t.other}
+                </button>
+              </div>
+            </div>
+
+            <button
+              className="btn-gold submit-btn"
+              onClick={handleHairRecommendation}
+              disabled={!selectedOccasion || !selectedVibe}
+            >
+              {t.getRecommendation}
+            </button>
+          </div>
+        </div>
+      </div>
+    )
+  }
+
+  // Hair Result Page
+  if (page === 'hair-result') {
+    const selectedOccasionData = hairOccasions.find(o => o.id === selectedOccasion)
+    const selectedVibeData = hairVibes.find(v => v.id === selectedVibe)
+    const getOccasionLabel = (o: HairOccasion) => lang === 'ko' ? o.labelKo : o.labelEn
+    const getVibeLabel = (v: HairVibe) => lang === 'ko' ? v.labelKo : v.labelEn
+
+    return (
+      <div className="app-container result-container">
+        <header className="app-header">
+          <div className="logo" onClick={handleRestart} style={{ cursor: 'pointer' }}>
+            <div className="logo-icon">
+              <svg viewBox="0 0 48 48" fill="currentColor">
+                <path d="M39.5563 34.1455V13.8546C39.5563 15.708 36.8773 17.3437 32.7927 18.3189C30.2914 18.916 27.263 19.2655 24 19.2655C20.737 19.2655 17.7086 18.916 15.2073 18.3189C11.1227 17.3437 8.44365 15.708 8.44365 13.8546V34.1455C8.44365 35.9988 11.1227 37.6346 15.2073 38.6098C17.7086 39.2069 20.737 39.5564 24 39.5564C27.1288 39.5564 30.2914 39.2069 32.7927 38.6098C36.8773 37.6346 39.5563 35.9988 39.5563 34.1455Z"/>
+              </svg>
+            </div>
+            <span className="logo-text">{t.title}</span>
+          </div>
+          <h1 className="page-title">{t.hairResultTitle}</h1>
+          <div className="lang-selector">
+            {(Object.keys(languageNames) as Language[]).map((code) => (
+              <button
+                key={code}
+                className={`lang-btn-sm ${lang === code ? 'active' : ''}`}
+                onClick={() => setLang(code)}
+              >
+                {languageNames[code]}
+              </button>
+            ))}
+          </div>
+        </header>
+
+        <div className="hair-result-content">
+          <div className="selected-options-card">
+            <h3>{t.selectedOptions}</h3>
+            <div className="selected-tags">
+              {selectedOccasionData && (
+                <span className="selected-tag">
+                  {selectedOccasionData.icon} {getOccasionLabel(selectedOccasionData)}
+                </span>
+              )}
+              {selectedVibeData && (
+                <span className="selected-tag">
+                  {selectedVibeData.icon} {getVibeLabel(selectedVibeData)}
+                </span>
+              )}
+            </div>
+          </div>
+
+          <div className="hair-recommendations">
+            <h3>{t.recommendedStyles}</h3>
+            <div className="recommendation-grid">
+              {hairRecommendations.map((style, index) => (
+                <div key={index} className="recommendation-card">
+                  <div className="recommendation-number">{index + 1}</div>
+                  <div className="recommendation-content">
+                    <h4>{style}</h4>
+                    <p>{t.hairResultDesc}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <div className="result-actions">
+            <button className="btn-outline" onClick={() => {
+              setSelectedOccasion(null)
+              setSelectedVibe(null)
+              setHairRecommendations([])
+              setPage('hair-selection')
+            }}>
+              {t.tryAnother}
+            </button>
+            <button className="btn-dark" onClick={handleRestart}>
+              {t.backToHome}
+            </button>
+          </div>
         </div>
       </div>
     )
