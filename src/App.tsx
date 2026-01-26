@@ -681,7 +681,7 @@ function App() {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          successUrl: `${window.location.origin}/#result`
+          successUrl: `${window.location.origin}/#payment-success`
         })
       })
 
@@ -691,25 +691,36 @@ function App() {
         throw new Error(checkoutData.message || 'Failed to create checkout session')
       }
 
-      const checkout = await PolarEmbedCheckout.create(checkoutData.url, {
-        theme: 'dark',
-        onLoaded: () => {
-          console.log('Polar checkout loaded')
-        }
-      })
+      // Embed 시도, 실패시 새 창으로 열기
+      try {
+        const checkout = await PolarEmbedCheckout.create(checkoutData.url, {
+          theme: 'dark',
+          onLoaded: () => {
+            console.log('Polar checkout loaded')
+          }
+        })
 
-      // 결제 성공 이벤트
-      checkout.addEventListener('success', () => {
-        setIsPaid(true)
-        setIsProcessingPayment(false)
-        // 결제 완료 후 자동으로 분석 시작
-        performAnalysis()
-      })
+        // 결제 성공 이벤트
+        checkout.addEventListener('success', () => {
+          setIsPaid(true)
+          setIsProcessingPayment(false)
+          performAnalysis()
+        })
 
-      // 결제 창 닫힘 이벤트
-      checkout.addEventListener('close', () => {
+        // 결제 창 닫힘 이벤트
+        checkout.addEventListener('close', () => {
+          setIsProcessingPayment(false)
+        })
+      } catch (embedError) {
+        console.log('Embed failed, opening in new window:', embedError)
+        // Embed 실패시 새 창으로 열기
+        window.open(checkoutData.url, '_blank')
         setIsProcessingPayment(false)
-      })
+        // 결제 완료 확인을 위한 안내
+        setError(lang === 'ko'
+          ? '새 창에서 결제를 완료해주세요. 완료 후 이 페이지로 돌아와 주세요.'
+          : 'Please complete payment in the new window. Return here after completion.')
+      }
     } catch (error) {
       console.error('Payment error:', error)
       setIsProcessingPayment(false)
