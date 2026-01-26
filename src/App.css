@@ -1773,6 +1773,234 @@
   font-size: 1rem;
 }
 
+/* ===== PHOTO UPLOAD SECTION ===== */
+.photo-upload-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  padding: 2rem;
+  background: linear-gradient(135deg, rgba(206, 169, 59, 0.08) 0%, rgba(206, 169, 59, 0.02) 100%);
+  border: 1px solid rgba(206, 169, 59, 0.15);
+  border-radius: 20px;
+}
+
+.photo-upload-desc {
+  font-size: 0.875rem;
+  color: rgba(26, 26, 26, 0.6);
+  text-align: center;
+  margin: 0;
+  max-width: 400px;
+}
+
+.mini-photo-upload {
+  width: 120px;
+  height: 160px;
+  border: 2px dashed rgba(206, 169, 59, 0.4);
+  border-radius: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  overflow: hidden;
+  background: white;
+}
+
+.mini-photo-upload:hover {
+  border-color: var(--primary);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(206, 169, 59, 0.15);
+}
+
+.mini-photo-upload.has-photo {
+  border-style: solid;
+  border-color: var(--primary);
+}
+
+.mini-photo-placeholder {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  color: rgba(26, 26, 26, 0.4);
+  font-size: 0.75rem;
+  text-align: center;
+}
+
+.mini-photo-placeholder span:first-child {
+  font-size: 1.5rem;
+}
+
+.mini-photo-preview {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Generated Images Section */
+.generated-images-section {
+  margin-top: 2rem;
+  padding: 2rem;
+  background: white;
+  border: 1px solid rgba(206, 169, 59, 0.15);
+  border-radius: 20px;
+}
+
+.generated-images-section h3 {
+  font-family: var(--font-serif);
+  font-size: 1.25rem;
+  color: var(--charcoal);
+  margin: 0 0 1.5rem;
+  text-align: center;
+}
+
+.generated-images-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1.5rem;
+}
+
+.generated-image-card {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  text-align: center;
+}
+
+.generated-image-container {
+  aspect-ratio: 3/4;
+  border-radius: 16px;
+  overflow: hidden;
+  background: linear-gradient(135deg, rgba(206, 169, 59, 0.1) 0%, rgba(206, 169, 59, 0.05) 100%);
+}
+
+.generated-image-container img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.generated-image-label {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--charcoal);
+}
+
+/* ===== AI GENERATED SECTION ===== */
+.ai-generated-section {
+  margin-top: 2rem;
+  padding: 2rem;
+  background: linear-gradient(135deg, rgba(138, 100, 210, 0.08) 0%, rgba(206, 169, 59, 0.05) 100%);
+  border: 1px solid rgba(138, 100, 210, 0.2);
+  border-radius: 20px;
+}
+
+.ai-generated-section h3 {
+  font-family: var(--font-serif);
+  font-size: 1.25rem;
+  color: var(--charcoal);
+  margin: 0 0 1.5rem;
+  text-align: center;
+  background: linear-gradient(135deg, #8a64d2 0%, var(--primary) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.generating-indicator {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  padding: 2rem;
+}
+
+.generating-indicator p {
+  color: rgba(26, 26, 26, 0.6);
+  font-size: 0.9rem;
+}
+
+.generated-images-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 1.5rem;
+}
+
+.generated-image-card {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  text-align: center;
+}
+
+.generated-image {
+  width: 100%;
+  aspect-ratio: 3/4;
+  object-fit: cover;
+  border-radius: 16px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+}
+
+.generated-placeholder {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  aspect-ratio: 3/4;
+  background: linear-gradient(135deg, rgba(138, 100, 210, 0.1) 0%, rgba(206, 169, 59, 0.1) 100%);
+  border-radius: 16px;
+  border: 2px dashed rgba(138, 100, 210, 0.3);
+}
+
+.generated-placeholder span:first-child {
+  font-size: 2.5rem;
+}
+
+.generated-placeholder span:last-child {
+  font-size: 0.75rem;
+  color: rgba(26, 26, 26, 0.5);
+  padding: 0 1rem;
+}
+
+.generated-style-name {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--charcoal);
+  margin: 0;
+}
+
+.ai-coming-soon {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.5rem;
+  padding: 1rem;
+}
+
+.ai-coming-soon p {
+  font-size: 0.9rem;
+  color: rgba(26, 26, 26, 0.6);
+  text-align: center;
+  margin: 0;
+}
+
+.uploaded-photo-preview {
+  width: 120px;
+  height: 160px;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 8px 24px rgba(138, 100, 210, 0.2);
+  border: 2px solid rgba(138, 100, 210, 0.3);
+}
+
+.uploaded-photo-preview img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
 /* Dark mode support */
 @media (prefers-color-scheme: dark) {
   .landing-page,
@@ -2047,5 +2275,56 @@
 
   .step-card p {
     color: rgba(255, 255, 255, 0.6);
+  }
+
+  /* Photo Upload Section Dark Mode */
+  .photo-upload-section {
+    background: rgba(206, 169, 59, 0.05);
+    border-color: rgba(255, 255, 255, 0.1);
+  }
+
+  .photo-upload-desc {
+    color: rgba(255, 255, 255, 0.6);
+  }
+
+  .mini-photo-upload {
+    background: rgba(255, 255, 255, 0.05);
+    border-color: rgba(255, 255, 255, 0.2);
+  }
+
+  .mini-photo-placeholder {
+    color: rgba(255, 255, 255, 0.4);
+  }
+
+  .generated-images-section {
+    background: rgba(255, 255, 255, 0.05);
+    border-color: rgba(255, 255, 255, 0.1);
+  }
+
+  .generated-images-section h3 {
+    color: var(--white);
+  }
+
+  .generated-image-label {
+    color: var(--white);
+  }
+
+  /* AI Generated Section Dark Mode */
+  .ai-generated-section {
+    background: linear-gradient(135deg, rgba(138, 100, 210, 0.1) 0%, rgba(206, 169, 59, 0.05) 100%);
+    border-color: rgba(138, 100, 210, 0.3);
+  }
+
+  .generating-indicator p,
+  .ai-coming-soon p {
+    color: rgba(255, 255, 255, 0.6);
+  }
+
+  .generated-style-name {
+    color: var(--white);
+  }
+
+  .generated-placeholder span:last-child {
+    color: rgba(255, 255, 255, 0.5);
   }
 }

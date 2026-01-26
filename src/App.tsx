@@ -557,7 +557,15 @@ function App() {
   const [hairRecommendations, setHairRecommendations] = useState<string[]>([])
   const [selectedFashionOccasion, setSelectedFashionOccasion] = useState<string | null>(null)
   const [fashionRecommendations, setFashionRecommendations] = useState<{title: string, items: string[]}[]>([])
+  const [hairPhoto, setHairPhoto] = useState<string | null>(null)
+  const [fashionPhoto, setFashionPhoto] = useState<string | null>(null)
+  const [generatedHairImages, setGeneratedHairImages] = useState<{style: string, imageUrl: string | null}[]>([])
+  const [generatedFashionImages, setGeneratedFashionImages] = useState<{style: string, imageUrl: string | null}[]>([])
+  const [isGeneratingHair, setIsGeneratingHair] = useState(false)
+  const [isGeneratingFashion, setIsGeneratingFashion] = useState(false)
   const fileInputRef = useRef<HTMLInputElement>(null)
+  const hairPhotoRef = useRef<HTMLInputElement>(null)
+  const fashionPhotoRef = useRef<HTMLInputElement>(null)
   const t = translations[lang]
 
   // 뒤로가기 지원을 위한 페이지 변경 함수
@@ -720,41 +728,75 @@ function App() {
     setHairRecommendations([])
     setSelectedFashionOccasion(null)
     setFashionRecommendations([])
+    setHairPhoto(null)
+    setFashionPhoto(null)
+    setGeneratedHairImages([])
+    setGeneratedFashionImages([])
     setPage('landing')
+  }
+
+  // 헤어 사진 업로드 처리
+  const handleHairPhotoUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
+    if (file && file.type.startsWith('image/')) {
+      const reader = new FileReader()
+      reader.onloadend = () => {
+        setHairPhoto(reader.result as string)
+      }
+      reader.readAsDataURL(file)
+    }
+  }
+
+  // 패션 사진 업로드 처리
+  const handleFashionPhotoUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
+    if (file && file.type.startsWith('image/')) {
+      const reader = new FileReader()
+      reader.onloadend = () => {
+        setFashionPhoto(reader.result as string)
+      }
+      reader.readAsDataURL(file)
+    }
   }
 
   const handleHairRecommendation = async () => {
     if (!selectedOccasion || !selectedVibe) return
 
     setPage('loading')
+    setIsGeneratingHair(true)
 
-    try {
-      const response = await fetch('/api/hair-recommend', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          occasion: selectedOccasion,
-          vibe: selectedVibe,
-          gender: profile.gender,
-          language: lang
+    // 데모 추천 가져오기
+    const demoRecommendations = getHairDemoRecommendations(selectedOccasion, selectedVibe, lang)
+    setHairRecommendations(demoRecommendations)
+
+    // 사진이 있으면 AI 이미지 생성 시도
+    if (hairPhoto) {
+      try {
+        const response = await fetch('/api/generate-hair-styles', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            photo: hairPhoto,
+            occasion: selectedOccasion,
+            vibe: selectedVibe,
+            gender: profile.gender,
+            styles: demoRecommendations,
+            language: lang
+          })
         })
-      })
 
-      if (response.ok) {
-        const data = await response.json()
-        setHairRecommendations(data.recommendations || [])
-      } else {
-        // 데모 모드: API 없이도 추천 제공
-        const demoRecommendations = getHairDemoRecommendations(selectedOccasion, selectedVibe, lang)
-        setHairRecommendations(demoRecommendations)
+        if (response.ok) {
+          const data = await response.json()
+          setGeneratedHairImages(data.images || [])
+        }
+      } catch {
+        // AI 이미지 생성 실패 시 빈 배열
+        setGeneratedHairImages([])
       }
-      setPage('hair-result')
-    } catch {
-      // 데모 모드
-      const demoRecommendations = getHairDemoRecommendations(selectedOccasion, selectedVibe, lang)
-      setHairRecommendations(demoRecommendations)
-      setPage('hair-result')
     }
+
+    setIsGeneratingHair(false)
+    setPage('hair-result')
   }
 
   // 데모용 헤어스타일 추천
@@ -848,31 +890,38 @@ function App() {
     if (!selectedFashionOccasion) return
 
     setPage('loading')
+    setIsGeneratingFashion(true)
 
-    try {
-      const response = await fetch('/api/fashion-recommend', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          occasion: selectedFashionOccasion,
-          gender: profile.gender,
-          language: lang
+    // 데모 추천 가져오기
+    const demoRecommendations = getFashionDemoRecommendations(selectedFashionOccasion, profile.gender, lang)
+    setFashionRecommendations(demoRecommendations)
+
+    // 사진이 있으면 AI 이미지 생성 시도
+    if (fashionPhoto) {
+      try {
+        const response = await fetch('/api/generate-fashion-styles', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            photo: fashionPhoto,
+            occasion: selectedFashionOccasion,
+            gender: profile.gender,
+            styles: demoRecommendations.map(r => r.title),
+            language: lang
+          })
         })
-      })
 
-      if (response.ok) {
-        const data = await response.json()
-        setFashionRecommendations(data.recommendations || [])
-      } else {
-        const demoRecommendations = getFashionDemoRecommendations(selectedFashionOccasion, profile.gender, lang)
-        setFashionRecommendations(demoRecommendations)
+        if (response.ok) {
+          const data = await response.json()
+          setGeneratedFashionImages(data.images || [])
+        }
+      } catch {
+        setGeneratedFashionImages([])
       }
-      setPage('fashion-result')
-    } catch {
-      const demoRecommendations = getFashionDemoRecommendations(selectedFashionOccasion, profile.gender, lang)
-      setFashionRecommendations(demoRecommendations)
-      setPage('fashion-result')
     }
+
+    setIsGeneratingFashion(false)
+    setPage('fashion-result')
   }
 
   // 데모용 패션 추천
@@ -1445,6 +1494,37 @@ function App() {
               </div>
             </div>
 
+            <div className="photo-upload-section">
+              <h3 className="selection-title">
+                {lang === 'ko' ? '내 사진 업로드 (선택)' : 'Upload My Photo (Optional)'}
+              </h3>
+              <p className="photo-upload-desc">
+                {lang === 'ko'
+                  ? '얼굴 사진을 올리면 AI가 헤어스타일을 적용한 이미지를 생성합니다'
+                  : 'Upload your face photo and AI will generate images with hairstyles applied'}
+              </p>
+              <div
+                className={`mini-photo-upload ${hairPhoto ? 'has-photo' : ''}`}
+                onClick={() => hairPhotoRef.current?.click()}
+              >
+                {hairPhoto ? (
+                  <img src={hairPhoto} alt="My photo" className="mini-photo-preview" />
+                ) : (
+                  <div className="mini-photo-placeholder">
+                    <span>📷</span>
+                    <span>{lang === 'ko' ? '클릭하여 업로드' : 'Click to upload'}</span>
+                  </div>
+                )}
+              </div>
+              <input
+                ref={hairPhotoRef}
+                type="file"
+                accept="image/*"
+                onChange={handleHairPhotoUpload}
+                className="hidden-input"
+              />
+            </div>
+
             <button
               className="btn-gold submit-btn"
               onClick={handleHairRecommendation}
@@ -1521,6 +1601,41 @@ function App() {
               ))}
             </div>
           </div>
+
+          {hairPhoto && (
+            <div className="ai-generated-section">
+              <h3>{lang === 'ko' ? 'AI 스타일 합성' : 'AI Style Synthesis'}</h3>
+              {isGeneratingHair ? (
+                <div className="generating-indicator">
+                  <div className="loading-spinner"></div>
+                  <p>{lang === 'ko' ? 'AI가 스타일을 합성 중입니다...' : 'AI is synthesizing styles...'}</p>
+                </div>
+              ) : generatedHairImages.length > 0 ? (
+                <div className="generated-images-grid">
+                  {generatedHairImages.map((item, index) => (
+                    <div key={index} className="generated-image-card">
+                      {item.imageUrl ? (
+                        <img src={item.imageUrl} alt={item.style} className="generated-image" />
+                      ) : (
+                        <div className="generated-placeholder">
+                          <span>🎨</span>
+                          <span>{item.style}</span>
+                        </div>
+                      )}
+                      <p className="generated-style-name">{item.style}</p>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <div className="ai-coming-soon">
+                  <p>{lang === 'ko' ? '업로드한 사진에 AI 스타일 합성 기능이 곧 제공됩니다' : 'AI style synthesis for your uploaded photo coming soon'}</p>
+                  <div className="uploaded-photo-preview">
+                    <img src={hairPhoto} alt="Uploaded" />
+                  </div>
+                </div>
+              )}
+            </div>
+          )}
 
           <div className="result-actions">
             <button className="btn-outline" onClick={() => {
@@ -1611,6 +1726,37 @@ function App() {
               </div>
             </div>
 
+            <div className="photo-upload-section">
+              <h3 className="selection-title">
+                {lang === 'ko' ? '전신 사진 업로드 (선택)' : 'Upload Full Body Photo (Optional)'}
+              </h3>
+              <p className="photo-upload-desc">
+                {lang === 'ko'
+                  ? '전신 사진을 올리면 AI가 패션 스타일을 적용한 이미지를 생성합니다'
+                  : 'Upload your full body photo and AI will generate images with fashion styles applied'}
+              </p>
+              <div
+                className={`mini-photo-upload ${fashionPhoto ? 'has-photo' : ''}`}
+                onClick={() => fashionPhotoRef.current?.click()}
+              >
+                {fashionPhoto ? (
+                  <img src={fashionPhoto} alt="My photo" className="mini-photo-preview" />
+                ) : (
+                  <div className="mini-photo-placeholder">
+                    <span>📷</span>
+                    <span>{lang === 'ko' ? '클릭하여 업로드' : 'Click to upload'}</span>
+                  </div>
+                )}
+              </div>
+              <input
+                ref={fashionPhotoRef}
+                type="file"
+                accept="image/*"
+                onChange={handleFashionPhotoUpload}
+                className="hidden-input"
+              />
+            </div>
+
             <button
               className="btn-gold submit-btn"
               onClick={handleFashionRecommendation}
@@ -1684,6 +1830,41 @@ function App() {
               ))}
             </div>
           </div>
+
+          {fashionPhoto && (
+            <div className="ai-generated-section">
+              <h3>{lang === 'ko' ? 'AI 패션 합성' : 'AI Fashion Synthesis'}</h3>
+              {isGeneratingFashion ? (
+                <div className="generating-indicator">
+                  <div className="loading-spinner"></div>
+                  <p>{lang === 'ko' ? 'AI가 패션 스타일을 합성 중입니다...' : 'AI is synthesizing fashion styles...'}</p>
+                </div>
+              ) : generatedFashionImages.length > 0 ? (
+                <div className="generated-images-grid">
+                  {generatedFashionImages.map((item, index) => (
+                    <div key={index} className="generated-image-card">
+                      {item.imageUrl ? (
+                        <img src={item.imageUrl} alt={item.style} className="generated-image" />
+                      ) : (
+                        <div className="generated-placeholder">
+                          <span>👗</span>
+                          <span>{item.style}</span>
+                        </div>
+                      )}
+                      <p className="generated-style-name">{item.style}</p>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <div className="ai-coming-soon">
+                  <p>{lang === 'ko' ? '업로드한 사진에 AI 패션 합성 기능이 곧 제공됩니다' : 'AI fashion synthesis for your uploaded photo coming soon'}</p>
+                  <div className="uploaded-photo-preview">
+                    <img src={fashionPhoto} alt="Uploaded" />
+                  </div>
+                </div>
+              )}
+            </div>
+          )}
 
           <div className="result-actions">
             <button className="btn-outline" onClick={() => {
