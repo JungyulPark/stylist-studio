@@ -708,8 +708,15 @@ function App() {
   const handlePayment = async () => {
     setIsProcessingPayment(true)
     try {
-      // 결제 전 폼 데이터 저장 (결제 후 복원용)
-      localStorage.setItem('pendingAnalysis', JSON.stringify(profile))
+      // 결제 전 폼 데이터 저장 (사진 제외 - 용량 문제)
+      const dataToSave = {
+        height: profile.height,
+        weight: profile.weight,
+        gender: profile.gender,
+        // 사진은 용량이 커서 저장하지 않음
+        photo: null
+      }
+      localStorage.setItem('pendingAnalysis', JSON.stringify(dataToSave))
 
       // 백엔드 API로 체크아웃 URL 가져오기
       const checkoutResponse = await fetch('/api/create-checkout', {
