@@ -1,9 +1,9 @@
-import { useState, useRef } from 'react'
+import { useState, useRef, useEffect, useCallback } from 'react'
 import './App.css'
 
 type Language = 'ko' | 'en' | 'ja' | 'zh' | 'es'
 type Gender = 'male' | 'female' | 'other' | null
-type Page = 'landing' | 'input' | 'loading' | 'result' | 'hair-selection' | 'hair-result' | 'fashion-selection' | 'fashion-result'
+type Page = 'landing' | 'input' | 'loading' | 'result' | 'hair-selection' | 'hair-result' | 'fashion-selection' | 'fashion-result' | 'how-to-use'
 
 // 헤어스타일 상황 옵션
 interface HairOccasion {
@@ -122,6 +122,17 @@ const translations: Record<Language, {
   fashionResultTitle: string
   fashionResultDesc: string
   recommendedOutfits: string
+  howToUseTitle: string
+  howToUseDesc: string
+  step1Title: string
+  step1Desc: string
+  step2Title: string
+  step2Desc: string
+  step3Title: string
+  step3Desc: string
+  step4Title: string
+  step4Desc: string
+  getStarted: string
 }> = {
   ko: {
     title: 'AI STYLIST',
@@ -186,7 +197,18 @@ const translations: Record<Language, {
     getFashionRecommendation: '패션 추천받기',
     fashionResultTitle: '맞춤 패션 추천',
     fashionResultDesc: '선택하신 상황에 맞는 스타일링입니다',
-    recommendedOutfits: '추천 코디'
+    recommendedOutfits: '추천 코디',
+    howToUseTitle: '이용 가이드',
+    howToUseDesc: 'AI 스타일리스트와 함께 나만의 스타일을 찾아보세요',
+    step1Title: '모듈 선택',
+    step1Desc: '헤어 스타일링 또는 패션 큐레이션 중 원하는 서비스를 선택하세요',
+    step2Title: '상황 & 느낌 선택',
+    step2Desc: '데이트, 면접, 파티 등 상황과 원하는 분위기를 선택해주세요',
+    step3Title: 'AI 분석',
+    step3Desc: 'AI가 선택하신 조건에 맞는 최적의 스타일을 분석합니다',
+    step4Title: '맞춤 추천',
+    step4Desc: '개인화된 헤어스타일과 패션 코디를 확인하세요',
+    getStarted: '시작하기'
   },
   en: {
     title: 'AI STYLIST',
@@ -251,7 +273,18 @@ const translations: Record<Language, {
     getFashionRecommendation: 'Get Fashion Recommendations',
     fashionResultTitle: 'Personalized Fashion Recommendations',
     fashionResultDesc: 'Styling that matches your selected occasion',
-    recommendedOutfits: 'Recommended Outfits'
+    recommendedOutfits: 'Recommended Outfits',
+    howToUseTitle: 'How to Use',
+    howToUseDesc: 'Find your unique style with AI Stylist',
+    step1Title: 'Select Module',
+    step1Desc: 'Choose between Hair Styling or Fashion Curation',
+    step2Title: 'Select Occasion & Vibe',
+    step2Desc: 'Pick your occasion like date, interview, party and desired mood',
+    step3Title: 'AI Analysis',
+    step3Desc: 'AI analyzes the best styles based on your selections',
+    step4Title: 'Personalized Recommendations',
+    step4Desc: 'Get your customized hairstyles and fashion outfits',
+    getStarted: 'Get Started'
   },
   ja: {
     title: 'AI STYLIST',
@@ -316,7 +349,18 @@ const translations: Record<Language, {
     getFashionRecommendation: 'ファッションを提案する',
     fashionResultTitle: 'おすすめファッション',
     fashionResultDesc: '選択されたシーンに合うスタイリングです',
-    recommendedOutfits: 'おすすめコーデ'
+    recommendedOutfits: 'おすすめコーデ',
+    howToUseTitle: 'ご利用ガイド',
+    howToUseDesc: 'AIスタイリストと一緒にあなただけのスタイルを見つけましょう',
+    step1Title: 'モジュール選択',
+    step1Desc: 'ヘアスタイリングまたはファッションキュレーションを選択',
+    step2Title: 'シーン＆雰囲気選択',
+    step2Desc: 'デート、面接、パーティーなどのシーンと雰囲気を選択',
+    step3Title: 'AI分析',
+    step3Desc: 'AIが最適なスタイルを分析します',
+    step4Title: 'パーソナライズ提案',
+    step4Desc: 'カスタマイズされたヘアスタイルとファッションを確認',
+    getStarted: '始める'
   },
   zh: {
     title: 'AI STYLIST',
@@ -381,7 +425,18 @@ const translations: Record<Language, {
     getFashionRecommendation: '获取时尚推荐',
     fashionResultTitle: '个性化时尚推荐',
     fashionResultDesc: '符合您选择场合的搭配',
-    recommendedOutfits: '推荐搭配'
+    recommendedOutfits: '推荐搭配',
+    howToUseTitle: '使用指南',
+    howToUseDesc: '与AI造型师一起找到您的独特风格',
+    step1Title: '选择模块',
+    step1Desc: '选择发型设计或时尚策划',
+    step2Title: '选择场合和氛围',
+    step2Desc: '选择约会、面试、派对等场合和想要的氛围',
+    step3Title: 'AI分析',
+    step3Desc: 'AI根据您的选择分析最佳风格',
+    step4Title: '个性化推荐',
+    step4Desc: '查看定制的发型和时尚搭配',
+    getStarted: '开始'
   },
   es: {
     title: 'AI STYLIST',
@@ -446,7 +501,18 @@ const translations: Record<Language, {
     getFashionRecommendation: 'Obtener Recomendaciones',
     fashionResultTitle: 'Recomendaciones de Moda',
     fashionResultDesc: 'Estilismo que coincide con tu ocasión',
-    recommendedOutfits: 'Outfits Recomendados'
+    recommendedOutfits: 'Outfits Recomendados',
+    howToUseTitle: 'Guía de Uso',
+    howToUseDesc: 'Encuentra tu estilo único con AI Stylist',
+    step1Title: 'Seleccionar Módulo',
+    step1Desc: 'Elige entre Estilismo Capilar o Curación de Moda',
+    step2Title: 'Seleccionar Ocasión y Estilo',
+    step2Desc: 'Elige tu ocasión como cita, entrevista, fiesta y el ambiente deseado',
+    step3Title: 'Análisis AI',
+    step3Desc: 'La IA analiza los mejores estilos según tus selecciones',
+    step4Title: 'Recomendaciones Personalizadas',
+    step4Desc: 'Obtén tus peinados y outfits personalizados',
+    getStarted: 'Comenzar'
   }
 }
 
@@ -474,7 +540,35 @@ interface StyleImage {
 
 function App() {
   const [lang, setLang] = useState<Language>('ko')
-  const [page, setPage] = useState<Page>('landing')
+  const [page, setPageState] = useState<Page>('landing')
+
+  // 뒤로가기 지원을 위한 페이지 변경 함수
+  const setPage = useCallback((newPage: Page) => {
+    setPageState(newPage)
+    window.history.pushState({ page: newPage }, '', `#${newPage}`)
+  }, [])
+
+  // 브라우저 뒤로가기 이벤트 처리
+  useEffect(() => {
+    const handlePopState = (event: PopStateEvent) => {
+      if (event.state?.page) {
+        setPageState(event.state.page)
+      } else {
+        setPageState('landing')
+      }
+    }
+
+    window.addEventListener('popstate', handlePopState)
+
+    // 초기 상태 설정
+    const hash = window.location.hash.slice(1) as Page
+    if (hash && ['landing', 'input', 'hair-selection', 'hair-result', 'fashion-selection', 'fashion-result', 'how-to-use', 'result'].includes(hash)) {
+      setPageState(hash)
+    }
+    window.history.replaceState({ page: 'landing' }, '', '#landing')
+
+    return () => window.removeEventListener('popstate', handlePopState)
+  }, [])
   const [profile, setProfile] = useState<UserProfile>({
     photo: null,
     height: '',
@@ -954,6 +1048,71 @@ function App() {
 
   const isFormValid = profile.photo && profile.height && profile.weight && profile.gender
 
+  // How to Use Page
+  if (page === 'how-to-use') {
+    return (
+      <div className="app-container">
+        <header className="app-header">
+          <div className="logo" onClick={handleRestart} style={{ cursor: 'pointer' }}>
+            <div className="logo-icon">
+              <svg viewBox="0 0 48 48" fill="currentColor">
+                <path d="M39.5563 34.1455V13.8546C39.5563 15.708 36.8773 17.3437 32.7927 18.3189C30.2914 18.916 27.263 19.2655 24 19.2655C20.737 19.2655 17.7086 18.916 15.2073 18.3189C11.1227 17.3437 8.44365 15.708 8.44365 13.8546V34.1455C8.44365 35.9988 11.1227 37.6346 15.2073 38.6098C17.7086 39.2069 20.737 39.5564 24 39.5564C27.1288 39.5564 30.2914 39.2069 32.7927 38.6098C36.8773 37.6346 39.5563 35.9988 39.5563 34.1455Z"/>
+              </svg>
+            </div>
+            <span className="logo-text">{t.title}</span>
+          </div>
+          <button className="back-btn" onClick={() => setPage('landing')}>
+            ← {t.backToHome}
+          </button>
+        </header>
+
+        <div className="how-to-use-content">
+          <div className="how-to-use-hero">
+            <span className="input-tag">GUIDE</span>
+            <h1 className="input-title">{t.howToUseTitle}</h1>
+            <p className="input-desc">{t.howToUseDesc}</p>
+          </div>
+
+          <div className="steps-container">
+            <div className="step-card">
+              <div className="step-number">1</div>
+              <div className="step-icon">🎯</div>
+              <h3>{t.step1Title}</h3>
+              <p>{t.step1Desc}</p>
+            </div>
+
+            <div className="step-card">
+              <div className="step-number">2</div>
+              <div className="step-icon">✨</div>
+              <h3>{t.step2Title}</h3>
+              <p>{t.step2Desc}</p>
+            </div>
+
+            <div className="step-card">
+              <div className="step-number">3</div>
+              <div className="step-icon">🤖</div>
+              <h3>{t.step3Title}</h3>
+              <p>{t.step3Desc}</p>
+            </div>
+
+            <div className="step-card">
+              <div className="step-number">4</div>
+              <div className="step-icon">💎</div>
+              <h3>{t.step4Title}</h3>
+              <p>{t.step4Desc}</p>
+            </div>
+          </div>
+
+          <div className="how-to-use-actions">
+            <button className="btn-gold" onClick={() => setPage('landing')}>
+              {t.getStarted}
+            </button>
+          </div>
+        </div>
+      </div>
+    )
+  }
+
   // Landing Page
   if (page === 'landing') {
     return (
@@ -1013,7 +1172,7 @@ function App() {
               <button className="btn-dark" onClick={() => setPage('input')}>
                 {t.startBtn}
               </button>
-              <button className="btn-outline">
+              <button className="btn-outline" onClick={() => setPage('how-to-use')}>
                 {t.learnMore}
               </button>
             </div>

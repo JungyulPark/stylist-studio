@@ -1603,6 +1603,99 @@
   font-weight: bold;
 }
 
+/* ===== HOW TO USE PAGE ===== */
+.how-to-use-content {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 3rem 2rem;
+}
+
+.how-to-use-hero {
+  text-align: center;
+  margin-bottom: 3rem;
+}
+
+.steps-container {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.5rem;
+  margin-bottom: 3rem;
+}
+
+@media (min-width: 640px) {
+  .steps-container {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 900px) {
+  .steps-container {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+.step-card {
+  position: relative;
+  background: white;
+  border: 1px solid rgba(206, 169, 59, 0.15);
+  border-radius: 20px;
+  padding: 2rem 1.5rem;
+  text-align: center;
+  transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.step-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 16px 40px rgba(206, 169, 59, 0.15);
+}
+
+.step-number {
+  position: absolute;
+  top: -12px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 28px;
+  height: 28px;
+  background: var(--primary);
+  color: white;
+  font-weight: 700;
+  font-size: 0.875rem;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.step-icon {
+  font-size: 2.5rem;
+  margin-bottom: 1rem;
+}
+
+.step-card h3 {
+  font-family: var(--font-serif);
+  font-size: 1.125rem;
+  color: var(--charcoal);
+  margin: 0 0 0.75rem;
+}
+
+.step-card p {
+  font-size: 0.875rem;
+  color: rgba(26, 26, 26, 0.6);
+  line-height: 1.6;
+  margin: 0;
+}
+
+.how-to-use-actions {
+  display: flex;
+  justify-content: center;
+}
+
+.how-to-use-actions .btn-gold {
+  min-width: 200px;
+  padding: 1rem 2.5rem;
+  font-size: 1rem;
+}
+
 /* Dark mode support */
 @media (prefers-color-scheme: dark) {
   .landing-page,
@@ -1863,5 +1956,19 @@
 
   .fashion-items li {
     color: rgba(255, 255, 255, 0.7);
+  }
+
+  /* How to Use Dark Mode */
+  .step-card {
+    background: rgba(255, 255, 255, 0.05);
+    border-color: rgba(255, 255, 255, 0.1);
+  }
+
+  .step-card h3 {
+    color: var(--white);
+  }
+
+  .step-card p {
+    color: rgba(255, 255, 255, 0.6);
   }
 }
