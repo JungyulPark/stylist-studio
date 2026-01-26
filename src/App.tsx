@@ -617,6 +617,19 @@ function App() {
 
     window.addEventListener('popstate', handlePopState)
 
+    // 결제 성공 후 리다이렉트 처리
+    const urlParams = new URLSearchParams(window.location.search)
+    const customerSessionToken = urlParams.get('customer_session_token')
+
+    if (customerSessionToken) {
+      // 결제 성공 - 결제 완료 상태로 설정하고 입력 페이지로 이동
+      setIsPaid(true)
+      setPageState('input')
+      // URL에서 토큰 파라미터 제거
+      window.history.replaceState({ page: 'input' }, '', '#input')
+      return
+    }
+
     // 초기 상태 설정
     const hash = window.location.hash.slice(1) as Page
     if (hash && ['landing', 'input', 'hair-selection', 'hair-result', 'fashion-selection', 'fashion-result', 'how-to-use', 'result'].includes(hash)) {
