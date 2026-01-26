@@ -185,9 +185,17 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
 
     // API key 확인
     const apiKey = context.env.OPENAI_API_KEY
-    if (!apiKey) {
+    const keyLength = apiKey ? apiKey.length : 0
+    const keyPrefix = apiKey ? apiKey.substring(0, 10) : 'none'
+
+    if (!apiKey || keyLength < 20) {
       return new Response(
-        JSON.stringify({ error: 'OpenAI API key not configured', envKeys: Object.keys(context.env) }),
+        JSON.stringify({
+          error: 'OpenAI API key not configured',
+          keyLength,
+          keyPrefix,
+          envKeys: Object.keys(context.env)
+        }),
         { status: 500, headers: { 'Content-Type': 'application/json', ...corsHeaders } }
       )
     }
