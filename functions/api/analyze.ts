@@ -234,7 +234,7 @@ Provide a detailed, personalized style report based on the photo and body inform
       const errorData = await response.text()
       console.error('OpenAI API Error:', errorData)
       return new Response(
-        JSON.stringify({ error: 'Failed to analyze image' }),
+        JSON.stringify({ error: 'Failed to analyze image', details: errorData }),
         { status: 500, headers: { 'Content-Type': 'application/json', ...corsHeaders } }
       )
     }
