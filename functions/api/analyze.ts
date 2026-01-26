@@ -206,8 +206,8 @@ ${languagePrompts[language] || languagePrompts.en}
 
 Provide a detailed, personalized style report based on the photo and body information.`
 
-    // OpenAI API 호출 (gpt-5-mini)
-    const response = await fetch('https://api.openai.com/v1/responses', {
+    // OpenAI Chat Completions API 호출
+    const response = await fetch('https://api.openai.com/v1/chat/completions', {
       method: 'POST',
       headers: {
         'Authorization': `Bearer ${context.env.OPENAI_API_KEY}`,
@@ -215,77 +215,35 @@ Provide a detailed, personalized style report based on the photo and body inform
       },
       body: JSON.stringify({
         model: MODEL,
-        input: [
-          {
-            role: 'developer',
-            content: [{ type: 'input_text', text: systemPrompt }]
-          },
+        messages: [
+          { role: 'system', content: systemPrompt },
           {
             role: 'user',
             content: [
-              { type: 'input_text', text: userMessage },
-              { type: 'input_image', image_url: photo, detail: 'high' }
+              { type: 'text', text: userMessage },
+              { type: 'image_url', image_url: { url: photo, detail: 'high' } }
             ]
           }
         ],
-        text: { format: { type: 'text' } },
-        store: false
+        max_tokens: 4096,
+        temperature: 0.7
       })
     })
 
     if (!response.ok) {
-      // Fallback to Chat Completions API
-      const fallbackResponse = await fetch('https://api.openai.com/v1/chat/completions', {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${context.env.OPENAI_API_KEY}`,
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          model: MODEL,
-          messages: [
-            { role: 'system', content: systemPrompt },
-            {
-              role: 'user',
-              content: [
-                { type: 'text', text: userMessage },
-                { type: 'image_url', image_url: { url: photo, detail: 'high' } }
-              ]
-            }
-          ],
-          max_tokens: 4096,
-          temperature: 0.7
-        })
-      })
-
-      if (!fallbackResponse.ok) {
-        return new Response(
-          JSON.stringify({ error: 'Failed to analyze image' }),
-          { status: 500, headers: { 'Content-Type': 'application/json', ...corsHeaders } }
-        )
-      }
-
-      const fallbackData = await fallbackResponse.json() as {
-        choices: Array<{ message: { content: string } }>
-      }
+      const errorData = await response.text()
+      console.error('OpenAI API Error:', errorData)
       return new Response(
-        JSON.stringify({ report: fallbackData.choices[0]?.message?.content || 'No analysis available' }),
-        { status: 200, headers: { 'Content-Type': 'application/json', ...corsHeaders } }
+        JSON.stringify({ error: 'Failed to analyze image' }),
+        { status: 500, headers: { 'Content-Type': 'application/json', ...corsHeaders } }
       )
     }
 
     const data = await response.json() as {
-      output: Array<{ content: Array<{ type: string; text?: string }> }>
+      choices: Array<{ message: { content: string } }>
     }
 
-    let report = 'No analysis available'
-    if (data.output?.length > 0) {
-      const lastOutput = data.output[data.output.length - 1]
-      const textContent = lastOutput.content?.find(c => c.type === 'output_text')
-      if (textContent?.text) {
-        report = textContent.text
-      }
-    }
+    const report = data.choices[0]?.message?.content || 'No analysis available'
 
     return new Response(
       JSON.stringify({ report }),
