@@ -595,9 +595,12 @@ function App() {
   const fashionPhotoRef = useRef<HTMLInputElement>(null)
   const t = translations[lang]
 
-  // Polar Checkout Product ID
-  const POLAR_PRODUCT_ID = '6f37a6b9-b3bf-413e-9221-182c61711ecc'
-  const POLAR_CHECKOUT_URL = `https://polar.sh/api/checkout/custom?products=${POLAR_PRODUCT_ID}`
+  // Polar Checkout Configuration
+  // Product ID: 6f37a6b9-b3bf-413e-9221-182c61711ecc
+  // Polar 대시보드에서 체크아웃 링크를 생성한 후 아래 URL을 업데이트하세요
+  // Create a checkout link in Polar dashboard and update the URL below
+  // URL format: https://buy.polar.sh/polar_cl_xxx
+  const POLAR_CHECKOUT_URL = 'https://buy.polar.sh/6f37a6b9-b3bf-413e-9221-182c61711ecc'
 
   // 뒤로가기 지원을 위한 페이지 변경 함수
   const setPage = useCallback((newPage: Page) => {
@@ -676,7 +679,29 @@ function App() {
   const handlePayment = async () => {
     setIsProcessingPayment(true)
     try {
-      const checkout = await PolarEmbedCheckout.create(POLAR_CHECKOUT_URL, {
+      // 백엔드 API로 체크아웃 URL 가져오기
+      let checkoutUrl = POLAR_CHECKOUT_URL
+
+      try {
+        const checkoutResponse = await fetch('/api/create-checkout', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            successUrl: `${window.location.origin}/#result`
+          })
+        })
+
+        if (checkoutResponse.ok) {
+          const checkoutData = await checkoutResponse.json()
+          if (checkoutData.url) {
+            checkoutUrl = checkoutData.url
+          }
+        }
+      } catch (apiError) {
+        console.log('Using fallback checkout URL')
+      }
+
+      const checkout = await PolarEmbedCheckout.create(checkoutUrl, {
         theme: 'dark',
         onLoaded: () => {
           console.log('Polar checkout loaded')
