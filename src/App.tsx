@@ -620,12 +620,32 @@ function App() {
     // 결제 성공 후 리다이렉트 처리
     const urlParams = new URLSearchParams(window.location.search)
     const customerSessionToken = urlParams.get('customer_session_token')
+    const paymentSuccess = urlParams.get('payment')
 
-    if (customerSessionToken) {
-      // 결제 성공 - 결제 완료 상태로 설정하고 입력 페이지로 이동
+    if (customerSessionToken || paymentSuccess === 'success') {
+      // 결제 성공 - 저장된 폼 데이터 복원
+      const savedData = localStorage.getItem('pendingAnalysis')
+      if (savedData) {
+        try {
+          const parsedData = JSON.parse(savedData)
+          setProfile(parsedData)
+          setIsPaid(true)
+          localStorage.removeItem('pendingAnalysis')
+          // URL 정리 후 바로 분석 시작
+          window.history.replaceState({ page: 'loading' }, '', '#loading')
+          setPageState('loading')
+          // 약간의 딜레이 후 분석 시작 (상태 업데이트 대기)
+          setTimeout(() => {
+            startAnalysisAfterPayment(parsedData)
+          }, 100)
+          return
+        } catch (e) {
+          console.error('Failed to parse saved data:', e)
+        }
+      }
+      // 저장된 데이터 없으면 입력 페이지로
       setIsPaid(true)
       setPageState('input')
-      // URL에서 토큰 파라미터 제거
       window.history.replaceState({ page: 'input' }, '', '#input')
       return
     }
@@ -689,12 +709,15 @@ function App() {
   const handlePayment = async () => {
     setIsProcessingPayment(true)
     try {
+      // 결제 전 폼 데이터 저장 (결제 후 복원용)
+      localStorage.setItem('pendingAnalysis', JSON.stringify(profile))
+
       // 백엔드 API로 체크아웃 URL 가져오기
       const checkoutResponse = await fetch('/api/create-checkout', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          successUrl: `${window.location.origin}/#payment-success`
+          successUrl: `${window.location.origin}/?payment=success`
         })
       })
 
@@ -738,6 +761,57 @@ function App() {
       console.error('Payment error:', error)
       setIsProcessingPayment(false)
       setError(lang === 'ko' ? '결제 설정 오류. 잠시 후 다시 시도해주세요.' : 'Payment configuration error. Please try again later.')
+    }
+  }
+
+  // 결제 후 분석 수행 (프로필 데이터를 직접 받음)
+  const startAnalysisAfterPayment = async (profileData: typeof profile) => {
+    setError('')
+    setStyleImages([])
+
+    try {
+      const [analyzeResponse, stylesResponse] = await Promise.all([
+        fetch('/api/analyze', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            photo: profileData.photo,
+            height: profileData.height,
+            weight: profileData.weight,
+            gender: profileData.gender,
+            language: lang
+          })
+        }),
+        fetch('/api/generate-styles', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            height: profileData.height,
+            weight: profileData.weight,
+            gender: profileData.gender,
+            language: lang
+          })
+        })
+      ])
+
+      const [analyzeData, stylesData] = await Promise.all([
+        analyzeResponse.json(),
+        stylesResponse.json()
+      ])
+
+      if (analyzeData.report) {
+        setReport(analyzeData.report)
+      }
+
+      if (stylesData.styles) {
+        setStyleImages(stylesData.styles)
+      }
+
+      setPage('result')
+    } catch (err) {
+      console.error('Analysis error:', err)
+      setError(lang === 'ko' ? '분석 중 오류가 발생했습니다' : 'An error occurred during analysis')
+      setPage('input')
     }
   }
 
