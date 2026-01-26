@@ -14,7 +14,7 @@ interface RequestBody {
 const ENABLE_API = true
 
 // 사용할 모델 설정
-const MODEL = 'gpt-4o-mini'
+const MODEL = 'gpt-5.2'
 
 const languagePrompts: Record<string, string> = {
   ko: '한국어로 답변해주세요.',
@@ -242,7 +242,7 @@ Provide a detailed, personalized style report based on the photo and body inform
             ]
           }
         ],
-        max_tokens: 4096,
+        max_completion_tokens: 4096,
         temperature: 0.7
       })
     })

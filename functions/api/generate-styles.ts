@@ -125,26 +125,22 @@ function buildPrompt(scenario: StyleScenario, gender: string, height: string, we
 
 async function generateImageWithGemini(prompt: string, apiKey: string): Promise<string | null> {
   try {
-    // Using Gemini 3 Pro Image Preview (Nano Banana Pro)
+    // Using Imagen 3 (Nano Banana Pro)
     const response = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/gemini-3-pro-image-preview:generateContent?key=${apiKey}`,
+      `https://generativelanguage.googleapis.com/v1beta/models/imagen-3.0-generate-002:predict?key=${apiKey}`,
       {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          contents: [
-            {
-              role: 'user',
-              parts: [{ text: prompt }]
-            }
+          instances: [
+            { prompt: prompt }
           ],
-          generationConfig: {
-            responseModalities: ['IMAGE', 'TEXT'],
-            imageConfig: {
-              image_size: '1K'
-            }
+          parameters: {
+            sampleCount: 1,
+            aspectRatio: '3:4',
+            personGeneration: 'allow_adult'
           }
         })
       }
@@ -152,31 +148,66 @@ async function generateImageWithGemini(prompt: string, apiKey: string): Promise<
 
     if (!response.ok) {
       const errorText = await response.text()
-      console.error('Gemini API error:', response.status, errorText)
+      console.error('Imagen 3 API error:', response.status, errorText)
+
+      // Fallback to Gemini 2.0 Flash native image generation
+      const fallbackResponse = await fetch(
+        `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-exp:generateContent?key=${apiKey}`,
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            contents: [
+              {
+                role: 'user',
+                parts: [{ text: `Generate an image: ${prompt}` }]
+              }
+            ],
+            generationConfig: {
+              responseModalities: ['IMAGE', 'TEXT']
+            }
+          })
+        }
+      )
+
+      if (!fallbackResponse.ok) {
+        console.error('Fallback also failed')
+        return null
+      }
+
+      const fallbackData = await fallbackResponse.json() as {
+        candidates?: Array<{
+          content?: {
+            parts?: Array<{
+              inlineData?: { mimeType: string; data: string }
+            }>
+          }
+        }>
+      }
+
+      if (fallbackData.candidates?.[0]?.content?.parts) {
+        for (const part of fallbackData.candidates[0].content.parts) {
+          if (part.inlineData?.data) {
+            return `data:${part.inlineData.mimeType};base64,${part.inlineData.data}`
+          }
+        }
+      }
       return null
     }
 
     const data = await response.json() as {
-      candidates?: Array<{
-        content?: {
-          parts?: Array<{
-            text?: string
-            inlineData?: {
-              mimeType: string
-              data: string
-            }
-          }>
-        }
+      predictions?: Array<{
+        bytesBase64Encoded: string
+        mimeType: string
       }>
     }
 
-    // Extract image from response
-    if (data.candidates && data.candidates[0]?.content?.parts) {
-      for (const part of data.candidates[0].content.parts) {
-        if (part.inlineData?.data) {
-          return `data:${part.inlineData.mimeType};base64,${part.inlineData.data}`
-        }
-      }
+    // Extract image from Imagen 3 response
+    if (data.predictions && data.predictions[0]?.bytesBase64Encoded) {
+      const mimeType = data.predictions[0].mimeType || 'image/png'
+      return `data:${mimeType};base64,${data.predictions[0].bytesBase64Encoded}`
     }
 
     return null

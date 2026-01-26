@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect, useCallback } from 'react'
+import { PolarEmbedCheckout } from '@polar-sh/checkout/embed'
 import './App.css'
 
 type Language = 'ko' | 'en' | 'ja' | 'zh' | 'es'
@@ -133,6 +134,10 @@ const translations: Record<Language, {
   step4Title: string
   step4Desc: string
   getStarted: string
+  purchaseRequired: string
+  purchaseBtn: string
+  processingPayment: string
+  price: string
 }> = {
   ko: {
     title: 'AI STYLIST',
@@ -208,7 +213,11 @@ const translations: Record<Language, {
     step3Desc: 'AI가 선택하신 조건에 맞는 최적의 스타일을 분석합니다',
     step4Title: '맞춤 추천',
     step4Desc: '개인화된 헤어스타일과 패션 코디를 확인하세요',
-    getStarted: '시작하기'
+    getStarted: '시작하기',
+    purchaseRequired: '프리미엄 AI 분석 서비스',
+    purchaseBtn: '결제하고 분석 시작',
+    processingPayment: '결제 처리 중...',
+    price: '$9.99/월'
   },
   en: {
     title: 'AI STYLIST',
@@ -284,7 +293,11 @@ const translations: Record<Language, {
     step3Desc: 'AI analyzes the best styles based on your selections',
     step4Title: 'Personalized Recommendations',
     step4Desc: 'Get your customized hairstyles and fashion outfits',
-    getStarted: 'Get Started'
+    getStarted: 'Get Started',
+    purchaseRequired: 'Premium AI Analysis Service',
+    purchaseBtn: 'Purchase & Start Analysis',
+    processingPayment: 'Processing payment...',
+    price: '$9.99/mo'
   },
   ja: {
     title: 'AI STYLIST',
@@ -360,7 +373,11 @@ const translations: Record<Language, {
     step3Desc: 'AIが最適なスタイルを分析します',
     step4Title: 'パーソナライズ提案',
     step4Desc: 'カスタマイズされたヘアスタイルとファッションを確認',
-    getStarted: '始める'
+    getStarted: '始める',
+    purchaseRequired: 'プレミアムAI分析サービス',
+    purchaseBtn: '購入して分析開始',
+    processingPayment: '支払い処理中...',
+    price: '$9.99/月'
   },
   zh: {
     title: 'AI STYLIST',
@@ -436,7 +453,11 @@ const translations: Record<Language, {
     step3Desc: 'AI根据您的选择分析最佳风格',
     step4Title: '个性化推荐',
     step4Desc: '查看定制的发型和时尚搭配',
-    getStarted: '开始'
+    getStarted: '开始',
+    purchaseRequired: '高级AI分析服务',
+    purchaseBtn: '购买并开始分析',
+    processingPayment: '支付处理中...',
+    price: '$9.99/月'
   },
   es: {
     title: 'AI STYLIST',
@@ -512,7 +533,11 @@ const translations: Record<Language, {
     step3Desc: 'La IA analiza los mejores estilos según tus selecciones',
     step4Title: 'Recomendaciones Personalizadas',
     step4Desc: 'Obtén tus peinados y outfits personalizados',
-    getStarted: 'Comenzar'
+    getStarted: 'Comenzar',
+    purchaseRequired: 'Servicio de Análisis AI Premium',
+    purchaseBtn: 'Comprar e Iniciar Análisis',
+    processingPayment: 'Procesando pago...',
+    price: '$9.99/mes'
   }
 }
 
@@ -563,10 +588,16 @@ function App() {
   const [generatedFashionImages, setGeneratedFashionImages] = useState<{style: string, imageUrl: string | null}[]>([])
   const [isGeneratingHair, setIsGeneratingHair] = useState(false)
   const [isGeneratingFashion, setIsGeneratingFashion] = useState(false)
+  const [isPaid, setIsPaid] = useState(false)
+  const [isProcessingPayment, setIsProcessingPayment] = useState(false)
   const fileInputRef = useRef<HTMLInputElement>(null)
   const hairPhotoRef = useRef<HTMLInputElement>(null)
   const fashionPhotoRef = useRef<HTMLInputElement>(null)
   const t = translations[lang]
+
+  // Polar Checkout Product ID
+  const POLAR_PRODUCT_ID = '6f37a6b9-b3bf-413e-9221-182c61711ecc'
+  const POLAR_CHECKOUT_URL = `https://polar.sh/api/checkout/custom?products=${POLAR_PRODUCT_ID}`
 
   // 뒤로가기 지원을 위한 페이지 변경 함수
   const setPage = useCallback((newPage: Page) => {
@@ -641,8 +672,38 @@ function App() {
     }
   }
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
+  // Polar 결제 처리
+  const handlePayment = async () => {
+    setIsProcessingPayment(true)
+    try {
+      const checkout = await PolarEmbedCheckout.create(POLAR_CHECKOUT_URL, {
+        theme: 'dark',
+        onLoaded: () => {
+          console.log('Polar checkout loaded')
+        }
+      })
+
+      // 결제 성공 이벤트
+      checkout.addEventListener('success', () => {
+        setIsPaid(true)
+        setIsProcessingPayment(false)
+        // 결제 완료 후 자동으로 분석 시작
+        performAnalysis()
+      })
+
+      // 결제 창 닫힘 이벤트
+      checkout.addEventListener('close', () => {
+        setIsProcessingPayment(false)
+      })
+    } catch (error) {
+      console.error('Payment error:', error)
+      setIsProcessingPayment(false)
+      setError('Payment failed. Please try again.')
+    }
+  }
+
+  // 실제 분석 수행 함수
+  const performAnalysis = async () => {
     setPage('loading')
     setError('')
     setStyleImages([])
@@ -689,6 +750,18 @@ function App() {
       console.error('Error:', err)
       setError(t.error)
       setPage('input')
+    }
+  }
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault()
+
+    // 결제가 완료된 경우 바로 분석 시작
+    if (isPaid) {
+      performAnalysis()
+    } else {
+      // 결제가 안된 경우 결제 창 열기
+      handlePayment()
     }
   }
 
@@ -1995,12 +2068,35 @@ function App() {
                 />
               </div>
 
+              {/* 결제 안내 */}
+              {!isPaid && (
+                <div className="payment-info" style={{
+                  marginTop: '1.5rem',
+                  padding: '1rem',
+                  background: 'rgba(212, 175, 55, 0.1)',
+                  borderRadius: '12px',
+                  border: '1px solid rgba(212, 175, 55, 0.3)',
+                  textAlign: 'center'
+                }}>
+                  <p style={{ margin: '0 0 0.5rem 0', color: '#d4af37', fontWeight: '600' }}>
+                    {t.purchaseRequired}
+                  </p>
+                  <p style={{ margin: 0, fontSize: '0.9rem', opacity: 0.8 }}>
+                    {t.price}
+                  </p>
+                </div>
+              )}
+
               <button
                 type="submit"
                 className="btn-gold submit-btn"
-                disabled={!isFormValid}
+                disabled={!isFormValid || isProcessingPayment}
               >
-                {t.startAnalysis}
+                {isProcessingPayment
+                  ? t.processingPayment
+                  : isPaid
+                    ? t.startAnalysis
+                    : t.purchaseBtn}
               </button>
             </div>
           </div>
