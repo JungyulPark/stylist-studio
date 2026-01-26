@@ -169,9 +169,9 @@
   position: absolute;
   inset: 0;
   background: linear-gradient(135deg, #2a2520 0%, #1a1815 100%);
-  background-image: url('https://images.unsplash.com/photo-1529139574466-a303027c1d8b?w=1920&q=100&fit=crop');
+  background-image: url('https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=1920&q=100&fit=crop');
   background-size: cover;
-  background-position: center;
+  background-position: center top;
   transition: transform 0.7s;
 }
 
