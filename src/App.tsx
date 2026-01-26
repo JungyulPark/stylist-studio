@@ -567,43 +567,6 @@ function App() {
           </div>
         </section>
 
-        {/* Algorithm Section */}
-        <section className="algorithm-section" id="algorithm">
-          <div className="algorithm-bg"></div>
-          <div className="algorithm-container">
-            <div className="algorithm-left">
-              <span className="algorithm-tag">{t.algorithmTag}</span>
-              <h2 className="algorithm-title">{t.algorithmTitle}</h2>
-              <p className="algorithm-desc">{t.algorithmDesc}</p>
-              <button className="btn-gold" onClick={() => setPage('input')}>
-                {t.startBtn}
-              </button>
-            </div>
-            <div className="algorithm-grid">
-              <div className="feature-card">
-                <div className="feature-icon">👤</div>
-                <h4>{t.feature1Title}</h4>
-                <p>{t.feature1Desc}</p>
-              </div>
-              <div className="feature-card">
-                <div className="feature-icon">🎨</div>
-                <h4>{t.feature2Title}</h4>
-                <p>{t.feature2Desc}</p>
-              </div>
-              <div className="feature-card">
-                <div className="feature-icon">✨</div>
-                <h4>{t.feature3Title}</h4>
-                <p>{t.feature3Desc}</p>
-              </div>
-              <div className="feature-card">
-                <div className="feature-icon">💎</div>
-                <h4>{t.feature4Title}</h4>
-                <p>{t.feature4Desc}</p>
-              </div>
-            </div>
-          </div>
-        </section>
-
         {/* Footer */}
         <footer className="landing-footer">
           <div className="footer-content">
