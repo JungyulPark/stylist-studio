@@ -139,6 +139,15 @@ const translations: Record<Language, {
   price: string
   discountPrice: string
   discountBadge: string
+  hairstyleTransform: string
+  hairstyleTransformDesc: string
+  fashionTransform: string
+  fashionTransformDesc: string
+  generateHairstyles: string
+  generateFashion: string
+  generatingHairstyles: string
+  generatingFashion: string
+  photoRequired: string
 }> = {
   ko: {
     title: 'AI STYLIST',
@@ -220,7 +229,16 @@ const translations: Record<Language, {
     processingPayment: '결제 처리 중...',
     price: '$6.99',
     discountPrice: '$3.49',
-    discountBadge: '재방문 50% 할인!'
+    discountBadge: '재방문 50% 할인!',
+    hairstyleTransform: '💇 AI 헤어스타일 변환',
+    hairstyleTransformDesc: '내 얼굴에 다양한 헤어스타일 적용',
+    fashionTransform: '👔 AI 패션 변환',
+    fashionTransformDesc: '내 모습에 다양한 패션 스타일 적용',
+    generateHairstyles: '헤어스타일 생성하기',
+    generateFashion: '패션 스타일 생성하기',
+    generatingHairstyles: '헤어스타일 생성 중...',
+    generatingFashion: '패션 스타일 생성 중...',
+    photoRequired: '사진을 업로드해주세요'
   },
   en: {
     title: 'AI STYLIST',
@@ -302,7 +320,16 @@ const translations: Record<Language, {
     processingPayment: 'Processing payment...',
     price: '$6.99',
     discountPrice: '$3.49',
-    discountBadge: '50% Welcome Back!'
+    discountBadge: '50% Welcome Back!',
+    hairstyleTransform: '💇 AI Hairstyle Transform',
+    hairstyleTransformDesc: 'Try different hairstyles on your photo',
+    fashionTransform: '👔 AI Fashion Transform',
+    fashionTransformDesc: 'Try different fashion styles on your photo',
+    generateHairstyles: 'Generate Hairstyles',
+    generateFashion: 'Generate Fashion Styles',
+    generatingHairstyles: 'Generating hairstyles...',
+    generatingFashion: 'Generating fashion styles...',
+    photoRequired: 'Please upload a photo'
   },
   ja: {
     title: 'AI STYLIST',
@@ -384,7 +411,16 @@ const translations: Record<Language, {
     processingPayment: '支払い処理中...',
     price: '$6.99',
     discountPrice: '$3.49',
-    discountBadge: 'リピーター50%割引!'
+    discountBadge: 'リピーター50%割引!',
+    hairstyleTransform: '💇 AIヘアスタイル変換',
+    hairstyleTransformDesc: '写真に様々なヘアスタイルを適用',
+    fashionTransform: '👔 AIファッション変換',
+    fashionTransformDesc: '写真に様々なファッションスタイルを適用',
+    generateHairstyles: 'ヘアスタイルを生成',
+    generateFashion: 'ファッションスタイルを生成',
+    generatingHairstyles: 'ヘアスタイル生成中...',
+    generatingFashion: 'ファッションスタイル生成中...',
+    photoRequired: '写真をアップロードしてください'
   },
   zh: {
     title: 'AI STYLIST',
@@ -466,7 +502,16 @@ const translations: Record<Language, {
     processingPayment: '支付处理中...',
     price: '$6.99',
     discountPrice: '$3.49',
-    discountBadge: '回头客50%折扣!'
+    discountBadge: '回头客50%折扣!',
+    hairstyleTransform: '💇 AI发型变换',
+    hairstyleTransformDesc: '在您的照片上尝试不同发型',
+    fashionTransform: '👔 AI时尚变换',
+    fashionTransformDesc: '在您的照片上尝试不同时尚风格',
+    generateHairstyles: '生成发型',
+    generateFashion: '生成时尚风格',
+    generatingHairstyles: '正在生成发型...',
+    generatingFashion: '正在生成时尚风格...',
+    photoRequired: '请上传照片'
   },
   es: {
     title: 'AI STYLIST',
@@ -548,7 +593,16 @@ const translations: Record<Language, {
     processingPayment: 'Procesando pago...',
     price: '$6.99',
     discountPrice: '$3.49',
-    discountBadge: '¡50% Bienvenido de vuelta!'
+    discountBadge: '¡50% Bienvenido de vuelta!',
+    hairstyleTransform: '💇 Transformación de Peinado AI',
+    hairstyleTransformDesc: 'Prueba diferentes peinados en tu foto',
+    fashionTransform: '👔 Transformación de Moda AI',
+    fashionTransformDesc: 'Prueba diferentes estilos de moda en tu foto',
+    generateHairstyles: 'Generar Peinados',
+    generateFashion: 'Generar Estilos de Moda',
+    generatingHairstyles: 'Generando peinados...',
+    generatingFashion: 'Generando estilos de moda...',
+    photoRequired: 'Por favor sube una foto'
   }
 }
 
@@ -599,6 +653,10 @@ function App() {
   const [generatedFashionImages, setGeneratedFashionImages] = useState<{style: string, imageUrl: string | null}[]>([])
   const [isGeneratingHair, setIsGeneratingHair] = useState(false)
   const [isGeneratingFashion, setIsGeneratingFashion] = useState(false)
+  const [transformedHairstyles, setTransformedHairstyles] = useState<{id: string, label: string, imageUrl: string | null}[]>([])
+  const [transformedFashion, setTransformedFashion] = useState<{id: string, label: string, imageUrl: string | null}[]>([])
+  const [isTransformingHair, setIsTransformingHair] = useState(false)
+  const [isTransformingFashion, setIsTransformingFashion] = useState(false)
   const [isPaid, setIsPaid] = useState(false)
   const [isProcessingPayment, setIsProcessingPayment] = useState(false)
   const [isRepeatCustomer, setIsRepeatCustomer] = useState(false)
@@ -911,6 +969,64 @@ function App() {
     }
   }
 
+  // 헤어스타일 변환 (3x3 그리드)
+  const transformHairstyles = async () => {
+    if (!profile.photo) {
+      setError(lang === 'ko' ? '사진이 필요합니다' : 'Photo is required')
+      return
+    }
+    setIsTransformingHair(true)
+    try {
+      const response = await fetch('/api/transform-batch', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          photo: profile.photo,
+          type: 'hairstyle',
+          gender: profile.gender,
+          language: lang
+        })
+      })
+      if (response.ok) {
+        const data = await response.json()
+        setTransformedHairstyles(data.results || [])
+      }
+    } catch (err) {
+      console.error('Error transforming hairstyles:', err)
+    } finally {
+      setIsTransformingHair(false)
+    }
+  }
+
+  // 패션 변환 (3x3 그리드)
+  const transformFashion = async () => {
+    if (!profile.photo) {
+      setError(lang === 'ko' ? '사진이 필요합니다' : 'Photo is required')
+      return
+    }
+    setIsTransformingFashion(true)
+    try {
+      const response = await fetch('/api/transform-batch', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          photo: profile.photo,
+          type: 'fashion',
+          gender: profile.gender,
+          language: lang
+        })
+      })
+      if (response.ok) {
+        const data = await response.json()
+        setTransformedFashion(data.results || [])
+      }
+    } catch (err) {
+      console.error('Error transforming fashion:', err)
+    } finally {
+      setIsTransformingFashion(false)
+    }
+  }
+
   const handleRestart = () => {
     setProfile({ photo: null, height: '', weight: '', gender: null })
     setReport('')
@@ -926,6 +1042,8 @@ function App() {
     setFashionPhoto(null)
     setGeneratedHairImages([])
     setGeneratedFashionImages([])
+    setTransformedHairstyles([])
+    setTransformedFashion([])
     setPage('landing')
   }
 
@@ -1590,6 +1708,82 @@ function App() {
             </button>
           )}
         </div>
+
+        {/* Hairstyle Transform Section */}
+        {profile.photo && (
+          <div className="transform-section">
+            <div className="transform-header">
+              <h2>{t.hairstyleTransform}</h2>
+              <p>{t.hairstyleTransformDesc}</p>
+            </div>
+
+            {isTransformingHair ? (
+              <div className="style-loading">
+                <div className="spinner small"></div>
+                <span>{t.generatingHairstyles}</span>
+              </div>
+            ) : transformedHairstyles.length > 0 ? (
+              <div className="transform-grid">
+                {transformedHairstyles.map((style) => (
+                  <div key={style.id} className="transform-card">
+                    <div className="transform-image-container">
+                      {style.imageUrl ? (
+                        <img src={style.imageUrl} alt={style.label} className="transform-image" />
+                      ) : (
+                        <div className="transform-placeholder">
+                          <span className="transform-icon">💇</span>
+                        </div>
+                      )}
+                    </div>
+                    <span className="transform-label">{style.label}</span>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <button className="btn-gold" onClick={transformHairstyles}>
+                {t.generateHairstyles}
+              </button>
+            )}
+          </div>
+        )}
+
+        {/* Fashion Transform Section */}
+        {profile.photo && (
+          <div className="transform-section">
+            <div className="transform-header">
+              <h2>{t.fashionTransform}</h2>
+              <p>{t.fashionTransformDesc}</p>
+            </div>
+
+            {isTransformingFashion ? (
+              <div className="style-loading">
+                <div className="spinner small"></div>
+                <span>{t.generatingFashion}</span>
+              </div>
+            ) : transformedFashion.length > 0 ? (
+              <div className="transform-grid">
+                {transformedFashion.map((style) => (
+                  <div key={style.id} className="transform-card">
+                    <div className="transform-image-container">
+                      {style.imageUrl ? (
+                        <img src={style.imageUrl} alt={style.label} className="transform-image" />
+                      ) : (
+                        <div className="transform-placeholder">
+                          <span className="transform-icon">👔</span>
+                        </div>
+                      )}
+                    </div>
+                    <span className="transform-label">{style.label}</span>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <button className="btn-gold" onClick={transformFashion}>
+                {t.generateFashion}
+              </button>
+            )}
+          </div>
+        )}
 
         <div className="result-actions">
           <button className="btn-dark" onClick={handleRestart}>

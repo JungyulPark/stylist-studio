@@ -1349,6 +1349,91 @@
   min-width: 200px;
 }
 
+/* ===== TRANSFORM SECTIONS ===== */
+.transform-section {
+  padding: 0 2.5rem;
+  margin-top: 3rem;
+  padding-top: 3rem;
+  border-top: 1px solid rgba(206, 169, 59, 0.15);
+}
+
+.transform-header {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.transform-header h2 {
+  font-family: var(--font-serif);
+  font-size: 1.75rem;
+  font-style: italic;
+  color: var(--charcoal);
+  margin: 0 0 0.75rem;
+  letter-spacing: 0.02em;
+}
+
+.transform-header p {
+  color: rgba(26, 26, 26, 0.5);
+  font-size: 0.9rem;
+  letter-spacing: 0.03em;
+  margin: 0;
+}
+
+.transform-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+}
+
+.transform-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.transform-image-container {
+  width: 100%;
+  aspect-ratio: 3/4;
+  border-radius: 12px;
+  overflow: hidden;
+  background: rgba(206, 169, 59, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.transform-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s;
+}
+
+.transform-card:hover .transform-image {
+  transform: scale(1.05);
+}
+
+.transform-placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, rgba(206, 169, 59, 0.1) 0%, rgba(206, 169, 59, 0.2) 100%);
+}
+
+.transform-icon {
+  font-size: 2rem;
+  opacity: 0.5;
+}
+
+.transform-label {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: rgba(26, 26, 26, 0.7);
+  text-align: center;
+}
+
 /* ===== HAIR STYLING PAGES ===== */
 .hair-selection-content {
   max-width: 700px;
@@ -2177,6 +2262,23 @@
   }
 
   .style-label {
+    color: rgba(255, 255, 255, 0.7);
+  }
+
+  /* Transform Sections Dark Mode */
+  .transform-section {
+    border-top-color: rgba(255, 255, 255, 0.05);
+  }
+
+  .transform-header h2 {
+    color: var(--white);
+  }
+
+  .transform-header p {
+    color: rgba(255, 255, 255, 0.6);
+  }
+
+  .transform-label {
     color: rgba(255, 255, 255, 0.7);
   }
 
