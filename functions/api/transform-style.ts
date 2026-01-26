@@ -71,16 +71,30 @@ async function transformWithGemini(
     const base64Data = base64Match[2]
 
     const editPrompt = type === 'hairstyle'
-      ? `Edit this photo: Change ONLY the hairstyle to ${stylePrompt}.
-         KEEP the exact same face, skin, expression, and background.
-         The result should look like a natural photo of the same person with a new hairstyle.`
-      : `Edit this photo: Change the person's outfit to ${stylePrompt}.
-         KEEP the exact same face, hairstyle, skin tone, and expression.
-         The result should look like a natural photo of the same person wearing new clothes.`
+      ? `EDIT this photo - ONLY change the HAIRSTYLE to: ${stylePrompt}
 
-    // Gemini 3.0 Pro Image for high quality image editing
-    const response = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/gemini-3-pro-image-preview:generateContent?key=${apiKey}`,
+CRITICAL - DO NOT CHANGE:
+- Face shape, eyes, nose, mouth, ears - MUST stay IDENTICAL
+- Skin tone and texture - MUST stay IDENTICAL
+- Body shape and proportions - MUST stay IDENTICAL
+- Expression and pose - MUST stay IDENTICAL
+- Background and lighting - MUST stay IDENTICAL
+
+ONLY modify the hair. Generate the edited photo.`
+      : `EDIT this photo - ONLY change the OUTFIT to: ${stylePrompt}
+
+CRITICAL - DO NOT CHANGE:
+- Face shape, eyes, nose, mouth, ears - MUST stay IDENTICAL
+- Hairstyle and hair color - MUST stay IDENTICAL
+- Skin tone - MUST stay IDENTICAL
+- Body proportions - MUST stay IDENTICAL
+- Expression and pose - MUST stay IDENTICAL
+
+ONLY change the clothes/outfit. Generate the edited photo.`
+
+    // Use Gemini 3 Flash for image editing
+    let response = await fetch(
+      `https://generativelanguage.googleapis.com/v1beta/models/gemini-3-flash:generateContent?key=${apiKey}`,
       {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -98,6 +112,29 @@ async function transformWithGemini(
         })
       }
     )
+
+    // If Gemini 2.0 fails, try Gemini 3 Pro Image
+    if (!response.ok) {
+      response = await fetch(
+        `https://generativelanguage.googleapis.com/v1beta/models/gemini-3-pro-image-preview:generateContent?key=${apiKey}`,
+        {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            contents: [{
+              role: 'user',
+              parts: [
+                { inlineData: { mimeType, data: base64Data } },
+                { text: editPrompt }
+              ]
+            }],
+            generationConfig: {
+              responseModalities: ['IMAGE', 'TEXT']
+            }
+          })
+        }
+      )
+    }
 
     if (!response.ok) {
       console.error('Gemini error:', response.status)

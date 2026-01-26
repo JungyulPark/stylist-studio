@@ -83,12 +83,26 @@ async function transformImage(
     const base64Data = base64Match[2]
 
     const editPrompt = type === 'hairstyle'
-      ? `Transform this person's hairstyle to: ${style.prompt}. Keep the EXACT same face, eyes, skin tone, expression. Only change the hair. Make it look natural and realistic. High quality photo result.`
-      : `Change this person's outfit to: ${style.prompt}. Keep the EXACT same face, hairstyle, expression. Only change the clothes. Natural, realistic result. High quality photo.`
+      ? `EDIT this photo - ONLY change the HAIRSTYLE to: ${style.prompt}
+
+CRITICAL - DO NOT CHANGE:
+- Face, eyes, nose, mouth - MUST stay IDENTICAL
+- Skin tone and body shape - MUST stay IDENTICAL
+- Expression and pose - MUST stay IDENTICAL
+
+ONLY modify the hair. Generate the edited photo.`
+      : `EDIT this photo - ONLY change the OUTFIT to: ${style.prompt}
+
+CRITICAL - DO NOT CHANGE:
+- Face and hairstyle - MUST stay IDENTICAL
+- Skin tone and body shape - MUST stay IDENTICAL
+- Expression and pose - MUST stay IDENTICAL
+
+ONLY change the clothes. Generate the edited photo.`
 
     // Gemini 3.0 Pro Image for high quality image editing
     const response = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/gemini-3-pro-image-preview:generateContent?key=${apiKey}`,
+      `https://generativelanguage.googleapis.com/v1beta/models/gemini-3-flash:generateContent?key=${apiKey}`,
       {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
