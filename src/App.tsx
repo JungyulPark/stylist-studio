@@ -137,6 +137,8 @@ const translations: Record<Language, {
   purchaseBtn: string
   processingPayment: string
   price: string
+  discountPrice: string
+  discountBadge: string
 }> = {
   ko: {
     title: 'AI STYLIST',
@@ -216,7 +218,9 @@ const translations: Record<Language, {
     purchaseRequired: '프리미엄 AI 분석 서비스',
     purchaseBtn: '결제하고 분석 시작',
     processingPayment: '결제 처리 중...',
-    price: '$9.99/월'
+    price: '$6.99',
+    discountPrice: '$3.49',
+    discountBadge: '재방문 50% 할인!'
   },
   en: {
     title: 'AI STYLIST',
@@ -296,7 +300,9 @@ const translations: Record<Language, {
     purchaseRequired: 'Premium AI Analysis Service',
     purchaseBtn: 'Purchase & Start Analysis',
     processingPayment: 'Processing payment...',
-    price: '$9.99/mo'
+    price: '$6.99',
+    discountPrice: '$3.49',
+    discountBadge: '50% Welcome Back!'
   },
   ja: {
     title: 'AI STYLIST',
@@ -376,7 +382,9 @@ const translations: Record<Language, {
     purchaseRequired: 'プレミアムAI分析サービス',
     purchaseBtn: '購入して分析開始',
     processingPayment: '支払い処理中...',
-    price: '$9.99/月'
+    price: '$6.99',
+    discountPrice: '$3.49',
+    discountBadge: 'リピーター50%割引!'
   },
   zh: {
     title: 'AI STYLIST',
@@ -456,7 +464,9 @@ const translations: Record<Language, {
     purchaseRequired: '高级AI分析服务',
     purchaseBtn: '购买并开始分析',
     processingPayment: '支付处理中...',
-    price: '$9.99/月'
+    price: '$6.99',
+    discountPrice: '$3.49',
+    discountBadge: '回头客50%折扣!'
   },
   es: {
     title: 'AI STYLIST',
@@ -536,7 +546,9 @@ const translations: Record<Language, {
     purchaseRequired: 'Servicio de Análisis AI Premium',
     purchaseBtn: 'Comprar e Iniciar Análisis',
     processingPayment: 'Procesando pago...',
-    price: '$9.99/mes'
+    price: '$6.99',
+    discountPrice: '$3.49',
+    discountBadge: '¡50% Bienvenido de vuelta!'
   }
 }
 
@@ -589,6 +601,7 @@ function App() {
   const [isGeneratingFashion, setIsGeneratingFashion] = useState(false)
   const [isPaid, setIsPaid] = useState(false)
   const [isProcessingPayment, setIsProcessingPayment] = useState(false)
+  const [isRepeatCustomer, setIsRepeatCustomer] = useState(false)
   const fileInputRef = useRef<HTMLInputElement>(null)
   const hairPhotoRef = useRef<HTMLInputElement>(null)
   const fashionPhotoRef = useRef<HTMLInputElement>(null)
@@ -606,6 +619,10 @@ function App() {
 
   // 브라우저 뒤로가기 이벤트 처리
   useEffect(() => {
+    // 재분석 고객 여부 확인 (50% 할인 적용)
+    const paidBefore = localStorage.getItem('paidCustomer') === 'true'
+    setIsRepeatCustomer(paidBefore)
+
     const handlePopState = (event: PopStateEvent) => {
       if (event.state?.page) {
         setPageState(event.state.page)
@@ -2182,9 +2199,30 @@ function App() {
                   <p style={{ margin: '0 0 0.5rem 0', color: '#d4af37', fontWeight: '600' }}>
                     {t.purchaseRequired}
                   </p>
-                  <p style={{ margin: 0, fontSize: '0.9rem', opacity: 0.8 }}>
-                    {t.price}
-                  </p>
+                  {isRepeatCustomer ? (
+                    <div style={{ margin: 0 }}>
+                      <span style={{
+                        background: 'linear-gradient(135deg, #d4af37, #f4e4bc)',
+                        color: '#1a1a2e',
+                        padding: '0.2rem 0.6rem',
+                        borderRadius: '4px',
+                        fontSize: '0.75rem',
+                        fontWeight: '700',
+                        marginBottom: '0.3rem',
+                        display: 'inline-block'
+                      }}>
+                        {t.discountBadge}
+                      </span>
+                      <p style={{ margin: '0.3rem 0 0 0', fontSize: '0.9rem' }}>
+                        <span style={{ textDecoration: 'line-through', opacity: 0.5, marginRight: '0.5rem' }}>{t.price}</span>
+                        <span style={{ color: '#d4af37', fontWeight: '700' }}>{t.discountPrice}</span>
+                      </p>
+                    </div>
+                  ) : (
+                    <p style={{ margin: 0, fontSize: '0.9rem', opacity: 0.8 }}>
+                      {t.price}
+                    </p>
+                  )}
                 </div>
               )}
 
