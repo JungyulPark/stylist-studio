@@ -539,7 +539,7 @@ interface StyleImage {
 }
 
 function App() {
-  const [lang, setLang] = useState<Language>('ko')
+  const [lang, setLang] = useState<Language>('en')
   const [page, setPageState] = useState<Page>('landing')
   const [profile, setProfile] = useState<UserProfile>({
     photo: null,
