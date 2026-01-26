@@ -541,6 +541,24 @@ interface StyleImage {
 function App() {
   const [lang, setLang] = useState<Language>('ko')
   const [page, setPageState] = useState<Page>('landing')
+  const [profile, setProfile] = useState<UserProfile>({
+    photo: null,
+    height: '',
+    weight: '',
+    gender: null
+  })
+  const [report, setReport] = useState<string>('')
+  const [error, setError] = useState<string>('')
+  const [isDragging, setIsDragging] = useState(false)
+  const [styleImages, setStyleImages] = useState<StyleImage[]>([])
+  const [isGeneratingStyles, setIsGeneratingStyles] = useState(false)
+  const [selectedOccasion, setSelectedOccasion] = useState<string | null>(null)
+  const [selectedVibe, setSelectedVibe] = useState<string | null>(null)
+  const [hairRecommendations, setHairRecommendations] = useState<string[]>([])
+  const [selectedFashionOccasion, setSelectedFashionOccasion] = useState<string | null>(null)
+  const [fashionRecommendations, setFashionRecommendations] = useState<{title: string, items: string[]}[]>([])
+  const fileInputRef = useRef<HTMLInputElement>(null)
+  const t = translations[lang]
 
   // 뒤로가기 지원을 위한 페이지 변경 함수
   const setPage = useCallback((newPage: Page) => {
@@ -564,29 +582,12 @@ function App() {
     const hash = window.location.hash.slice(1) as Page
     if (hash && ['landing', 'input', 'hair-selection', 'hair-result', 'fashion-selection', 'fashion-result', 'how-to-use', 'result'].includes(hash)) {
       setPageState(hash)
+    } else {
+      window.history.replaceState({ page: 'landing' }, '', '#landing')
     }
-    window.history.replaceState({ page: 'landing' }, '', '#landing')
 
     return () => window.removeEventListener('popstate', handlePopState)
   }, [])
-  const [profile, setProfile] = useState<UserProfile>({
-    photo: null,
-    height: '',
-    weight: '',
-    gender: null
-  })
-  const [report, setReport] = useState<string>('')
-  const [error, setError] = useState<string>('')
-  const [isDragging, setIsDragging] = useState(false)
-  const [styleImages, setStyleImages] = useState<StyleImage[]>([])
-  const [isGeneratingStyles, setIsGeneratingStyles] = useState(false)
-  const [selectedOccasion, setSelectedOccasion] = useState<string | null>(null)
-  const [selectedVibe, setSelectedVibe] = useState<string | null>(null)
-  const [hairRecommendations, setHairRecommendations] = useState<string[]>([])
-  const [selectedFashionOccasion, setSelectedFashionOccasion] = useState<string | null>(null)
-  const [fashionRecommendations, setFashionRecommendations] = useState<{title: string, items: string[]}[]>([])
-  const fileInputRef = useRef<HTMLInputElement>(null)
-  const t = translations[lang]
 
   const processFile = (file: File) => {
     if (file && file.type.startsWith('image/')) {
