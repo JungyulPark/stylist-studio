@@ -183,6 +183,15 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
       )
     }
 
+    // API key 확인
+    const apiKey = context.env.OPENAI_API_KEY
+    if (!apiKey) {
+      return new Response(
+        JSON.stringify({ error: 'OpenAI API key not configured', envKeys: Object.keys(context.env) }),
+        { status: 500, headers: { 'Content-Type': 'application/json', ...corsHeaders } }
+      )
+    }
+
     // API 비활성화 시 Mock 응답 반환
     if (!ENABLE_API) {
       const mockReport = mockResponses[language] || mockResponses.en
@@ -210,7 +219,7 @@ Provide a detailed, personalized style report based on the photo and body inform
     const response = await fetch('https://api.openai.com/v1/chat/completions', {
       method: 'POST',
       headers: {
-        'Authorization': `Bearer ${context.env.OPENAI_API_KEY}`,
+        'Authorization': `Bearer ${apiKey}`,
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
