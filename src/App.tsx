@@ -731,7 +731,10 @@ function App() {
     } catch (error) {
       console.error('Payment error:', error)
       setIsProcessingPayment(false)
-      setError(lang === 'ko' ? '결제 설정 오류. 잠시 후 다시 시도해주세요.' : 'Payment configuration error. Please try again later.')
+      const errorMessage = error instanceof Error ? error.message : 'Unknown error'
+      setError(lang === 'ko'
+        ? `결제 오류: ${errorMessage}`
+        : `Payment error: ${errorMessage}`)
     }
   }
 
