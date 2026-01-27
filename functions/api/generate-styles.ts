@@ -77,19 +77,31 @@ const styleScenarios: StyleScenario[] = [
   }
 ]
 
-// Analyze photo to get physical description
-async function analyzePhotoForStyling(photo: string, apiKey: string): Promise<string> {
+// Edit user's photo with a specific outfit style using Gemini image editing
+async function editPhotoWithStyle(
+  photo: string,
+  scenario: StyleScenario,
+  apiKey: string
+): Promise<string | null> {
   try {
-    // Extract base64 data
     const base64Match = photo.match(/^data:image\/(\w+);base64,(.+)$/)
-    if (!base64Match) {
-      return ''
-    }
+    if (!base64Match) return null
 
     const mimeType = `image/${base64Match[1]}`
     const base64Data = base64Match[2]
 
-    const response = await fetch(
+    const editPrompt = `EDIT this photo - ONLY change the OUTFIT to: ${scenario.prompt}
+
+CRITICAL - DO NOT CHANGE:
+- Face shape, eyes, nose, mouth, ears - MUST stay IDENTICAL
+- Hairstyle and hair color - MUST stay IDENTICAL
+- Skin tone - MUST stay IDENTICAL
+- Body proportions - MUST stay IDENTICAL
+- Expression and pose - MUST stay IDENTICAL
+
+ONLY change the clothes/outfit. Generate the edited photo.`
+
+    let response = await fetch(
       `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-image:generateContent?key=${apiKey}`,
       {
         method: 'POST',
@@ -98,50 +110,62 @@ async function analyzePhotoForStyling(photo: string, apiKey: string): Promise<st
           contents: [{
             role: 'user',
             parts: [
-              {
-                inlineData: {
-                  mimeType,
-                  data: base64Data
-                }
-              },
-              {
-                text: `Analyze this person's appearance for fashion styling. Provide a brief description in this exact format:
-
-ETHNICITY: [Asian/Caucasian/Black/Hispanic/Mixed/etc]
-SKIN_TONE: [fair/medium/tan/dark]
-HAIR_COLOR: [black/brown/blonde/red/gray]
-HAIR_STYLE: [short/medium/long] [straight/wavy/curly]
-FACE_SHAPE: [oval/round/square/heart/oblong]
-AGE_RANGE: [20s/30s/40s/50s]
-BUILD: [slim/athletic/average/muscular/heavy]
-
-Keep each value to 1-2 words only. Be accurate and concise.`
-              }
+              { inlineData: { mimeType, data: base64Data } },
+              { text: editPrompt }
             ]
           }],
           generationConfig: {
-            temperature: 0.1,
-            maxOutputTokens: 200
+            responseModalities: ['IMAGE', 'TEXT']
           }
         })
       }
     )
 
     if (!response.ok) {
-      console.error('Photo analysis failed:', response.status)
-      return ''
+      response = await fetch(
+        `https://generativelanguage.googleapis.com/v1beta/models/gemini-3-pro-image-preview:generateContent?key=${apiKey}`,
+        {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            contents: [{
+              role: 'user',
+              parts: [
+                { inlineData: { mimeType, data: base64Data } },
+                { text: editPrompt }
+              ]
+            }],
+            generationConfig: {
+              responseModalities: ['IMAGE', 'TEXT']
+            }
+          })
+        }
+      )
+    }
+
+    if (!response.ok) {
+      console.error(`Photo edit failed for ${scenario.id}:`, response.status)
+      return null
     }
 
     const data = await response.json() as {
       candidates?: Array<{
-        content?: { parts?: Array<{ text?: string }> }
+        content?: {
+          parts?: Array<{ inlineData?: { mimeType: string; data: string } }>
+        }
       }>
     }
 
-    return data.candidates?.[0]?.content?.parts?.[0]?.text || ''
+    for (const part of data.candidates?.[0]?.content?.parts || []) {
+      if (part.inlineData?.data) {
+        return `data:${part.inlineData.mimeType};base64,${part.inlineData.data}`
+      }
+    }
+
+    return null
   } catch (error) {
-    console.error('Error analyzing photo:', error)
-    return ''
+    console.error(`Error editing photo for ${scenario.id}:`, error)
+    return null
   }
 }
 
@@ -288,17 +312,23 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
       )
     }
 
-    // Analyze photo if provided
-    let photoDescription = ''
-    if (photo && photo.length > 0) {
-      photoDescription = await analyzePhotoForStyling(photo, apiKey)
-    }
+    const hasPhoto = photo && photo.length > 100 // base64 photo will be much longer
 
-    // Generate images with personalized prompts
+    // Generate images - use photo editing if photo available, otherwise text-to-image
     const results = await Promise.all(
       styleScenarios.map(async (scenario) => {
-        const prompt = buildPrompt(scenario, gender, height, weight, photoDescription)
-        const imageUrl = await generateImageWithGemini(prompt, apiKey)
+        let imageUrl: string | null = null
+
+        if (hasPhoto) {
+          // Edit the user's actual photo - preserves their face/body
+          imageUrl = await editPhotoWithStyle(photo, scenario, apiKey)
+        }
+
+        // Fallback to text-to-image generation if no photo or photo editing failed
+        if (!imageUrl) {
+          const prompt = buildPrompt(scenario, gender, height, weight, '')
+          imageUrl = await generateImageWithGemini(prompt, apiKey)
+        }
 
         const labelKey = `label${language === 'ko' ? 'Ko' : language === 'ja' ? 'Ja' : language === 'zh' ? 'Zh' : language === 'es' ? 'Es' : 'En'}` as keyof StyleScenario
 

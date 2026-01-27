@@ -628,6 +628,31 @@ interface StyleImage {
   isDemo: boolean
 }
 
+function renderMarkdownToHtml(markdown: string): string {
+  return markdown
+    .split('\n')
+    .map(line => {
+      // Headers
+      if (line.startsWith('## ')) return `<h2>${line.slice(3)}</h2>`
+      if (line.startsWith('### ')) return `<h3>${line.slice(4)}</h3>`
+      // Horizontal rule
+      if (line.trim() === '---') return '<hr />'
+      // Numbered list
+      if (/^\d+\.\s/.test(line)) return `<li class="numbered">${line.replace(/^\d+\.\s/, '')}</li>`
+      // Unordered list
+      if (line.startsWith('- ')) return `<li>${line.slice(2)}</li>`
+      // Empty line
+      if (line.trim() === '') return ''
+      // Normal paragraph
+      return `<p>${line}</p>`
+    })
+    .join('\n')
+    // Bold
+    .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+    // Italic
+    .replace(/\*(.+?)\*/g, '<em>$1</em>')
+}
+
 function App() {
   const [lang, setLang] = useState<Language>('en')
   const [page, setPageState] = useState<Page>('landing')
@@ -1662,11 +1687,7 @@ function App() {
             </div>
           </div>
 
-          <div className="report-content">
-            {report.split('\n').map((line, index) => (
-              <p key={index}>{line}</p>
-            ))}
-          </div>
+          <div className="report-content" dangerouslySetInnerHTML={{ __html: renderMarkdownToHtml(report) }} />
         </div>
 
         <div className="style-gallery-section">

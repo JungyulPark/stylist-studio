@@ -140,6 +140,102 @@ function buildStylePrompt(scenario, gender, height, weight) {
   return `Fashion photography of a ${genderDesc} with ${bodyDesc} physique, ${scenario.prompt}, high quality, professional lighting, magazine editorial style, 4k, detailed clothing texture`
 }
 
+async function generateStyledImage(photo, type, styleName) {
+  if (!GEMINI_API_KEY) {
+    return null
+  }
+
+  try {
+    const base64Match = photo.match(/^data:image\/(\w+);base64,(.+)$/)
+    if (!base64Match) return null
+
+    const mimeType = `image/${base64Match[1]}`
+    const base64Data = base64Match[2]
+
+    const editPrompt = type === 'hairstyle'
+      ? `EDIT this photo - ONLY change the HAIRSTYLE to: ${styleName}
+
+CRITICAL - DO NOT CHANGE:
+- Face shape, eyes, nose, mouth, ears - MUST stay IDENTICAL
+- Skin tone and texture - MUST stay IDENTICAL
+- Body shape and proportions - MUST stay IDENTICAL
+- Expression and pose - MUST stay IDENTICAL
+- Background and lighting - MUST stay IDENTICAL
+
+ONLY modify the hair to match the style "${styleName}". Generate the edited photo.`
+      : `EDIT this photo - ONLY change the OUTFIT to match the style: ${styleName}
+
+CRITICAL - DO NOT CHANGE:
+- Face shape, eyes, nose, mouth, ears - MUST stay IDENTICAL
+- Hairstyle and hair color - MUST stay IDENTICAL
+- Skin tone - MUST stay IDENTICAL
+- Body proportions - MUST stay IDENTICAL
+- Expression and pose - MUST stay IDENTICAL
+
+ONLY change the clothes/outfit to match "${styleName}" style. Generate the edited photo.`
+
+    let response = await fetch(
+      `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-image:generateContent?key=${GEMINI_API_KEY}`,
+      {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          contents: [{
+            role: 'user',
+            parts: [
+              { inlineData: { mimeType, data: base64Data } },
+              { text: editPrompt }
+            ]
+          }],
+          generationConfig: {
+            responseModalities: ['IMAGE', 'TEXT']
+          }
+        })
+      }
+    )
+
+    if (!response.ok) {
+      response = await fetch(
+        `https://generativelanguage.googleapis.com/v1beta/models/gemini-3-pro-image-preview:generateContent?key=${GEMINI_API_KEY}`,
+        {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            contents: [{
+              role: 'user',
+              parts: [
+                { inlineData: { mimeType, data: base64Data } },
+                { text: editPrompt }
+              ]
+            }],
+            generationConfig: {
+              responseModalities: ['IMAGE', 'TEXT']
+            }
+          })
+        }
+      )
+    }
+
+    if (!response.ok) {
+      console.error(`Gemini error for "${styleName}":`, response.status)
+      return null
+    }
+
+    const data = await response.json()
+
+    for (const part of data.candidates?.[0]?.content?.parts || []) {
+      if (part.inlineData?.data) {
+        return `data:${part.inlineData.mimeType};base64,${part.inlineData.data}`
+      }
+    }
+
+    return null
+  } catch (error) {
+    console.error(`Error generating "${styleName}":`, error.message)
+    return null
+  }
+}
+
 async function generateStyleImage(prompt) {
   if (!GEMINI_API_KEY) {
     return null
@@ -196,7 +292,7 @@ async function generateStyleImage(prompt) {
 }
 
 async function generateStyles(body) {
-  const { gender, height, weight, language } = body
+  const { gender, height, weight, photo, language } = body
 
   const labelKey = language === 'ko' ? 'labelKo' :
                    language === 'ja' ? 'labelJa' :
@@ -216,12 +312,24 @@ async function generateStyles(body) {
     }
   }
 
-  // Generate images in parallel
+  const hasPhoto = photo && photo.length > 100
+
+  // Generate images - use photo editing if photo available
   const results = await Promise.all(
     styleScenarios.map(async (scenario) => {
-      const prompt = buildStylePrompt(scenario, gender, height, weight)
-      console.log(`Generating: ${scenario.id}`)
-      const imageUrl = await generateStyleImage(prompt)
+      let imageUrl = null
+
+      if (hasPhoto) {
+        console.log(`Editing photo for: ${scenario.id}`)
+        imageUrl = await generateStyledImage(photo, 'fashion', scenario.prompt)
+      }
+
+      // Fallback to text-to-image if no photo or editing failed
+      if (!imageUrl) {
+        const prompt = buildStylePrompt(scenario, gender, height, weight)
+        console.log(`Generating: ${scenario.id}`)
+        imageUrl = await generateStyleImage(prompt)
+      }
 
       return {
         id: scenario.id,
@@ -373,6 +481,74 @@ const server = http.createServer(async (req, res) => {
         res.end(JSON.stringify({ error: error.message }))
       }
     })
+  } else if (req.method === 'POST' && req.url === '/api/generate-hair-styles') {
+    let body = ''
+
+    req.on('data', chunk => {
+      body += chunk.toString()
+    })
+
+    req.on('end', async () => {
+      try {
+        const data = JSON.parse(body)
+
+        if (!data.photo || !data.styles || data.styles.length === 0) {
+          res.writeHead(400, { 'Content-Type': 'application/json' })
+          res.end(JSON.stringify({ error: 'Photo and styles are required' }))
+          return
+        }
+
+        console.log(`\nGenerating hair styles: ${data.styles.join(', ')}`)
+
+        const images = await Promise.all(
+          data.styles.map(async (styleName) => {
+            const imageUrl = await generateStyledImage(data.photo, 'hairstyle', styleName)
+            return { style: styleName, imageUrl }
+          })
+        )
+
+        res.writeHead(200, { 'Content-Type': 'application/json' })
+        res.end(JSON.stringify({ images }))
+      } catch (error) {
+        console.error('Error:', error.message)
+        res.writeHead(500, { 'Content-Type': 'application/json' })
+        res.end(JSON.stringify({ error: error.message }))
+      }
+    })
+  } else if (req.method === 'POST' && req.url === '/api/generate-fashion-styles') {
+    let body = ''
+
+    req.on('data', chunk => {
+      body += chunk.toString()
+    })
+
+    req.on('end', async () => {
+      try {
+        const data = JSON.parse(body)
+
+        if (!data.photo || !data.styles || data.styles.length === 0) {
+          res.writeHead(400, { 'Content-Type': 'application/json' })
+          res.end(JSON.stringify({ error: 'Photo and styles are required' }))
+          return
+        }
+
+        console.log(`\nGenerating fashion styles: ${data.styles.join(', ')}`)
+
+        const images = await Promise.all(
+          data.styles.map(async (styleName) => {
+            const imageUrl = await generateStyledImage(data.photo, 'fashion', styleName)
+            return { style: styleName, imageUrl }
+          })
+        )
+
+        res.writeHead(200, { 'Content-Type': 'application/json' })
+        res.end(JSON.stringify({ images }))
+      } catch (error) {
+        console.error('Error:', error.message)
+        res.writeHead(500, { 'Content-Type': 'application/json' })
+        res.end(JSON.stringify({ error: error.message }))
+      }
+    })
   } else if (req.method === 'POST' && req.url === '/api/generate-styles') {
     let body = ''
 
@@ -415,8 +591,10 @@ server.listen(PORT, () => {
 ╠═══════════════════════════════════════════════════════════╣
 ║  API Server:  http://localhost:${PORT}                       ║
 ║  Endpoints:                                               ║
-║    POST /api/analyze         - Style analysis             ║
-║    POST /api/generate-styles - AI style images (Gemini)   ║
+║    POST /api/analyze              - Style analysis        ║
+║    POST /api/generate-styles      - AI style images       ║
+║    POST /api/generate-hair-styles - Hair synthesis        ║
+║    POST /api/generate-fashion-styles - Fashion synthesis  ║
 ║                                                           ║
 ║  Gemini: ${GEMINI_API_KEY ? 'Configured' : 'Not set (demo mode)'}                                  ║
 ║                                                           ║

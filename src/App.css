@@ -1216,14 +1216,39 @@
   background: white;
   border: 1px solid rgba(206, 169, 59, 0.15);
   border-radius: 24px;
-  line-height: 2;
+  line-height: 1.8;
   box-shadow: 0 8px 40px rgba(0, 0, 0, 0.06);
+  counter-reset: report-list;
+}
+
+.report-content h2 {
+  font-family: var(--font-serif);
+  font-size: 1.35rem;
+  font-weight: 700;
+  color: var(--charcoal);
+  margin: 2rem 0 0.75rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid rgba(206, 169, 59, 0.15);
+  letter-spacing: 0.01em;
+}
+
+.report-content h2:first-child {
+  margin-top: 0;
+}
+
+.report-content h3 {
+  font-family: var(--font-serif);
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--charcoal);
+  margin: 1.5rem 0 0.5rem;
 }
 
 .report-content p {
-  margin: 0 0 1.25rem 0;
+  margin: 0 0 0.75rem 0;
   color: var(--charcoal);
-  font-size: 1rem;
+  font-size: 0.95rem;
+  line-height: 1.7;
   letter-spacing: 0.01em;
 }
 
@@ -1233,6 +1258,60 @@
 
 .report-content p:last-child {
   margin-bottom: 0;
+}
+
+.report-content li {
+  color: var(--charcoal);
+  font-size: 0.95rem;
+  line-height: 1.7;
+  margin: 0.3rem 0;
+  padding-left: 1.25rem;
+  position: relative;
+  list-style: none;
+}
+
+.report-content li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0.65em;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--gold);
+}
+
+.report-content li.numbered {
+  counter-increment: report-list;
+  padding-left: 1.5rem;
+}
+
+.report-content li.numbered::before {
+  content: counter(report-list) '.';
+  width: auto;
+  height: auto;
+  border-radius: 0;
+  background: none;
+  color: var(--gold);
+  font-weight: 700;
+  font-size: 0.9rem;
+  top: 0;
+}
+
+.report-content strong {
+  font-weight: 700;
+  color: var(--charcoal);
+}
+
+.report-content em {
+  font-style: italic;
+  color: rgba(26, 26, 26, 0.6);
+}
+
+.report-content hr {
+  border: none;
+  border-top: 1px solid rgba(206, 169, 59, 0.2);
+  margin: 1.5rem 0;
 }
 
 /* Style Gallery Section */
@@ -2236,8 +2315,24 @@
     border-color: rgba(255, 255, 255, 0.05);
   }
 
-  .report-content p {
+  .report-content h2,
+  .report-content h3,
+  .report-content p,
+  .report-content li,
+  .report-content strong {
     color: rgba(255, 255, 255, 0.9);
+  }
+
+  .report-content h2 {
+    border-bottom-color: rgba(255, 255, 255, 0.1);
+  }
+
+  .report-content em {
+    color: rgba(255, 255, 255, 0.6);
+  }
+
+  .report-content hr {
+    border-top-color: rgba(255, 255, 255, 0.1);
   }
 
   .style-gallery-section {
