@@ -20,8 +20,9 @@ interface ReplicateResponse {
   error?: string
 }
 
-// InstantID model version
+// ===== Model Versions =====
 const INSTANT_ID_VERSION = '2e4785a4d80dadf580077b2244c8d7c05d8e3faac04a04c02d8e099dd2876789'
+const FACE_FUSION_VERSION = '52edbb2b42beb4e19242f0c9ad5717211a96c63ff1f0b0320caa518b2745f4f7'
 
 // ===== Hairstyle Prompt Mapping =====
 const hairstylePrompts: Record<string, Record<string, string>> = {
@@ -73,11 +74,11 @@ const fashionPrompts: Record<string, Record<string, string>> = {
   }
 }
 
-// ===== Replicate API =====
+// ===== Replicate Helpers =====
 async function createPrediction(
   apiToken: string,
-  imageUrl: string,
-  prompt: string
+  version: string,
+  input: Record<string, unknown>
 ): Promise<string> {
   const response = await fetch('https://api.replicate.com/v1/predictions', {
     method: 'POST',
@@ -85,25 +86,7 @@ async function createPrediction(
       'Authorization': `Bearer ${apiToken}`,
       'Content-Type': 'application/json',
     },
-    body: JSON.stringify({
-      version: INSTANT_ID_VERSION,
-      input: {
-        image: imageUrl,
-        prompt: prompt,
-        negative_prompt: 'blurry, bad quality, distorted face, ugly, deformed, disfigured, bad anatomy, wrong proportions, multiple people, group photo, crowd',
-        num_inference_steps: 30,
-        guidance_scale: 7.5,
-        ip_adapter_scale: 0.8,
-        controlnet_conditioning_scale: 0.8,
-        num_outputs: 1,
-        scheduler: 'EulerDiscreteScheduler',
-        face_detection_input_width: 640,
-        face_detection_input_height: 640,
-        enhance_nonface_region: true,
-        output_format: 'webp',
-        output_quality: 90
-      }
-    })
+    body: JSON.stringify({ version, input })
   })
 
   if (!response.ok) {
@@ -115,17 +98,17 @@ async function createPrediction(
   return prediction.id
 }
 
-async function waitForPrediction(
+async function pollPrediction(
   apiToken: string,
   predictionId: string,
-  maxAttempts: number = 60
+  maxWaitMs: number = 120000
 ): Promise<string | null> {
-  for (let i = 0; i < maxAttempts; i++) {
+  const startTime = Date.now()
+
+  while (Date.now() - startTime < maxWaitMs) {
     const response = await fetch(
       `https://api.replicate.com/v1/predictions/${predictionId}`,
-      {
-        headers: { 'Authorization': `Bearer ${apiToken}` }
-      }
+      { headers: { 'Authorization': `Bearer ${apiToken}` } }
     )
 
     if (!response.ok) {
@@ -136,9 +119,7 @@ async function waitForPrediction(
 
     if (prediction.status === 'succeeded') {
       const output = prediction.output
-      if (Array.isArray(output)) {
-        return output[0]
-      }
+      if (Array.isArray(output)) return output[0]
       return output || null
     }
 
@@ -166,7 +147,47 @@ async function urlToBase64(url: string): Promise<string> {
   return `data:${contentType};base64,${base64}`
 }
 
-// ===== Replicate Transform =====
+// ===== Step 1: InstantID =====
+async function generateStyledImage(
+  apiToken: string,
+  photo: string,
+  prompt: string
+): Promise<string | null> {
+  const predictionId = await createPrediction(apiToken, INSTANT_ID_VERSION, {
+    image: photo,
+    prompt: prompt,
+    negative_prompt: 'blurry, bad quality, distorted face, ugly, deformed, disfigured, bad anatomy, wrong proportions, multiple people, group photo, crowd',
+    num_inference_steps: 30,
+    guidance_scale: 7.5,
+    ip_adapter_scale: 0.9,
+    controlnet_conditioning_scale: 0.8,
+    num_outputs: 1,
+    scheduler: 'EulerDiscreteScheduler',
+    face_detection_input_width: 640,
+    face_detection_input_height: 640,
+    enhance_nonface_region: true,
+    output_format: 'webp',
+    output_quality: 90
+  })
+
+  return await pollPrediction(apiToken, predictionId)
+}
+
+// ===== Step 2: FaceFusion =====
+async function swapFace(
+  apiToken: string,
+  templateImageUrl: string,
+  userFacePhoto: string
+): Promise<string | null> {
+  const predictionId = await createPrediction(apiToken, FACE_FUSION_VERSION, {
+    template_image: templateImageUrl,
+    user_image: userFacePhoto
+  })
+
+  return await pollPrediction(apiToken, predictionId, 60000)
+}
+
+// ===== 2-Step Replicate Transform =====
 async function transformWithReplicate(
   photo: string,
   type: 'hairstyle' | 'fashion',
@@ -188,17 +209,30 @@ async function transformWithReplicate(
 
     prompt += ', solo person, professional photography, high resolution, detailed, 8k'
 
-    const predictionId = await createPrediction(apiToken, photo, prompt)
-    const outputUrl = await waitForPrediction(apiToken, predictionId)
+    console.log(`[Step 1] InstantID: ${styleName}`)
 
-    if (!outputUrl) {
+    // Step 1: Generate styled image
+    const styledImageUrl = await generateStyledImage(apiToken, photo, prompt)
+
+    if (!styledImageUrl) {
       return { style: styleName, imageUrl: null }
     }
 
-    const base64Image = await urlToBase64(outputUrl)
+    console.log(`[Step 2] FaceFusion: ${styleName}`)
+
+    // Step 2: Swap original face
+    const fusedImageUrl = await swapFace(apiToken, styledImageUrl, photo)
+
+    if (!fusedImageUrl) {
+      // Fallback to InstantID result if face swap fails
+      const base64Image = await urlToBase64(styledImageUrl)
+      return { style: styleName, imageUrl: base64Image }
+    }
+
+    const base64Image = await urlToBase64(fusedImageUrl)
     return { style: styleName, imageUrl: base64Image }
   } catch (error) {
-    console.error(`Error transforming with Replicate for "${styleName}":`, error)
+    console.error(`Error transforming "${styleName}":`, error)
     return { style: styleName, imageUrl: null }
   }
 }
@@ -302,15 +336,11 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
 
     const results = await Promise.all(
       styles.map(async (styleName) => {
-        // Replicate first
         if (replicateToken) {
           const result = await transformWithReplicate(photo, type, styleName, gender, replicateToken)
-          if (result.imageUrl) {
-            return result
-          }
+          if (result.imageUrl) return result
         }
 
-        // Gemini fallback
         if (geminiKey) {
           return await transformWithGemini(photo, type, styleName, geminiKey)
         }

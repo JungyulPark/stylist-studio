@@ -18,11 +18,15 @@ interface ReplicateResponse {
   error?: string
 }
 
-// ===== Replicate API =====
-async function createReplicatePrediction(
+// ===== Model Versions =====
+const INSTANT_ID_VERSION = '2e4785a4d80dadf580077b2244c8d7c05d8e3faac04a04c02d8e099dd2876789'
+const FACE_FUSION_VERSION = '52edbb2b42beb4e19242f0c9ad5717211a96c63ff1f0b0320caa518b2745f4f7'
+
+// ===== Replicate Helpers =====
+async function createPrediction(
   apiToken: string,
-  imageData: string,
-  prompt: string
+  version: string,
+  input: Record<string, unknown>
 ): Promise<string> {
   const response = await fetch('https://api.replicate.com/v1/predictions', {
     method: 'POST',
@@ -30,25 +34,7 @@ async function createReplicatePrediction(
       'Authorization': `Bearer ${apiToken}`,
       'Content-Type': 'application/json',
     },
-    body: JSON.stringify({
-      version: '2e4785a4d80dadf580077b2244c8d7c05d8e3faac04a04c02d8e099dd2876789',
-      input: {
-        image: imageData,
-        prompt: prompt,
-        negative_prompt: 'blurry, bad quality, distorted face, ugly, deformed, disfigured, bad anatomy, wrong proportions, low quality, worst quality, watermark, text, naked, nude, nsfw, multiple people, group photo, crowd',
-        num_inference_steps: 30,
-        guidance_scale: 7.5,
-        ip_adapter_scale: 0.8,
-        controlnet_conditioning_scale: 0.8,
-        num_outputs: 1,
-        scheduler: 'EulerDiscreteScheduler',
-        face_detection_input_width: 640,
-        face_detection_input_height: 640,
-        enhance_nonface_region: true,
-        output_format: 'webp',
-        output_quality: 90
-      }
-    })
+    body: JSON.stringify({ version, input })
   })
 
   if (!response.ok) {
@@ -60,7 +46,7 @@ async function createReplicatePrediction(
   return prediction.id
 }
 
-async function pollReplicatePrediction(
+async function pollPrediction(
   apiToken: string,
   predictionId: string,
   maxWaitMs: number = 120000
@@ -70,9 +56,7 @@ async function pollReplicatePrediction(
   while (Date.now() - startTime < maxWaitMs) {
     const response = await fetch(
       `https://api.replicate.com/v1/predictions/${predictionId}`,
-      {
-        headers: { 'Authorization': `Bearer ${apiToken}` }
-      }
+      { headers: { 'Authorization': `Bearer ${apiToken}` } }
     )
 
     if (!response.ok) {
@@ -135,7 +119,47 @@ const fashionPromptDetails: Record<string, Record<string, string>> = {
   }
 }
 
-// ===== Replicate =====
+// ===== Step 1: InstantID =====
+async function generateStyledImage(
+  apiToken: string,
+  photo: string,
+  prompt: string
+): Promise<string | null> {
+  const predictionId = await createPrediction(apiToken, INSTANT_ID_VERSION, {
+    image: photo,
+    prompt: prompt,
+    negative_prompt: 'blurry, bad quality, distorted face, ugly, deformed, disfigured, bad anatomy, wrong proportions, low quality, worst quality, watermark, text, naked, nude, nsfw, multiple people, group photo, crowd',
+    num_inference_steps: 30,
+    guidance_scale: 7.5,
+    ip_adapter_scale: 0.9,
+    controlnet_conditioning_scale: 0.8,
+    num_outputs: 1,
+    scheduler: 'EulerDiscreteScheduler',
+    face_detection_input_width: 640,
+    face_detection_input_height: 640,
+    enhance_nonface_region: true,
+    output_format: 'webp',
+    output_quality: 90
+  })
+
+  return await pollPrediction(apiToken, predictionId)
+}
+
+// ===== Step 2: FaceFusion =====
+async function swapFace(
+  apiToken: string,
+  templateImageUrl: string,
+  userFacePhoto: string
+): Promise<string | null> {
+  const predictionId = await createPrediction(apiToken, FACE_FUSION_VERSION, {
+    template_image: templateImageUrl,
+    user_image: userFacePhoto
+  })
+
+  return await pollPrediction(apiToken, predictionId, 60000)
+}
+
+// ===== Replicate 2-Step Pipeline =====
 async function generateFashionImageWithReplicate(
   photo: string,
   styleName: string,
@@ -151,19 +175,28 @@ async function generateFashionImageWithReplicate(
 
     const prompt = `one single ${genderWord} ${styleDetail}, solo person, fashion photography, professional studio lighting, high quality, 8k resolution`
 
-    console.log(`[Replicate Fashion] Generating: ${styleName}`)
+    console.log(`[Step 1] InstantID generating fashion: ${styleName}`)
 
-    const predictionId = await createReplicatePrediction(apiToken, photo, prompt)
-    const outputUrl = await pollReplicatePrediction(apiToken, predictionId)
+    const styledImageUrl = await generateStyledImage(apiToken, photo, prompt)
 
-    if (!outputUrl) {
-      console.log(`[Replicate Fashion] No output for: ${styleName}`)
+    if (!styledImageUrl) {
+      console.log(`[Step 1] InstantID failed for: ${styleName}`)
       return { style: styleName, imageUrl: null }
     }
 
-    const base64Image = await fetchImageAsBase64(outputUrl)
+    console.log(`[Step 2] FaceFusion swapping face: ${styleName}`)
 
-    console.log(`[Replicate Fashion] Success: ${styleName}`)
+    const fusedImageUrl = await swapFace(apiToken, styledImageUrl, photo)
+
+    if (!fusedImageUrl) {
+      console.log(`[Step 2] FaceFusion failed, using InstantID result: ${styleName}`)
+      const base64Image = await fetchImageAsBase64(styledImageUrl)
+      return { style: styleName, imageUrl: base64Image }
+    }
+
+    const base64Image = await fetchImageAsBase64(fusedImageUrl)
+
+    console.log(`[Done] Fashion success with face swap: ${styleName}`)
     return { style: styleName, imageUrl: base64Image }
   } catch (error) {
     console.error(`[Replicate Fashion] Error for "${styleName}":`, error)
@@ -254,7 +287,6 @@ async function generateFashionImage(
   replicateToken: string | undefined,
   geminiKey: string | undefined
 ): Promise<{ style: string; imageUrl: string | null }> {
-  // 1. Replicate (InstantID)
   if (replicateToken) {
     const result = await generateFashionImageWithReplicate(photo, styleName, gender, replicateToken)
     if (result.imageUrl) {
@@ -263,7 +295,6 @@ async function generateFashionImage(
     console.log(`[Fallback] Replicate failed for ${styleName}, trying Gemini...`)
   }
 
-  // 2. Gemini fallback
   if (geminiKey) {
     return await generateFashionImageWithGemini(photo, styleName, geminiKey)
   }
@@ -300,7 +331,7 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
       )
     }
 
-    console.log(`[API Fashion] Generating ${styles.length} fashion styles with ${replicateToken ? 'Replicate' : 'Gemini'}`)
+    console.log(`[API Fashion] Generating ${styles.length} fashion styles (InstantID + FaceFusion pipeline)`)
 
     const images = await Promise.all(
       styles.map(styleName =>
