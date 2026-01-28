@@ -1541,8 +1541,8 @@ function App() {
           <div className="hero-image">
             <div className="hero-image-bg"></div>
             <div className="glass-card">
-              <span className="glass-tag">THE EVOLUTION</span>
-              <p className="glass-text">Transformation v2.4</p>
+              <span className="glass-tag">AI-POWERED STYLING</span>
+              <p className="glass-text">Your Style, Reimagined</p>
             </div>
             <div className="slider-handle">
               <div className="slider-dot"></div>
