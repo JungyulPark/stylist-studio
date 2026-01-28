@@ -21,7 +21,7 @@ interface ReplicateResponse {
 
 // ===== Model Versions =====
 const INSTANT_ID_VERSION = '2e4785a4d80dadf580077b2244c8d7c05d8e3faac04a04c02d8e099dd2876789'
-const FACE_FUSION_VERSION = '52edbb2b42beb4e19242f0c9ad5717211a96c63ff1f0b0320caa518b2745f4f7'
+const FACE_SWAP_VERSION = '278a81e7ebb22db98bcba54de985d22cc1abeead2754eb1f2af717247be69b34'
 
 // ===== Replicate Helpers =====
 async function createPrediction(
@@ -122,18 +122,18 @@ async function generateStyledImage(
   return await pollPrediction(apiToken, predictionId)
 }
 
-// ===== Step 2: FaceFusion - Swap original face onto styled image =====
+// ===== Step 2: FaceSwap - Swap original face onto styled image =====
 async function swapFace(
   apiToken: string,
   templateImageUrl: string,
   userFacePhoto: string
 ): Promise<string | null> {
-  const predictionId = await createPrediction(apiToken, FACE_FUSION_VERSION, {
-    template_image: templateImageUrl,
-    user_image: userFacePhoto
+  const predictionId = await createPrediction(apiToken, FACE_SWAP_VERSION, {
+    input_image: templateImageUrl,
+    swap_image: userFacePhoto
   })
 
-  return await pollPrediction(apiToken, predictionId, 60000)
+  return await pollPrediction(apiToken, predictionId, 30000)
 }
 
 // ===== Replicate 2-Step Pipeline =====
@@ -157,14 +157,14 @@ async function generateHairImageWithReplicate(
       return { style: styleName, imageUrl: null }
     }
 
-    console.log(`[Step 2] FaceFusion swapping face: ${styleName}`)
+    console.log(`[Step 2] FaceSwap swapping face: ${styleName}`)
 
     // Step 2: Swap original face onto styled image
     const fusedImageUrl = await swapFace(apiToken, styledImageUrl, photo)
 
     if (!fusedImageUrl) {
       // If face swap fails, still return InstantID result
-      console.log(`[Step 2] FaceFusion failed, using InstantID result: ${styleName}`)
+      console.log(`[Step 2] FaceSwap failed, using InstantID result: ${styleName}`)
       const base64Image = await fetchImageAsBase64(styledImageUrl)
       return { style: styleName, imageUrl: base64Image }
     }

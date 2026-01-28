@@ -1143,6 +1143,45 @@
   margin: 0;
 }
 
+/* Progress Bar */
+.progress-bar-container {
+  width: 280px;
+  height: 6px;
+  background: rgba(212, 114, 140, 0.15);
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.progress-bar-container.small {
+  width: 200px;
+  height: 4px;
+  margin-top: 0.5rem;
+}
+
+.progress-bar {
+  height: 100%;
+  background: linear-gradient(90deg, var(--primary), #e88fa7);
+  border-radius: 3px;
+  transition: width 0.5s ease;
+}
+
+.progress-bar.animated {
+  width: 0%;
+  animation: progressIndeterminate 2s ease-in-out infinite;
+}
+
+@keyframes progressIndeterminate {
+  0% { width: 0%; margin-left: 0; }
+  50% { width: 60%; margin-left: 20%; }
+  100% { width: 0%; margin-left: 100%; }
+}
+
+.progress-text {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--primary);
+}
+
 /* Error Message */
 .error-message {
   width: 100%;
@@ -1366,7 +1405,7 @@
 
 .style-grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(2, 1fr);
   gap: 1rem;
 }
 
@@ -1461,7 +1500,7 @@
 
 .transform-grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(2, 1fr);
   gap: 1rem;
 }
 

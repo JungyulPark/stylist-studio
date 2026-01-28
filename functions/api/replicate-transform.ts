@@ -22,7 +22,7 @@ interface ReplicateResponse {
 
 // ===== Model Versions =====
 const INSTANT_ID_VERSION = '2e4785a4d80dadf580077b2244c8d7c05d8e3faac04a04c02d8e099dd2876789'
-const FACE_FUSION_VERSION = '52edbb2b42beb4e19242f0c9ad5717211a96c63ff1f0b0320caa518b2745f4f7'
+const FACE_SWAP_VERSION = '278a81e7ebb22db98bcba54de985d22cc1abeead2754eb1f2af717247be69b34'
 
 // ===== Hairstyle Prompt Mapping =====
 const hairstylePrompts: Record<string, Record<string, string>> = {
@@ -173,18 +173,18 @@ async function generateStyledImage(
   return await pollPrediction(apiToken, predictionId)
 }
 
-// ===== Step 2: FaceFusion =====
+// ===== Step 2: FaceSwap =====
 async function swapFace(
   apiToken: string,
   templateImageUrl: string,
   userFacePhoto: string
 ): Promise<string | null> {
-  const predictionId = await createPrediction(apiToken, FACE_FUSION_VERSION, {
-    template_image: templateImageUrl,
-    user_image: userFacePhoto
+  const predictionId = await createPrediction(apiToken, FACE_SWAP_VERSION, {
+    input_image: templateImageUrl,
+    swap_image: userFacePhoto
   })
 
-  return await pollPrediction(apiToken, predictionId, 60000)
+  return await pollPrediction(apiToken, predictionId, 30000)
 }
 
 // ===== 2-Step Replicate Transform =====
@@ -218,7 +218,7 @@ async function transformWithReplicate(
       return { style: styleName, imageUrl: null }
     }
 
-    console.log(`[Step 2] FaceFusion: ${styleName}`)
+    console.log(`[Step 2] FaceSwap: ${styleName}`)
 
     // Step 2: Swap original face
     const fusedImageUrl = await swapFace(apiToken, styledImageUrl, photo)

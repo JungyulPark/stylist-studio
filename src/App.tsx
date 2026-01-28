@@ -729,6 +729,8 @@ function App() {
   const [transformedFashion, setTransformedFashion] = useState<{id: string, label: string, imageUrl: string | null}[]>([])
   const [isTransformingHair, setIsTransformingHair] = useState(false)
   const [isTransformingFashion, setIsTransformingFashion] = useState(false)
+  const [loadingProgress, setLoadingProgress] = useState(0)
+  const [loadingStep, setLoadingStep] = useState('')
   const [isPaid, setIsPaid] = useState(false)
   const [isProcessingPayment, setIsProcessingPayment] = useState(false)
   const [isRepeatCustomer, setIsRepeatCustomer] = useState(false)
@@ -903,46 +905,63 @@ function App() {
   const startAnalysisAfterPayment = async (profileData: typeof profile) => {
     setError('')
     setStyleImages([])
+    setLoadingProgress(0)
+    setLoadingStep(lang === 'ko' ? '결제 확인 완료! 분석 시작...' : 'Payment confirmed! Starting analysis...')
+    setPage('loading')
 
     try {
-      const [analyzeResponse, stylesResponse] = await Promise.all([
-        fetch('/api/analyze', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            photo: profileData.photo,
-            height: profileData.height,
-            weight: profileData.weight,
-            gender: profileData.gender,
-            language: lang
-          })
-        }),
-        fetch('/api/generate-styles', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            height: profileData.height,
-            weight: profileData.weight,
-            gender: profileData.gender,
-            photo: profileData.photo,
-            language: lang
-          })
-        })
-      ])
+      setLoadingProgress(15)
+      setLoadingStep(lang === 'ko' ? '체형 및 컬러 분석 중...' : 'Analyzing body type & colors...')
 
-      const [analyzeData, stylesData] = await Promise.all([
-        analyzeResponse.json(),
-        stylesResponse.json()
-      ])
+      const analyzePromise = fetch('/api/analyze', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          photo: profileData.photo,
+          height: profileData.height,
+          weight: profileData.weight,
+          gender: profileData.gender,
+          language: lang
+        })
+      })
+
+      setLoadingProgress(30)
+      setLoadingStep(lang === 'ko' ? '맞춤 스타일 이미지 생성 중...' : 'Generating personalized style images...')
+
+      const stylesPromise = fetch('/api/generate-styles', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          height: profileData.height,
+          weight: profileData.weight,
+          gender: profileData.gender,
+          photo: profileData.photo,
+          language: lang
+        })
+      }).catch(() => null)
+
+      setLoadingProgress(50)
+      const analyzeResponse = await analyzePromise
+      const analyzeData = await analyzeResponse.json()
 
       if (analyzeData.report) {
         setReport(analyzeData.report)
       }
 
-      if (stylesData.styles) {
-        setStyleImages(stylesData.styles)
+      setLoadingProgress(75)
+      setLoadingStep(lang === 'ko' ? '스타일 이미지 마무리 중...' : 'Finalizing style images...')
+
+      const stylesResponse = await stylesPromise
+      if (stylesResponse && stylesResponse.ok) {
+        const stylesData = await stylesResponse.json()
+        if (stylesData.styles) {
+          setStyleImages(stylesData.styles)
+        }
       }
 
+      setLoadingProgress(100)
+      setLoadingStep(lang === 'ko' ? '완료!' : 'Complete!')
+      await new Promise(resolve => setTimeout(resolve, 300))
       setPage('result')
     } catch (err) {
       console.error('Analysis error:', err)
@@ -956,45 +975,72 @@ function App() {
     setPage('loading')
     setError('')
     setStyleImages([])
+    setLoadingProgress(0)
+    setLoadingStep(lang === 'ko' ? '프로필 분석 시작...' : 'Starting profile analysis...')
 
     try {
-      const [analyzeResponse, stylesResponse] = await Promise.all([
-        fetch('/api/analyze', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            photo: profile.photo,
-            height: profile.height,
-            weight: profile.weight,
-            gender: profile.gender,
-            language: lang
-          })
-        }),
-        fetch('/api/generate-styles', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            height: profile.height,
-            weight: profile.weight,
-            gender: profile.gender,
-            photo: profile.photo,
-            language: lang
-          })
-        }).catch(() => null)
-      ])
+      // Step 1: Start analysis (20%)
+      setLoadingProgress(10)
+      setLoadingStep(lang === 'ko' ? '체형 및 컬러 분석 중...' : 'Analyzing body type & colors...')
+
+      const analyzePromise = fetch('/api/analyze', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          photo: profile.photo,
+          height: profile.height,
+          weight: profile.weight,
+          gender: profile.gender,
+          language: lang
+        })
+      })
+
+      // Step 2: Start style generation (30%)
+      setLoadingProgress(25)
+      setLoadingStep(lang === 'ko' ? '맞춤 스타일 이미지 생성 중...' : 'Generating personalized style images...')
+
+      const stylesPromise = fetch('/api/generate-styles', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          height: profile.height,
+          weight: profile.weight,
+          gender: profile.gender,
+          photo: profile.photo,
+          language: lang
+        })
+      }).catch(() => null)
+
+      // Wait for analysis first
+      setLoadingProgress(40)
+      const analyzeResponse = await analyzePromise
 
       if (!analyzeResponse.ok) {
         throw new Error('Analysis failed')
       }
 
+      setLoadingProgress(60)
+      setLoadingStep(lang === 'ko' ? '리포트 생성 완료!' : 'Report generated!')
+
       const analyzeData = await analyzeResponse.json()
       setReport(analyzeData.report)
+
+      // Wait for styles
+      setLoadingProgress(75)
+      setLoadingStep(lang === 'ko' ? '스타일 이미지 마무리 중...' : 'Finalizing style images...')
+
+      const stylesResponse = await stylesPromise
 
       if (stylesResponse && stylesResponse.ok) {
         const stylesData = await stylesResponse.json()
         setStyleImages(stylesData.styles || [])
       }
 
+      setLoadingProgress(100)
+      setLoadingStep(lang === 'ko' ? '완료!' : 'Complete!')
+
+      // Brief delay to show 100%
+      await new Promise(resolve => setTimeout(resolve, 300))
       setPage('result')
     } catch (err) {
       console.error('Error:', err)
@@ -1690,7 +1736,11 @@ function App() {
         <div className="loading-page">
           <div className="spinner"></div>
           <h2>{t.analyzing}</h2>
-          <p>{t.analyzingDesc}</p>
+          <p>{loadingStep || t.analyzingDesc}</p>
+          <div className="progress-bar-container">
+            <div className="progress-bar" style={{ width: `${loadingProgress}%` }}></div>
+          </div>
+          <span className="progress-text">{loadingProgress}%</span>
         </div>
       </div>
     )
@@ -1789,6 +1839,9 @@ function App() {
               <div className="style-loading">
                 <div className="spinner small"></div>
                 <span>{t.generatingHairstyles}</span>
+                <div className="progress-bar-container small">
+                  <div className="progress-bar animated"></div>
+                </div>
               </div>
             ) : transformedHairstyles.length > 0 ? (
               <div className="transform-grid">
@@ -1827,6 +1880,9 @@ function App() {
               <div className="style-loading">
                 <div className="spinner small"></div>
                 <span>{t.generatingFashion}</span>
+                <div className="progress-bar-container small">
+                  <div className="progress-bar animated"></div>
+                </div>
               </div>
             ) : transformedFashion.length > 0 ? (
               <div className="transform-grid">

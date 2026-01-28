@@ -64,30 +64,12 @@ const styleScenarios: StyleScenario[] = [
     labelZh: '奢华',
     labelEs: 'Lujo',
     prompt: 'high-end luxury designer fashion, premium quality, sophisticated'
-  },
-  {
-    id: 'business',
-    labelKo: '비즈니스',
-    labelEn: 'Business',
-    labelJa: 'ビジネス',
-    labelZh: '商务',
-    labelEs: 'Negocios',
-    prompt: 'professional business attire, corporate style, modern office look'
-  },
-  {
-    id: 'casual',
-    labelKo: '캐주얼',
-    labelEn: 'Casual',
-    labelJa: 'カジュアル',
-    labelZh: '休闲',
-    labelEs: 'Casual',
-    prompt: 'relaxed casual outfit, comfortable streetwear, weekend style'
   }
 ]
 
 // ===== Replicate Model Versions =====
 const INSTANT_ID_VERSION = '2e4785a4d80dadf580077b2244c8d7c05d8e3faac04a04c02d8e099dd2876789'
-const FACE_FUSION_VERSION = '52edbb2b42beb4e19242f0c9ad5717211a96c63ff1f0b0320caa518b2745f4f7'
+const FACE_SWAP_VERSION = '278a81e7ebb22db98bcba54de985d22cc1abeead2754eb1f2af717247be69b34'
 
 // ===== Replicate Helpers =====
 async function createPrediction(
@@ -199,18 +181,18 @@ async function generateWithReplicate(
       return null
     }
 
-    console.log(`[Step 2] FaceFusion: ${scenario.id}`)
+    console.log(`[Step 2] FaceSwap: ${scenario.id}`)
 
     // Step 2: Swap original face onto styled image
-    const fusionId = await createPrediction(apiToken, FACE_FUSION_VERSION, {
-      template_image: styledImageUrl,
-      user_image: photo
+    const fusionId = await createPrediction(apiToken, FACE_SWAP_VERSION, {
+      input_image: styledImageUrl,
+      swap_image: photo
     })
 
-    const fusedImageUrl = await pollPrediction(apiToken, fusionId, 60000)
+    const fusedImageUrl = await pollPrediction(apiToken, fusionId, 30000)
 
     if (!fusedImageUrl) {
-      console.log(`[Step 2] FaceFusion failed, using InstantID result: ${scenario.id}`)
+      console.log(`[Step 2] FaceSwap failed, using InstantID result: ${scenario.id}`)
       return await fetchImageAsBase64(styledImageUrl)
     }
 

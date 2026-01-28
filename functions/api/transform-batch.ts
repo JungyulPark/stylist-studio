@@ -26,26 +26,16 @@ interface ReplicateResponse {
 
 const hairstyles: Record<string, StyleOption[]> = {
   male: [
-    { id: 'classic-short', ko: '클래식 숏컷', en: 'Classic Short', prompt: 'classic short haircut with clean side part' },
+    { id: 'two-block', ko: '투블럭', en: 'Two Block', prompt: 'Korean two-block haircut with volume on top' },
     { id: 'textured-crop', ko: '텍스처드 크롭', en: 'Textured Crop', prompt: 'textured messy crop with skin fade' },
     { id: 'slick-back', ko: '슬릭백', en: 'Slick Back', prompt: 'slicked back wet look hair' },
-    { id: 'two-block', ko: '투블럭', en: 'Two Block', prompt: 'Korean two-block haircut with volume on top' },
-    { id: 'pompadour', ko: '폼파두르', en: 'Pompadour', prompt: 'modern pompadour with height' },
-    { id: 'buzz-fade', ko: '버즈 페이드', en: 'Buzz Fade', prompt: 'buzz cut with high fade' },
-    { id: 'curtain', ko: '커튼뱅', en: 'Curtain Bangs', prompt: 'middle part curtain bangs K-style' },
-    { id: 'quiff', ko: '퀴프', en: 'Quiff', prompt: 'textured quiff swept up' },
-    { id: 'long-flow', ko: '롱 플로우', en: 'Long Flow', prompt: 'medium long flowing hair' }
+    { id: 'pompadour', ko: '폼파두르', en: 'Pompadour', prompt: 'modern pompadour with height' }
   ],
   female: [
     { id: 'long-layers', ko: '롱 레이어드', en: 'Long Layers', prompt: 'long layered hair with face framing' },
     { id: 'bob', ko: '단발', en: 'Bob Cut', prompt: 'sleek chin-length bob cut' },
-    { id: 'beach-waves', ko: '비치 웨이브', en: 'Beach Waves', prompt: 'loose beach waves natural texture' },
-    { id: 'pixie', ko: '픽시컷', en: 'Pixie Cut', prompt: 'short chic pixie cut' },
     { id: 'korean-perm', ko: '코리안 펌', en: 'Korean Perm', prompt: 'soft Korean style perm waves' },
-    { id: 'straight', ko: '스트레이트', en: 'Straight Long', prompt: 'long sleek straight hair' },
-    { id: 'curtain', ko: '커튼뱅', en: 'Curtain Bangs', prompt: 'curtain bangs with soft layers' },
-    { id: 'ponytail', ko: '포니테일', en: 'Ponytail', prompt: 'sleek high ponytail' },
-    { id: 'lob', ko: '로브', en: 'Long Bob', prompt: 'shoulder length long bob' }
+    { id: 'beach-waves', ko: '비치 웨이브', en: 'Beach Waves', prompt: 'loose beach waves natural texture' }
   ]
 }
 
@@ -53,30 +43,20 @@ const fashionStyles: Record<string, StyleOption[]> = {
   male: [
     { id: 'business', ko: '비즈니스', en: 'Business', prompt: 'navy suit with white shirt and silk tie, professional' },
     { id: 'casual', ko: '캐주얼', en: 'Casual', prompt: 'white t-shirt, slim blue jeans, white sneakers' },
-    { id: 'smart-casual', ko: '스마트 캐주얼', en: 'Smart Casual', prompt: 'navy blazer, light blue polo, beige chinos' },
     { id: 'streetwear', ko: '스트릿', en: 'Streetwear', prompt: 'oversized hoodie, jogger pants, chunky sneakers' },
-    { id: 'formal', ko: '포멀', en: 'Formal', prompt: 'black tuxedo with bow tie, elegant formal wear' },
-    { id: 'preppy', ko: '프레피', en: 'Preppy', prompt: 'cable knit sweater over oxford shirt, khaki pants' },
-    { id: 'minimalist', ko: '미니멀', en: 'Minimalist', prompt: 'black turtleneck, gray wool pants, clean minimal' },
-    { id: 'sporty', ko: '스포티', en: 'Sporty', prompt: 'athletic wear, track jacket, performance outfit' },
     { id: 'luxury', ko: '럭셔리', en: 'Luxury', prompt: 'designer luxury outfit, high-end fashion, premium' }
   ],
   female: [
     { id: 'business', ko: '비즈니스', en: 'Business', prompt: 'tailored blazer, pencil skirt, professional elegant' },
     { id: 'casual', ko: '캐주얼', en: 'Casual', prompt: 'cozy sweater, comfortable jeans, casual chic' },
     { id: 'elegant', ko: '엘레강스', en: 'Elegant', prompt: 'elegant midi dress, sophisticated feminine' },
-    { id: 'streetwear', ko: '스트릿', en: 'Streetwear', prompt: 'crop top, high-waist cargo pants, sneakers' },
-    { id: 'formal', ko: '포멀', en: 'Formal', prompt: 'beautiful evening gown, formal elegant' },
-    { id: 'romantic', ko: '로맨틱', en: 'Romantic', prompt: 'flowy floral dress, soft romantic style' },
-    { id: 'minimalist', ko: '미니멀', en: 'Minimalist', prompt: 'clean lines, neutral colors, minimal chic' },
-    { id: 'bohemian', ko: '보헤미안', en: 'Bohemian', prompt: 'flowing boho dress, layered accessories' },
     { id: 'luxury', ko: '럭셔리', en: 'Luxury', prompt: 'designer luxury outfit, high fashion, premium' }
   ]
 }
 
 // ===== Replicate Model Versions =====
 const INSTANT_ID_VERSION = '2e4785a4d80dadf580077b2244c8d7c05d8e3faac04a04c02d8e099dd2876789'
-const FACE_FUSION_VERSION = '52edbb2b42beb4e19242f0c9ad5717211a96c63ff1f0b0320caa518b2745f4f7'
+const FACE_SWAP_VERSION = '278a81e7ebb22db98bcba54de985d22cc1abeead2754eb1f2af717247be69b34'
 
 // ===== Replicate Helpers =====
 async function createPrediction(
@@ -192,18 +172,18 @@ async function transformWithReplicate(
       return null
     }
 
-    console.log(`[Step 2] FaceFusion: ${style.id}`)
+    console.log(`[Step 2] FaceSwap: ${style.id}`)
 
     // Step 2: Swap original face onto styled image
-    const fusionId = await createPrediction(apiToken, FACE_FUSION_VERSION, {
-      template_image: styledImageUrl,
-      user_image: photo
+    const fusionId = await createPrediction(apiToken, FACE_SWAP_VERSION, {
+      input_image: styledImageUrl,
+      swap_image: photo
     })
 
-    const fusedImageUrl = await pollPrediction(apiToken, fusionId, 60000)
+    const fusedImageUrl = await pollPrediction(apiToken, fusionId, 30000)
 
     if (!fusedImageUrl) {
-      console.log(`[Step 2] FaceFusion failed, using InstantID result: ${style.id}`)
+      console.log(`[Step 2] FaceSwap failed, using InstantID result: ${style.id}`)
       return await fetchImageAsBase64(styledImageUrl)
     }
 
