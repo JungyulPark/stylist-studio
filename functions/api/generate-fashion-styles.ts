@@ -1,5 +1,4 @@
 interface Env {
-  REPLICATE_API_KEY: string
   GEMINI_API_KEY: string
 }
 
@@ -11,174 +10,7 @@ interface RequestBody {
   language: string
 }
 
-interface ReplicateResponse {
-  id: string
-  status: string
-  output?: string | string[]
-  error?: string
-}
-
-// ===== Model Versions =====
-const INSTANT_ID_VERSION = '2e4785a4d80dadf580077b2244c8d7c05d8e3faac04a04c02d8e099dd2876789'
-
-// ===== Replicate Helpers =====
-async function createPrediction(
-  apiToken: string,
-  version: string,
-  input: Record<string, unknown>
-): Promise<string> {
-  const response = await fetch('https://api.replicate.com/v1/predictions', {
-    method: 'POST',
-    headers: {
-      'Authorization': `Bearer ${apiToken}`,
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({ version, input })
-  })
-
-  if (!response.ok) {
-    const errorText = await response.text()
-    throw new Error(`Replicate API error: ${response.status} - ${errorText}`)
-  }
-
-  const prediction: ReplicateResponse = await response.json()
-  return prediction.id
-}
-
-async function pollPrediction(
-  apiToken: string,
-  predictionId: string,
-  maxWaitMs: number = 120000
-): Promise<string | null> {
-  const startTime = Date.now()
-
-  while (Date.now() - startTime < maxWaitMs) {
-    const response = await fetch(
-      `https://api.replicate.com/v1/predictions/${predictionId}`,
-      { headers: { 'Authorization': `Bearer ${apiToken}` } }
-    )
-
-    if (!response.ok) {
-      throw new Error(`Failed to poll prediction: ${response.status}`)
-    }
-
-    const prediction: ReplicateResponse = await response.json()
-
-    if (prediction.status === 'succeeded') {
-      const output = prediction.output
-      return Array.isArray(output) ? output[0] : (output || null)
-    }
-
-    if (prediction.status === 'failed' || prediction.status === 'canceled') {
-      console.error('Prediction failed:', prediction.error)
-      return null
-    }
-
-    await new Promise(resolve => setTimeout(resolve, 2000))
-  }
-
-  console.error('Prediction timeout')
-  return null
-}
-
-async function fetchImageAsBase64(url: string): Promise<string> {
-  const response = await fetch(url)
-  const buffer = await response.arrayBuffer()
-  const bytes = new Uint8Array(buffer)
-  let binary = ''
-  for (let i = 0; i < bytes.length; i++) {
-    binary += String.fromCharCode(bytes[i])
-  }
-  const base64 = btoa(binary)
-  const contentType = response.headers.get('content-type') || 'image/webp'
-  return `data:${contentType};base64,${base64}`
-}
-
-// ===== Fashion Prompt Mapping =====
-const fashionPromptDetails: Record<string, Record<string, string>> = {
-  male: {
-    'luxury': 'wearing luxury designer suit, Gucci or Louis Vuitton style, high-end fashion, elegant, wealthy look',
-    'interview': 'wearing professional navy blue suit with crisp white shirt and silk tie, job interview attire, confident',
-    'date': 'wearing stylish smart casual outfit, fitted blazer over casual shirt, charming date look',
-    'business': 'wearing formal business attire, executive suit, corporate professional look',
-    'casual': 'wearing casual weekend outfit, quality t-shirt with well-fitted jeans, relaxed style',
-    'party': 'wearing trendy party outfit, fashionable evening wear, stylish and modern',
-    'travel': 'wearing comfortable travel outfit, casual but stylish, practical fashion',
-    'sports': 'wearing athletic sportswear, fitness outfit, sporty and active look'
-  },
-  female: {
-    'luxury': 'wearing luxury designer dress, Chanel or Dior style, high fashion, elegant and sophisticated',
-    'interview': 'wearing professional interview outfit, tailored blazer with elegant blouse, confident and polished',
-    'date': 'wearing beautiful date night outfit, feminine and attractive dress, romantic style',
-    'business': 'wearing business formal attire, power suit or elegant corporate wear, professional',
-    'casual': 'wearing casual chic outfit, stylish everyday wear, comfortable yet fashionable',
-    'party': 'wearing glamorous party dress, evening wear, sophisticated and stunning',
-    'travel': 'wearing comfortable travel outfit, practical but stylish, effortlessly chic',
-    'sports': 'wearing athletic sportswear, yoga or fitness outfit, sporty and fit'
-  }
-}
-
-// ===== Step 1: InstantID =====
-async function generateStyledImage(
-  apiToken: string,
-  photo: string,
-  prompt: string
-): Promise<string | null> {
-  const predictionId = await createPrediction(apiToken, INSTANT_ID_VERSION, {
-    image: photo,
-    prompt: prompt,
-    negative_prompt: 'blurry, bad quality, distorted face, ugly, deformed, disfigured, bad anatomy, wrong proportions, low quality, worst quality, watermark, text, naked, nude, nsfw, multiple people, group photo, crowd',
-    num_inference_steps: 30,
-    guidance_scale: 7.5,
-    ip_adapter_scale: 0.9,
-    controlnet_conditioning_scale: 0.8,
-    num_outputs: 1,
-    scheduler: 'EulerDiscreteScheduler',
-    face_detection_input_width: 640,
-    face_detection_input_height: 640,
-    enhance_nonface_region: true,
-    output_format: 'webp',
-    output_quality: 90
-  })
-
-  return await pollPrediction(apiToken, predictionId)
-}
-
-// ===== Replicate InstantID Pipeline =====
-async function generateFashionImageWithReplicate(
-  photo: string,
-  styleName: string,
-  gender: string,
-  apiToken: string
-): Promise<{ style: string; imageUrl: string | null }> {
-  try {
-    const genderWord = gender === 'female' ? 'woman' : 'man'
-    const genderKey = gender === 'female' ? 'female' : 'male'
-
-    const styleKey = styleName.toLowerCase().replace(/\s+/g, '-')
-    const styleDetail = fashionPromptDetails[genderKey]?.[styleKey] || `wearing ${styleName} style outfit`
-
-    const prompt = `one single ${genderWord} ${styleDetail}, solo person, fashion photography, professional studio lighting, high quality, 8k resolution`
-
-    console.log(`[Step 1] InstantID generating fashion: ${styleName}`)
-
-    const styledImageUrl = await generateStyledImage(apiToken, photo, prompt)
-
-    if (!styledImageUrl) {
-      console.log(`[InstantID] Failed for: ${styleName}`)
-      return { style: styleName, imageUrl: null }
-    }
-
-    const base64Image = await fetchImageAsBase64(styledImageUrl)
-    console.log(`[InstantID] Success: ${styleName}`)
-    return { style: styleName, imageUrl: base64Image }
-  } catch (error) {
-    console.error(`[Replicate Fashion] Error for "${styleName}":`, error)
-    return { style: styleName, imageUrl: null }
-  }
-}
-
-// ===== Gemini Fallback =====
+// ===== Gemini Image Editing =====
 async function generateFashionImageWithGemini(
   photo: string,
   styleName: string,
@@ -203,28 +35,44 @@ CRITICAL REQUIREMENTS:
 
 Generate the edited photo with the new outfit.`
 
-    const response = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-exp-image-generation:generateContent?key=${apiKey}`,
-      {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          contents: [{
-            role: 'user',
-            parts: [
-              { inlineData: { mimeType, data: base64Data } },
-              { text: editPrompt }
-            ]
-          }],
-          generationConfig: {
-            responseModalities: ['IMAGE', 'TEXT']
-          }
-        })
-      }
-    )
+    const geminiModels = [
+      'nano-banana-pro-preview',
+      'gemini-2.0-flash-exp-image-generation'
+    ]
 
-    if (!response.ok) {
-      console.error(`[Gemini Fashion] Error for ${styleName}:`, response.status)
+    let response: Response | null = null
+    for (const model of geminiModels) {
+      try {
+        response = await fetch(
+          `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`,
+          {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              contents: [{
+                role: 'user',
+                parts: [
+                  { inlineData: { mimeType, data: base64Data } },
+                  { text: editPrompt }
+                ]
+              }],
+              generationConfig: {
+                responseModalities: ['IMAGE', 'TEXT']
+              }
+            })
+          }
+        )
+        if (response.ok) {
+          console.log(`[Gemini] ${model} succeeded for ${styleName}`)
+          break
+        }
+        console.log(`[Gemini] ${model} failed (${response.status}) for ${styleName}`)
+      } catch (e) {
+        console.error(`[Gemini] ${model} error:`, e)
+      }
+    }
+
+    if (!response || !response.ok) {
       return { style: styleName, imageUrl: null }
     }
 
@@ -253,29 +101,6 @@ Generate the edited photo with the new outfit.`
   }
 }
 
-// ===== Replicate -> Gemini Fallback =====
-async function generateFashionImage(
-  photo: string,
-  styleName: string,
-  gender: string,
-  replicateToken: string | undefined,
-  geminiKey: string | undefined
-): Promise<{ style: string; imageUrl: string | null }> {
-  if (replicateToken) {
-    const result = await generateFashionImageWithReplicate(photo, styleName, gender, replicateToken)
-    if (result.imageUrl) {
-      return result
-    }
-    console.log(`[Fallback] Replicate failed for ${styleName}, trying Gemini...`)
-  }
-
-  if (geminiKey) {
-    return await generateFashionImageWithGemini(photo, styleName, geminiKey)
-  }
-
-  return { style: styleName, imageUrl: null }
-}
-
 // ===== API Handler =====
 export const onRequestPost: PagesFunction<Env> = async (context) => {
   const corsHeaders = {
@@ -286,7 +111,7 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
 
   try {
     const body: RequestBody = await context.request.json()
-    const { photo, styles, gender } = body
+    const { photo, styles } = body
 
     if (!photo || !styles || styles.length === 0) {
       return new Response(
@@ -295,32 +120,29 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
       )
     }
 
-    const replicateToken = context.env.REPLICATE_API_KEY
     const geminiKey = context.env.GEMINI_API_KEY
 
-    if (!replicateToken && !geminiKey) {
+    if (!geminiKey) {
       return new Response(
-        JSON.stringify({ error: 'API not configured. Please set REPLICATE_API_KEY or GEMINI_API_KEY.' }),
+        JSON.stringify({ error: 'API not configured. Please set GEMINI_API_KEY.' }),
         { status: 500, headers: { 'Content-Type': 'application/json', ...corsHeaders } }
       )
     }
 
-    console.log(`[API Fashion] Generating ${styles.length} fashion styles (InstantID + FaceSwap pipeline)`)
+    console.log(`[API Fashion] Generating ${styles.length} fashion styles with Gemini`)
 
     const images = await Promise.all(
-      styles.map(styleName =>
-        generateFashionImage(photo, styleName, gender, replicateToken, geminiKey)
-      )
+      styles.map(styleName => generateFashionImageWithGemini(photo, styleName, geminiKey))
     )
 
     const successCount = images.filter(r => r.imageUrl).length
-    console.log(`[API Fashion] Generated ${successCount}/${styles.length} fashion styles successfully`)
+    console.log(`[API Fashion] Generated ${successCount}/${styles.length} fashion styles`)
 
     return new Response(
       JSON.stringify({
         images,
         successCount,
-        provider: replicateToken ? 'replicate' : 'gemini'
+        provider: 'gemini'
       }),
       { status: 200, headers: { 'Content-Type': 'application/json', ...corsHeaders } }
     )

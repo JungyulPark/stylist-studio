@@ -97,54 +97,45 @@ CRITICAL - DO NOT CHANGE:
 
 ONLY change the clothes/outfit. Generate the edited photo.`
 
-    // Use Gemini 3 Flash for image editing
-    let response = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-image:generateContent?key=${apiKey}`,
-      {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          contents: [{
-            role: 'user',
-            parts: [
-              { inlineData: { mimeType, data: base64Data } },
-              { text: editPrompt }
-            ]
-          }],
-          generationConfig: {
-            responseModalities: ['IMAGE', 'TEXT']
-          }
-        })
-      }
-    )
+    const geminiModels = [
+      'nano-banana-pro-preview',
+      'gemini-2.0-flash-exp-image-generation'
+    ]
 
-    // If Gemini 2.0 fails, try Gemini 3 Pro Image
-    if (!response.ok) {
-      response = await fetch(
-        `https://generativelanguage.googleapis.com/v1beta/models/gemini-3-pro-image-preview:generateContent?key=${apiKey}`,
-        {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            contents: [{
-              role: 'user',
-              parts: [
-                { inlineData: { mimeType, data: base64Data } },
-                { text: editPrompt }
-              ]
-            }],
-            generationConfig: {
-              responseModalities: ['IMAGE', 'TEXT']
-            }
-          })
+    let response: Response | null = null
+    for (const model of geminiModels) {
+      try {
+        response = await fetch(
+          `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`,
+          {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              contents: [{
+                role: 'user',
+                parts: [
+                  { inlineData: { mimeType, data: base64Data } },
+                  { text: editPrompt }
+                ]
+              }],
+              generationConfig: {
+                responseModalities: ['IMAGE', 'TEXT']
+              }
+            })
+          }
+        )
+        if (response.ok) {
+          console.log(`[Gemini] ${model} succeeded for ${stylePrompt}`)
+          break
         }
-      )
+        console.log(`[Gemini] ${model} failed (${response.status}) for ${stylePrompt}`)
+      } catch (e) {
+        console.error(`[Gemini] ${model} error:`, e)
+      }
     }
 
-    if (!response.ok) {
-      const errorText = await response.text()
-      console.error('Gemini error:', response.status, errorText)
-      return { imageUrl: null, error: `Gemini API error ${response.status}: ${errorText.substring(0, 200)}` }
+    if (!response || !response.ok) {
+      return { imageUrl: null, error: 'All Gemini models failed' }
     }
 
     const data = await response.json() as {
