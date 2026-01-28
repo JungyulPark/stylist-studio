@@ -148,6 +148,13 @@ const translations: Record<Language, {
   generatingHairstyles: string
   generatingFashion: string
   photoRequired: string
+  serviceIntroTitle: string
+  serviceStep1: string
+  serviceStep1Desc: string
+  serviceStep2: string
+  serviceStep2Desc: string
+  serviceStep3: string
+  serviceStep3Desc: string
 }> = {
   ko: {
     title: 'AI STYLIST',
@@ -238,7 +245,14 @@ const translations: Record<Language, {
     generateFashion: '패션 스타일 생성하기',
     generatingHairstyles: '헤어스타일 생성 중...',
     generatingFashion: '패션 스타일 생성 중...',
-    photoRequired: '사진을 업로드해주세요'
+    photoRequired: '사진을 업로드해주세요',
+    serviceIntroTitle: '이렇게 이용하세요',
+    serviceStep1: '셀카 업로드',
+    serviceStep1Desc: '정면 사진 한 장이면 충분합니다',
+    serviceStep2: '스타일 선택',
+    serviceStep2Desc: '헤어 또는 패션 변환을 선택하세요',
+    serviceStep3: '결과 확인',
+    serviceStep3Desc: '내 얼굴 그대로, 다양한 스타일을 미리 체험'
   },
   en: {
     title: 'AI STYLIST',
@@ -329,7 +343,14 @@ const translations: Record<Language, {
     generateFashion: 'Generate Fashion Styles',
     generatingHairstyles: 'Generating hairstyles...',
     generatingFashion: 'Generating fashion styles...',
-    photoRequired: 'Please upload a photo'
+    photoRequired: 'Please upload a photo',
+    serviceIntroTitle: 'How It Works',
+    serviceStep1: 'Upload a Selfie',
+    serviceStep1Desc: 'One front-facing photo is all you need',
+    serviceStep2: 'Choose Your Style',
+    serviceStep2Desc: 'Select hair or fashion transformation',
+    serviceStep3: 'See Results',
+    serviceStep3Desc: 'Preview styles on your actual face instantly'
   },
   ja: {
     title: 'AI STYLIST',
@@ -420,7 +441,14 @@ const translations: Record<Language, {
     generateFashion: 'ファッションスタイルを生成',
     generatingHairstyles: 'ヘアスタイル生成中...',
     generatingFashion: 'ファッションスタイル生成中...',
-    photoRequired: '写真をアップロードしてください'
+    photoRequired: '写真をアップロードしてください',
+    serviceIntroTitle: 'ご利用方法',
+    serviceStep1: 'セルフィーをアップロード',
+    serviceStep1Desc: '正面写真1枚でOK',
+    serviceStep2: 'スタイルを選択',
+    serviceStep2Desc: 'ヘアまたはファッション変換を選択',
+    serviceStep3: '結果を確認',
+    serviceStep3Desc: 'あなたの顔のまま様々なスタイルをプレビュー'
   },
   zh: {
     title: 'AI STYLIST',
@@ -511,7 +539,14 @@ const translations: Record<Language, {
     generateFashion: '生成时尚风格',
     generatingHairstyles: '正在生成发型...',
     generatingFashion: '正在生成时尚风格...',
-    photoRequired: '请上传照片'
+    photoRequired: '请上传照片',
+    serviceIntroTitle: '使用方法',
+    serviceStep1: '上传自拍',
+    serviceStep1Desc: '一张正面照片就够了',
+    serviceStep2: '选择风格',
+    serviceStep2Desc: '选择发型或时尚变换',
+    serviceStep3: '查看结果',
+    serviceStep3Desc: '保留您的面容，即时预览各种风格'
   },
   es: {
     title: 'AI STYLIST',
@@ -602,7 +637,14 @@ const translations: Record<Language, {
     generateFashion: 'Generar Estilos de Moda',
     generatingHairstyles: 'Generando peinados...',
     generatingFashion: 'Generando estilos de moda...',
-    photoRequired: 'Por favor sube una foto'
+    photoRequired: 'Por favor sube una foto',
+    serviceIntroTitle: 'Como Funciona',
+    serviceStep1: 'Sube un Selfie',
+    serviceStep1Desc: 'Solo necesitas una foto frontal',
+    serviceStep2: 'Elige tu Estilo',
+    serviceStep2Desc: 'Selecciona cambio de peinado o moda',
+    serviceStep3: 'Ver Resultados',
+    serviceStep3Desc: 'Vista previa de estilos en tu rostro al instante'
   }
 }
 
@@ -945,47 +987,56 @@ function App() {
     setPage('loading')
 
     try {
-      const [analyzeResponse, stylesResponse] = await Promise.all([
-        fetch('/api/analyze', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            photo: profileData.photo,
-            height: profileData.height,
-            weight: profileData.weight,
-            gender: profileData.gender,
-            language: lang
-          })
-        }),
-        fetch('/api/generate-styles', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            height: profileData.height,
-            weight: profileData.weight,
-            gender: profileData.gender,
-            photo: profileData.photo,
-            language: lang
-          })
-        }).catch(() => null)
-      ])
+      // Step 1: Text analysis first
+      const analyzeResponse = await fetch('/api/analyze', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          photo: profileData.photo,
+          height: profileData.height,
+          weight: profileData.weight,
+          gender: profileData.gender,
+          language: lang
+        })
+      })
+
+      if (!analyzeResponse.ok) {
+        throw new Error('Analysis failed')
+      }
 
       const analyzeData = await analyzeResponse.json()
       if (analyzeData.report) {
         setReport(analyzeData.report)
       }
 
-      if (stylesResponse && stylesResponse.ok) {
-        const stylesData = await stylesResponse.json()
-        if (stylesData.styles) {
-          setStyleImages(stylesData.styles)
-        }
-      }
-
       setLoadingProgress(100)
       setLoadingStep(lang === 'ko' ? '완료!' : 'Complete!')
       await new Promise(resolve => setTimeout(resolve, 400))
       setPage('result')
+
+      // Step 2: Generate style images AFTER showing result page
+      setIsGeneratingStyles(true)
+      try {
+        const stylesResponse = await fetch('/api/generate-styles', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            height: profileData.height,
+            weight: profileData.weight,
+            gender: profileData.gender,
+            photo: profileData.photo,
+            language: lang
+          })
+        })
+        if (stylesResponse.ok) {
+          const stylesData = await stylesResponse.json()
+          setStyleImages(stylesData.styles || [])
+        }
+      } catch (styleErr) {
+        console.error('Style generation error:', styleErr)
+      } finally {
+        setIsGeneratingStyles(false)
+      }
     } catch (err) {
       console.error('Analysis error:', err)
       setError(lang === 'ko' ? '분석 중 오류가 발생했습니다' : 'An error occurred during analysis')
@@ -1002,30 +1053,18 @@ function App() {
     setLoadingStep('')
 
     try {
-      const [analyzeResponse, stylesResponse] = await Promise.all([
-        fetch('/api/analyze', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            photo: profile.photo,
-            height: profile.height,
-            weight: profile.weight,
-            gender: profile.gender,
-            language: lang
-          })
-        }),
-        fetch('/api/generate-styles', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            height: profile.height,
-            weight: profile.weight,
-            gender: profile.gender,
-            photo: profile.photo,
-            language: lang
-          })
-        }).catch(() => null)
-      ])
+      // Step 1: Text analysis first
+      const analyzeResponse = await fetch('/api/analyze', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          photo: profile.photo,
+          height: profile.height,
+          weight: profile.weight,
+          gender: profile.gender,
+          language: lang
+        })
+      })
 
       if (!analyzeResponse.ok) {
         throw new Error('Analysis failed')
@@ -1034,15 +1073,34 @@ function App() {
       const analyzeData = await analyzeResponse.json()
       setReport(analyzeData.report)
 
-      if (stylesResponse && stylesResponse.ok) {
-        const stylesData = await stylesResponse.json()
-        setStyleImages(stylesData.styles || [])
-      }
-
       setLoadingProgress(100)
       setLoadingStep(lang === 'ko' ? '완료!' : 'Complete!')
       await new Promise(resolve => setTimeout(resolve, 400))
       setPage('result')
+
+      // Step 2: Generate style images AFTER showing result page (non-blocking)
+      setIsGeneratingStyles(true)
+      try {
+        const stylesResponse = await fetch('/api/generate-styles', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            height: profile.height,
+            weight: profile.weight,
+            gender: profile.gender,
+            photo: profile.photo,
+            language: lang
+          })
+        })
+        if (stylesResponse.ok) {
+          const stylesData = await stylesResponse.json()
+          setStyleImages(stylesData.styles || [])
+        }
+      } catch (styleErr) {
+        console.error('Style generation error:', styleErr)
+      } finally {
+        setIsGeneratingStyles(false)
+      }
     } catch (err) {
       console.error('Error:', err)
       setError(t.error)
@@ -1662,6 +1720,31 @@ function App() {
               <span className="magazine">BAZAAR</span>
               <span className="magazine">ELLE</span>
               <span className="magazine">WWD</span>
+            </div>
+          </div>
+        </section>
+
+        {/* Service Intro Section */}
+        <section className="service-intro-section">
+          <h2 className="section-title">{t.serviceIntroTitle}</h2>
+          <div className="section-divider"></div>
+          <div className="service-steps">
+            <div className="service-step">
+              <div className="service-step-icon">1</div>
+              <h3>{t.serviceStep1}</h3>
+              <p>{t.serviceStep1Desc}</p>
+            </div>
+            <div className="service-step-arrow">→</div>
+            <div className="service-step">
+              <div className="service-step-icon">2</div>
+              <h3>{t.serviceStep2}</h3>
+              <p>{t.serviceStep2Desc}</p>
+            </div>
+            <div className="service-step-arrow">→</div>
+            <div className="service-step">
+              <div className="service-step-icon">3</div>
+              <h3>{t.serviceStep3}</h3>
+              <p>{t.serviceStep3Desc}</p>
             </div>
           </div>
         </section>

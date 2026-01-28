@@ -33,6 +33,8 @@ CRITICAL REQUIREMENTS:
 - Body proportions must not change
 - Only the CLOTHING should be modified to "${styleName}" style
 
+Also apply subtle beauty retouching: smooth clear skin, even skin tone, soft professional studio lighting.
+
 Generate the edited photo with the new outfit.`
 
     const geminiModels = [

@@ -15,6 +15,7 @@ interface RequestBody {
 async function generateHairImageWithGemini(
   photo: string,
   styleName: string,
+  gender: string,
   apiKey: string
 ): Promise<{ style: string; imageUrl: string | null }> {
   try {
@@ -26,13 +27,21 @@ async function generateHairImageWithGemini(
     const mimeType = `image/${base64Match[1]}`
     const base64Data = base64Match[2]
 
+    const genderGuide = gender === 'female'
+      ? 'This is a WOMAN. Apply a feminine, elegant hairstyle that suits women. Make it look natural and attractive for a woman.'
+      : 'This is a MAN. Apply a masculine, clean-cut hairstyle that suits men. Keep hair SHORT to MEDIUM length only. Do NOT make hair long, flowing, or feminine. Must look like a proper men\'s haircut.'
+
     const editPrompt = `EDIT this photo - ONLY change the HAIRSTYLE to: ${styleName}
+
+${genderGuide}
 
 CRITICAL REQUIREMENTS:
 - The person's FACE must remain EXACTLY identical (same eyes, nose, mouth, face shape)
 - Skin tone must stay the same
 - Expression and pose must not change
 - Only the HAIR should be modified to "${styleName}" style
+
+Also apply subtle beauty retouching: smooth clear skin, even skin tone, soft professional studio lighting.
 
 Generate the edited photo with the new hairstyle.`
 
@@ -112,7 +121,7 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
 
   try {
     const body: RequestBody = await context.request.json()
-    const { photo, styles } = body
+    const { photo, styles, gender } = body
 
     if (!photo || !styles || styles.length === 0) {
       return new Response(
@@ -133,7 +142,7 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
     console.log(`[API Hair] Generating ${styles.length} hairstyles with Gemini`)
 
     const images = await Promise.all(
-      styles.map(styleName => generateHairImageWithGemini(photo, styleName, geminiKey))
+      styles.map(styleName => generateHairImageWithGemini(photo, styleName, gender || 'male', geminiKey))
     )
 
     const successCount = images.filter(r => r.imageUrl).length

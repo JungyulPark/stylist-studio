@@ -365,6 +365,76 @@
   font-style: italic;
 }
 
+/* Service Intro Section */
+.service-intro-section {
+  padding: 4rem 2rem;
+  background: rgba(212, 114, 140, 0.03);
+}
+
+@media (min-width: 768px) {
+  .service-intro-section {
+    padding: 5rem;
+  }
+}
+
+.service-steps {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  margin-top: 2.5rem;
+  flex-wrap: wrap;
+}
+
+.service-step {
+  text-align: center;
+  flex: 0 1 200px;
+}
+
+.service-step-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--primary), #e88fa7);
+  color: white;
+  font-size: 1.2rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 1rem;
+}
+
+.service-step h3 {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--text);
+  margin-bottom: 0.5rem;
+}
+
+.service-step p {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  line-height: 1.5;
+}
+
+.service-step-arrow {
+  font-size: 1.5rem;
+  color: var(--primary);
+  font-weight: 300;
+  opacity: 0.5;
+}
+
+@media (max-width: 600px) {
+  .service-step-arrow {
+    display: none;
+  }
+  .service-steps {
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+}
+
 /* Path Section */
 .path-section {
   padding: 5rem 2rem;

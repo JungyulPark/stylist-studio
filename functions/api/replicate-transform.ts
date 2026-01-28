@@ -17,6 +17,7 @@ async function transformWithGemini(
   photo: string,
   type: 'hairstyle' | 'fashion',
   styleName: string,
+  gender: string,
   apiKey: string
 ): Promise<{ style: string; imageUrl: string | null }> {
   try {
@@ -28,15 +29,24 @@ async function transformWithGemini(
     const mimeType = `image/${base64Match[1]}`
     const base64Data = base64Match[2]
 
+    const genderGuide = gender === 'female'
+      ? 'This is a WOMAN. Style should be feminine and suit women.'
+      : 'This is a MAN. Style should be masculine and suit men. For hair: keep SHORT to MEDIUM length only, no long/flowing hair.'
+
     const editPrompt = type === 'hairstyle'
       ? `EDIT this photo - ONLY change the HAIRSTYLE to: ${styleName}
+
+${genderGuide}
 
 CRITICAL - DO NOT CHANGE:
 - Face, eyes, nose, mouth - MUST stay IDENTICAL
 - Skin tone and body - MUST stay IDENTICAL
 - Expression and pose - MUST stay IDENTICAL
 
-ONLY modify the hair. Generate the edited photo.`
+ONLY modify the hair.
+Also apply subtle beauty retouching: smooth clear skin, even skin tone, soft professional studio lighting.
+
+Generate the edited photo.`
       : `EDIT this photo - ONLY change the OUTFIT to: ${styleName}
 
 CRITICAL - DO NOT CHANGE:
@@ -44,7 +54,10 @@ CRITICAL - DO NOT CHANGE:
 - Skin tone and body - MUST stay IDENTICAL
 - Expression and pose - MUST stay IDENTICAL
 
-ONLY change the clothes. Generate the edited photo.`
+ONLY change the clothes.
+Also apply subtle beauty retouching: smooth clear skin, even skin tone, soft professional studio lighting.
+
+Generate the edited photo.`
 
     const geminiModels = [
       'nano-banana-pro-preview',
@@ -121,7 +134,7 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
 
   try {
     const body: RequestBody = await context.request.json()
-    const { photo, type, styles } = body
+    const { photo, type, styles, gender } = body
 
     if (!photo || !styles || styles.length === 0) {
       return new Response(
@@ -140,7 +153,7 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
     }
 
     const results = await Promise.all(
-      styles.map(styleName => transformWithGemini(photo, type, styleName, geminiKey))
+      styles.map(styleName => transformWithGemini(photo, type, styleName, gender || 'male', geminiKey))
     )
 
     return new Response(

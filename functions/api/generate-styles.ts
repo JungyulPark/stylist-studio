@@ -81,7 +81,10 @@ CRITICAL - DO NOT CHANGE:
 - Body proportions - MUST stay IDENTICAL
 - Expression and pose - MUST stay IDENTICAL
 
-ONLY change the clothes/outfit. Generate the edited photo.`
+ONLY change the clothes/outfit.
+Also apply subtle beauty retouching: smooth clear skin, even skin tone, soft professional studio lighting.
+
+Generate the edited photo.`
 
     const geminiModels = [
       'nano-banana-pro-preview',

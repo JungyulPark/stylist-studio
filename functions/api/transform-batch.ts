@@ -51,6 +51,7 @@ async function transformWithGemini(
   photo: string,
   type: 'hairstyle' | 'fashion',
   style: StyleOption,
+  gender: string,
   apiKey: string
 ): Promise<string | null> {
   try {
@@ -60,15 +61,24 @@ async function transformWithGemini(
     const mimeType = `image/${base64Match[1]}`
     const base64Data = base64Match[2]
 
+    const genderGuide = gender === 'female'
+      ? 'This is a WOMAN. Style should be feminine and suit women.'
+      : 'This is a MAN. Style should be masculine and suit men. For hair: keep SHORT to MEDIUM length only, no long/flowing hair.'
+
     const editPrompt = type === 'hairstyle'
       ? `EDIT this photo - ONLY change the HAIRSTYLE to: ${style.prompt}
+
+${genderGuide}
 
 CRITICAL - DO NOT CHANGE:
 - Face, eyes, nose, mouth - MUST stay IDENTICAL
 - Skin tone and body shape - MUST stay IDENTICAL
 - Expression and pose - MUST stay IDENTICAL
 
-ONLY modify the hair. Generate the edited photo.`
+ONLY modify the hair.
+Also apply subtle beauty retouching: smooth clear skin, even skin tone, soft professional studio lighting.
+
+Generate the edited photo.`
       : `EDIT this photo - ONLY change the OUTFIT to: ${style.prompt}
 
 CRITICAL - DO NOT CHANGE:
@@ -76,7 +86,10 @@ CRITICAL - DO NOT CHANGE:
 - Skin tone and body shape - MUST stay IDENTICAL
 - Expression and pose - MUST stay IDENTICAL
 
-ONLY change the clothes. Generate the edited photo.`
+ONLY change the clothes.
+Also apply subtle beauty retouching: smooth clear skin, even skin tone, soft professional studio lighting.
+
+Generate the edited photo.`
 
     const geminiModels = [
       'nano-banana-pro-preview',
@@ -176,7 +189,7 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
 
     const results = await Promise.all(
       styles.map(async (style) => {
-        const imageUrl = await transformWithGemini(photo, type, style, geminiKey)
+        const imageUrl = await transformWithGemini(photo, type, style, genderKey, geminiKey)
         const label = language === 'ko' ? style.ko : style.en
         return { id: style.id, label, imageUrl }
       })

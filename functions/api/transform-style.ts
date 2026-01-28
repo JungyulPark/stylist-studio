@@ -85,7 +85,10 @@ CRITICAL - DO NOT CHANGE:
 - Expression and pose - MUST stay IDENTICAL
 - Background and lighting - MUST stay IDENTICAL
 
-ONLY modify the hair. Generate the edited photo.`
+ONLY modify the hair. Keep hair at a natural, manageable length - avoid overly long or exaggerated styles for men.
+Also apply subtle beauty retouching: smooth clear skin, even skin tone, soft professional studio lighting.
+
+Generate the edited photo.`
       : `EDIT this photo - ONLY change the OUTFIT to: ${stylePrompt}
 
 CRITICAL - DO NOT CHANGE:
@@ -95,7 +98,10 @@ CRITICAL - DO NOT CHANGE:
 - Body proportions - MUST stay IDENTICAL
 - Expression and pose - MUST stay IDENTICAL
 
-ONLY change the clothes/outfit. Generate the edited photo.`
+ONLY change the clothes/outfit.
+Also apply subtle beauty retouching: smooth clear skin, even skin tone, soft professional studio lighting.
+
+Generate the edited photo.`
 
     const geminiModels = [
       'nano-banana-pro-preview',
