@@ -812,6 +812,41 @@ function App() {
     return () => window.removeEventListener('popstate', handlePopState)
   }, [])
 
+  // 로딩 프로그레스 타이머 (자연스러운 진행률 표시)
+  useEffect(() => {
+    if (page !== 'loading') return
+
+    const steps = lang === 'ko'
+      ? ['프로필 분석 시작...', '체형 및 컬러 분석 중...', '퍼스널 스타일 계산 중...', '맞춤 스타일 이미지 생성 중...', '스타일 리포트 작성 중...', '마무리 중...']
+      : ['Starting analysis...', 'Analyzing body type & colors...', 'Calculating personal style...', 'Generating style images...', 'Creating style report...', 'Finalizing...']
+
+    let progress = 0
+    let stepIdx = 0
+
+    const interval = setInterval(() => {
+      // Increment by random amount (faster at start, slower near end)
+      const increment = progress < 30 ? Math.random() * 6 + 3
+        : progress < 60 ? Math.random() * 4 + 2
+        : progress < 85 ? Math.random() * 2 + 1
+        : Math.random() * 0.5 + 0.2
+
+      progress = Math.min(progress + increment, 92) // Cap at 92%
+      setLoadingProgress(Math.round(progress))
+
+      // Update step text periodically
+      const newStepIdx = Math.min(Math.floor(progress / 16), steps.length - 1)
+      if (newStepIdx !== stepIdx) {
+        stepIdx = newStepIdx
+        setLoadingStep(steps[stepIdx])
+      }
+    }, 600)
+
+    // Set initial step
+    setLoadingStep(steps[0])
+
+    return () => clearInterval(interval)
+  }, [page, lang])
+
   const processFile = (file: File) => {
     if (file && file.type.startsWith('image/')) {
       const reader = new FileReader()
@@ -906,52 +941,40 @@ function App() {
     setError('')
     setStyleImages([])
     setLoadingProgress(0)
-    setLoadingStep(lang === 'ko' ? '결제 확인 완료! 분석 시작...' : 'Payment confirmed! Starting analysis...')
+    setLoadingStep('')
     setPage('loading')
 
     try {
-      setLoadingProgress(15)
-      setLoadingStep(lang === 'ko' ? '체형 및 컬러 분석 중...' : 'Analyzing body type & colors...')
+      const [analyzeResponse, stylesResponse] = await Promise.all([
+        fetch('/api/analyze', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            photo: profileData.photo,
+            height: profileData.height,
+            weight: profileData.weight,
+            gender: profileData.gender,
+            language: lang
+          })
+        }),
+        fetch('/api/generate-styles', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            height: profileData.height,
+            weight: profileData.weight,
+            gender: profileData.gender,
+            photo: profileData.photo,
+            language: lang
+          })
+        }).catch(() => null)
+      ])
 
-      const analyzePromise = fetch('/api/analyze', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          photo: profileData.photo,
-          height: profileData.height,
-          weight: profileData.weight,
-          gender: profileData.gender,
-          language: lang
-        })
-      })
-
-      setLoadingProgress(30)
-      setLoadingStep(lang === 'ko' ? '맞춤 스타일 이미지 생성 중...' : 'Generating personalized style images...')
-
-      const stylesPromise = fetch('/api/generate-styles', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          height: profileData.height,
-          weight: profileData.weight,
-          gender: profileData.gender,
-          photo: profileData.photo,
-          language: lang
-        })
-      }).catch(() => null)
-
-      setLoadingProgress(50)
-      const analyzeResponse = await analyzePromise
       const analyzeData = await analyzeResponse.json()
-
       if (analyzeData.report) {
         setReport(analyzeData.report)
       }
 
-      setLoadingProgress(75)
-      setLoadingStep(lang === 'ko' ? '스타일 이미지 마무리 중...' : 'Finalizing style images...')
-
-      const stylesResponse = await stylesPromise
       if (stylesResponse && stylesResponse.ok) {
         const stylesData = await stylesResponse.json()
         if (stylesData.styles) {
@@ -961,7 +984,7 @@ function App() {
 
       setLoadingProgress(100)
       setLoadingStep(lang === 'ko' ? '완료!' : 'Complete!')
-      await new Promise(resolve => setTimeout(resolve, 300))
+      await new Promise(resolve => setTimeout(resolve, 400))
       setPage('result')
     } catch (err) {
       console.error('Analysis error:', err)
@@ -976,60 +999,40 @@ function App() {
     setError('')
     setStyleImages([])
     setLoadingProgress(0)
-    setLoadingStep(lang === 'ko' ? '프로필 분석 시작...' : 'Starting profile analysis...')
+    setLoadingStep('')
 
     try {
-      // Step 1: Start analysis (20%)
-      setLoadingProgress(10)
-      setLoadingStep(lang === 'ko' ? '체형 및 컬러 분석 중...' : 'Analyzing body type & colors...')
-
-      const analyzePromise = fetch('/api/analyze', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          photo: profile.photo,
-          height: profile.height,
-          weight: profile.weight,
-          gender: profile.gender,
-          language: lang
-        })
-      })
-
-      // Step 2: Start style generation (30%)
-      setLoadingProgress(25)
-      setLoadingStep(lang === 'ko' ? '맞춤 스타일 이미지 생성 중...' : 'Generating personalized style images...')
-
-      const stylesPromise = fetch('/api/generate-styles', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          height: profile.height,
-          weight: profile.weight,
-          gender: profile.gender,
-          photo: profile.photo,
-          language: lang
-        })
-      }).catch(() => null)
-
-      // Wait for analysis first
-      setLoadingProgress(40)
-      const analyzeResponse = await analyzePromise
+      const [analyzeResponse, stylesResponse] = await Promise.all([
+        fetch('/api/analyze', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            photo: profile.photo,
+            height: profile.height,
+            weight: profile.weight,
+            gender: profile.gender,
+            language: lang
+          })
+        }),
+        fetch('/api/generate-styles', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            height: profile.height,
+            weight: profile.weight,
+            gender: profile.gender,
+            photo: profile.photo,
+            language: lang
+          })
+        }).catch(() => null)
+      ])
 
       if (!analyzeResponse.ok) {
         throw new Error('Analysis failed')
       }
 
-      setLoadingProgress(60)
-      setLoadingStep(lang === 'ko' ? '리포트 생성 완료!' : 'Report generated!')
-
       const analyzeData = await analyzeResponse.json()
       setReport(analyzeData.report)
-
-      // Wait for styles
-      setLoadingProgress(75)
-      setLoadingStep(lang === 'ko' ? '스타일 이미지 마무리 중...' : 'Finalizing style images...')
-
-      const stylesResponse = await stylesPromise
 
       if (stylesResponse && stylesResponse.ok) {
         const stylesData = await stylesResponse.json()
@@ -1038,9 +1041,7 @@ function App() {
 
       setLoadingProgress(100)
       setLoadingStep(lang === 'ko' ? '완료!' : 'Complete!')
-
-      // Brief delay to show 100%
-      await new Promise(resolve => setTimeout(resolve, 300))
+      await new Promise(resolve => setTimeout(resolve, 400))
       setPage('result')
     } catch (err) {
       console.error('Error:', err)

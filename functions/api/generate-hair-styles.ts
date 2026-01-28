@@ -21,7 +21,6 @@ interface ReplicateResponse {
 
 // ===== Model Versions =====
 const INSTANT_ID_VERSION = '2e4785a4d80dadf580077b2244c8d7c05d8e3faac04a04c02d8e099dd2876789'
-const FACE_SWAP_VERSION = '278a81e7ebb22db98bcba54de985d22cc1abeead2754eb1f2af717247be69b34'
 
 // ===== Replicate Helpers =====
 async function createPrediction(
@@ -122,21 +121,7 @@ async function generateStyledImage(
   return await pollPrediction(apiToken, predictionId)
 }
 
-// ===== Step 2: FaceSwap - Swap original face onto styled image =====
-async function swapFace(
-  apiToken: string,
-  templateImageUrl: string,
-  userFacePhoto: string
-): Promise<string | null> {
-  const predictionId = await createPrediction(apiToken, FACE_SWAP_VERSION, {
-    input_image: templateImageUrl,
-    swap_image: userFacePhoto
-  })
-
-  return await pollPrediction(apiToken, predictionId, 30000)
-}
-
-// ===== Replicate 2-Step Pipeline =====
+// ===== Replicate InstantID Pipeline =====
 async function generateHairImageWithReplicate(
   photo: string,
   styleName: string,
@@ -153,25 +138,12 @@ async function generateHairImageWithReplicate(
     const styledImageUrl = await generateStyledImage(apiToken, photo, prompt)
 
     if (!styledImageUrl) {
-      console.log(`[Step 1] InstantID failed for: ${styleName}`)
+      console.log(`[InstantID] Failed for: ${styleName}`)
       return { style: styleName, imageUrl: null }
     }
 
-    console.log(`[Step 2] FaceSwap swapping face: ${styleName}`)
-
-    // Step 2: Swap original face onto styled image
-    const fusedImageUrl = await swapFace(apiToken, styledImageUrl, photo)
-
-    if (!fusedImageUrl) {
-      // If face swap fails, still return InstantID result
-      console.log(`[Step 2] FaceSwap failed, using InstantID result: ${styleName}`)
-      const base64Image = await fetchImageAsBase64(styledImageUrl)
-      return { style: styleName, imageUrl: base64Image }
-    }
-
-    const base64Image = await fetchImageAsBase64(fusedImageUrl)
-
-    console.log(`[Done] Success with face swap: ${styleName}`)
+    const base64Image = await fetchImageAsBase64(styledImageUrl)
+    console.log(`[InstantID] Success: ${styleName}`)
     return { style: styleName, imageUrl: base64Image }
   } catch (error) {
     console.error(`[Replicate] Error for "${styleName}":`, error)

@@ -56,7 +56,6 @@ const fashionStyles: Record<string, StyleOption[]> = {
 
 // ===== Replicate Model Versions =====
 const INSTANT_ID_VERSION = '2e4785a4d80dadf580077b2244c8d7c05d8e3faac04a04c02d8e099dd2876789'
-const FACE_SWAP_VERSION = '278a81e7ebb22db98bcba54de985d22cc1abeead2754eb1f2af717247be69b34'
 
 // ===== Replicate Helpers =====
 async function createPrediction(
@@ -168,27 +167,12 @@ async function transformWithReplicate(
 
     const styledImageUrl = await pollPrediction(apiToken, predictionId)
     if (!styledImageUrl) {
-      console.log(`[Step 1] InstantID failed for: ${style.id}`)
+      console.log(`[InstantID] Failed for: ${style.id}`)
       return null
     }
 
-    console.log(`[Step 2] FaceSwap: ${style.id}`)
-
-    // Step 2: Swap original face onto styled image
-    const fusionId = await createPrediction(apiToken, FACE_SWAP_VERSION, {
-      input_image: styledImageUrl,
-      swap_image: photo
-    })
-
-    const fusedImageUrl = await pollPrediction(apiToken, fusionId, 30000)
-
-    if (!fusedImageUrl) {
-      console.log(`[Step 2] FaceSwap failed, using InstantID result: ${style.id}`)
-      return await fetchImageAsBase64(styledImageUrl)
-    }
-
-    console.log(`[Done] Success with face swap: ${style.id}`)
-    return await fetchImageAsBase64(fusedImageUrl)
+    console.log(`[InstantID] Success: ${style.id}`)
+    return await fetchImageAsBase64(styledImageUrl)
   } catch (error) {
     console.error(`[Replicate] Error for ${style.id}:`, error)
     return null
@@ -227,28 +211,45 @@ CRITICAL - DO NOT CHANGE:
 
 ONLY change the clothes. Generate the edited photo.`
 
-    const response = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-image:generateContent?key=${apiKey}`,
-      {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          contents: [{
-            role: 'user',
-            parts: [
-              { inlineData: { mimeType, data: base64Data } },
-              { text: editPrompt }
-            ]
-          }],
-          generationConfig: {
-            responseModalities: ['IMAGE', 'TEXT']
-          }
-        })
-      }
-    )
+    const geminiModels = [
+      'gemini-2.0-flash-exp-image-generation',
+      'gemini-2.5-flash-image'
+    ]
 
-    if (!response.ok) {
-      console.error(`Gemini error for ${style.id}:`, response.status)
+    let response: Response | null = null
+    for (const model of geminiModels) {
+      try {
+        response = await fetch(
+          `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`,
+          {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              contents: [{
+                role: 'user',
+                parts: [
+                  { inlineData: { mimeType, data: base64Data } },
+                  { text: editPrompt }
+                ]
+              }],
+              generationConfig: {
+                responseModalities: ['IMAGE', 'TEXT']
+              }
+            })
+          }
+        )
+        if (response.ok) {
+          console.log(`[Gemini] ${model} succeeded for ${style.id}`)
+          break
+        }
+        console.log(`[Gemini] ${model} failed (${response.status}) for ${style.id}`)
+      } catch (e) {
+        console.error(`[Gemini] ${model} error:`, e)
+      }
+    }
+
+    if (!response || !response.ok) {
+      console.error(`[Gemini] All models failed for ${style.id}`)
       return null
     }
 
@@ -286,13 +287,13 @@ async function transformImage(
   const label = language === 'ko' ? style.ko : style.en
   let imageUrl: string | null = null
 
-  // Priority 1: Replicate 2-step pipeline (best face preservation)
+  // Priority 1: Replicate InstantID (face-preserving style generation)
   if (replicateToken) {
     imageUrl = await transformWithReplicate(photo, type, style, gender, replicateToken)
     if (imageUrl) {
       return { id: style.id, label, imageUrl }
     }
-    console.log(`[Fallback] Replicate failed for ${style.id}, trying Gemini...`)
+    console.log(`[Fallback] InstantID failed for ${style.id}, trying Gemini...`)
   }
 
   // Priority 2: Gemini photo editing

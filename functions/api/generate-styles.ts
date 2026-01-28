@@ -69,7 +69,6 @@ const styleScenarios: StyleScenario[] = [
 
 // ===== Replicate Model Versions =====
 const INSTANT_ID_VERSION = '2e4785a4d80dadf580077b2244c8d7c05d8e3faac04a04c02d8e099dd2876789'
-const FACE_SWAP_VERSION = '278a81e7ebb22db98bcba54de985d22cc1abeead2754eb1f2af717247be69b34'
 
 // ===== Replicate Helpers =====
 async function createPrediction(
@@ -155,9 +154,8 @@ async function generateWithReplicate(
     const genderWord = gender === 'female' ? 'woman' : 'man'
     const prompt = `one single ${genderWord} wearing ${scenario.prompt}, solo person, fashion photography, professional studio lighting, high quality, 8k resolution`
 
-    console.log(`[Step 1] InstantID: ${scenario.id}`)
+    console.log(`[InstantID] Generating: ${scenario.id}`)
 
-    // Step 1: Generate styled image with InstantID
     const predictionId = await createPrediction(apiToken, INSTANT_ID_VERSION, {
       image: photo,
       prompt: prompt,
@@ -177,27 +175,12 @@ async function generateWithReplicate(
 
     const styledImageUrl = await pollPrediction(apiToken, predictionId)
     if (!styledImageUrl) {
-      console.log(`[Step 1] InstantID failed for: ${scenario.id}`)
+      console.log(`[InstantID] Failed for: ${scenario.id}`)
       return null
     }
 
-    console.log(`[Step 2] FaceSwap: ${scenario.id}`)
-
-    // Step 2: Swap original face onto styled image
-    const fusionId = await createPrediction(apiToken, FACE_SWAP_VERSION, {
-      input_image: styledImageUrl,
-      swap_image: photo
-    })
-
-    const fusedImageUrl = await pollPrediction(apiToken, fusionId, 30000)
-
-    if (!fusedImageUrl) {
-      console.log(`[Step 2] FaceSwap failed, using InstantID result: ${scenario.id}`)
-      return await fetchImageAsBase64(styledImageUrl)
-    }
-
-    console.log(`[Done] Success with face swap: ${scenario.id}`)
-    return await fetchImageAsBase64(fusedImageUrl)
+    console.log(`[InstantID] Success: ${scenario.id}`)
+    return await fetchImageAsBase64(styledImageUrl)
   } catch (error) {
     console.error(`[Replicate] Error for ${scenario.id}:`, error)
     return null
@@ -228,50 +211,45 @@ CRITICAL - DO NOT CHANGE:
 
 ONLY change the clothes/outfit. Generate the edited photo.`
 
-    let response = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-image:generateContent?key=${apiKey}`,
-      {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          contents: [{
-            role: 'user',
-            parts: [
-              { inlineData: { mimeType, data: base64Data } },
-              { text: editPrompt }
-            ]
-          }],
-          generationConfig: {
-            responseModalities: ['IMAGE', 'TEXT']
-          }
-        })
-      }
-    )
+    const geminiModels = [
+      'gemini-2.0-flash-exp-image-generation',
+      'gemini-2.5-flash-image'
+    ]
 
-    if (!response.ok) {
-      response = await fetch(
-        `https://generativelanguage.googleapis.com/v1beta/models/gemini-3-pro-image-preview:generateContent?key=${apiKey}`,
-        {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            contents: [{
-              role: 'user',
-              parts: [
-                { inlineData: { mimeType, data: base64Data } },
-                { text: editPrompt }
-              ]
-            }],
-            generationConfig: {
-              responseModalities: ['IMAGE', 'TEXT']
-            }
-          })
+    let response: Response | null = null
+    for (const model of geminiModels) {
+      try {
+        response = await fetch(
+          `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`,
+          {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              contents: [{
+                role: 'user',
+                parts: [
+                  { inlineData: { mimeType, data: base64Data } },
+                  { text: editPrompt }
+                ]
+              }],
+              generationConfig: {
+                responseModalities: ['IMAGE', 'TEXT']
+              }
+            })
+          }
+        )
+        if (response.ok) {
+          console.log(`[Gemini] ${model} succeeded for ${scenario.id}`)
+          break
         }
-      )
+        console.log(`[Gemini] ${model} failed (${response.status}) for ${scenario.id}, trying next...`)
+      } catch (e) {
+        console.error(`[Gemini] ${model} error:`, e)
+      }
     }
 
-    if (!response.ok) {
-      console.error(`Gemini edit failed for ${scenario.id}:`, response.status)
+    if (!response || !response.ok) {
+      console.error(`[Gemini] All models failed for ${scenario.id}`)
       return null
     }
 

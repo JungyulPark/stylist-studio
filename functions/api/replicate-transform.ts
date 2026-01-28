@@ -22,7 +22,6 @@ interface ReplicateResponse {
 
 // ===== Model Versions =====
 const INSTANT_ID_VERSION = '2e4785a4d80dadf580077b2244c8d7c05d8e3faac04a04c02d8e099dd2876789'
-const FACE_SWAP_VERSION = '278a81e7ebb22db98bcba54de985d22cc1abeead2754eb1f2af717247be69b34'
 
 // ===== Hairstyle Prompt Mapping =====
 const hairstylePrompts: Record<string, Record<string, string>> = {
@@ -173,21 +172,7 @@ async function generateStyledImage(
   return await pollPrediction(apiToken, predictionId)
 }
 
-// ===== Step 2: FaceSwap =====
-async function swapFace(
-  apiToken: string,
-  templateImageUrl: string,
-  userFacePhoto: string
-): Promise<string | null> {
-  const predictionId = await createPrediction(apiToken, FACE_SWAP_VERSION, {
-    input_image: templateImageUrl,
-    swap_image: userFacePhoto
-  })
-
-  return await pollPrediction(apiToken, predictionId, 30000)
-}
-
-// ===== 2-Step Replicate Transform =====
+// ===== Replicate InstantID Transform =====
 async function transformWithReplicate(
   photo: string,
   type: 'hairstyle' | 'fashion',
@@ -218,18 +203,8 @@ async function transformWithReplicate(
       return { style: styleName, imageUrl: null }
     }
 
-    console.log(`[Step 2] FaceSwap: ${styleName}`)
-
-    // Step 2: Swap original face
-    const fusedImageUrl = await swapFace(apiToken, styledImageUrl, photo)
-
-    if (!fusedImageUrl) {
-      // Fallback to InstantID result if face swap fails
-      const base64Image = await urlToBase64(styledImageUrl)
-      return { style: styleName, imageUrl: base64Image }
-    }
-
-    const base64Image = await urlToBase64(fusedImageUrl)
+    console.log(`[InstantID] Success: ${styleName}`)
+    const base64Image = await urlToBase64(styledImageUrl)
     return { style: styleName, imageUrl: base64Image }
   } catch (error) {
     console.error(`Error transforming "${styleName}":`, error)
