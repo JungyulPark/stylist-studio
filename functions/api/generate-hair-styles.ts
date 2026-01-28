@@ -29,7 +29,7 @@ async function generateHairImageWithGemini(
 
     const genderGuide = gender === 'female'
       ? 'This is a WOMAN. Apply a feminine, elegant hairstyle that suits women. Make it look natural and attractive for a woman.'
-      : 'This is a MAN. Apply a masculine, clean-cut hairstyle that suits men. Keep hair SHORT to MEDIUM length only. Do NOT make hair long, flowing, or feminine. Must look like a proper men\'s haircut.'
+      : 'This is a MAN. The hairstyle should suit a man naturally. Perms, soft waves, textured styles are fine. Just avoid overly feminine or women\'s hairstyles. Keep it looking like a men\'s style.'
 
     const editPrompt = `EDIT this photo - ONLY change the HAIRSTYLE to: ${styleName}
 

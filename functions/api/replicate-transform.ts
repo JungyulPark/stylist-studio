@@ -31,7 +31,7 @@ async function transformWithGemini(
 
     const genderGuide = gender === 'female'
       ? 'This is a WOMAN. Style should be feminine and suit women.'
-      : 'This is a MAN. Style should be masculine and suit men. For hair: keep SHORT to MEDIUM length only, no long/flowing hair.'
+      : 'This is a MAN. The hairstyle should suit a man naturally. Perms, soft waves, textured styles are fine. Just avoid overly feminine or women\'s hairstyles.'
 
     const editPrompt = type === 'hairstyle'
       ? `EDIT this photo - ONLY change the HAIRSTYLE to: ${styleName}
