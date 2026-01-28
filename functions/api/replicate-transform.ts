@@ -21,7 +21,7 @@ interface ReplicateResponse {
 }
 
 // InstantID model version
-const INSTANT_ID_VERSION = 'bc6f7be740ba7227787f7b3a112452aef703c021cec8daf50b91f5528e9f613c'
+const INSTANT_ID_VERSION = '2e4785a4d80dadf580077b2244c8d7c05d8e3faac04a04c02d8e099dd2876789'
 
 // ===== Hairstyle Prompt Mapping =====
 const hairstylePrompts: Record<string, Record<string, string>> = {
@@ -90,13 +90,16 @@ async function createPrediction(
       input: {
         image: imageUrl,
         prompt: prompt,
-        negative_prompt: 'blurry, bad quality, distorted face, ugly, deformed, disfigured, bad anatomy, wrong proportions',
+        negative_prompt: 'blurry, bad quality, distorted face, ugly, deformed, disfigured, bad anatomy, wrong proportions, multiple people, group photo, crowd',
         num_inference_steps: 30,
-        guidance_scale: 5,
+        guidance_scale: 7.5,
         ip_adapter_scale: 0.8,
         controlnet_conditioning_scale: 0.8,
         num_outputs: 1,
         scheduler: 'EulerDiscreteScheduler',
+        face_detection_input_width: 640,
+        face_detection_input_height: 640,
+        enhance_nonface_region: true,
         output_format: 'webp',
         output_quality: 90
       }
@@ -179,11 +182,11 @@ async function transformWithReplicate(
 
     if (!prompt) {
       prompt = type === 'hairstyle'
-        ? `${gender === 'female' ? 'woman' : 'man'} with ${styleName} hairstyle, high quality portrait`
-        : `${gender === 'female' ? 'woman' : 'man'} wearing ${styleName} outfit, fashion photography`
+        ? `one single ${gender === 'female' ? 'woman' : 'man'} with ${styleName} hairstyle, solo person, high quality portrait`
+        : `one single ${gender === 'female' ? 'woman' : 'man'} wearing ${styleName} outfit, solo person, fashion photography`
     }
 
-    prompt += ', professional photography, high resolution, detailed, 8k'
+    prompt += ', solo person, professional photography, high resolution, detailed, 8k'
 
     const predictionId = await createPrediction(apiToken, photo, prompt)
     const outputUrl = await waitForPrediction(apiToken, predictionId)

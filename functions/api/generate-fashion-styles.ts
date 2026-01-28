@@ -31,17 +31,20 @@ async function createReplicatePrediction(
       'Content-Type': 'application/json',
     },
     body: JSON.stringify({
-      version: 'bc6f7be740ba7227787f7b3a112452aef703c021cec8daf50b91f5528e9f613c',
+      version: '2e4785a4d80dadf580077b2244c8d7c05d8e3faac04a04c02d8e099dd2876789',
       input: {
         image: imageData,
         prompt: prompt,
-        negative_prompt: 'blurry, bad quality, distorted face, ugly, deformed, disfigured, bad anatomy, wrong proportions, low quality, worst quality, watermark, text, naked, nude, nsfw',
+        negative_prompt: 'blurry, bad quality, distorted face, ugly, deformed, disfigured, bad anatomy, wrong proportions, low quality, worst quality, watermark, text, naked, nude, nsfw, multiple people, group photo, crowd',
         num_inference_steps: 30,
-        guidance_scale: 5,
+        guidance_scale: 7.5,
         ip_adapter_scale: 0.8,
         controlnet_conditioning_scale: 0.8,
         num_outputs: 1,
         scheduler: 'EulerDiscreteScheduler',
+        face_detection_input_width: 640,
+        face_detection_input_height: 640,
+        enhance_nonface_region: true,
         output_format: 'webp',
         output_quality: 90
       }
@@ -140,13 +143,13 @@ async function generateFashionImageWithReplicate(
   apiToken: string
 ): Promise<{ style: string; imageUrl: string | null }> {
   try {
-    const genderWord = gender === 'female' ? 'beautiful woman' : 'handsome man'
+    const genderWord = gender === 'female' ? 'woman' : 'man'
     const genderKey = gender === 'female' ? 'female' : 'male'
 
     const styleKey = styleName.toLowerCase().replace(/\s+/g, '-')
     const styleDetail = fashionPromptDetails[genderKey]?.[styleKey] || `wearing ${styleName} style outfit`
 
-    const prompt = `A ${genderWord} ${styleDetail}, full body fashion photography, professional studio lighting, high quality, same person same face, 8k resolution`
+    const prompt = `one single ${genderWord} ${styleDetail}, solo person, fashion photography, professional studio lighting, high quality, 8k resolution`
 
     console.log(`[Replicate Fashion] Generating: ${styleName}`)
 
