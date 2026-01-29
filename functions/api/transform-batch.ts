@@ -18,13 +18,15 @@ const hairstyles: Record<string, StyleOption[]> = {
     { id: 'two-block', ko: '투블럭', en: 'Two Block', prompt: 'Korean two-block haircut with volume on top' },
     { id: 'textured-crop', ko: '텍스처드 크롭', en: 'Textured Crop', prompt: 'textured messy crop with skin fade' },
     { id: 'slick-back', ko: '슬릭백', en: 'Slick Back', prompt: 'slicked back wet look hair' },
-    { id: 'pompadour', ko: '폼파두르', en: 'Pompadour', prompt: 'modern pompadour with height' }
+    { id: 'pompadour', ko: '폼파두르', en: 'Pompadour', prompt: 'modern pompadour with height' },
+    { id: 'curtain-bangs', ko: '커튼뱅', en: 'Curtain Bangs', prompt: 'middle part curtain bangs K-pop style' }
   ],
   female: [
     { id: 'long-layers', ko: '롱 레이어드', en: 'Long Layers', prompt: 'long layered hair with face framing' },
     { id: 'bob', ko: '단발', en: 'Bob Cut', prompt: 'sleek chin-length bob cut' },
     { id: 'korean-perm', ko: '코리안 펌', en: 'Korean Perm', prompt: 'soft Korean style perm waves' },
-    { id: 'beach-waves', ko: '비치 웨이브', en: 'Beach Waves', prompt: 'loose beach waves natural texture' }
+    { id: 'beach-waves', ko: '비치 웨이브', en: 'Beach Waves', prompt: 'loose beach waves natural texture' },
+    { id: 'straight-long', ko: '스트레이트', en: 'Straight Long', prompt: 'long sleek straight hair with shine' }
   ]
 }
 
@@ -78,15 +80,18 @@ Also apply subtle beauty retouching: smooth clear skin, even skin tone, soft pro
 Generate the edited photo.`
       : `EDIT this photo - ONLY change the OUTFIT to: ${style.prompt}
 
-CRITICAL - DO NOT CHANGE:
-- Face and hairstyle - MUST stay IDENTICAL
-- Skin tone and body shape - MUST stay IDENTICAL
-- Expression and pose - MUST stay IDENTICAL
+CRITICAL RULES - MUST FOLLOW:
+1. DO NOT CROP the image - keep EXACT same framing and composition
+2. Face MUST remain EXACTLY identical - same position, same size, fully visible
+3. Hairstyle MUST stay the same
+4. Body proportions and pose MUST stay identical
+5. Background MUST stay the same
+6. Output image MUST have same dimensions as input
 
-ONLY change the clothes.
-Also apply subtle beauty retouching: smooth clear skin, even skin tone, soft professional studio lighting.
+ONLY change the clothing/outfit. Nothing else.
+Keep the person's face and head FULLY VISIBLE in the frame.
 
-Generate the edited photo.`
+Generate the edited photo maintaining the original composition.`
 
     const geminiModels = [
       'nano-banana-pro-preview',

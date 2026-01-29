@@ -23,15 +23,18 @@ async function generateFashionImageWithGemini(
 
     const editPrompt = `EDIT this photo - ONLY change the OUTFIT to match the style: ${styleName}
 
-CRITICAL REQUIREMENTS:
-- The person's FACE must remain EXACTLY identical
-- Hairstyle must stay the same
-- Body proportions must not change
-- Only the CLOTHING should be modified to "${styleName}" style
+CRITICAL RULES - MUST FOLLOW:
+1. DO NOT CROP the image - keep EXACT same framing and composition
+2. Face MUST remain EXACTLY identical - same position, same size, fully visible
+3. Hairstyle MUST stay the same
+4. Body proportions and pose MUST stay identical
+5. Background MUST stay the same
+6. Output image MUST have same dimensions as input
 
-Also apply subtle beauty retouching: smooth clear skin, even skin tone, soft professional studio lighting.
+ONLY change the clothing to "${styleName}" style. Nothing else.
+Keep the person's face and head FULLY VISIBLE in the frame.
 
-Generate the edited photo with the new outfit.`
+Generate the edited photo maintaining the original composition.`
 
     const geminiModels = [
       'nano-banana-pro-preview',
