@@ -24,7 +24,13 @@ async function generateHairImageWithGemini(
 
     const genderGuide = gender === 'female'
       ? 'This is a WOMAN. Apply a feminine, elegant hairstyle that suits women. Make it look natural and attractive for a woman.'
-      : 'This is a MAN. The hairstyle should suit a man naturally. Perms, soft waves, textured styles are fine. Just avoid overly feminine or women\'s hairstyles. Keep it looking like a men\'s style.'
+      : `This is a MAN. STRICT REQUIREMENTS for men's hair:
+- Hair length must be SHORT to MEDIUM (above shoulders, typically ear-length or shorter)
+- NO long flowing hair, NO hair past the shoulders
+- NO feminine accessories like flowers, ribbons, or decorative clips
+- Style must look masculine and natural for a man
+- Acceptable: short cuts, fades, textured crops, pompadours, slicked back, natural waves
+- NOT acceptable: long ponytails, braids, feminine updos, anything that looks like women's styling`
 
     const editPrompt = `EDIT this photo - ONLY change the HAIRSTYLE to: ${styleName}
 
@@ -132,8 +138,17 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
 
     console.log(`[API Hair] Generating ${styles.length} hairstyles with Gemini`)
 
+    // Hair color variations for last 2 styles
+    const hairColors = ['with warm chestnut brown hair color', 'with cool ash brown hair color']
+
     const images = await Promise.all(
-      styles.map(styleName => generateHairImageWithGemini(photo, styleName, gender || 'male', geminiKey))
+      styles.map((styleName, index) => {
+        // Add hair color variation to last 2 styles (index 3 and 4)
+        const styleWithColor = index >= 3 && index < 5
+          ? `${styleName} ${hairColors[index - 3]}`
+          : styleName
+        return generateHairImageWithGemini(photo, styleWithColor, gender || 'male', geminiKey)
+      })
     )
 
     const successCount = images.filter(r => r.imageUrl).length
