@@ -73,12 +73,20 @@ const styleScenarios: StyleScenario[] = [
   }
 ]
 
+// ===== Retry Helper =====
+async function sleep(ms: number): Promise<void> {
+  return new Promise(resolve => setTimeout(resolve, ms))
+}
+
 // ===== Gemini Image Editing =====
 async function editPhotoWithGemini(
   photo: string,
   scenario: StyleScenario,
-  apiKey: string
+  apiKey: string,
+  retryCount: number = 0
 ): Promise<string | null> {
+  const MAX_RETRIES = 2
+
   try {
     const base64Match = photo.match(/^data:image\/(\w+);base64,(.+)$/)
     if (!base64Match) return null
@@ -152,6 +160,13 @@ Generate the edited photo with IDENTICAL composition to the input.`
 
     if (!response || !response.ok) {
       console.error(`[Gemini] All models failed for ${scenario.id}. Last error: ${lastError}`)
+      // Retry with exponential backoff
+      if (retryCount < MAX_RETRIES) {
+        const delay = (retryCount + 1) * 2000 // 2s, 4s
+        console.log(`[Gemini] Retrying ${scenario.id} in ${delay}ms (attempt ${retryCount + 2}/${MAX_RETRIES + 1})`)
+        await sleep(delay)
+        return editPhotoWithGemini(photo, scenario, apiKey, retryCount + 1)
+      }
       return null
     }
 
@@ -169,9 +184,24 @@ Generate the edited photo with IDENTICAL composition to the input.`
       }
     }
 
+    // No image in response - retry
+    if (retryCount < MAX_RETRIES) {
+      const delay = (retryCount + 1) * 2000
+      console.log(`[Gemini] No image returned for ${scenario.id}, retrying in ${delay}ms`)
+      await sleep(delay)
+      return editPhotoWithGemini(photo, scenario, apiKey, retryCount + 1)
+    }
+
     return null
   } catch (error) {
     console.error(`Gemini error for ${scenario.id}:`, error)
+    // Retry on exception
+    if (retryCount < MAX_RETRIES) {
+      const delay = (retryCount + 1) * 2000
+      console.log(`[Gemini] Exception for ${scenario.id}, retrying in ${delay}ms`)
+      await sleep(delay)
+      return editPhotoWithGemini(photo, scenario, apiKey, retryCount + 1)
+    }
     return null
   }
 }
@@ -209,8 +239,14 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
 
     console.log(`[API Styles] Generating ${styleScenarios.length} styles with Gemini, hasPhoto: ${hasPhoto}, keyLength: ${geminiKey.length}`)
 
+    // Stagger requests to avoid rate limiting (500ms between each start)
     const results = await Promise.all(
-      styleScenarios.map(async (scenario) => {
+      styleScenarios.map(async (scenario, index) => {
+        // Stagger start times to avoid overwhelming the API
+        if (index > 0) {
+          await sleep(index * 500)
+        }
+
         let imageUrl: string | null = null
 
         if (hasPhoto) {
