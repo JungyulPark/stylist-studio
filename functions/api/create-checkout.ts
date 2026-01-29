@@ -1,12 +1,9 @@
+import { getCorsHeaders, createCorsPreflightResponse } from '../lib/cors'
+import { validateCheckoutRequest, createValidationErrorResponse } from '../lib/validation'
+import { errors } from '../lib/errors'
+
 interface Env {
   POLAR_API_KEY?: string
-}
-
-interface RequestBody {
-  productId: string
-  successUrl?: string
-  isRepeatCustomer?: boolean  // 재분석 고객 여부
-  discountCode?: string       // 할인 코드
 }
 
 // Polar Product ID (Sandbox)
@@ -16,33 +13,31 @@ const PRODUCT_ID = 'cca7d48e-6758-4e83-a375-807ab70615ea'
 const REPEAT_DISCOUNT_CODE = 'COMEBACK50'
 
 export const onRequestPost: PagesFunction<Env> = async (context) => {
-  const corsHeaders = {
-    'Access-Control-Allow-Origin': '*',
-    'Access-Control-Allow-Methods': 'POST, OPTIONS',
-    'Access-Control-Allow-Headers': 'Content-Type',
-  }
+  const corsHeaders = getCorsHeaders(context.request)
 
   try {
-    const body: RequestBody = await context.request.json().catch(() => ({}))
-    const productId = body.productId || PRODUCT_ID
-    const successUrl = body.successUrl || `${new URL(context.request.url).origin}/#result`
+    const body = await context.request.json().catch(() => ({}))
+
+    // Validate request body
+    const validation = validateCheckoutRequest(body)
+    if (!validation.valid) {
+      return createValidationErrorResponse(validation.errors!, corsHeaders)
+    }
+
+    const validatedData = validation.data!
+    const productId = validatedData.productId || PRODUCT_ID
+    const successUrl = validatedData.successUrl || `${new URL(context.request.url).origin}/#result`
 
     // Polar API로 체크아웃 세션 생성
     const polarToken = context.env.POLAR_API_KEY
 
     if (!polarToken) {
-      // API 토큰이 없으면 에러 반환 - Cloudflare 환경변수 설정 필요
-      return new Response(
-        JSON.stringify({
-          error: 'Payment not configured',
-          message: 'Polar API key not set. Please configure Polar_API_KEY in environment variables.'
-        }),
-        { status: 503, headers: { 'Content-Type': 'application/json', ...corsHeaders } }
-      )
+      console.error('[create-checkout] Payment API not configured')
+      return errors.configError(corsHeaders)
     }
 
     // 할인 코드 결정 (재분석 고객이면 자동 적용)
-    const discountCode = body.discountCode || (body.isRepeatCustomer ? REPEAT_DISCOUNT_CODE : undefined)
+    const discountCode = validatedData.discountCode || (validatedData.isRepeatCustomer ? REPEAT_DISCOUNT_CODE : undefined)
 
     // Polar Checkout Session API 호출 (Sandbox 환경)
     const checkoutBody: Record<string, unknown> = {
@@ -68,10 +63,7 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
     if (!response.ok) {
       const errorData = await response.text()
       console.error('Polar API Error:', errorData)
-      return new Response(
-        JSON.stringify({ error: 'Failed to create checkout session', details: errorData }),
-        { status: 500, headers: { 'Content-Type': 'application/json', ...corsHeaders } }
-      )
+      return errors.externalApi('Polar', corsHeaders)
     }
 
     const data = await response.json() as { url: string; client_secret: string }
@@ -83,20 +75,10 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
 
   } catch (error) {
     console.error('Error:', error)
-    return new Response(
-      JSON.stringify({ error: 'Internal server error' }),
-      { status: 500, headers: { 'Content-Type': 'application/json', ...corsHeaders } }
-    )
+    return errors.internal(corsHeaders)
   }
 }
 
-export const onRequestOptions: PagesFunction = async () => {
-  return new Response(null, {
-    status: 204,
-    headers: {
-      'Access-Control-Allow-Origin': '*',
-      'Access-Control-Allow-Methods': 'POST, OPTIONS',
-      'Access-Control-Allow-Headers': 'Content-Type',
-    }
-  })
+export const onRequestOptions: PagesFunction = async (context) => {
+  return createCorsPreflightResponse(context.request)
 }

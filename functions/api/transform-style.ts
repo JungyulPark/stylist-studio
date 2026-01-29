@@ -1,14 +1,10 @@
+import { getCorsHeaders, createCorsPreflightResponse } from '../lib/cors'
+import { validateTransformStyleRequest, createValidationErrorResponse } from '../lib/validation'
+import { errors } from '../lib/errors'
+
 interface Env {
   GEMINI_API_KEY: string
   OPENAI_API_KEY: string
-}
-
-interface RequestBody {
-  photo: string  // Base64 user photo
-  type: 'hairstyle' | 'fashion'
-  style: string  // Style description or ID
-  gender: 'male' | 'female' | 'other'
-  language: 'ko' | 'en'
 }
 
 // 헤어스타일 옵션
@@ -166,29 +162,23 @@ Generate the edited photo.`
 }
 
 export const onRequestPost: PagesFunction<Env> = async (context) => {
-  const corsHeaders = {
-    'Access-Control-Allow-Origin': '*',
-    'Access-Control-Allow-Methods': 'POST, OPTIONS',
-    'Access-Control-Allow-Headers': 'Content-Type',
-  }
+  const corsHeaders = getCorsHeaders(context.request)
 
   try {
-    const body: RequestBody = await context.request.json()
-    const { photo, type, style, gender, language } = body
+    const body = await context.request.json()
 
-    if (!photo || !type || !style) {
-      return new Response(
-        JSON.stringify({ error: 'Missing required fields' }),
-        { status: 400, headers: { 'Content-Type': 'application/json', ...corsHeaders } }
-      )
+    // Validate request body
+    const validation = validateTransformStyleRequest(body)
+    if (!validation.valid) {
+      return createValidationErrorResponse(validation.errors!, corsHeaders)
     }
+
+    const { photo, type, style, gender, language } = validation.data!
 
     const apiKey = context.env.GEMINI_API_KEY
     if (!apiKey) {
-      return new Response(
-        JSON.stringify({ error: 'API not configured' }),
-        { status: 500, headers: { 'Content-Type': 'application/json', ...corsHeaders } }
-      )
+      console.error('[transform-style] Image generation API not configured')
+      return errors.configError(corsHeaders)
     }
 
     // Get style options based on type and gender
@@ -197,10 +187,7 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
     const selectedStyle = styleOptions.find(s => s.id === style)
 
     if (!selectedStyle) {
-      return new Response(
-        JSON.stringify({ error: 'Invalid style' }),
-        { status: 400, headers: { 'Content-Type': 'application/json', ...corsHeaders } }
-      )
+      return errors.validation('Invalid style', corsHeaders)
     }
 
     const result = await transformWithGemini(photo, type, selectedStyle.prompt, apiKey)
@@ -220,20 +207,13 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
 
   } catch (error) {
     console.error('Error:', error)
-    return new Response(
-      JSON.stringify({ error: 'Internal server error' }),
-      { status: 500, headers: { 'Content-Type': 'application/json', ...corsHeaders } }
-    )
+    return errors.internal(corsHeaders)
   }
 }
 
 // GET: 사용 가능한 스타일 목록 반환
 export const onRequestGet: PagesFunction<Env> = async (context) => {
-  const corsHeaders = {
-    'Access-Control-Allow-Origin': '*',
-    'Access-Control-Allow-Methods': 'GET, OPTIONS',
-    'Access-Control-Allow-Headers': 'Content-Type',
-  }
+  const corsHeaders = getCorsHeaders(context.request)
 
   const url = new URL(context.request.url)
   const gender = url.searchParams.get('gender') || 'male'
@@ -248,13 +228,6 @@ export const onRequestGet: PagesFunction<Env> = async (context) => {
   )
 }
 
-export const onRequestOptions: PagesFunction = async () => {
-  return new Response(null, {
-    status: 204,
-    headers: {
-      'Access-Control-Allow-Origin': '*',
-      'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
-      'Access-Control-Allow-Headers': 'Content-Type',
-    }
-  })
+export const onRequestOptions: PagesFunction = async (context) => {
+  return createCorsPreflightResponse(context.request)
 }

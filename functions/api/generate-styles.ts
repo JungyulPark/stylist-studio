@@ -1,13 +1,9 @@
+import { getCorsHeaders, createCorsPreflightResponse } from '../lib/cors'
+import { validateGenerateStylesRequest, createValidationErrorResponse } from '../lib/validation'
+import { errors } from '../lib/errors'
+
 interface Env {
   GEMINI_API_KEY: string
-}
-
-interface RequestBody {
-  gender: 'male' | 'female' | 'other'
-  height: string
-  weight: string
-  photo?: string
-  language: 'ko' | 'en' | 'ja' | 'zh' | 'es'
 }
 
 interface StyleScenario {
@@ -150,22 +146,18 @@ Generate the edited photo.`
 }
 
 export const onRequestPost: PagesFunction<Env> = async (context) => {
-  const corsHeaders = {
-    'Access-Control-Allow-Origin': '*',
-    'Access-Control-Allow-Methods': 'POST, OPTIONS',
-    'Access-Control-Allow-Headers': 'Content-Type',
-  }
+  const corsHeaders = getCorsHeaders(context.request)
 
   try {
-    const body: RequestBody = await context.request.json()
-    const { gender, height, weight, photo, language } = body
+    const body = await context.request.json()
 
-    if (!gender || !height || !weight) {
-      return new Response(
-        JSON.stringify({ error: 'Missing required fields' }),
-        { status: 400, headers: { 'Content-Type': 'application/json', ...corsHeaders } }
-      )
+    // Validate request body
+    const validation = validateGenerateStylesRequest(body)
+    if (!validation.valid) {
+      return createValidationErrorResponse(validation.errors!, corsHeaders)
     }
+
+    const { photo, language } = validation.data!
 
     const geminiKey = context.env.GEMINI_API_KEY
     const hasPhoto = photo && photo.length > 100
@@ -215,20 +207,10 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
 
   } catch (error) {
     console.error('Error:', error)
-    return new Response(
-      JSON.stringify({ error: 'Internal server error' }),
-      { status: 500, headers: { 'Content-Type': 'application/json', ...corsHeaders } }
-    )
+    return errors.internal(corsHeaders)
   }
 }
 
-export const onRequestOptions: PagesFunction = async () => {
-  return new Response(null, {
-    status: 204,
-    headers: {
-      'Access-Control-Allow-Origin': '*',
-      'Access-Control-Allow-Methods': 'POST, OPTIONS',
-      'Access-Control-Allow-Headers': 'Content-Type',
-    }
-  })
+export const onRequestOptions: PagesFunction = async (context) => {
+  return createCorsPreflightResponse(context.request)
 }

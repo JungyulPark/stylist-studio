@@ -1,13 +1,9 @@
+import { getCorsHeaders, createCorsPreflightResponse } from '../lib/cors'
+import { validateAnalyzeRequest, createValidationErrorResponse } from '../lib/validation'
+import { errors } from '../lib/errors'
+
 interface Env {
   OPENAI_API_KEY: string
-}
-
-interface RequestBody {
-  photo: string
-  height: string
-  weight: string
-  gender: 'male' | 'female' | 'other'
-  language: 'ko' | 'en' | 'ja' | 'zh' | 'es'
 }
 
 // API 활성화
@@ -221,38 +217,25 @@ Según tu información, tienes un tipo de cuerpo bien equilibrado.
 }
 
 export const onRequestPost: PagesFunction<Env> = async (context) => {
-  const corsHeaders = {
-    'Access-Control-Allow-Origin': '*',
-    'Access-Control-Allow-Methods': 'POST, OPTIONS',
-    'Access-Control-Allow-Headers': 'Content-Type',
-  }
+  const corsHeaders = getCorsHeaders(context.request)
 
   try {
-    const body: RequestBody = await context.request.json()
-    const { photo, height, weight, gender, language } = body
+    const body = await context.request.json()
 
-    if (!height || !weight || !gender) {
-      return new Response(
-        JSON.stringify({ error: 'Missing required fields' }),
-        { status: 400, headers: { 'Content-Type': 'application/json', ...corsHeaders } }
-      )
+    // Validate request body
+    const validation = validateAnalyzeRequest(body)
+    if (!validation.valid) {
+      return createValidationErrorResponse(validation.errors!, corsHeaders)
     }
+
+    const { photo, height, weight, gender, language } = validation.data!
 
     // API key 확인
     const apiKey = context.env.OPENAI_API_KEY
-    const keyLength = apiKey ? apiKey.length : 0
-    const keyPrefix = apiKey ? apiKey.substring(0, 10) : 'none'
 
-    if (!apiKey || keyLength < 20) {
-      return new Response(
-        JSON.stringify({
-          error: 'OpenAI API key not configured',
-          keyLength,
-          keyPrefix,
-          envKeys: Object.keys(context.env)
-        }),
-        { status: 500, headers: { 'Content-Type': 'application/json', ...corsHeaders } }
-      )
+    if (!apiKey || apiKey.length < 20) {
+      console.error('[analyze] OpenAI API key not configured or invalid')
+      return errors.configError(corsHeaders)
     }
 
     // API 비활성화 시 Mock 응답 반환
@@ -322,10 +305,7 @@ Provide a detailed, personalized style report with general recommendations based
     if (!response.ok) {
       const errorData = await response.text()
       console.error('OpenAI API Error:', errorData)
-      return new Response(
-        JSON.stringify({ error: 'Failed to analyze image', details: errorData }),
-        { status: 500, headers: { 'Content-Type': 'application/json', ...corsHeaders } }
-      )
+      return errors.externalApi('OpenAI', corsHeaders)
     }
 
     const data = await response.json() as {
@@ -341,20 +321,10 @@ Provide a detailed, personalized style report with general recommendations based
 
   } catch (error) {
     console.error('Error:', error)
-    return new Response(
-      JSON.stringify({ error: 'Internal server error' }),
-      { status: 500, headers: { 'Content-Type': 'application/json', ...corsHeaders } }
-    )
+    return errors.internal(corsHeaders)
   }
 }
 
-export const onRequestOptions: PagesFunction = async () => {
-  return new Response(null, {
-    status: 204,
-    headers: {
-      'Access-Control-Allow-Origin': '*',
-      'Access-Control-Allow-Methods': 'POST, OPTIONS',
-      'Access-Control-Allow-Headers': 'Content-Type',
-    }
-  })
+export const onRequestOptions: PagesFunction = async (context) => {
+  return createCorsPreflightResponse(context.request)
 }

@@ -1,14 +1,9 @@
+import { getCorsHeaders, createCorsPreflightResponse } from '../lib/cors'
+import { validateHairStylesRequest, createValidationErrorResponse } from '../lib/validation'
+import { errors } from '../lib/errors'
+
 interface Env {
   GEMINI_API_KEY: string
-}
-
-interface RequestBody {
-  photo: string
-  occasion: string
-  vibe: string
-  gender: 'male' | 'female' | 'other'
-  styles: string[]
-  language: string
 }
 
 // ===== Gemini Image Editing =====
@@ -113,30 +108,24 @@ Generate the edited photo with the new hairstyle.`
 
 // ===== API Handler =====
 export const onRequestPost: PagesFunction<Env> = async (context) => {
-  const corsHeaders = {
-    'Access-Control-Allow-Origin': '*',
-    'Access-Control-Allow-Methods': 'POST, OPTIONS',
-    'Access-Control-Allow-Headers': 'Content-Type',
-  }
+  const corsHeaders = getCorsHeaders(context.request)
 
   try {
-    const body: RequestBody = await context.request.json()
-    const { photo, styles, gender } = body
+    const body = await context.request.json()
 
-    if (!photo || !styles || styles.length === 0) {
-      return new Response(
-        JSON.stringify({ error: 'Photo and styles are required' }),
-        { status: 400, headers: { 'Content-Type': 'application/json', ...corsHeaders } }
-      )
+    // Validate request body
+    const validation = validateHairStylesRequest(body)
+    if (!validation.valid) {
+      return createValidationErrorResponse(validation.errors!, corsHeaders)
     }
+
+    const { photo, styles, gender } = validation.data!
 
     const geminiKey = context.env.GEMINI_API_KEY
 
     if (!geminiKey) {
-      return new Response(
-        JSON.stringify({ error: 'API not configured. Please set GEMINI_API_KEY.' }),
-        { status: 500, headers: { 'Content-Type': 'application/json', ...corsHeaders } }
-      )
+      console.error('[generate-hair-styles] Image generation API not configured')
+      return errors.configError(corsHeaders)
     }
 
     console.log(`[API Hair] Generating ${styles.length} hairstyles with Gemini`)
@@ -158,20 +147,10 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
     )
   } catch (error) {
     console.error('[API Hair] Error:', error)
-    return new Response(
-      JSON.stringify({ error: 'Internal server error' }),
-      { status: 500, headers: { 'Content-Type': 'application/json', ...corsHeaders } }
-    )
+    return errors.internal(corsHeaders)
   }
 }
 
-export const onRequestOptions: PagesFunction = async () => {
-  return new Response(null, {
-    status: 204,
-    headers: {
-      'Access-Control-Allow-Origin': '*',
-      'Access-Control-Allow-Methods': 'POST, OPTIONS',
-      'Access-Control-Allow-Headers': 'Content-Type',
-    }
-  })
+export const onRequestOptions: PagesFunction = async (context) => {
+  return createCorsPreflightResponse(context.request)
 }
