@@ -559,6 +559,32 @@
   letter-spacing: 0.3em;
 }
 
+.path-price {
+  display: inline-block;
+  margin-left: 0.75rem;
+  padding: 0.25rem 0.75rem;
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 20px;
+  color: var(--white);
+  font-size: 0.875rem;
+  font-weight: 700;
+  letter-spacing: 0;
+}
+
+.path-price.best {
+  background: linear-gradient(135deg, var(--primary), #f4e4bc);
+  color: var(--charcoal);
+}
+
+.path-card.featured {
+  transform: scale(1.02);
+}
+
+.path-card.featured .path-glass {
+  border-color: var(--primary);
+  box-shadow: 0 0 30px rgba(212, 175, 55, 0.2);
+}
+
 .path-title {
   color: var(--white);
   font-family: var(--font-serif);
@@ -1052,7 +1078,8 @@
 .photo-preview {
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  object-fit: contain;
+  background: linear-gradient(135deg, #f8f4f0 0%, #f0ebe5 100%);
 }
 
 .hidden-input {

@@ -148,8 +148,8 @@ const translations: Record<Language, {
     pathTitle: '당신의 변신 경로를 선택하세요',
     module1Title: '헤어 스타일링',
     module1Desc: '전문 스타일리스트의 컷과 컬러 분석. 당신의 얼굴형에 완벽한 실루엣을 찾아보세요.',
-    module2Title: '패션 큐레이션',
-    module2Desc: '맞춤형 워드로브 엔지니어링. 글로벌 트렌드로 실시간 업데이트되는 캡슐 컬렉션.',
+    module2Title: '풀 스타일 컨설팅',
+    module2Desc: '전문 분석 리포트 + 헤어스타일 5종 + 패션 추천까지. 완벽한 스타일 변신을 경험하세요.',
     explore: '탐색하기',
     algorithmTag: '알고리즘',
     algorithmTitle: '개인 우아함의 미래',
@@ -163,7 +163,7 @@ const translations: Record<Language, {
     feature4Title: '독점 액세스',
     feature4Desc: '당신의 프로필에 맞춤 큐레이팅된 한정판 디자이너 콜라보레이션.',
     uploadPhoto: '사진 업로드',
-    photoHint: '사진을 올려주세요',
+    photoHint: '전신 사진을 올리면 패션 추천도 받을 수 있어요',
     height: '키 (cm)',
     weight: '몸무게 (kg)',
     gender: '성별',
@@ -214,7 +214,7 @@ const translations: Record<Language, {
     purchaseRequired: '프리미엄 스타일 분석 서비스',
     purchaseBtn: '결제하고 분석 시작',
     processingPayment: '결제 처리 중...',
-    price: '$6.99',
+    price: '$9.99',
     hairstyleTransform: '💇 헤어스타일 변환',
     hairstyleTransformDesc: '내 얼굴에 다양한 헤어스타일 적용',
     fashionTransform: '👔 패션 변환',
@@ -244,8 +244,8 @@ const translations: Record<Language, {
     pathTitle: 'Choose Your Transformation Path',
     module1Title: 'Hair Styling',
     module1Desc: 'Expert-driven cut and color discovery. Find the perfect silhouette for your facial architecture.',
-    module2Title: 'Fashion Curation',
-    module2Desc: 'Bespoke wardrobe engineering. Curated capsule collections updated in real-time by global trends.',
+    module2Title: 'Full Style Consultation',
+    module2Desc: 'Expert analysis report + 5 hairstyles + fashion recommendations. Experience a complete style transformation.',
     explore: 'Explore',
     algorithmTag: 'The Method',
     algorithmTitle: 'The Future of Personal Elegance',
@@ -259,7 +259,7 @@ const translations: Record<Language, {
     feature4Title: 'Exclusive Access',
     feature4Desc: 'Priority access to limited-edition designer collaborations curated for your profile.',
     uploadPhoto: 'Upload Photo',
-    photoHint: 'Upload your photo',
+    photoHint: 'Upload full body photo for fashion recommendations too',
     height: 'Height (cm)',
     weight: 'Weight (kg)',
     gender: 'Gender',
@@ -310,7 +310,7 @@ const translations: Record<Language, {
     purchaseRequired: 'Premium Styling Service',
     purchaseBtn: 'Purchase & Start Analysis',
     processingPayment: 'Processing payment...',
-    price: '$6.99',
+    price: '$9.99',
     hairstyleTransform: '💇 Hairstyle Transform',
     hairstyleTransformDesc: 'Try different hairstyles on your photo',
     fashionTransform: '👔 Fashion Transform',
@@ -340,8 +340,8 @@ const translations: Record<Language, {
     pathTitle: '変身パスを選択',
     module1Title: 'ヘアスタイリング',
     module1Desc: 'プロによるカットとカラーの発見。顔の構造に完璧なシルエットを。',
-    module2Title: 'ファッションキュレーション',
-    module2Desc: 'オーダーメイドのワードローブ。グローバルトレンドでリアルタイム更新。',
+    module2Title: 'フルスタイルコンサル',
+    module2Desc: '専門分析レポート + ヘアスタイル5種 + ファッション提案。完璧なスタイル変身を体験。',
     explore: '探索する',
     algorithmTag: 'メソッド',
     algorithmTitle: 'パーソナルエレガンスの未来',
@@ -355,7 +355,7 @@ const translations: Record<Language, {
     feature4Title: '限定アクセス',
     feature4Desc: 'あなたのプロフィールに合わせてキュレートされた限定版デザイナーコラボレーション。',
     uploadPhoto: '写真をアップロード',
-    photoHint: '写真をアップロードしてください',
+    photoHint: '全身写真でファッション提案も受けられます',
     height: '身長 (cm)',
     weight: '体重 (kg)',
     gender: '性別',
@@ -406,7 +406,7 @@ const translations: Record<Language, {
     purchaseRequired: 'プレミアムスタイリングサービス',
     purchaseBtn: '購入して分析開始',
     processingPayment: '支払い処理中...',
-    price: '$6.99',
+    price: '$9.99',
     hairstyleTransform: '💇 ヘアスタイル変換',
     hairstyleTransformDesc: '写真に様々なヘアスタイルを適用',
     fashionTransform: '👔 ファッション変換',
@@ -436,8 +436,8 @@ const translations: Record<Language, {
     pathTitle: '选择您的蜕变之路',
     module1Title: '发型设计',
     module1Desc: '专业造型师驱动的剪裁和色彩发现。为您的面部结构找到完美轮廓。',
-    module2Title: '时尚策划',
-    module2Desc: '定制衣橱工程。由全球趋势实时更新的精选胶囊系列。',
+    module2Title: '全套风格咨询',
+    module2Desc: '专业分析报告 + 5种发型 + 时尚推荐。体验完整的风格蜕变。',
     explore: '探索',
     algorithmTag: '方法',
     algorithmTitle: '个人优雅的未来',
@@ -451,7 +451,7 @@ const translations: Record<Language, {
     feature4Title: '专属访问',
     feature4Desc: '优先获得为您的个人资料精选的限量版设计师合作款。',
     uploadPhoto: '上传照片',
-    photoHint: '请上传您的照片',
+    photoHint: '上传全身照还可获得时尚推荐',
     height: '身高 (cm)',
     weight: '体重 (kg)',
     gender: '性别',
@@ -502,7 +502,7 @@ const translations: Record<Language, {
     purchaseRequired: '高级造型服务',
     purchaseBtn: '购买并开始分析',
     processingPayment: '支付处理中...',
-    price: '$6.99',
+    price: '$9.99',
     hairstyleTransform: '💇 发型变换',
     hairstyleTransformDesc: '在您的照片上尝试不同发型',
     fashionTransform: '👔 时尚变换',
@@ -532,8 +532,8 @@ const translations: Record<Language, {
     pathTitle: 'Elige Tu Camino de Transformación',
     module1Title: 'Estilismo Capilar',
     module1Desc: 'Descubrimiento de corte y color por expertos. Encuentra la silueta perfecta para tu arquitectura facial.',
-    module2Title: 'Curación de Moda',
-    module2Desc: 'Ingeniería de guardarropa a medida. Colecciones cápsula curadas actualizadas en tiempo real.',
+    module2Title: 'Consulta de Estilo Completa',
+    module2Desc: 'Informe de análisis experto + 5 peinados + recomendaciones de moda. Experimenta una transformación completa.',
     explore: 'Explorar',
     algorithmTag: 'El Método',
     algorithmTitle: 'El Futuro de la Elegancia Personal',
@@ -547,7 +547,7 @@ const translations: Record<Language, {
     feature4Title: 'Acceso Exclusivo',
     feature4Desc: 'Acceso prioritario a colaboraciones de diseñadores de edición limitada.',
     uploadPhoto: 'Subir foto',
-    photoHint: 'Sube tu foto',
+    photoHint: 'Sube foto de cuerpo completo para recomendaciones de moda',
     height: 'Altura (cm)',
     weight: 'Peso (kg)',
     gender: 'Género',
@@ -598,7 +598,7 @@ const translations: Record<Language, {
     purchaseRequired: 'Servicio de Estilismo Premium',
     purchaseBtn: 'Comprar e Iniciar Análisis',
     processingPayment: 'Procesando pago...',
-    price: '$6.99',
+    price: '$9.99',
     hairstyleTransform: '💇 Transformación de Peinado',
     hairstyleTransformDesc: 'Prueba diferentes peinados en tu foto',
     fashionTransform: '👔 Transformación de Moda',
@@ -1384,9 +1384,25 @@ function App() {
               <div className="path-overlay"></div>
               <div className="path-content">
                 <div className="path-glass">
-                  <span className="path-module">MODULE 01</span>
+                  <span className="path-module">HAIR ONLY</span>
+                  <span className="path-price">$4.99</span>
                   <h3 className="path-title">{t.module1Title}</h3>
                   <p className="path-desc">{t.module1Desc}</p>
+                  <div className="path-explore">
+                    {t.explore} <span>→</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div className="path-card featured" onClick={() => setPage('input')}>
+              <div className="path-image path-image-2"></div>
+              <div className="path-overlay"></div>
+              <div className="path-content">
+                <div className="path-glass">
+                  <span className="path-module">FULL PACKAGE</span>
+                  <span className="path-price best">$9.99</span>
+                  <h3 className="path-title">{t.module2Title}</h3>
+                  <p className="path-desc">{t.module2Desc}</p>
                   <div className="path-explore">
                     {t.explore} <span>→</span>
                   </div>
