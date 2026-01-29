@@ -1325,7 +1325,7 @@ function App() {
                 </button>
               ))}
             </div>
-            <button className="btn-primary" onClick={() => setPage('input')}>
+            <button className="btn-primary" onClick={() => document.getElementById('features')?.scrollIntoView({ behavior: 'smooth' })}>
               {t.startBtn}
             </button>
           </div>
@@ -1336,7 +1336,7 @@ function App() {
           <div className="hero-image">
             <div className="hero-image-bg"></div>
             <div className="glass-card">
-              <span className="glass-tag">AI-POWERED STYLING</span>
+              <span className="glass-tag">PERSONAL STYLING</span>
               <p className="glass-text">Your Style, Reimagined</p>
             </div>
             <div className="slider-handle">
@@ -1351,7 +1351,7 @@ function App() {
             </h1>
             <p className="hero-desc">{t.heroDesc}</p>
             <div className="hero-buttons">
-              <button className="btn-dark" onClick={() => setPage('input')}>
+              <button className="btn-dark" onClick={() => document.getElementById('features')?.scrollIntoView({ behavior: 'smooth' })}>
                 {t.startBtn}
               </button>
               <button className="btn-outline" onClick={() => setPage('how-to-use')}>
