@@ -24,7 +24,7 @@ const styleScenarios: StyleScenario[] = [
     labelJa: 'ベストマッチ',
     labelZh: '最佳搭配',
     labelEs: 'Mejor Combinación',
-    prompt: 'elegant casual daily outfit, clean minimal style'
+    prompt: 'clean minimalist everyday outfit, simple solid colors, basic wardrobe essentials like white tee and well-fitted jeans or chinos, understated and versatile'
   },
   {
     id: 'interview',
@@ -42,7 +42,7 @@ const styleScenarios: StyleScenario[] = [
     labelJa: 'デートルック',
     labelZh: '约会装',
     labelEs: 'Cita',
-    prompt: 'romantic date night outfit, stylish and charming, smart casual'
+    prompt: 'romantic evening date outfit, stylish blazer or leather jacket, dark sophisticated colors, charming and attractive look for dinner date'
   },
   {
     id: 'luxury',
