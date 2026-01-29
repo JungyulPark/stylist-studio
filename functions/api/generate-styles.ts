@@ -52,6 +52,24 @@ const styleScenarios: StyleScenario[] = [
     labelZh: '奢华',
     labelEs: 'Lujo',
     prompt: 'high-end luxury designer fashion, premium quality, sophisticated'
+  },
+  {
+    id: 'casual',
+    labelKo: '캐주얼',
+    labelEn: 'Casual',
+    labelJa: 'カジュアル',
+    labelZh: '休闲',
+    labelEs: 'Casual',
+    prompt: 'relaxed casual outfit, comfortable t-shirt or hoodie with jeans, sneakers, laid-back weekend style'
+  },
+  {
+    id: 'daily',
+    labelKo: '데일리',
+    labelEn: 'Daily',
+    labelJa: 'デイリー',
+    labelZh: '日常',
+    labelEs: 'Diario',
+    prompt: 'everyday practical outfit, simple and neat, comfortable for daily activities, effortless style'
   }
 ]
 
