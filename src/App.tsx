@@ -913,10 +913,13 @@ function App() {
       await new Promise(resolve => setTimeout(resolve, 400))
       setPage('result')
 
-      // Step 2: Generate style images AFTER showing result page
+      // Step 2: Generate style images AND hairstyles AFTER showing result page
       setIsGeneratingStyles(true)
-      try {
-        const stylesResponse = await fetch('/api/generate-styles', {
+      setIsTransformingHair(true)
+
+      // Generate fashion styles and hairstyles in parallel
+      const [stylesResult, hairResult] = await Promise.allSettled([
+        fetch('/api/generate-styles', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
@@ -926,16 +929,32 @@ function App() {
             photo: profileData.photo,
             language: lang
           })
+        }),
+        fetch('/api/transform-batch', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            photo: profileData.photo,
+            type: 'hairstyle',
+            gender: profileData.gender,
+            language: lang
+          })
         })
-        if (stylesResponse.ok) {
-          const stylesData = await stylesResponse.json()
-          setStyleImages(stylesData.styles || [])
-        }
-      } catch (styleErr) {
-        console.error('Style generation error:', styleErr)
-      } finally {
-        setIsGeneratingStyles(false)
+      ])
+
+      // Handle fashion styles
+      if (stylesResult.status === 'fulfilled' && stylesResult.value.ok) {
+        const stylesData = await stylesResult.value.json()
+        setStyleImages(stylesData.styles || [])
       }
+      setIsGeneratingStyles(false)
+
+      // Handle hairstyles
+      if (hairResult.status === 'fulfilled' && hairResult.value.ok) {
+        const hairData = await hairResult.value.json()
+        setTransformedHairstyles(hairData.results || [])
+      }
+      setIsTransformingHair(false)
     } catch (err) {
       console.error('Analysis error:', err)
       setError(lang === 'ko' ? '분석 중 오류가 발생했습니다' : 'An error occurred during analysis')
@@ -977,10 +996,13 @@ function App() {
       await new Promise(resolve => setTimeout(resolve, 400))
       setPage('result')
 
-      // Step 2: Generate style images AFTER showing result page (non-blocking)
+      // Step 2: Generate style images AND hairstyles AFTER showing result page
       setIsGeneratingStyles(true)
-      try {
-        const stylesResponse = await fetch('/api/generate-styles', {
+      setIsTransformingHair(true)
+
+      // Generate fashion styles and hairstyles in parallel
+      const [stylesResult, hairResult] = await Promise.allSettled([
+        fetch('/api/generate-styles', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
@@ -990,16 +1012,32 @@ function App() {
             photo: profile.photo,
             language: lang
           })
+        }),
+        fetch('/api/transform-batch', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            photo: profile.photo,
+            type: 'hairstyle',
+            gender: profile.gender,
+            language: lang
+          })
         })
-        if (stylesResponse.ok) {
-          const stylesData = await stylesResponse.json()
-          setStyleImages(stylesData.styles || [])
-        }
-      } catch (styleErr) {
-        console.error('Style generation error:', styleErr)
-      } finally {
-        setIsGeneratingStyles(false)
+      ])
+
+      // Handle fashion styles
+      if (stylesResult.status === 'fulfilled' && stylesResult.value.ok) {
+        const stylesData = await stylesResult.value.json()
+        setStyleImages(stylesData.styles || [])
       }
+      setIsGeneratingStyles(false)
+
+      // Handle hairstyles
+      if (hairResult.status === 'fulfilled' && hairResult.value.ok) {
+        const hairData = await hairResult.value.json()
+        setTransformedHairstyles(hairData.results || [])
+      }
+      setIsTransformingHair(false)
     } catch (err) {
       console.error('Error:', err)
       setError(t.error)
