@@ -60,8 +60,7 @@ ONLY replace the clothing/outfit textures. Nothing else changes.
 Generate the edited photo with IDENTICAL composition to the input.`
 
     const geminiModels = [
-      'gemini-2.0-flash-exp',
-      'gemini-2.0-flash-preview-image-generation'
+      'gemini-3-pro-image-preview'
     ]
 
     let response: Response | null = null
@@ -81,7 +80,10 @@ Generate the edited photo with IDENTICAL composition to the input.`
                 ]
               }],
               generationConfig: {
-                responseModalities: ['IMAGE', 'TEXT']
+                responseModalities: ['IMAGE', 'TEXT'],
+                imageConfig: {
+                  imageSize: '1K'
+                }
               }
             })
           }

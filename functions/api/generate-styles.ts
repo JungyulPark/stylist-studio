@@ -87,13 +87,15 @@ ONLY replace the clothing/outfit textures. Nothing else changes.
 Generate the edited photo with IDENTICAL composition to the input.`
 
     const geminiModels = [
-      'gemini-2.0-flash-exp',
-      'gemini-2.0-flash-preview-image-generation'
+      'gemini-3-pro-image-preview'
     ]
 
     let response: Response | null = null
+    let lastError: string = ''
+
     for (const model of geminiModels) {
       try {
+        console.log(`[Gemini] Trying model: ${model} for ${scenario.id}`)
         response = await fetch(
           `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`,
           {
@@ -108,7 +110,10 @@ Generate the edited photo with IDENTICAL composition to the input.`
                 ]
               }],
               generationConfig: {
-                responseModalities: ['IMAGE', 'TEXT']
+                responseModalities: ['IMAGE', 'TEXT'],
+                imageConfig: {
+                  imageSize: '1K'
+                }
               }
             })
           }
@@ -117,14 +122,18 @@ Generate the edited photo with IDENTICAL composition to the input.`
           console.log(`[Gemini] ${model} succeeded for ${scenario.id}`)
           break
         }
-        console.log(`[Gemini] ${model} failed (${response.status}) for ${scenario.id}, trying next...`)
+        const errorBody = await response.text()
+        lastError = `${model} failed (${response.status}): ${errorBody.substring(0, 500)}`
+        console.error(`[Gemini] ${lastError}`)
+        response = null // Reset so we try next model
       } catch (e) {
-        console.error(`[Gemini] ${model} error:`, e)
+        lastError = `${model} exception: ${e}`
+        console.error(`[Gemini] ${lastError}`)
       }
     }
 
     if (!response || !response.ok) {
-      console.error(`[Gemini] All models failed for ${scenario.id}`)
+      console.error(`[Gemini] All models failed for ${scenario.id}. Last error: ${lastError}`)
       return null
     }
 
@@ -180,7 +189,7 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
       )
     }
 
-    console.log(`[API Styles] Generating ${styleScenarios.length} styles with Gemini, hasPhoto: ${hasPhoto}`)
+    console.log(`[API Styles] Generating ${styleScenarios.length} styles with Gemini, hasPhoto: ${hasPhoto}, keyLength: ${geminiKey.length}`)
 
     const results = await Promise.all(
       styleScenarios.map(async (scenario) => {
@@ -205,7 +214,15 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
     console.log(`[API Styles] Generated ${successCount}/${styleScenarios.length} styles`)
 
     return new Response(
-      JSON.stringify({ styles: results }),
+      JSON.stringify({
+        styles: results,
+        debug: {
+          hasPhoto,
+          photoLength: photo?.length || 0,
+          successCount,
+          totalStyles: styleScenarios.length
+        }
+      }),
       { status: 200, headers: { 'Content-Type': 'application/json', ...corsHeaders } }
     )
 

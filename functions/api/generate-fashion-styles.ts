@@ -37,8 +37,7 @@ Keep the person's face and head FULLY VISIBLE in the frame.
 Generate the edited photo maintaining the original composition.`
 
     const geminiModels = [
-      'gemini-2.0-flash-exp',
-      'gemini-2.0-flash-preview-image-generation'
+      'gemini-3-pro-image-preview'
     ]
 
     let response: Response | null = null
@@ -58,7 +57,10 @@ Generate the edited photo maintaining the original composition.`
                 ]
               }],
               generationConfig: {
-                responseModalities: ['IMAGE', 'TEXT']
+                responseModalities: ['IMAGE', 'TEXT'],
+                imageConfig: {
+                  imageSize: '1K'
+                }
               }
             })
           }
