@@ -1509,11 +1509,8 @@ function App() {
               <div className="spinner small"></div>
               <span>{t.generatingStyles}</span>
             </div>
-          ) : styleImages.length > 0 ? (
+          ) : styleImages.length > 0 && styleImages.some(s => s.imageUrl) ? (
             <>
-              {styleImages.some(s => s.isDemo) && (
-                <p className="demo-notice">{t.demoMode}</p>
-              )}
               <div className="style-grid">
                 {styleImages.map((style) => (
                   <div key={style.id} className="style-card">
@@ -1532,9 +1529,16 @@ function App() {
               </div>
             </>
           ) : (
-            <button className="btn-gold" onClick={generateStyleImages}>
-              {t.styleGallery}
-            </button>
+            <div className="style-generate-prompt">
+              <p style={{ marginBottom: '1rem', opacity: 0.7 }}>
+                {lang === 'ko'
+                  ? '패션 스타일 이미지를 생성하려면 아래 버튼을 클릭하세요'
+                  : 'Click below to generate fashion style images'}
+              </p>
+              <button className="btn-gold" onClick={generateStyleImages}>
+                {lang === 'ko' ? '🎨 스타일 이미지 생성' : '🎨 Generate Style Images'}
+              </button>
+            </div>
           )}
         </div>
 
