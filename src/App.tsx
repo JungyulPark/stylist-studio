@@ -1785,8 +1785,8 @@ function App() {
               </h3>
               <p className="photo-upload-desc">
                 {lang === 'ko'
-                  ? '얼굴 사진을 올리면 AI가 헤어스타일을 적용한 이미지를 생성합니다'
-                  : 'Upload your face photo and AI will generate images with hairstyles applied'}
+                  ? '사진을 올리면 스타일리스트가 추천 헤어스타일을 미리보기로 보여드립니다'
+                  : 'Upload your photo and your stylist will show recommended hairstyles as previews'}
               </p>
               <div
                 className={`mini-photo-upload ${hairPhoto ? 'has-photo' : ''}`}

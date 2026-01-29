@@ -15,18 +15,18 @@ interface StyleOption {
 
 const hairstyles: Record<string, StyleOption[]> = {
   male: [
-    { id: 'two-block', ko: '투블럭', en: 'Two Block', prompt: 'Korean two-block haircut with volume on top, keep original hair color' },
-    { id: 'textured-crop', ko: '텍스처드 크롭', en: 'Textured Crop', prompt: 'textured messy crop with skin fade, keep original hair color' },
-    { id: 'slick-back', ko: '슬릭백', en: 'Slick Back', prompt: 'slicked back wet look hair, keep original hair color' },
-    { id: 'pompadour-brown', ko: '폼파두르 브라운', en: 'Pompadour Chestnut', prompt: 'modern pompadour with height, elegant warm chestnut brown hair color' },
-    { id: 'curtain-ash', ko: '커튼뱅 애쉬', en: 'Curtain Ash', prompt: 'middle part curtain bangs K-pop style, sophisticated ash brown with subtle highlights' }
+    { id: 'two-block', ko: '투블럭', en: 'Two Block', prompt: 'Korean two-block haircut with volume on top' },
+    { id: 'textured-crop', ko: '텍스처드 크롭', en: 'Textured Crop', prompt: 'textured messy crop with skin fade' },
+    { id: 'slick-back', ko: '슬릭백', en: 'Slick Back', prompt: 'slicked back wet look hair' },
+    { id: 'pompadour-brown', ko: '폼파두르 브라운', en: 'Pompadour Chestnut', prompt: 'modern pompadour with height. IMPORTANT: Change hair color to warm chestnut brown color' },
+    { id: 'curtain-ash', ko: '커튼뱅 애쉬', en: 'Curtain Ash', prompt: 'middle part curtain bangs K-pop style. IMPORTANT: Change hair color to ash brown with highlights' }
   ],
   female: [
-    { id: 'long-layers', ko: '롱 레이어드', en: 'Long Layers', prompt: 'long layered hair with face framing, keep original hair color' },
-    { id: 'bob', ko: '단발', en: 'Bob Cut', prompt: 'sleek chin-length bob cut, keep original hair color' },
-    { id: 'korean-perm', ko: '코리안 펌', en: 'Korean Perm', prompt: 'soft Korean style perm waves, keep original hair color' },
-    { id: 'beach-honey', ko: '비치 웨이브 허니', en: 'Beach Honey Brown', prompt: 'loose beach waves, elegant honey brown hair color' },
-    { id: 'straight-caramel', ko: '스트레이트 카라멜', en: 'Straight Caramel', prompt: 'long sleek straight hair with shine, luxurious caramel brown with soft highlights' }
+    { id: 'long-layers', ko: '롱 레이어드', en: 'Long Layers', prompt: 'long layered hair with face framing' },
+    { id: 'bob', ko: '단발', en: 'Bob Cut', prompt: 'sleek chin-length bob cut' },
+    { id: 'korean-perm', ko: '코리안 펌', en: 'Korean Perm', prompt: 'soft Korean style perm waves' },
+    { id: 'beach-honey', ko: '비치 웨이브 허니', en: 'Beach Honey Brown', prompt: 'loose beach waves. IMPORTANT: Change hair color to honey brown color' },
+    { id: 'straight-caramel', ko: '스트레이트 카라멜', en: 'Straight Caramel', prompt: 'long sleek straight hair with shine. IMPORTANT: Change hair color to caramel brown with soft highlights' }
   ]
 }
 
