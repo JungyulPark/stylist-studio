@@ -15,18 +15,18 @@ interface StyleOption {
 
 const hairstyles: Record<string, StyleOption[]> = {
   male: [
-    { id: 'two-block', ko: '투블럭', en: 'Two Block', prompt: 'Korean two-block haircut with volume on top' },
-    { id: 'textured-crop', ko: '텍스처드 크롭', en: 'Textured Crop', prompt: 'textured messy crop with skin fade' },
-    { id: 'slick-back', ko: '슬릭백', en: 'Slick Back', prompt: 'slicked back wet look hair' },
-    { id: 'pompadour', ko: '폼파두르', en: 'Pompadour', prompt: 'modern pompadour with height' },
-    { id: 'curtain-bangs', ko: '커튼뱅', en: 'Curtain Bangs', prompt: 'middle part curtain bangs K-pop style' }
+    { id: 'two-block', ko: '투블럭', en: 'Two Block', prompt: 'Korean two-block haircut with volume on top, natural black hair' },
+    { id: 'textured-crop', ko: '텍스처드 크롭', en: 'Textured Crop', prompt: 'textured messy crop with skin fade, natural dark hair' },
+    { id: 'slick-back', ko: '슬릭백', en: 'Slick Back', prompt: 'slicked back wet look hair, natural black hair' },
+    { id: 'pompadour-brown', ko: '폼파두르 브라운', en: 'Pompadour Brown', prompt: 'modern pompadour with height, warm chestnut brown hair color' },
+    { id: 'curtain-ash', ko: '커튼뱅 애쉬', en: 'Curtain Ash Brown', prompt: 'middle part curtain bangs K-pop style, ash brown hair with subtle highlights' }
   ],
   female: [
-    { id: 'long-layers', ko: '롱 레이어드', en: 'Long Layers', prompt: 'long layered hair with face framing' },
-    { id: 'bob', ko: '단발', en: 'Bob Cut', prompt: 'sleek chin-length bob cut' },
-    { id: 'korean-perm', ko: '코리안 펌', en: 'Korean Perm', prompt: 'soft Korean style perm waves' },
-    { id: 'beach-waves', ko: '비치 웨이브', en: 'Beach Waves', prompt: 'loose beach waves natural texture' },
-    { id: 'straight-long', ko: '스트레이트', en: 'Straight Long', prompt: 'long sleek straight hair with shine' }
+    { id: 'long-layers', ko: '롱 레이어드', en: 'Long Layers', prompt: 'long layered hair with face framing, natural black hair' },
+    { id: 'bob', ko: '단발', en: 'Bob Cut', prompt: 'sleek chin-length bob cut, natural dark hair' },
+    { id: 'korean-perm', ko: '코리안 펌', en: 'Korean Perm', prompt: 'soft Korean style perm waves, natural black hair' },
+    { id: 'beach-honey', ko: '비치 웨이브 허니', en: 'Beach Waves Honey', prompt: 'loose beach waves natural texture, honey brown hair color' },
+    { id: 'straight-blonde', ko: '스트레이트 골드', en: 'Straight Golden', prompt: 'long sleek straight hair with shine, golden blonde highlights' }
   ]
 }
 

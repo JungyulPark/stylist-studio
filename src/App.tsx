@@ -943,16 +943,30 @@ function App() {
       ])
 
       // Handle fashion styles
-      if (stylesResult.status === 'fulfilled' && stylesResult.value.ok) {
-        const stylesData = await stylesResult.value.json()
-        setStyleImages(stylesData.styles || [])
+      if (stylesResult.status === 'fulfilled') {
+        if (stylesResult.value.ok) {
+          const stylesData = await stylesResult.value.json()
+          console.log('[Fashion] Success:', stylesData)
+          setStyleImages(stylesData.styles || [])
+        } else {
+          console.error('[Fashion] API error:', stylesResult.value.status, await stylesResult.value.text())
+        }
+      } else {
+        console.error('[Fashion] Fetch failed:', stylesResult.reason)
       }
       setIsGeneratingStyles(false)
 
       // Handle hairstyles
-      if (hairResult.status === 'fulfilled' && hairResult.value.ok) {
-        const hairData = await hairResult.value.json()
-        setTransformedHairstyles(hairData.results || [])
+      if (hairResult.status === 'fulfilled') {
+        if (hairResult.value.ok) {
+          const hairData = await hairResult.value.json()
+          console.log('[Hair] Success:', hairData)
+          setTransformedHairstyles(hairData.results || [])
+        } else {
+          console.error('[Hair] API error:', hairResult.value.status, await hairResult.value.text())
+        }
+      } else {
+        console.error('[Hair] Fetch failed:', hairResult.reason)
       }
       setIsTransformingHair(false)
     } catch (err) {
@@ -1026,16 +1040,30 @@ function App() {
       ])
 
       // Handle fashion styles
-      if (stylesResult.status === 'fulfilled' && stylesResult.value.ok) {
-        const stylesData = await stylesResult.value.json()
-        setStyleImages(stylesData.styles || [])
+      if (stylesResult.status === 'fulfilled') {
+        if (stylesResult.value.ok) {
+          const stylesData = await stylesResult.value.json()
+          console.log('[Fashion] Success:', stylesData)
+          setStyleImages(stylesData.styles || [])
+        } else {
+          console.error('[Fashion] API error:', stylesResult.value.status, await stylesResult.value.text())
+        }
+      } else {
+        console.error('[Fashion] Fetch failed:', stylesResult.reason)
       }
       setIsGeneratingStyles(false)
 
       // Handle hairstyles
-      if (hairResult.status === 'fulfilled' && hairResult.value.ok) {
-        const hairData = await hairResult.value.json()
-        setTransformedHairstyles(hairData.results || [])
+      if (hairResult.status === 'fulfilled') {
+        if (hairResult.value.ok) {
+          const hairData = await hairResult.value.json()
+          console.log('[Hair] Success:', hairData)
+          setTransformedHairstyles(hairData.results || [])
+        } else {
+          console.error('[Hair] API error:', hairResult.value.status, await hairResult.value.text())
+        }
+      } else {
+        console.error('[Hair] Fetch failed:', hairResult.reason)
       }
       setIsTransformingHair(false)
     } catch (err) {
