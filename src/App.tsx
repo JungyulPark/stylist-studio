@@ -727,6 +727,20 @@ function App() {
           setProfile(parsedData)
           setIsPaid(true)
           localStorage.removeItem('pendingAnalysis')
+
+          // 사진이 없으면 다시 업로드 요청 (localStorage 용량 제한으로 사진 저장 불가)
+          if (!parsedData.photo) {
+            setPageState('input')
+            window.history.replaceState({ page: 'input' }, '', '#input')
+            // 사진 재업로드 안내 메시지
+            setTimeout(() => {
+              alert(lang === 'ko'
+                ? '결제가 완료되었습니다! 사진을 다시 업로드해주세요.'
+                : 'Payment successful! Please re-upload your photo.')
+            }, 100)
+            return
+          }
+
           // URL 정리 후 바로 분석 시작
           window.history.replaceState({ page: 'loading' }, '', '#loading')
           setPageState('loading')
