@@ -43,18 +43,21 @@ Also apply subtle beauty retouching: smooth clear skin, even skin tone, soft pro
 Generate the edited photo.`
       : `EDIT this photo - ONLY change the OUTFIT to: ${styleName}
 
-CRITICAL RULES - MUST FOLLOW:
-1. DO NOT CROP the image - keep EXACT same framing and composition
-2. Face MUST remain EXACTLY identical - same position, same size, fully visible
-3. Hairstyle MUST stay the same
-4. Body proportions and pose MUST stay identical
-5. Background MUST stay the same
-6. Output image MUST have same dimensions as input
+ABSOLUTE REQUIREMENTS - VIOLATION IS FAILURE:
+1. NEVER CROP OR ZOOM - output must have IDENTICAL framing as input
+2. NEVER change aspect ratio - if input is portrait, output is portrait
+3. Face position, size, and features MUST be PIXEL-PERFECT identical
+4. If this is a FULL BODY shot, keep the ENTIRE body visible from head to toe
+5. Hairstyle, hair color, skin tone - ZERO changes allowed
+6. Background, lighting, pose - ZERO changes allowed
+7. Output resolution MUST match input resolution exactly
 
-ONLY change the clothing/outfit. Nothing else.
-Keep the person's face and head FULLY VISIBLE in the frame.
+This is a FULL BODY photo editing task. DO NOT zoom in on the torso.
+The person's HEAD and FACE must remain at the EXACT same position in the frame.
 
-Generate the edited photo maintaining the original composition.`
+ONLY replace the clothing/outfit textures. Nothing else changes.
+
+Generate the edited photo with IDENTICAL composition to the input.`
 
     const geminiModels = [
       'nano-banana-pro-preview',
