@@ -41,8 +41,8 @@ Also apply subtle beauty retouching: smooth clear skin, even skin tone, soft pro
 Generate the edited photo with the new hairstyle.`
 
     const geminiModels = [
-      'nano-banana-pro-preview',
-      'gemini-2.0-flash-exp-image-generation'
+      'gemini-2.0-flash-exp',
+      'gemini-2.0-flash-preview-image-generation'
     ]
 
     let response: Response | null = null

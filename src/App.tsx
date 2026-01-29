@@ -52,8 +52,11 @@ const translations: Record<Language, {
   pathTitle: string
   module1Title: string
   module1Desc: string
+  module1Features: string[]
   module2Title: string
   module2Desc: string
+  module2Features: string[]
+  bestValue: string
   explore: string
   algorithmTag: string
   algorithmTitle: string
@@ -147,10 +150,13 @@ const translations: Record<Language, {
     featuredIn: 'Featured in',
     pathTitle: '당신의 변신 경로를 선택하세요',
     module1Title: '헤어 스타일링',
-    module1Desc: '전문 스타일리스트의 컷과 컬러 분석. 당신의 얼굴형에 완벽한 실루엣을 찾아보세요.',
+    module1Desc: '헤어스타일 변환에 집중하고 싶다면',
+    module1Features: ['헤어스타일 5종 생성', '나만의 얼굴에 적용', '즉시 결과 확인'],
     module2Title: '풀 스타일 컨설팅',
-    module2Desc: '전문 분석 리포트 + 헤어스타일 5종 + 패션 추천까지. 완벽한 스타일 변신을 경험하세요.',
-    explore: '탐색하기',
+    module2Desc: '헤어 + 패션 완벽 변신 패키지',
+    module2Features: ['전문 분석 리포트', '헤어스타일 5종', '상황별 패션 4종', '피부톤·체형 분석'],
+    bestValue: '베스트',
+    explore: '시작하기',
     algorithmTag: '알고리즘',
     algorithmTitle: '개인 우아함의 미래',
     algorithmDesc: '우리의 스타일리스트는 최신 패션 전문성을 바탕으로 당신만의 룩을 큐레이팅합니다. 트렌드를 따르는 것이 아니라, 당신의 미적 잠재력을 발견합니다.',
@@ -243,10 +249,13 @@ const translations: Record<Language, {
     featuredIn: 'Featured in',
     pathTitle: 'Choose Your Transformation Path',
     module1Title: 'Hair Styling',
-    module1Desc: 'Expert-driven cut and color discovery. Find the perfect silhouette for your facial architecture.',
+    module1Desc: 'Focus on finding your perfect hairstyle',
+    module1Features: ['5 hairstyle transformations', 'Applied to your face', 'Instant results'],
     module2Title: 'Full Style Consultation',
-    module2Desc: 'Expert analysis report + 5 hairstyles + fashion recommendations. Experience a complete style transformation.',
-    explore: 'Explore',
+    module2Desc: 'Complete hair + fashion makeover package',
+    module2Features: ['Expert analysis report', '5 hairstyles', '4 fashion looks', 'Skin tone & body analysis'],
+    bestValue: 'BEST',
+    explore: 'Get Started',
     algorithmTag: 'The Method',
     algorithmTitle: 'The Future of Personal Elegance',
     algorithmDesc: 'Our stylist combines cutting-edge technology with high-fashion expertise to curate your unique look. We don\'t just follow trends—we calculate your aesthetic potential.',
@@ -339,10 +348,13 @@ const translations: Record<Language, {
     featuredIn: '掲載メディア',
     pathTitle: '変身パスを選択',
     module1Title: 'ヘアスタイリング',
-    module1Desc: 'プロによるカットとカラーの発見。顔の構造に完璧なシルエットを。',
+    module1Desc: '理想のヘアスタイルを見つけたい方に',
+    module1Features: ['ヘアスタイル5種生成', 'あなたの顔に適用', '即座に結果確認'],
     module2Title: 'フルスタイルコンサル',
-    module2Desc: '専門分析レポート + ヘアスタイル5種 + ファッション提案。完璧なスタイル変身を体験。',
-    explore: '探索する',
+    module2Desc: 'ヘア＋ファッション完全変身パッケージ',
+    module2Features: ['専門分析レポート', 'ヘアスタイル5種', 'シーン別ファッション4種', '肌色・体型分析'],
+    bestValue: 'おすすめ',
+    explore: '始める',
     algorithmTag: 'メソッド',
     algorithmTitle: 'パーソナルエレガンスの未来',
     algorithmDesc: '私たちのスタイリストは、最先端テクノロジーとハイファッションの専門知識を組み合わせて、あなただけのルックをキュレートします。',
@@ -435,10 +447,13 @@ const translations: Record<Language, {
     featuredIn: '媒体报道',
     pathTitle: '选择您的蜕变之路',
     module1Title: '发型设计',
-    module1Desc: '专业造型师驱动的剪裁和色彩发现。为您的面部结构找到完美轮廓。',
+    module1Desc: '专注于找到您的完美发型',
+    module1Features: ['5种发型变换', '应用到您的脸上', '即时查看结果'],
     module2Title: '全套风格咨询',
-    module2Desc: '专业分析报告 + 5种发型 + 时尚推荐。体验完整的风格蜕变。',
-    explore: '探索',
+    module2Desc: '发型 + 时尚完整改造套餐',
+    module2Features: ['专业分析报告', '5种发型', '4种场合穿搭', '肤色体型分析'],
+    bestValue: '最佳',
+    explore: '开始',
     algorithmTag: '方法',
     algorithmTitle: '个人优雅的未来',
     algorithmDesc: '我们的造型师将前沿科技与高级时尚专业知识相结合，为您打造独特造型。我们不只是追随潮流——我们计算您的美学潜力。',
@@ -531,10 +546,13 @@ const translations: Record<Language, {
     featuredIn: 'Destacado en',
     pathTitle: 'Elige Tu Camino de Transformación',
     module1Title: 'Estilismo Capilar',
-    module1Desc: 'Descubrimiento de corte y color por expertos. Encuentra la silueta perfecta para tu arquitectura facial.',
+    module1Desc: 'Enfócate en encontrar tu peinado perfecto',
+    module1Features: ['5 transformaciones de peinado', 'Aplicado a tu rostro', 'Resultados instantáneos'],
     module2Title: 'Consulta de Estilo Completa',
-    module2Desc: 'Informe de análisis experto + 5 peinados + recomendaciones de moda. Experimenta una transformación completa.',
-    explore: 'Explorar',
+    module2Desc: 'Paquete completo de cabello + moda',
+    module2Features: ['Informe de análisis', '5 peinados', '4 looks de moda', 'Análisis de tono y cuerpo'],
+    bestValue: 'MEJOR',
+    explore: 'Comenzar',
     algorithmTag: 'El Método',
     algorithmTitle: 'El Futuro de la Elegancia Personal',
     algorithmDesc: 'Nuestro estilista combina tecnología de vanguardia con experiencia en alta moda para curar tu look único.',
@@ -1384,10 +1402,17 @@ function App() {
               <div className="path-overlay"></div>
               <div className="path-content">
                 <div className="path-glass">
-                  <span className="path-module">HAIR ONLY</span>
-                  <span className="path-price">$4.99</span>
+                  <div className="path-header">
+                    <span className="path-module">HAIR ONLY</span>
+                    <span className="path-price">$4.99</span>
+                  </div>
                   <h3 className="path-title">{t.module1Title}</h3>
                   <p className="path-desc">{t.module1Desc}</p>
+                  <ul className="path-features">
+                    {t.module1Features.map((feature, i) => (
+                      <li key={i}>✓ {feature}</li>
+                    ))}
+                  </ul>
                   <div className="path-explore">
                     {t.explore} <span>→</span>
                   </div>
@@ -1399,10 +1424,18 @@ function App() {
               <div className="path-overlay"></div>
               <div className="path-content">
                 <div className="path-glass">
-                  <span className="path-module">FULL PACKAGE</span>
-                  <span className="path-price best">$9.99</span>
+                  <div className="path-header">
+                    <span className="path-module">FULL PACKAGE</span>
+                    <span className="path-badge">{t.bestValue}</span>
+                    <span className="path-price best">$9.99</span>
+                  </div>
                   <h3 className="path-title">{t.module2Title}</h3>
                   <p className="path-desc">{t.module2Desc}</p>
+                  <ul className="path-features">
+                    {t.module2Features.map((feature, i) => (
+                      <li key={i}>✓ {feature}</li>
+                    ))}
+                  </ul>
                   <div className="path-explore">
                     {t.explore} <span>→</span>
                   </div>

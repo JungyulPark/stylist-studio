@@ -598,12 +598,62 @@
   }
 }
 
+.path-header {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 0.25rem;
+}
+
+.path-header .path-price {
+  margin-left: auto;
+}
+
+.path-badge {
+  padding: 0.2rem 0.5rem;
+  background: linear-gradient(135deg, #ff6b6b, #ffa500);
+  border-radius: 4px;
+  color: white;
+  font-size: 0.625rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  animation: pulse-badge 2s ease-in-out infinite;
+}
+
+@keyframes pulse-badge {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+}
+
 .path-desc {
   color: rgba(255, 255, 255, 0.7);
   font-size: 0.875rem;
   line-height: 1.6;
-  margin: 0;
+  margin: 0 0 1rem;
   max-width: 280px;
+}
+
+.path-features {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 1rem;
+}
+
+.path-features li {
+  color: rgba(255, 255, 255, 0.85);
+  font-size: 0.8rem;
+  padding: 0.35rem 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.path-features li:last-child {
+  border-bottom: none;
+}
+
+.path-card.featured .path-features li {
+  color: rgba(255, 255, 255, 0.95);
 }
 
 .path-explore {

@@ -60,8 +60,8 @@ ONLY replace the clothing/outfit textures. Nothing else changes.
 Generate the edited photo with IDENTICAL composition to the input.`
 
     const geminiModels = [
-      'nano-banana-pro-preview',
-      'gemini-2.0-flash-exp-image-generation'
+      'gemini-2.0-flash-exp',
+      'gemini-2.0-flash-preview-image-generation'
     ]
 
     let response: Response | null = null
