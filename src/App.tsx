@@ -2,6 +2,57 @@ import { useState, useRef, useEffect, useCallback } from 'react'
 import './App.css'
 import { renderMarkdownToHtml } from './utils/markdown'
 
+// IndexedDB 헬퍼 함수 (큰 데이터 저장용)
+const DB_NAME = 'StylistStudioDB'
+const STORE_NAME = 'pendingData'
+
+const openDB = (): Promise<IDBDatabase> => {
+  return new Promise((resolve, reject) => {
+    const request = indexedDB.open(DB_NAME, 1)
+    request.onerror = () => reject(request.error)
+    request.onsuccess = () => resolve(request.result)
+    request.onupgradeneeded = (event) => {
+      const db = (event.target as IDBOpenDBRequest).result
+      if (!db.objectStoreNames.contains(STORE_NAME)) {
+        db.createObjectStore(STORE_NAME, { keyPath: 'id' })
+      }
+    }
+  })
+}
+
+const saveToIndexedDB = async (data: object): Promise<void> => {
+  const db = await openDB()
+  return new Promise((resolve, reject) => {
+    const tx = db.transaction(STORE_NAME, 'readwrite')
+    const store = tx.objectStore(STORE_NAME)
+    store.put({ id: 'pendingAnalysis', ...data })
+    tx.oncomplete = () => resolve()
+    tx.onerror = () => reject(tx.error)
+  })
+}
+
+const loadFromIndexedDB = async (): Promise<object | null> => {
+  const db = await openDB()
+  return new Promise((resolve, reject) => {
+    const tx = db.transaction(STORE_NAME, 'readonly')
+    const store = tx.objectStore(STORE_NAME)
+    const request = store.get('pendingAnalysis')
+    request.onsuccess = () => resolve(request.result || null)
+    request.onerror = () => reject(request.error)
+  })
+}
+
+const clearIndexedDB = async (): Promise<void> => {
+  const db = await openDB()
+  return new Promise((resolve, reject) => {
+    const tx = db.transaction(STORE_NAME, 'readwrite')
+    const store = tx.objectStore(STORE_NAME)
+    store.delete('pendingAnalysis')
+    tx.oncomplete = () => resolve()
+    tx.onerror = () => reject(tx.error)
+  })
+}
+
 type Language = 'ko' | 'en' | 'ja' | 'zh' | 'es'
 type Gender = 'male' | 'female' | 'other' | null
 type Page = 'landing' | 'input' | 'loading' | 'result' | 'hair-selection' | 'hair-result' | 'how-to-use'
@@ -719,39 +770,42 @@ function App() {
       // 결제 성공
       localStorage.setItem('paidCustomer', 'true')
 
-      // 결제 성공 - 저장된 폼 데이터 복원
-      const savedData = localStorage.getItem('pendingAnalysis')
-      if (savedData) {
-        try {
-          const parsedData = JSON.parse(savedData)
-          setProfile(parsedData)
-          setIsPaid(true)
-          localStorage.removeItem('pendingAnalysis')
+      // 결제 성공 - IndexedDB에서 저장된 폼 데이터 복원 (사진 포함)
+      const hasPendingData = localStorage.getItem('pendingAnalysisFlag')
+      if (hasPendingData) {
+        // async 처리를 위한 IIFE
+        (async () => {
+          try {
+            const savedData = await loadFromIndexedDB() as { height: string; weight: string; gender: Gender; photo: string | null } | null
+            if (savedData) {
+              setProfile({
+                height: savedData.height,
+                weight: savedData.weight,
+                gender: savedData.gender,
+                photo: savedData.photo
+              })
+              setIsPaid(true)
+              await clearIndexedDB()
+              localStorage.removeItem('pendingAnalysisFlag')
 
-          // 사진이 없으면 다시 업로드 요청 (localStorage 용량 제한으로 사진 저장 불가)
-          if (!parsedData.photo) {
-            setPageState('input')
-            window.history.replaceState({ page: 'input' }, '', '#input')
-            // 사진 재업로드 안내 메시지
-            setTimeout(() => {
-              alert(lang === 'ko'
-                ? '결제가 완료되었습니다! 사진을 다시 업로드해주세요.'
-                : 'Payment successful! Please re-upload your photo.')
-            }, 100)
-            return
+              // URL 정리 후 바로 분석 시작
+              window.history.replaceState({ page: 'loading' }, '', '#loading')
+              setPageState('loading')
+              // 약간의 딜레이 후 분석 시작 (상태 업데이트 대기)
+              setTimeout(() => {
+                startAnalysisAfterPayment(savedData)
+              }, 100)
+              return
+            }
+          } catch (e) {
+            console.error('Failed to load saved data from IndexedDB:', e)
           }
-
-          // URL 정리 후 바로 분석 시작
-          window.history.replaceState({ page: 'loading' }, '', '#loading')
-          setPageState('loading')
-          // 약간의 딜레이 후 분석 시작 (상태 업데이트 대기)
-          setTimeout(() => {
-            startAnalysisAfterPayment(parsedData)
-          }, 100)
-          return
-        } catch (e) {
-          console.error('Failed to parse saved data:', e)
-        }
+          // 저장된 데이터 없으면 입력 페이지로
+          setIsPaid(true)
+          setPageState('input')
+          window.history.replaceState({ page: 'input' }, '', '#input')
+        })()
+        return
       }
       // 저장된 데이터 없으면 입력 페이지로
       setIsPaid(true)
@@ -854,15 +908,15 @@ function App() {
   const handlePayment = async () => {
     setIsProcessingPayment(true)
     try {
-      // 결제 전 폼 데이터 저장 (사진 제외 - 용량 문제)
+      // 결제 전 폼 데이터 저장 (IndexedDB - 사진 포함 가능)
       const dataToSave = {
         height: profile.height,
         weight: profile.weight,
         gender: profile.gender,
-        // 사진은 용량이 커서 저장하지 않음
-        photo: null
+        photo: profile.photo  // IndexedDB는 큰 데이터도 저장 가능
       }
-      localStorage.setItem('pendingAnalysis', JSON.stringify(dataToSave))
+      await saveToIndexedDB(dataToSave)
+      localStorage.setItem('pendingAnalysisFlag', 'true')  // 플래그만 localStorage에
 
       // 백엔드 API로 체크아웃 URL 가져오기
       const checkoutResponse = await fetch('/api/create-checkout', {
