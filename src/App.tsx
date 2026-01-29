@@ -1675,6 +1675,12 @@ function App() {
             <div className="style-loading">
               <div className="spinner small"></div>
               <span>{t.generatingStyles}</span>
+              <div className="progress-bar-container small" style={{ marginTop: '0.75rem', width: '200px' }}>
+                <div className="progress-bar animated" style={{ animationDuration: '25s' }}></div>
+              </div>
+              <span style={{ fontSize: '0.75rem', opacity: 0.6, marginTop: '0.5rem' }}>
+                {language === 'ko' ? '6개 스타일 생성 중 (약 20-30초)' : 'Generating 6 styles (~20-30 seconds)'}
+              </span>
             </div>
           ) : styleImages.length > 0 && styleImages.some(s => s.imageUrl) ? (
             <>
@@ -1721,9 +1727,12 @@ function App() {
               <div className="style-loading">
                 <div className="spinner small"></div>
                 <span>{t.generatingHairstyles}</span>
-                <div className="progress-bar-container small">
-                  <div className="progress-bar animated"></div>
+                <div className="progress-bar-container small" style={{ marginTop: '0.75rem', width: '200px' }}>
+                  <div className="progress-bar animated" style={{ animationDuration: '20s' }}></div>
                 </div>
+                <span style={{ fontSize: '0.75rem', opacity: 0.6, marginTop: '0.5rem' }}>
+                  {language === 'ko' ? '5개 헤어스타일 생성 중 (약 15-20초)' : 'Generating 5 hairstyles (~15-20 seconds)'}
+                </span>
               </div>
             ) : transformedHairstyles.length > 0 ? (
               <div className="transform-grid">
