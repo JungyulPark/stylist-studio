@@ -769,6 +769,7 @@ function App() {
     if (customerSessionToken || paymentSuccess === 'success') {
       // 결제 성공
       localStorage.setItem('paidCustomer', 'true')
+      const purchasedProductType = urlParams.get('type') || localStorage.getItem('productType') || 'full'
 
       // 결제 성공 - IndexedDB에서 저장된 폼 데이터 복원 (사진 포함)
       const hasPendingData = localStorage.getItem('pendingAnalysisFlag')
@@ -776,8 +777,33 @@ function App() {
         // async 처리를 위한 IIFE
         (async () => {
           try {
-            const savedData = await loadFromIndexedDB() as { height: string; weight: string; gender: Gender; photo: string | null } | null
+            const savedData = await loadFromIndexedDB() as {
+              height: string; weight: string; gender: Gender; photo: string | null;
+              hairPhoto?: string; selectedOccasion?: string; selectedVibe?: string; productType?: string
+            } | null
+
             if (savedData) {
+              // Hair Only 상품인 경우
+              if (purchasedProductType === 'hair' && savedData.hairPhoto) {
+                setHairPhoto(savedData.hairPhoto)
+                setSelectedOccasion(savedData.selectedOccasion || null)
+                setSelectedVibe(savedData.selectedVibe || null)
+                setProfile(prev => ({ ...prev, gender: savedData.gender }))
+                setIsPaid(true)
+                await clearIndexedDB()
+                localStorage.removeItem('pendingAnalysisFlag')
+                localStorage.removeItem('productType')
+
+                // URL 정리 후 헤어 결과 생성 시작
+                window.history.replaceState({ page: 'loading' }, '', '#loading')
+                setPageState('loading')
+                setTimeout(() => {
+                  startHairGenerationAfterPayment(savedData)
+                }, 100)
+                return
+              }
+
+              // Full 상품인 경우 (기존 로직)
               setProfile({
                 height: savedData.height,
                 weight: savedData.weight,
@@ -787,6 +813,7 @@ function App() {
               setIsPaid(true)
               await clearIndexedDB()
               localStorage.removeItem('pendingAnalysisFlag')
+              localStorage.removeItem('productType')
 
               // URL 정리 후 바로 분석 시작
               window.history.replaceState({ page: 'loading' }, '', '#loading')
@@ -905,7 +932,7 @@ function App() {
   }
 
   // Polar 결제 처리
-  const handlePayment = async () => {
+  const handlePayment = async (productType: 'full' | 'hair' = 'full') => {
     setIsProcessingPayment(true)
     try {
       // 결제 전 폼 데이터 저장 (IndexedDB - 사진 포함 가능)
@@ -913,17 +940,20 @@ function App() {
         height: profile.height,
         weight: profile.weight,
         gender: profile.gender,
-        photo: profile.photo  // IndexedDB는 큰 데이터도 저장 가능
+        photo: profile.photo,  // IndexedDB는 큰 데이터도 저장 가능
+        productType  // 어떤 상품을 구매했는지 저장
       }
       await saveToIndexedDB(dataToSave)
       localStorage.setItem('pendingAnalysisFlag', 'true')  // 플래그만 localStorage에
+      localStorage.setItem('productType', productType)  // 상품 타입 저장
 
       // 백엔드 API로 체크아웃 URL 가져오기
       const checkoutResponse = await fetch('/api/create-checkout', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          successUrl: `${window.location.origin}/?payment=success`
+          productType,
+          successUrl: `${window.location.origin}/?payment=success&type=${productType}`
         })
       })
 
@@ -1042,6 +1072,48 @@ function App() {
       setError(lang === 'ko' ? '분석 중 오류가 발생했습니다' : 'An error occurred during analysis')
       setPage('input')
     }
+  }
+
+  // 결제 후 헤어 스타일 생성 (Hair Only 상품)
+  const startHairGenerationAfterPayment = async (savedData: {
+    hairPhoto?: string; selectedOccasion?: string; selectedVibe?: string; gender?: Gender
+  }) => {
+    setIsGeneratingHair(true)
+
+    const occasion = savedData.selectedOccasion || 'daily'
+    const vibe = savedData.selectedVibe || 'natural'
+
+    // 데모 추천 가져오기
+    const demoRecommendations = getHairDemoRecommendations(occasion, vibe, lang)
+    setHairRecommendations(demoRecommendations)
+
+    // 사진으로 AI 이미지 생성
+    if (savedData.hairPhoto) {
+      try {
+        const response = await fetch('/api/generate-hair-styles', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            photo: savedData.hairPhoto,
+            occasion,
+            vibe,
+            gender: savedData.gender,
+            styles: demoRecommendations,
+            language: lang
+          })
+        })
+
+        if (response.ok) {
+          const data = await response.json()
+          setGeneratedHairImages(data.images || [])
+        }
+      } catch {
+        setGeneratedHairImages([])
+      }
+    }
+
+    setIsGeneratingHair(false)
+    setPage('hair-result')
   }
 
   // 실제 분석 수행 함수
@@ -1239,6 +1311,47 @@ function App() {
   const handleHairRecommendation = async () => {
     if (!selectedOccasion || !selectedVibe) return
 
+    // 사진이 있고 결제 안 됐으면 결제 진행
+    if (hairPhoto && !isPaid) {
+      setIsProcessingPayment(true)
+      try {
+        // 결제 전 데이터 저장
+        const dataToSave = {
+          hairPhoto,
+          selectedOccasion,
+          selectedVibe,
+          gender: profile.gender,
+          productType: 'hair'
+        }
+        await saveToIndexedDB(dataToSave)
+        localStorage.setItem('pendingAnalysisFlag', 'true')
+        localStorage.setItem('productType', 'hair')
+
+        // 결제 페이지로 리다이렉트
+        const checkoutResponse = await fetch('/api/create-checkout', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            productType: 'hair',
+            successUrl: `${window.location.origin}/?payment=success&type=hair`
+          })
+        })
+
+        const checkoutData = await checkoutResponse.json()
+        if (!checkoutResponse.ok || !checkoutData.url) {
+          throw new Error(checkoutData.message || 'Failed to create checkout session')
+        }
+
+        window.location.href = checkoutData.url
+      } catch (error) {
+        console.error('Payment error:', error)
+        setIsProcessingPayment(false)
+        setError(lang === 'ko' ? '결제 오류가 발생했습니다' : 'Payment error occurred')
+      }
+      return
+    }
+
+    // 결제 완료된 경우 또는 사진 없는 경우 (데모)
     setPage('loading')
     setIsGeneratingHair(true)
 
@@ -1679,7 +1792,7 @@ function App() {
                 <div className="progress-bar animated" style={{ animationDuration: '25s' }}></div>
               </div>
               <span style={{ fontSize: '0.75rem', opacity: 0.6, marginTop: '0.5rem' }}>
-                {language === 'ko' ? '6개 스타일 생성 중 (약 20-30초)' : 'Generating 6 styles (~20-30 seconds)'}
+                {lang === 'ko' ? '6개 스타일 생성 중 (약 20-30초)' : 'Generating 6 styles (~20-30 seconds)'}
               </span>
             </div>
           ) : styleImages.length > 0 && styleImages.some(s => s.imageUrl) ? (
@@ -1731,7 +1844,7 @@ function App() {
                   <div className="progress-bar animated" style={{ animationDuration: '20s' }}></div>
                 </div>
                 <span style={{ fontSize: '0.75rem', opacity: 0.6, marginTop: '0.5rem' }}>
-                  {language === 'ko' ? '5개 헤어스타일 생성 중 (약 15-20초)' : 'Generating 5 hairstyles (~15-20 seconds)'}
+                  {lang === 'ko' ? '5개 헤어스타일 생성 중 (약 15-20초)' : 'Generating 5 hairstyles (~15-20 seconds)'}
                 </span>
               </div>
             ) : transformedHairstyles.length > 0 ? (
