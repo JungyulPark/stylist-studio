@@ -1,0 +1,9 @@
+# robots.txt for kstylist.cc
+User-agent: *
+Allow: /
+
+# Sitemap
+Sitemap: https://kstylist.cc/sitemap.xml
+
+# Crawl-delay (optional, be nice to servers)
+Crawl-delay: 1

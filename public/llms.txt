@@ -1,0 +1,33 @@
+# AI Stylist - kstylist.cc
+
+## What is AI Stylist?
+AI Stylist is an AI-powered personal styling service that recommends hairstyles and fashion outfits based on your photo. Upload a photo and get personalized style recommendations instantly.
+
+## Services
+1. **AI Hairstyle Recommendation** ($4.99)
+   - Upload your photo
+   - Get 5 AI-generated hairstyle previews applied to your face
+   - See yourself with different hairstyles before visiting a salon
+
+2. **Full Style Consultation** ($9.99)
+   - Complete AI style analysis report
+   - 5 hairstyle transformations
+   - 6 fashion outfit previews (Best Match, Interview, Date Night, Luxury, Casual, Daily)
+   - Personalized recommendations based on your features
+
+## How It Works
+1. Upload your photo
+2. AI analyzes your facial features and body type
+3. Get instant style recommendations with AI-generated preview images
+
+## Key Features
+- Face-preserving AI technology
+- Multiple style scenarios for different occasions
+- Support for Korean, English, Japanese, Chinese, Spanish
+- Instant results
+
+## Website
+https://kstylist.cc
+
+## Keywords
+AI hairstyle, AI fashion, personal styling, virtual makeover, hairstyle recommendation, fashion recommendation, AI stylist, personal color analysis
