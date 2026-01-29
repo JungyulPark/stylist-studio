@@ -11,10 +11,10 @@ interface Env {
 // Product 타입 정의
 type ProductType = 'hair' | 'full'
 
-// Sandbox용 기본 Product IDs (Production 전환 시 환경변수로 교체)
+// Production Product IDs
 const DEFAULT_PRODUCTS: Record<ProductType, string> = {
-  hair: 'cca7d48e-6758-4e83-a375-807ab70615ea', // TODO: Polar에서 Hair 상품 생성 후 교체
-  full: 'cca7d48e-6758-4e83-a375-807ab70615ea', // TODO: Polar에서 Full 상품 생성 후 교체
+  hair: '3df2c89e-ce52-4792-b735-3eaa164c3927',
+  full: '533aed39-303f-4746-afb0-d150aa294f64',
 }
 
 // 가격 정보 (표시용)
@@ -79,7 +79,7 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
       checkoutBody.discount_code = discountCode
     }
 
-    const response = await fetch('https://sandbox-api.polar.sh/v1/checkouts/', {
+    const response = await fetch('https://api.polar.sh/v1/checkouts/', {
       method: 'POST',
       headers: {
         'Authorization': `Bearer ${polarToken}`,
@@ -132,7 +132,7 @@ export const onRequestGet: PagesFunction<Env> = async (context) => {
           features: [
             'AI Style Analysis Report',
             '5 hairstyle previews',
-            '4 fashion outfit previews',
+            '6 fashion outfit previews',
             'Personalized recommendations'
           ]
         },
