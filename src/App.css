@@ -1190,6 +1190,48 @@
   color: rgba(26, 26, 26, 0.35);
 }
 
+/* Imperial Units (US) */
+.imperial-height-inputs {
+  display: flex;
+  gap: 0.75rem;
+}
+
+.imperial-input {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex: 1;
+}
+
+.imperial-input input {
+  padding: 1.125rem 1rem;
+  font-size: 1rem;
+  font-family: var(--font-display);
+  border: 2px solid rgba(26, 26, 26, 0.08);
+  border-radius: 14px;
+  outline: none;
+  background: #fafafa;
+  transition: all 0.3s ease;
+  width: 100%;
+}
+
+.imperial-input input:hover {
+  border-color: rgba(212, 114, 140, 0.3);
+}
+
+.imperial-input input:focus {
+  border-color: var(--primary);
+  background: white;
+  box-shadow: 0 0 0 4px rgba(212, 114, 140, 0.1);
+}
+
+.imperial-input .unit-label {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--charcoal);
+  min-width: 1.5rem;
+}
+
 /* Gender Options - Elegant Cards */
 .gender-options {
   display: flex;

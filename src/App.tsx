@@ -123,6 +123,8 @@ const translations: Record<Language, {
   uploadPhoto: string
   photoHint: string
   height: string
+  heightFeet: string
+  heightInches: string
   weight: string
   gender: string
   male: string
@@ -232,6 +234,8 @@ const translations: Record<Language, {
     uploadPhoto: '사진 업로드',
     photoHint: '전신 사진을 올리면 패션 추천도 받을 수 있어요',
     height: '키 (cm)',
+    heightFeet: '',
+    heightInches: '',
     weight: '몸무게 (kg)',
     gender: '성별',
     male: '남성',
@@ -340,8 +344,10 @@ const translations: Record<Language, {
     feature4Desc: 'Priority access to limited-edition designer collaborations curated for your profile.',
     uploadPhoto: 'Upload Photo',
     photoHint: 'Upload full body photo for fashion recommendations too',
-    height: 'Height (cm)',
-    weight: 'Weight (kg)',
+    height: 'Height',
+    heightFeet: 'ft',
+    heightInches: 'in',
+    weight: 'Weight (lbs)',
     gender: 'Gender',
     male: 'Male',
     female: 'Female',
@@ -450,6 +456,8 @@ const translations: Record<Language, {
     uploadPhoto: '写真をアップロード',
     photoHint: '全身写真でファッション提案も受けられます',
     height: '身長 (cm)',
+    heightFeet: '',
+    heightInches: '',
     weight: '体重 (kg)',
     gender: '性別',
     male: '男性',
@@ -559,6 +567,8 @@ const translations: Record<Language, {
     uploadPhoto: '上传照片',
     photoHint: '上传全身照还可获得时尚推荐',
     height: '身高 (cm)',
+    heightFeet: '',
+    heightInches: '',
     weight: '体重 (kg)',
     gender: '性别',
     male: '男',
@@ -668,6 +678,8 @@ const translations: Record<Language, {
     uploadPhoto: 'Subir foto',
     photoHint: 'Sube foto de cuerpo completo para recomendaciones de moda',
     height: 'Altura (cm)',
+    heightFeet: '',
+    heightInches: '',
     weight: 'Peso (kg)',
     gender: 'Género',
     male: 'Masculino',
@@ -1059,9 +1071,48 @@ function App() {
   const [emailSent, setEmailSent] = useState(false)
   const [emailError, setEmailError] = useState('')
   const [checkoutId, setCheckoutId] = useState<string | null>(null)
+  const [heightFeet, setHeightFeet] = useState('')
+  const [heightInches, setHeightInches] = useState('')
+  const [weightLbs, setWeightLbs] = useState('')
   const fileInputRef = useRef<HTMLInputElement>(null)
   const hairPhotoRef = useRef<HTMLInputElement>(null)
   const t = translations[lang]
+
+  // 미국 단위 변환 함수
+  const isImperial = lang === 'en'
+
+  const feetInchesToCm = (feet: string, inches: string): string => {
+    const ft = parseFloat(feet) || 0
+    const inch = parseFloat(inches) || 0
+    const totalInches = (ft * 12) + inch
+    const cm = Math.round(totalInches * 2.54)
+    return cm > 0 ? cm.toString() : ''
+  }
+
+  const lbsToKg = (lbs: string): string => {
+    const pounds = parseFloat(lbs) || 0
+    const kg = Math.round(pounds * 0.453592)
+    return kg > 0 ? kg.toString() : ''
+  }
+
+  // 영어 사용자: feet/inches, lbs 입력 시 자동 변환
+  useEffect(() => {
+    if (isImperial) {
+      const cmValue = feetInchesToCm(heightFeet, heightInches)
+      if (cmValue) {
+        setProfile(prev => ({ ...prev, height: cmValue }))
+      }
+    }
+  }, [heightFeet, heightInches, isImperial])
+
+  useEffect(() => {
+    if (isImperial) {
+      const kgValue = lbsToKg(weightLbs)
+      if (kgValue) {
+        setProfile(prev => ({ ...prev, weight: kgValue }))
+      }
+    }
+  }, [weightLbs, isImperial])
 
   // Polar Checkout Configuration (Sandbox 환경)
   // Product ID: cca7d48e-6758-4e83-a375-807ab70615ea
@@ -1731,6 +1782,9 @@ function App() {
   // 패션 변환 (3x3 그리드)
   const handleRestart = () => {
     setProfile({ photo: null, height: '', weight: '', gender: null })
+    setHeightFeet('')
+    setHeightInches('')
+    setWeightLbs('')
     setReport('')
     setError('')
     setStyleImages([])
@@ -2323,8 +2377,17 @@ function App() {
               <img src={profile.photo} alt="Profile" className="result-photo" />
             )}
             <div className="profile-info">
-              <span>{profile.height} cm</span>
-              <span>{profile.weight} kg</span>
+              {isImperial ? (
+                <>
+                  <span>{heightFeet}'{heightInches}"</span>
+                  <span>{weightLbs} lbs</span>
+                </>
+              ) : (
+                <>
+                  <span>{profile.height} cm</span>
+                  <span>{profile.weight} kg</span>
+                </>
+              )}
             </div>
           </div>
 
@@ -2851,27 +2914,72 @@ function App() {
                 </div>
               </div>
 
-              <div className="input-group">
-                <label htmlFor="height">{t.height}</label>
-                <input
-                  id="height"
-                  type="number"
-                  placeholder="170"
-                  value={profile.height}
-                  onChange={(e) => setProfile(prev => ({ ...prev, height: e.target.value }))}
-                />
-              </div>
+              {isImperial ? (
+                <div className="input-group">
+                  <label>{t.height}</label>
+                  <div className="imperial-height-inputs">
+                    <div className="imperial-input">
+                      <input
+                        id="height-feet"
+                        type="number"
+                        placeholder="5"
+                        value={heightFeet}
+                        onChange={(e) => setHeightFeet(e.target.value)}
+                        min="0"
+                        max="8"
+                      />
+                      <span className="unit-label">{t.heightFeet}</span>
+                    </div>
+                    <div className="imperial-input">
+                      <input
+                        id="height-inches"
+                        type="number"
+                        placeholder="7"
+                        value={heightInches}
+                        onChange={(e) => setHeightInches(e.target.value)}
+                        min="0"
+                        max="11"
+                      />
+                      <span className="unit-label">{t.heightInches}</span>
+                    </div>
+                  </div>
+                </div>
+              ) : (
+                <div className="input-group">
+                  <label htmlFor="height">{t.height}</label>
+                  <input
+                    id="height"
+                    type="number"
+                    placeholder="170"
+                    value={profile.height}
+                    onChange={(e) => setProfile(prev => ({ ...prev, height: e.target.value }))}
+                  />
+                </div>
+              )}
 
-              <div className="input-group">
-                <label htmlFor="weight">{t.weight}</label>
-                <input
-                  id="weight"
-                  type="number"
-                  placeholder="65"
-                  value={profile.weight}
-                  onChange={(e) => setProfile(prev => ({ ...prev, weight: e.target.value }))}
-                />
-              </div>
+              {isImperial ? (
+                <div className="input-group">
+                  <label htmlFor="weight-lbs">{t.weight}</label>
+                  <input
+                    id="weight-lbs"
+                    type="number"
+                    placeholder="150"
+                    value={weightLbs}
+                    onChange={(e) => setWeightLbs(e.target.value)}
+                  />
+                </div>
+              ) : (
+                <div className="input-group">
+                  <label htmlFor="weight">{t.weight}</label>
+                  <input
+                    id="weight"
+                    type="number"
+                    placeholder="65"
+                    value={profile.weight}
+                    onChange={(e) => setProfile(prev => ({ ...prev, weight: e.target.value }))}
+                  />
+                </div>
+              )}
 
               {/* 결제 안내 */}
               {!isPaid && (
