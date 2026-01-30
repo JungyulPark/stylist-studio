@@ -2492,10 +2492,10 @@ function App() {
               <img src={profile.photo} alt="Profile" className="result-photo" />
             )}
             <div className="profile-info">
-              {isImperial ? (
+              {heightFeet || heightInches ? (
                 <>
-                  <span>{heightFeet}'{heightInches}"</span>
-                  <span>{weightLbs} lbs</span>
+                  <span>{heightFeet || '0'}'{heightInches || '0'}"</span>
+                  <span>{weightLbs || '0'} lbs</span>
                 </>
               ) : (
                 <>
