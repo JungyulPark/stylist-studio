@@ -713,6 +713,245 @@ const languageNames: Record<Language, string> = {
   es: 'ES'
 }
 
+// Legal Policy Content
+const policyContent = {
+  terms: {
+    title: 'Terms of Service',
+    lastUpdated: 'January 30, 2026',
+    content: `
+## 1. Acceptance of Terms
+
+By accessing or using PERSONAL STYLIST ("Service"), you agree to be bound by these Terms of Service. If you do not agree, please do not use the Service.
+
+## 2. Service Description
+
+PERSONAL STYLIST is an AI-powered styling consultation service that provides:
+- Personalized style analysis based on uploaded photos
+- AI-generated hairstyle previews
+- AI-generated fashion outfit recommendations
+
+The Service uses artificial intelligence to generate suggestions and visual previews. Results are for entertainment and reference purposes only.
+
+## 3. Payment & Billing
+
+- Payments are processed securely through Polar (polar.sh)
+- All prices are in USD and include applicable taxes
+- Payment is required before accessing premium features
+- By completing a purchase, you agree to Polar's terms of service
+
+## 4. Digital Products & Delivery
+
+- All products are digital and delivered instantly upon payment
+- Generated images and analysis reports are available immediately after processing
+- You may download and save your results for personal use
+
+## 5. User Responsibilities
+
+You agree to:
+- Provide accurate information
+- Upload only photos you have the right to use
+- Use the Service for lawful purposes only
+- Not attempt to reverse-engineer or exploit the Service
+
+## 6. Intellectual Property
+
+- AI-generated images are provided for your personal use
+- You may share your results on social media with attribution
+- The Service, including its AI models and design, remains our property
+
+## 7. Privacy
+
+Your use of the Service is also governed by our Privacy Policy. Uploaded photos are processed securely and not stored permanently.
+
+## 8. Disclaimers
+
+- The Service is provided "as is" without warranties
+- AI-generated results may vary and are not guaranteed to be accurate
+- We are not responsible for styling decisions made based on our suggestions
+
+## 9. Limitation of Liability
+
+To the maximum extent permitted by law, we shall not be liable for any indirect, incidental, or consequential damages arising from your use of the Service.
+
+## 10. Changes to Terms
+
+We may update these Terms at any time. Continued use of the Service constitutes acceptance of updated Terms.
+
+## 11. Contact
+
+For questions about these Terms, contact us at support@kstylist.cc
+    `
+  },
+  privacy: {
+    title: 'Privacy Policy',
+    lastUpdated: 'January 30, 2026',
+    content: `
+## 1. Information We Collect
+
+**Information You Provide:**
+- Photos uploaded for styling analysis
+- Basic measurements (height, weight, gender)
+- Language preference
+- Payment information (processed by Polar)
+
+**Automatically Collected:**
+- Device and browser information
+- Usage analytics (via Google Analytics)
+- Session data for service functionality
+
+## 2. How We Use Your Information
+
+- To provide AI-powered styling recommendations
+- To process payments through Polar
+- To improve our Service and AI models
+- To communicate service updates
+
+## 3. Photo Processing
+
+**Important:**
+- Uploaded photos are sent to AI providers (OpenAI, Google) for processing
+- Photos are processed in real-time and not permanently stored on our servers
+- Generated images are temporarily cached to enable downloads
+- We do not use your photos for AI training
+
+## 4. Third-Party Services
+
+We use the following third-party services:
+
+| Service | Purpose | Privacy Policy |
+|---------|---------|----------------|
+| Polar | Payment processing | polar.sh/legal/privacy |
+| OpenAI | AI analysis | openai.com/privacy |
+| Google (Gemini) | Image generation | policies.google.com/privacy |
+| Google Analytics | Usage analytics | policies.google.com/privacy |
+| Cloudflare | Hosting & CDN | cloudflare.com/privacypolicy |
+
+## 5. Data Retention
+
+- Session data: Deleted after browser session ends
+- Generated images: Temporarily cached, deleted within 24 hours
+- Payment records: Retained by Polar per their policies
+- Analytics: Anonymized, retained per Google Analytics policies
+
+## 6. Your Rights
+
+You have the right to:
+- Request deletion of any stored data
+- Opt out of analytics tracking
+- Access information about your data
+
+## 7. Security
+
+We implement industry-standard security measures:
+- HTTPS encryption for all data transmission
+- Secure API communication with AI providers
+- No permanent storage of sensitive photos
+
+## 8. Children's Privacy
+
+The Service is not intended for users under 13 years of age. We do not knowingly collect information from children.
+
+## 9. International Users
+
+The Service is operated from the United States. By using the Service, you consent to data processing in the US.
+
+## 10. Changes to This Policy
+
+We may update this Privacy Policy periodically. We will notify users of significant changes.
+
+## 11. Contact
+
+For privacy inquiries: privacy@kstylist.cc
+    `
+  },
+  refund: {
+    title: 'Refund Policy',
+    lastUpdated: 'January 30, 2026',
+    content: `
+## Digital Product Refund Policy
+
+Thank you for using PERSONAL STYLIST. Please read our refund policy carefully before making a purchase.
+
+## 1. Nature of Our Products
+
+PERSONAL STYLIST provides **digital services** including:
+- AI-powered style analysis reports
+- AI-generated hairstyle preview images
+- AI-generated fashion outfit previews
+
+These are **instant digital deliverables** that cannot be "returned" once generated.
+
+## 2. Refund Eligibility
+
+**Full Refund Available When:**
+- Technical failure prevents delivery of your results
+- Payment was processed but service was not provided
+- Duplicate charges occurred
+
+**Partial Refund or Credit May Be Offered When:**
+- Significant portions of the service did not work as expected
+- AI generation failed for multiple styles
+
+**Refunds Not Available When:**
+- You are unsatisfied with AI-generated style suggestions
+- You changed your mind after purchase
+- You did not like how a hairstyle or outfit looked on your photo
+- Results differ from your expectations
+
+## 3. Why Limited Refunds?
+
+Once you upload your photo and we process it through AI:
+- Computing resources have been consumed
+- AI generation costs have been incurred
+- Digital results have been delivered to you
+
+Unlike physical products, digital services cannot be "returned."
+
+## 4. How to Request a Refund
+
+If you believe you qualify for a refund:
+
+1. Email us at **support@kstylist.cc** within **7 days** of purchase
+2. Include:
+   - Your payment confirmation/receipt
+   - Description of the issue
+   - Screenshots if applicable
+
+We will review your request within 3 business days.
+
+## 5. Refund Processing
+
+Approved refunds are processed through Polar, our payment provider:
+- Refunds typically appear within 5-10 business days
+- Refund will be credited to your original payment method
+- Processing time depends on your bank/card issuer
+
+## 6. Dispute Resolution
+
+Before filing a payment dispute:
+- Please contact us first at support@kstylist.cc
+- We aim to resolve all issues fairly and promptly
+- Chargebacks without prior contact may result in account restrictions
+
+## 7. Repeat Customer Discount
+
+Unsatisfied with your results? Instead of a refund, we offer:
+- **50% discount** on your next purchase (code: COMEBACK50)
+- This allows you to try again with a different photo
+
+## 8. Contact Us
+
+For refund requests or questions:
+- Email: support@kstylist.cc
+- Please allow 1-3 business days for response
+
+---
+
+*This policy is designed to be fair to both customers and our service. We appreciate your understanding.*
+    `
+  }
+}
+
 interface UserProfile {
   photo: string | null
   height: string
@@ -753,6 +992,7 @@ function App() {
   const [loadingStep, setLoadingStep] = useState('')
   const [isPaid, setIsPaid] = useState(false)
   const [isProcessingPayment, setIsProcessingPayment] = useState(false)
+  const [policyModal, setPolicyModal] = useState<'terms' | 'privacy' | 'refund' | null>(null)
   const fileInputRef = useRef<HTMLInputElement>(null)
   const hairPhotoRef = useRef<HTMLInputElement>(null)
   const t = translations[lang]
@@ -1771,21 +2011,36 @@ function App() {
             </div>
             <div className="footer-links">
               <div className="footer-col">
-                <h5>DISCOVER</h5>
-                <a href="#">Pathways</a>
-                <a href="#">Collections</a>
+                <h5>LEGAL</h5>
+                <a href="#" onClick={(e) => { e.preventDefault(); setPolicyModal('terms') }}>Terms of Service</a>
+                <a href="#" onClick={(e) => { e.preventDefault(); setPolicyModal('privacy') }}>Privacy Policy</a>
+                <a href="#" onClick={(e) => { e.preventDefault(); setPolicyModal('refund') }}>Refund Policy</a>
               </div>
               <div className="footer-col">
-                <h5>COMPANY</h5>
-                <a href="#">About</a>
-                <a href="#">Contact</a>
+                <h5>CONTACT</h5>
+                <a href="mailto:support@kstylist.cc">support@kstylist.cc</a>
               </div>
             </div>
           </div>
           <div className="footer-bottom">
-            <span>© 2024 PERSONAL STYLIST. ALL RIGHTS RESERVED.</span>
+            <span>© 2026 PERSONAL STYLIST. ALL RIGHTS RESERVED.</span>
           </div>
         </footer>
+
+        {/* Policy Modal */}
+        {policyModal && (
+          <div className="policy-modal-overlay" onClick={() => setPolicyModal(null)}>
+            <div className="policy-modal" onClick={(e) => e.stopPropagation()}>
+              <button className="policy-modal-close" onClick={() => setPolicyModal(null)}>×</button>
+              <h1>{policyContent[policyModal].title}</h1>
+              <p className="policy-updated">Last Updated: {policyContent[policyModal].lastUpdated}</p>
+              <div
+                className="policy-content"
+                dangerouslySetInnerHTML={{ __html: renderMarkdownToHtml(policyContent[policyModal].content) }}
+              />
+            </div>
+          </div>
+        )}
       </div>
     )
   }
