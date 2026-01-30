@@ -448,3 +448,63 @@ export function createValidationErrorResponse(
     }
   )
 }
+
+/**
+ * Validate email format
+ */
+export function isValidEmail(value: unknown): boolean {
+  if (typeof value !== 'string') return false
+  // Simple but effective email regex
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+  return emailRegex.test(value) && value.length <= 254
+}
+
+export interface SendReportRequestBody {
+  email: string
+  report: string
+  language: Language
+}
+
+export function validateSendReportRequest(body: unknown): ValidationResult<SendReportRequestBody> {
+  const errors: ValidationError[] = []
+
+  if (typeof body !== 'object' || body === null) {
+    return { valid: false, errors: [{ field: 'body', message: 'Invalid request body' }] }
+  }
+
+  const { email, report, language } = body as Record<string, unknown>
+
+  // Email validation (required)
+  if (!email) {
+    errors.push({ field: 'email', message: 'Email is required' })
+  } else if (!isValidEmail(email)) {
+    errors.push({ field: 'email', message: 'Invalid email format' })
+  }
+
+  // Report validation (required)
+  if (!report) {
+    errors.push({ field: 'report', message: 'Report content is required' })
+  } else if (typeof report !== 'string' || report.length < 10) {
+    errors.push({ field: 'report', message: 'Report content is too short' })
+  } else if (report.length > 100000) {
+    errors.push({ field: 'report', message: 'Report content is too long' })
+  }
+
+  // Language validation (optional, defaults to 'en')
+  if (language && !isValidLanguage(language)) {
+    errors.push({ field: 'language', message: 'Invalid language value' })
+  }
+
+  if (errors.length > 0) {
+    return { valid: false, errors }
+  }
+
+  return {
+    valid: true,
+    data: {
+      email: email as string,
+      report: report as string,
+      language: (language as Language) || 'en',
+    },
+  }
+}

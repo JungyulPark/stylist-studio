@@ -3058,3 +3058,138 @@
     padding: 0.5rem;
   }
 }
+
+/* ===== EMAIL MODAL ===== */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.8);
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 1rem;
+}
+
+.modal-content {
+  background: var(--card-bg);
+  border: 1px solid var(--border-color);
+  border-radius: 16px;
+  max-width: 400px;
+  width: 100%;
+  padding: 2rem;
+  position: relative;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+}
+
+.modal-close {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: none;
+  background: var(--bg-light);
+  color: var(--charcoal);
+  font-size: 1.5rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+}
+
+.modal-close:hover {
+  background: var(--gold);
+  color: var(--charcoal);
+}
+
+.email-modal h2 {
+  font-family: var(--font-serif);
+  font-size: 1.25rem;
+  color: var(--white);
+  margin: 0 0 1.5rem 0;
+  padding-right: 2rem;
+  text-align: center;
+}
+
+.email-input {
+  width: 100%;
+  padding: 0.875rem 1rem;
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--white);
+  font-size: 1rem;
+  transition: all 0.2s ease;
+  box-sizing: border-box;
+}
+
+.email-input:focus {
+  outline: none;
+  border-color: var(--gold);
+  box-shadow: 0 0 0 3px rgba(201, 169, 98, 0.2);
+}
+
+.email-input::placeholder {
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.email-error {
+  color: #ff6b6b;
+  font-size: 0.875rem;
+  margin: 0.75rem 0 0 0;
+  text-align: center;
+}
+
+.email-send-btn {
+  width: 100%;
+  margin-top: 1rem;
+  padding: 0.875rem 1.5rem;
+}
+
+.email-send-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.email-success {
+  text-align: center;
+  padding: 1rem 0;
+}
+
+.email-success .success-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  background: var(--gold);
+  color: var(--charcoal);
+  border-radius: 50%;
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin-bottom: 1rem;
+}
+
+.email-success p {
+  color: var(--white);
+  font-size: 1rem;
+  margin: 0;
+}
+
+@media (max-width: 640px) {
+  .modal-content {
+    padding: 1.5rem;
+    margin: 0 0.5rem;
+  }
+
+  .email-modal h2 {
+    font-size: 1.1rem;
+  }
+}

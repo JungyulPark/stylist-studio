@@ -192,6 +192,13 @@ const translations: Record<Language, {
   downloadResult: string
   shareResult: string
   linkCopied: string
+  emailReport: string
+  emailModalTitle: string
+  emailPlaceholder: string
+  emailSend: string
+  emailSending: string
+  emailSuccess: string
+  emailError: string
 }> = {
   ko: {
     title: 'PERSONAL STYLIST',
@@ -293,7 +300,14 @@ const translations: Record<Language, {
     serviceStep3Desc: '내 얼굴 그대로, 다양한 스타일을 미리 체험',
     downloadResult: '📥 결과 저장',
     shareResult: '📤 공유하기',
-    linkCopied: '링크가 복사되었습니다!'
+    linkCopied: '링크가 복사되었습니다!',
+    emailReport: '📧 이메일로 받기',
+    emailModalTitle: '리포트를 이메일로 받기',
+    emailPlaceholder: '이메일 주소를 입력하세요',
+    emailSend: '전송',
+    emailSending: '전송 중...',
+    emailSuccess: '이메일이 전송되었습니다!',
+    emailError: '이메일 전송에 실패했습니다. 다시 시도해주세요.'
   },
   en: {
     title: 'PERSONAL STYLIST',
@@ -395,7 +409,14 @@ const translations: Record<Language, {
     serviceStep3Desc: 'Preview styles on your actual face instantly',
     downloadResult: '📥 Save Results',
     shareResult: '📤 Share',
-    linkCopied: 'Link copied!'
+    linkCopied: 'Link copied!',
+    emailReport: '📧 Email Report',
+    emailModalTitle: 'Send Report to Email',
+    emailPlaceholder: 'Enter your email address',
+    emailSend: 'Send',
+    emailSending: 'Sending...',
+    emailSuccess: 'Email sent successfully!',
+    emailError: 'Failed to send email. Please try again.'
   },
   ja: {
     title: 'PERSONAL STYLIST',
@@ -497,7 +518,14 @@ const translations: Record<Language, {
     serviceStep3Desc: 'あなたの顔のまま様々なスタイルをプレビュー',
     downloadResult: '📥 結果を保存',
     shareResult: '📤 シェア',
-    linkCopied: 'リンクがコピーされました！'
+    linkCopied: 'リンクがコピーされました！',
+    emailReport: '📧 メールで受け取る',
+    emailModalTitle: 'レポートをメールで受け取る',
+    emailPlaceholder: 'メールアドレスを入力',
+    emailSend: '送信',
+    emailSending: '送信中...',
+    emailSuccess: 'メールを送信しました！',
+    emailError: 'メール送信に失敗しました。再度お試しください。'
   },
   zh: {
     title: 'PERSONAL STYLIST',
@@ -599,7 +627,14 @@ const translations: Record<Language, {
     serviceStep3Desc: '保留您的面容，即时预览各种风格',
     downloadResult: '📥 保存结果',
     shareResult: '📤 分享',
-    linkCopied: '链接已复制！'
+    linkCopied: '链接已复制！',
+    emailReport: '📧 发送到邮箱',
+    emailModalTitle: '将报告发送到邮箱',
+    emailPlaceholder: '请输入邮箱地址',
+    emailSend: '发送',
+    emailSending: '发送中...',
+    emailSuccess: '邮件已发送！',
+    emailError: '邮件发送失败，请重试。'
   },
   es: {
     title: 'PERSONAL STYLIST',
@@ -701,7 +736,14 @@ const translations: Record<Language, {
     serviceStep3Desc: 'Vista previa de estilos en tu rostro al instante',
     downloadResult: '📥 Guardar',
     shareResult: '📤 Compartir',
-    linkCopied: '¡Enlace copiado!'
+    linkCopied: '¡Enlace copiado!',
+    emailReport: '📧 Enviar por Email',
+    emailModalTitle: 'Enviar Informe por Email',
+    emailPlaceholder: 'Ingresa tu correo electrónico',
+    emailSend: 'Enviar',
+    emailSending: 'Enviando...',
+    emailSuccess: '¡Email enviado correctamente!',
+    emailError: 'Error al enviar el email. Inténtalo de nuevo.'
   }
 }
 
@@ -881,24 +923,44 @@ PERSONAL STYLIST provides **digital services** including:
 
 These are **instant digital deliverables** that cannot be "returned" once generated.
 
-## 2. Refund Eligibility
+## 2. Automatic Refunds
+
+We automatically process full refunds when our service fails to deliver results:
+- **Text analysis failure**: If the style report fails to generate
+- **Image generation failure**: If AI fails to create hairstyle or fashion images
+- **Technical errors**: Any server-side errors preventing service delivery
+
+When automatic refund is triggered:
+- You will receive a refund notification email
+- The refund is processed immediately
+- No action required from you
+
+## 3. Refund Eligibility
 
 **Full Refund Available When:**
-- Technical failure prevents delivery of your results
+- Technical failure prevents delivery of your results (automatic)
 - Payment was processed but service was not provided
 - Duplicate charges occurred
 
-**Partial Refund or Credit May Be Offered When:**
-- Significant portions of the service did not work as expected
-- AI generation failed for multiple styles
-
-**Refunds Not Available When:**
+**Refunds NOT Available When:**
 - You are unsatisfied with AI-generated style suggestions
 - You changed your mind after purchase
 - You did not like how a hairstyle or outfit looked on your photo
 - Results differ from your expectations
+- **Email address errors** (see below)
 
-## 3. Why Limited Refunds?
+## 4. Email Address Policy
+
+**Important:** Payment confirmation and result emails are sent to the email address you provide during checkout.
+
+- You are responsible for entering a correct email address
+- **Typos in email addresses do NOT qualify for refunds**
+- If you don't receive emails, check your spam folder first
+- We cannot resend emails to a different address for security reasons
+
+Please double-check your email address before completing payment.
+
+## 5. Why Limited Refunds?
 
 Once you upload your photo and we process it through AI:
 - Computing resources have been consumed
@@ -907,7 +969,7 @@ Once you upload your photo and we process it through AI:
 
 Unlike physical products, digital services cannot be "returned."
 
-## 4. How to Request a Refund
+## 6. How to Request a Refund
 
 If you believe you qualify for a refund:
 
@@ -919,27 +981,27 @@ If you believe you qualify for a refund:
 
 We will review your request within 3 business days.
 
-## 5. Refund Processing
+## 7. Refund Processing
 
 Approved refunds are processed through Polar, our payment provider:
 - Refunds typically appear within 5-10 business days
 - Refund will be credited to your original payment method
 - Processing time depends on your bank/card issuer
 
-## 6. Dispute Resolution
+## 8. Dispute Resolution
 
 Before filing a payment dispute:
 - Please contact us first through our website
 - We aim to resolve all issues fairly and promptly
 - Chargebacks without prior contact may result in account restrictions
 
-## 7. Repeat Customer Discount
+## 9. Repeat Customer Discount
 
 Unsatisfied with your results? Instead of a refund, we offer:
 - **50% discount** on your next purchase (code: COMEBACK50)
 - This allows you to try again with a different photo
 
-## 8. Contact Us
+## 10. Contact Us
 
 For refund requests or questions, please contact us through our website. We typically respond within 1-3 business days.
 
@@ -991,6 +1053,12 @@ function App() {
   const [isPaid, setIsPaid] = useState(false)
   const [isProcessingPayment, setIsProcessingPayment] = useState(false)
   const [policyModal, setPolicyModal] = useState<'terms' | 'privacy' | 'refund' | null>(null)
+  const [emailInput, setEmailInput] = useState('')
+  const [showEmailModal, setShowEmailModal] = useState(false)
+  const [isSendingEmail, setIsSendingEmail] = useState(false)
+  const [emailSent, setEmailSent] = useState(false)
+  const [emailError, setEmailError] = useState('')
+  const [checkoutId, setCheckoutId] = useState<string | null>(null)
   const fileInputRef = useRef<HTMLInputElement>(null)
   const hairPhotoRef = useRef<HTMLInputElement>(null)
   const t = translations[lang]
@@ -1026,6 +1094,40 @@ function App() {
       // 결제 성공
       localStorage.setItem('paidCustomer', 'true')
       const purchasedProductType = urlParams.get('type') || localStorage.getItem('productType') || 'full'
+      const polarCheckoutId = urlParams.get('checkout_id')
+
+      // checkout_id 저장 (환불 시 필요)
+      if (polarCheckoutId) {
+        setCheckoutId(polarCheckoutId)
+        localStorage.setItem('lastCheckoutId', polarCheckoutId)
+      }
+
+      // 결제 확인 이메일 전송 (비동기, 실패해도 진행)
+      if (polarCheckoutId) {
+        (async () => {
+          try {
+            const checkoutInfoRes = await fetch(`/api/checkout-info?id=${polarCheckoutId}`)
+            if (checkoutInfoRes.ok) {
+              const checkoutInfo = await checkoutInfoRes.json()
+              if (checkoutInfo.email) {
+                await fetch('/api/send-payment-email', {
+                  method: 'POST',
+                  headers: { 'Content-Type': 'application/json' },
+                  body: JSON.stringify({
+                    email: checkoutInfo.email,
+                    productType: purchasedProductType,
+                    amount: checkoutInfo.amount,
+                    currency: checkoutInfo.currency || 'USD',
+                    language: lang
+                  })
+                })
+              }
+            }
+          } catch (e) {
+            console.error('Failed to send payment confirmation email:', e)
+          }
+        })()
+      }
 
       // 결제 성공 - IndexedDB에서 저장된 폼 데이터 복원 (사진 포함)
       const hasPendingData = localStorage.getItem('pendingAnalysisFlag')
@@ -1054,7 +1156,7 @@ function App() {
                 window.history.replaceState({ page: 'loading' }, '', '#loading')
                 setPageState('loading')
                 setTimeout(() => {
-                  startHairGenerationAfterPayment(savedData)
+                  startHairGenerationAfterPayment(savedData, polarCheckoutId)
                 }, 100)
                 return
               }
@@ -1076,7 +1178,7 @@ function App() {
               setPageState('loading')
               // 약간의 딜레이 후 분석 시작 (상태 업데이트 대기)
               setTimeout(() => {
-                startAnalysisAfterPayment(savedData)
+                startAnalysisAfterPayment(savedData, polarCheckoutId)
               }, 100)
               return
             }
@@ -1232,12 +1334,39 @@ function App() {
   }
 
   // 결제 후 분석 수행 (프로필 데이터를 직접 받음)
-  const startAnalysisAfterPayment = async (profileData: typeof profile) => {
+  const startAnalysisAfterPayment = async (profileData: typeof profile, paymentCheckoutId?: string | null) => {
     setError('')
     setStyleImages([])
     setLoadingProgress(0)
     setLoadingStep('')
     setPage('loading')
+
+    const activeCheckoutId = paymentCheckoutId || checkoutId || localStorage.getItem('lastCheckoutId')
+
+    // 자동 환불 처리 함수
+    const processAutoRefund = async (reason: string) => {
+      if (!activeCheckoutId) {
+        console.error('No checkout ID available for refund')
+        return
+      }
+      try {
+        console.log('[Auto-Refund] Processing refund for checkout:', activeCheckoutId)
+        const refundRes = await fetch('/api/refund', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ checkoutId: activeCheckoutId, reason })
+        })
+        if (refundRes.ok) {
+          console.log('[Auto-Refund] Refund processed successfully')
+          localStorage.removeItem('lastCheckoutId')
+          setCheckoutId(null)
+        } else {
+          console.error('[Auto-Refund] Refund failed:', await refundRes.text())
+        }
+      } catch (e) {
+        console.error('[Auto-Refund] Error processing refund:', e)
+      }
+    }
 
     try {
       // Step 1: Text analysis first
@@ -1254,13 +1383,18 @@ function App() {
       })
 
       if (!analyzeResponse.ok) {
+        // 텍스트 분석 실패 - 자동 환불
+        await processAutoRefund('Text analysis failed - API error')
         throw new Error('Analysis failed')
       }
 
       const analyzeData = await analyzeResponse.json()
-      if (analyzeData.report) {
-        setReport(analyzeData.report)
+      if (!analyzeData.report) {
+        // 리포트 생성 실패 - 자동 환불
+        await processAutoRefund('Report generation failed - empty response')
+        throw new Error('No report generated')
       }
+      setReport(analyzeData.report)
 
       setLoadingProgress(100)
       setLoadingStep(lang === 'ko' ? '완료!' : 'Complete!')
@@ -1323,9 +1457,15 @@ function App() {
         console.error('[Hair] Fetch failed:', hairResult.reason)
       }
       setIsTransformingHair(false)
+
+      // 리포트 성공 후 checkout ID 정리 (환불 불가 상태)
+      localStorage.removeItem('lastCheckoutId')
+      setCheckoutId(null)
     } catch (err) {
       console.error('Analysis error:', err)
-      setError(lang === 'ko' ? '분석 중 오류가 발생했습니다' : 'An error occurred during analysis')
+      setError(lang === 'ko'
+        ? '분석 중 오류가 발생했습니다. 자동으로 환불 처리됩니다.'
+        : 'An error occurred during analysis. Your payment will be automatically refunded.')
       setPage('input')
     }
   }
@@ -1333,8 +1473,35 @@ function App() {
   // 결제 후 헤어 스타일 생성 (Hair Only 상품)
   const startHairGenerationAfterPayment = async (savedData: {
     hairPhoto?: string; selectedOccasion?: string; selectedVibe?: string; gender?: Gender
-  }) => {
+  }, paymentCheckoutId?: string | null) => {
     setIsGeneratingHair(true)
+
+    const activeCheckoutId = paymentCheckoutId || checkoutId || localStorage.getItem('lastCheckoutId')
+
+    // 자동 환불 처리 함수
+    const processAutoRefund = async (reason: string) => {
+      if (!activeCheckoutId) {
+        console.error('No checkout ID available for refund')
+        return
+      }
+      try {
+        console.log('[Auto-Refund] Processing refund for checkout:', activeCheckoutId)
+        const refundRes = await fetch('/api/refund', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ checkoutId: activeCheckoutId, reason })
+        })
+        if (refundRes.ok) {
+          console.log('[Auto-Refund] Refund processed successfully')
+          localStorage.removeItem('lastCheckoutId')
+          setCheckoutId(null)
+        } else {
+          console.error('[Auto-Refund] Refund failed:', await refundRes.text())
+        }
+      } catch (e) {
+        console.error('[Auto-Refund] Error processing refund:', e)
+      }
+    }
 
     const occasion = savedData.selectedOccasion || 'daily'
     const vibe = savedData.selectedVibe || 'natural'
@@ -1361,10 +1528,35 @@ function App() {
 
         if (response.ok) {
           const data = await response.json()
-          setGeneratedHairImages(data.images || [])
+          if (data.images && data.images.length > 0) {
+            setGeneratedHairImages(data.images)
+            // 성공 후 checkout ID 정리
+            localStorage.removeItem('lastCheckoutId')
+            setCheckoutId(null)
+          } else {
+            // 이미지 생성 실패 - 자동 환불
+            await processAutoRefund('Hair style generation failed - no images returned')
+            setGeneratedHairImages([])
+            setError(lang === 'ko'
+              ? '헤어스타일 생성에 실패했습니다. 자동으로 환불 처리됩니다.'
+              : 'Hair style generation failed. Your payment will be automatically refunded.')
+          }
+        } else {
+          // API 오류 - 자동 환불
+          await processAutoRefund('Hair style generation failed - API error')
+          setGeneratedHairImages([])
+          setError(lang === 'ko'
+            ? '헤어스타일 생성에 실패했습니다. 자동으로 환불 처리됩니다.'
+            : 'Hair style generation failed. Your payment will be automatically refunded.')
         }
-      } catch {
+      } catch (e) {
+        console.error('Hair generation error:', e)
+        // 예외 발생 - 자동 환불
+        await processAutoRefund('Hair style generation failed - exception')
         setGeneratedHairImages([])
+        setError(lang === 'ko'
+          ? '헤어스타일 생성에 실패했습니다. 자동으로 환불 처리됩니다.'
+          : 'Hair style generation failed. Your payment will be automatically refunded.')
       }
     }
 
@@ -1601,6 +1793,48 @@ function App() {
       } catch (err) {
         console.error('Copy failed:', err)
       }
+    }
+  }
+
+  // 이메일로 리포트 전송
+  const handleSendEmail = async () => {
+    if (!emailInput || isSendingEmail) return
+
+    // Simple email validation
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+    if (!emailRegex.test(emailInput)) {
+      setEmailError(t.emailError)
+      return
+    }
+
+    setIsSendingEmail(true)
+    setEmailError('')
+
+    try {
+      const response = await fetch('/api/send-report', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          email: emailInput,
+          report,
+          language: lang
+        })
+      })
+
+      if (response.ok) {
+        setEmailSent(true)
+        setTimeout(() => {
+          setShowEmailModal(false)
+          setEmailSent(false)
+          setEmailInput('')
+        }, 2000)
+      } else {
+        setEmailError(t.emailError)
+      }
+    } catch {
+      setEmailError(t.emailError)
+    } finally {
+      setIsSendingEmail(false)
     }
   }
 
@@ -2192,6 +2426,18 @@ function App() {
         )}
 
         <div className="result-actions">
+          {report && (
+            <button
+              className="btn-outline"
+              onClick={() => {
+                setShowEmailModal(true)
+                setEmailSent(false)
+                setEmailError('')
+              }}
+            >
+              {t.emailReport}
+            </button>
+          )}
           {(styleImages.some(s => s.imageUrl) || transformedHairstyles.some(s => s.imageUrl)) && (
             <>
               <button
@@ -2212,6 +2458,41 @@ function App() {
             {t.restart}
           </button>
         </div>
+
+        {/* Email Modal */}
+        {showEmailModal && (
+          <div className="modal-overlay" onClick={() => setShowEmailModal(false)}>
+            <div className="modal-content email-modal" onClick={(e) => e.stopPropagation()}>
+              <button className="modal-close" onClick={() => setShowEmailModal(false)}>×</button>
+              <h2>{t.emailModalTitle}</h2>
+              {emailSent ? (
+                <div className="email-success">
+                  <span className="success-icon">✓</span>
+                  <p>{t.emailSuccess}</p>
+                </div>
+              ) : (
+                <>
+                  <input
+                    type="email"
+                    className="email-input"
+                    placeholder={t.emailPlaceholder}
+                    value={emailInput}
+                    onChange={(e) => setEmailInput(e.target.value)}
+                    onKeyDown={(e) => e.key === 'Enter' && handleSendEmail()}
+                  />
+                  {emailError && <p className="email-error">{emailError}</p>}
+                  <button
+                    className="btn-gold email-send-btn"
+                    onClick={handleSendEmail}
+                    disabled={isSendingEmail || !emailInput}
+                  >
+                    {isSendingEmail ? t.emailSending : t.emailSend}
+                  </button>
+                </>
+              )}
+            </div>
+          </div>
+        )}
       </div>
     )
   }
