@@ -1610,10 +1610,16 @@
   padding: 2rem;
   display: flex;
   justify-content: center;
+  gap: 1rem;
+  flex-wrap: wrap;
 }
 
 .result-actions .btn-dark {
   min-width: 200px;
+}
+
+.result-actions .btn-outline {
+  min-width: 140px;
 }
 
 /* ===== TRANSFORM SECTIONS ===== */

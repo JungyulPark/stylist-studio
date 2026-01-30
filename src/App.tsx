@@ -189,6 +189,9 @@ const translations: Record<Language, {
   serviceStep2Desc: string
   serviceStep3: string
   serviceStep3Desc: string
+  downloadResult: string
+  shareResult: string
+  linkCopied: string
 }> = {
   ko: {
     title: 'PERSONAL STYLIST',
@@ -287,7 +290,10 @@ const translations: Record<Language, {
     serviceStep2: '스타일 선택',
     serviceStep2Desc: '헤어 또는 패션 변환을 선택하세요',
     serviceStep3: '결과 확인',
-    serviceStep3Desc: '내 얼굴 그대로, 다양한 스타일을 미리 체험'
+    serviceStep3Desc: '내 얼굴 그대로, 다양한 스타일을 미리 체험',
+    downloadResult: '📥 결과 저장',
+    shareResult: '📤 공유하기',
+    linkCopied: '링크가 복사되었습니다!'
   },
   en: {
     title: 'PERSONAL STYLIST',
@@ -386,7 +392,10 @@ const translations: Record<Language, {
     serviceStep2: 'Choose Your Style',
     serviceStep2Desc: 'Select hair or fashion transformation',
     serviceStep3: 'See Results',
-    serviceStep3Desc: 'Preview styles on your actual face instantly'
+    serviceStep3Desc: 'Preview styles on your actual face instantly',
+    downloadResult: '📥 Save Results',
+    shareResult: '📤 Share',
+    linkCopied: 'Link copied!'
   },
   ja: {
     title: 'PERSONAL STYLIST',
@@ -485,7 +494,10 @@ const translations: Record<Language, {
     serviceStep2: 'スタイルを選択',
     serviceStep2Desc: 'ヘアまたはファッション変換を選択',
     serviceStep3: '結果を確認',
-    serviceStep3Desc: 'あなたの顔のまま様々なスタイルをプレビュー'
+    serviceStep3Desc: 'あなたの顔のまま様々なスタイルをプレビュー',
+    downloadResult: '📥 結果を保存',
+    shareResult: '📤 シェア',
+    linkCopied: 'リンクがコピーされました！'
   },
   zh: {
     title: 'PERSONAL STYLIST',
@@ -584,7 +596,10 @@ const translations: Record<Language, {
     serviceStep2: '选择风格',
     serviceStep2Desc: '选择发型或时尚变换',
     serviceStep3: '查看结果',
-    serviceStep3Desc: '保留您的面容，即时预览各种风格'
+    serviceStep3Desc: '保留您的面容，即时预览各种风格',
+    downloadResult: '📥 保存结果',
+    shareResult: '📤 分享',
+    linkCopied: '链接已复制！'
   },
   es: {
     title: 'PERSONAL STYLIST',
@@ -683,7 +698,10 @@ const translations: Record<Language, {
     serviceStep2: 'Elige tu Estilo',
     serviceStep2Desc: 'Selecciona cambio de peinado o moda',
     serviceStep3: 'Ver Resultados',
-    serviceStep3Desc: 'Vista previa de estilos en tu rostro al instante'
+    serviceStep3Desc: 'Vista previa de estilos en tu rostro al instante',
+    downloadResult: '📥 Guardar',
+    shareResult: '📤 Compartir',
+    linkCopied: '¡Enlace copiado!'
   }
 }
 
@@ -1296,6 +1314,58 @@ function App() {
     setPage('landing')
   }
 
+  // 결과 다운로드 (이미지 URL들을 새 탭에서 열기)
+  const handleDownloadResult = async (imageUrls: string[]) => {
+    const validUrls = imageUrls.filter(url => url)
+    if (validUrls.length === 0) return
+
+    // 각 이미지를 다운로드
+    for (let i = 0; i < validUrls.length; i++) {
+      try {
+        const response = await fetch(validUrls[i])
+        const blob = await response.blob()
+        const url = window.URL.createObjectURL(blob)
+        const a = document.createElement('a')
+        a.href = url
+        a.download = `stylist-result-${i + 1}.png`
+        document.body.appendChild(a)
+        a.click()
+        document.body.removeChild(a)
+        window.URL.revokeObjectURL(url)
+      } catch (err) {
+        console.error('Download failed:', err)
+      }
+    }
+  }
+
+  // 결과 공유
+  const handleShareResult = async () => {
+    const shareData = {
+      title: 'AI Stylist - 나만의 스타일 추천',
+      text: '🪄 AI가 내 얼굴에 맞는 헤어스타일과 패션을 추천해줬어요! 당신도 체험해보세요!',
+      url: 'https://kstylist.cc'
+    }
+
+    if (navigator.share) {
+      try {
+        await navigator.share(shareData)
+      } catch (err) {
+        // 사용자가 취소한 경우 무시
+        if ((err as Error).name !== 'AbortError') {
+          console.error('Share failed:', err)
+        }
+      }
+    } else {
+      // Web Share API 미지원 시 클립보드에 복사
+      try {
+        await navigator.clipboard.writeText(shareData.url)
+        alert(t.linkCopied)
+      } catch (err) {
+        console.error('Copy failed:', err)
+      }
+    }
+  }
+
   // 헤어 사진 업로드 처리
   const handleHairPhotoUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
@@ -1873,6 +1943,22 @@ function App() {
         )}
 
         <div className="result-actions">
+          {(styleImages.some(s => s.imageUrl) || transformedHairstyles.some(s => s.imageUrl)) && (
+            <>
+              <button
+                className="btn-outline"
+                onClick={() => handleDownloadResult([
+                  ...styleImages.map(s => s.imageUrl).filter(Boolean) as string[],
+                  ...transformedHairstyles.map(s => s.imageUrl).filter(Boolean) as string[]
+                ])}
+              >
+                {t.downloadResult}
+              </button>
+              <button className="btn-outline" onClick={handleShareResult}>
+                {t.shareResult}
+              </button>
+            </>
+          )}
           <button className="btn-dark" onClick={handleRestart}>
             {t.restart}
           </button>
@@ -2113,6 +2199,21 @@ function App() {
           )}
 
           <div className="result-actions">
+            {generatedHairImages.some(img => img.imageUrl) && (
+              <>
+                <button
+                  className="btn-outline"
+                  onClick={() => handleDownloadResult(
+                    generatedHairImages.map(img => img.imageUrl).filter(Boolean) as string[]
+                  )}
+                >
+                  {t.downloadResult}
+                </button>
+                <button className="btn-outline" onClick={handleShareResult}>
+                  {t.shareResult}
+                </button>
+              </>
+            )}
             <button className="btn-outline" onClick={() => {
               setSelectedOccasion(null)
               setSelectedVibe(null)
