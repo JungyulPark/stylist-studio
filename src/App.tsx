@@ -55,7 +55,7 @@ const clearIndexedDB = async (): Promise<void> => {
 
 type Language = 'ko' | 'en' | 'ja' | 'zh' | 'es'
 type Gender = 'male' | 'female' | 'other' | null
-type Page = 'landing' | 'input' | 'loading' | 'result' | 'hair-selection' | 'hair-result' | 'how-to-use'
+type Page = 'landing' | 'input' | 'loading' | 'result' | 'hair-selection' | 'hair-result' | 'how-to-use' | 'preview' | 'hair-preview'
 
 // 헤어스타일 상황 옵션
 interface HairOccasion {
@@ -201,6 +201,24 @@ const translations: Record<Language, {
   emailSending: string
   emailSuccess: string
   emailError: string
+  // Preview page (Value Gate + Curiosity Gap)
+  previewTitle: string
+  previewSubtitle: string
+  previewAnalysisComplete: string
+  previewFaceShape: string
+  previewHairStylesFound: string
+  previewFashionFound: string
+  previewCuriosity1: string
+  previewCuriosity2: string
+  previewProgress: string
+  previewUnlock: string
+  previewCompare1: string
+  previewCompare2: string
+  previewCoffeeNote: string
+  hairPreviewTitle: string
+  hairPreviewSubtitle: string
+  hairPreviewCuriosity: string
+  hairPreviewUnlock: string
 }> = {
   ko: {
     title: 'PERSONAL STYLIST',
@@ -311,7 +329,25 @@ const translations: Record<Language, {
     emailSend: '전송',
     emailSending: '전송 중...',
     emailSuccess: '이메일이 전송되었습니다!',
-    emailError: '이메일 전송에 실패했습니다. 다시 시도해주세요.'
+    emailError: '이메일 전송에 실패했습니다. 다시 시도해주세요.',
+    // Preview page translations
+    previewTitle: '분석 완료!',
+    previewSubtitle: '당신만을 위한 스타일을 찾았어요',
+    previewAnalysisComplete: 'AI 분석이 완료되었습니다',
+    previewFaceShape: '얼굴형 분석 결과',
+    previewHairStylesFound: '어울리는 헤어스타일 5개 발견!',
+    previewFashionFound: '맞춤 패션 코디 6개 준비 완료!',
+    previewCuriosity1: '의외의 결과가 나왔어요! 👀',
+    previewCuriosity2: '1위 스타일이 궁금하지 않으세요?',
+    previewProgress: '87% 완료 - 결과만 확인하면 끝!',
+    previewUnlock: '결과 확인하기',
+    previewCompare1: '전문 스타일리스트 상담',
+    previewCompare2: 'AI Stylist',
+    previewCoffeeNote: '☕ 커피 한 잔 가격으로 미용실 실패 예방!',
+    hairPreviewTitle: '헤어스타일 분석 완료!',
+    hairPreviewSubtitle: '당신에게 어울리는 스타일을 찾았어요',
+    hairPreviewCuriosity: '이 중 1개는 예상 못 하셨을 거예요! 👀',
+    hairPreviewUnlock: '헤어스타일 확인하기'
   },
   en: {
     title: 'PERSONAL STYLIST',
@@ -422,7 +458,25 @@ const translations: Record<Language, {
     emailSend: 'Send',
     emailSending: 'Sending...',
     emailSuccess: 'Email sent successfully!',
-    emailError: 'Failed to send email. Please try again.'
+    emailError: 'Failed to send email. Please try again.',
+    // Preview page translations
+    previewTitle: 'Analysis Complete!',
+    previewSubtitle: 'We found styles just for you',
+    previewAnalysisComplete: 'AI analysis is complete',
+    previewFaceShape: 'Face Shape Analysis',
+    previewHairStylesFound: '5 matching hairstyles found!',
+    previewFashionFound: '6 custom fashion looks ready!',
+    previewCuriosity1: 'Surprising results! 👀',
+    previewCuriosity2: 'Curious about your #1 style?',
+    previewProgress: '87% complete - just unlock to finish!',
+    previewUnlock: 'Unlock Results',
+    previewCompare1: 'Professional Stylist',
+    previewCompare2: 'AI Stylist',
+    previewCoffeeNote: '☕ Prevent salon disasters for the price of a coffee!',
+    hairPreviewTitle: 'Hairstyle Analysis Complete!',
+    hairPreviewSubtitle: 'We found styles that suit you',
+    hairPreviewCuriosity: 'One of these will surprise you! 👀',
+    hairPreviewUnlock: 'Unlock Hairstyles'
   },
   ja: {
     title: 'PERSONAL STYLIST',
@@ -533,7 +587,25 @@ const translations: Record<Language, {
     emailSend: '送信',
     emailSending: '送信中...',
     emailSuccess: 'メールを送信しました！',
-    emailError: 'メール送信に失敗しました。再度お試しください。'
+    emailError: 'メール送信に失敗しました。再度お試しください。',
+    // Preview page translations
+    previewTitle: '分析完了！',
+    previewSubtitle: 'あなただけのスタイルを見つけました',
+    previewAnalysisComplete: 'AI分析が完了しました',
+    previewFaceShape: '顔型分析結果',
+    previewHairStylesFound: 'お似合いのヘアスタイル5つ発見！',
+    previewFashionFound: 'カスタムファッション6点準備完了！',
+    previewCuriosity1: '意外な結果が出ました！👀',
+    previewCuriosity2: '1位のスタイルが気になりませんか？',
+    previewProgress: '87%完了 - 結果を確認するだけ！',
+    previewUnlock: '結果を確認',
+    previewCompare1: 'プロスタイリスト相談',
+    previewCompare2: 'AI Stylist',
+    previewCoffeeNote: '☕ コーヒー1杯の価格で美容室の失敗を防止！',
+    hairPreviewTitle: 'ヘアスタイル分析完了！',
+    hairPreviewSubtitle: 'お似合いのスタイルを見つけました',
+    hairPreviewCuriosity: 'この中の1つは予想外かも！👀',
+    hairPreviewUnlock: 'ヘアスタイルを確認'
   },
   zh: {
     title: 'PERSONAL STYLIST',
@@ -644,7 +716,25 @@ const translations: Record<Language, {
     emailSend: '发送',
     emailSending: '发送中...',
     emailSuccess: '邮件已发送！',
-    emailError: '邮件发送失败，请重试。'
+    emailError: '邮件发送失败，请重试。',
+    // Preview page translations
+    previewTitle: '分析完成！',
+    previewSubtitle: '我们为您找到了专属风格',
+    previewAnalysisComplete: 'AI分析已完成',
+    previewFaceShape: '脸型分析结果',
+    previewHairStylesFound: '发现5款适合您的发型！',
+    previewFashionFound: '6套定制时尚搭配已就绪！',
+    previewCuriosity1: '出乎意料的结果！👀',
+    previewCuriosity2: '想知道您的第1名风格吗？',
+    previewProgress: '87%完成 - 只需解锁查看结果！',
+    previewUnlock: '查看结果',
+    previewCompare1: '专业造型师咨询',
+    previewCompare2: 'AI Stylist',
+    previewCoffeeNote: '☕ 一杯咖啡的价格，避免美发失败！',
+    hairPreviewTitle: '发型分析完成！',
+    hairPreviewSubtitle: '我们找到了适合您的风格',
+    hairPreviewCuriosity: '其中1款会让您惊喜！👀',
+    hairPreviewUnlock: '查看发型'
   },
   es: {
     title: 'PERSONAL STYLIST',
@@ -755,7 +845,25 @@ const translations: Record<Language, {
     emailSend: 'Enviar',
     emailSending: 'Enviando...',
     emailSuccess: '¡Email enviado correctamente!',
-    emailError: 'Error al enviar el email. Inténtalo de nuevo.'
+    emailError: 'Error al enviar el email. Inténtalo de nuevo.',
+    // Preview page translations
+    previewTitle: '¡Análisis Completo!',
+    previewSubtitle: 'Encontramos estilos perfectos para ti',
+    previewAnalysisComplete: 'El análisis de IA está completo',
+    previewFaceShape: 'Análisis de Forma de Cara',
+    previewHairStylesFound: '¡5 peinados compatibles encontrados!',
+    previewFashionFound: '¡6 looks de moda personalizados listos!',
+    previewCuriosity1: '¡Resultados sorprendentes! 👀',
+    previewCuriosity2: '¿Curioso por tu estilo #1?',
+    previewProgress: '87% completo - ¡solo desbloquea para terminar!',
+    previewUnlock: 'Desbloquear Resultados',
+    previewCompare1: 'Estilista Profesional',
+    previewCompare2: 'AI Stylist',
+    previewCoffeeNote: '☕ ¡Evita desastres en el salón por el precio de un café!',
+    hairPreviewTitle: '¡Análisis de Peinado Completo!',
+    hairPreviewSubtitle: 'Encontramos estilos que te quedan bien',
+    hairPreviewCuriosity: '¡Uno de estos te sorprenderá! 👀',
+    hairPreviewUnlock: 'Desbloquear Peinados'
   }
 }
 
@@ -1719,8 +1827,8 @@ function App() {
     if (isPaid) {
       performAnalysis()
     } else {
-      // 결제가 안된 경우 결제 창 열기
-      handlePayment()
+      // 결제가 안된 경우 프리뷰 페이지로 이동 (Value Gate)
+      setPage('preview')
     }
   }
 
@@ -1907,8 +2015,14 @@ function App() {
   const handleHairRecommendation = async () => {
     if (!selectedOccasion || !selectedVibe) return
 
-    // 사진이 있고 결제 안 됐으면 결제 진행
+    // 사진이 있고 결제 안 됐으면 프리뷰 페이지로 이동 (Value Gate)
     if (hairPhoto && !isPaid) {
+      setPage('hair-preview')
+      return
+    }
+
+    // 사진 없이 데모 모드로 진행하는 경우 (기존 로직)
+    if (!hairPhoto && !isPaid) {
       setIsProcessingPayment(true)
       try {
         // 결제 전 데이터 저장
@@ -2560,6 +2674,296 @@ function App() {
     )
   }
 
+  // Hair Preview Page (Hair Only - Value Gate + Curiosity Gap)
+  if (page === 'hair-preview') {
+    const selectedOccasionData = hairOccasions.find(o => o.id === selectedOccasion)
+    const selectedVibeData = hairVibes.find(v => v.id === selectedVibe)
+
+    const handleHairPayment = async () => {
+      setIsProcessingPayment(true)
+      try {
+        // 결제 전 데이터 저장
+        const dataToSave = {
+          hairPhoto,
+          selectedOccasion,
+          selectedVibe,
+          gender: profile.gender,
+          productType: 'hair'
+        }
+        await saveToIndexedDB(dataToSave)
+        localStorage.setItem('pendingAnalysisFlag', 'true')
+        localStorage.setItem('productType', 'hair')
+
+        // 결제 페이지로 리다이렉트
+        const checkoutResponse = await fetch('/api/create-checkout', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            productType: 'hair',
+            successUrl: `${window.location.origin}/?payment=success&type=hair`
+          })
+        })
+
+        const checkoutData = await checkoutResponse.json()
+        if (!checkoutResponse.ok || !checkoutData.url) {
+          throw new Error(checkoutData.message || 'Failed to create checkout session')
+        }
+
+        window.location.href = checkoutData.url
+      } catch (error) {
+        console.error('Payment error:', error)
+        setIsProcessingPayment(false)
+        setError(lang === 'ko' ? '결제 오류가 발생했습니다' : 'Payment error occurred')
+      }
+    }
+
+    return (
+      <div className="app-container hair-preview-container" style={{
+        minHeight: '100vh',
+        background: 'linear-gradient(135deg, #1a1a2e 0%, #16213e 100%)',
+        padding: '2rem 1rem'
+      }}>
+        <header className="app-header" style={{ marginBottom: '2rem' }}>
+          <div className="logo" onClick={handleRestart} style={{ cursor: 'pointer' }}>
+            <div className="logo-icon">
+              <svg viewBox="0 0 48 48" fill="currentColor">
+                <path d="M39.5563 34.1455V13.8546C39.5563 15.708 36.8773 17.3437 32.7927 18.3189C30.2914 18.916 27.263 19.2655 24 19.2655C20.737 19.2655 17.7086 18.916 15.2073 18.3189C11.1227 17.3437 8.44365 15.708 8.44365 13.8546V34.1455C8.44365 35.9988 11.1227 37.6346 15.2073 38.6098C17.7086 39.2069 20.737 39.5564 24 39.5564C27.1288 39.5564 30.2914 39.2069 32.7927 38.6098C36.8773 37.6346 39.5563 35.9988 39.5563 34.1455Z"/>
+              </svg>
+            </div>
+            <span className="logo-text">{t.title}</span>
+          </div>
+        </header>
+
+        <div style={{ maxWidth: '500px', margin: '0 auto', textAlign: 'center' }}>
+          {/* Progress Indicator */}
+          <div style={{
+            background: 'rgba(212, 175, 55, 0.1)',
+            borderRadius: '12px',
+            padding: '0.75rem 1.5rem',
+            marginBottom: '2rem',
+            border: '1px solid rgba(212, 175, 55, 0.3)'
+          }}>
+            <div style={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              marginBottom: '0.5rem'
+            }}>
+              <span style={{ color: '#d4af37', fontSize: '0.9rem' }}>{t.previewProgress}</span>
+              <span style={{ color: '#d4af37', fontWeight: '700' }}>87%</span>
+            </div>
+            <div style={{
+              height: '8px',
+              background: 'rgba(255,255,255,0.1)',
+              borderRadius: '4px',
+              overflow: 'hidden'
+            }}>
+              <div style={{
+                width: '87%',
+                height: '100%',
+                background: 'linear-gradient(90deg, #d4af37, #f4d03f)',
+                borderRadius: '4px'
+              }}/>
+            </div>
+          </div>
+
+          {/* Success Title */}
+          <div style={{ marginBottom: '2rem' }}>
+            <h1 style={{
+              fontSize: 'clamp(1.6rem, 5vw, 2.2rem)',
+              fontWeight: '700',
+              color: '#fff',
+              marginBottom: '0.5rem'
+            }}>
+              💇 {t.hairPreviewTitle}
+            </h1>
+            <p style={{ color: 'rgba(255,255,255,0.7)', fontSize: '1rem' }}>
+              {t.hairPreviewSubtitle}
+            </p>
+          </div>
+
+          {/* Selected Options Display */}
+          <div style={{
+            display: 'flex',
+            gap: '1rem',
+            justifyContent: 'center',
+            marginBottom: '1.5rem',
+            flexWrap: 'wrap'
+          }}>
+            {selectedOccasionData && (
+              <span style={{
+                background: 'rgba(255,255,255,0.1)',
+                padding: '0.5rem 1rem',
+                borderRadius: '20px',
+                color: '#fff',
+                fontSize: '0.9rem'
+              }}>
+                {selectedOccasionData.icon} {lang === 'ko' ? selectedOccasionData.labelKo : selectedOccasionData.labelEn}
+              </span>
+            )}
+            {selectedVibeData && (
+              <span style={{
+                background: 'rgba(255,255,255,0.1)',
+                padding: '0.5rem 1rem',
+                borderRadius: '20px',
+                color: '#fff',
+                fontSize: '0.9rem'
+              }}>
+                {selectedVibeData.icon} {lang === 'ko' ? selectedVibeData.labelKo : selectedVibeData.labelEn}
+              </span>
+            )}
+          </div>
+
+          {/* Blurred Preview Images */}
+          <div style={{
+            background: 'rgba(255,255,255,0.05)',
+            borderRadius: '16px',
+            padding: '1.5rem',
+            marginBottom: '1.5rem',
+            border: '1px solid rgba(255,255,255,0.1)'
+          }}>
+            <p style={{
+              color: '#d4af37',
+              fontSize: '1rem',
+              marginBottom: '1rem',
+              fontWeight: '600'
+            }}>
+              {t.previewHairStylesFound}
+            </p>
+
+            {/* Blurred Hairstyle Previews */}
+            <div style={{
+              display: 'grid',
+              gridTemplateColumns: 'repeat(5, 1fr)',
+              gap: '0.5rem',
+              marginBottom: '1rem'
+            }}>
+              {[1,2,3,4,5].map((i) => (
+                <div key={i} style={{
+                  aspectRatio: '1',
+                  borderRadius: '12px',
+                  position: 'relative',
+                  overflow: 'hidden',
+                  background: hairPhoto ? `url(${hairPhoto})` : 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+                  backgroundSize: 'cover',
+                  backgroundPosition: 'center',
+                  filter: 'blur(8px) brightness(0.7)'
+                }}>
+                  <div style={{
+                    position: 'absolute',
+                    inset: 0,
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    background: 'rgba(0,0,0,0.4)',
+                    filter: 'blur(0)'
+                  }}>
+                    <span style={{ fontSize: '1.5rem' }}>🔒</span>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            <p style={{
+              color: 'rgba(255,255,255,0.9)',
+              fontSize: '1rem',
+              fontWeight: '500'
+            }}>
+              {t.hairPreviewCuriosity}
+            </p>
+          </div>
+
+          {/* Price Comparison */}
+          <div style={{
+            background: 'rgba(255,255,255,0.05)',
+            borderRadius: '16px',
+            padding: '1.25rem',
+            marginBottom: '1.5rem',
+            border: '1px solid rgba(255,255,255,0.1)'
+          }}>
+            <div style={{
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+              marginBottom: '0.5rem'
+            }}>
+              <span style={{ color: 'rgba(255,255,255,0.6)', fontSize: '0.85rem' }}>
+                {t.previewCompare1}
+              </span>
+              <span style={{
+                color: 'rgba(255,255,255,0.4)',
+                textDecoration: 'line-through',
+                fontSize: '0.85rem'
+              }}>
+                $50+
+              </span>
+            </div>
+            <div style={{
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'center'
+            }}>
+              <span style={{ color: '#d4af37', fontWeight: '600' }}>
+                {t.previewCompare2}
+              </span>
+              <span style={{
+                color: '#d4af37',
+                fontWeight: '700',
+                fontSize: '1.2rem'
+              }}>
+                $4.99
+              </span>
+            </div>
+            <p style={{
+              color: 'rgba(255,255,255,0.6)',
+              fontSize: '0.8rem',
+              marginTop: '0.5rem',
+              textAlign: 'center'
+            }}>
+              {t.previewCoffeeNote}
+            </p>
+          </div>
+
+          {/* CTA Button */}
+          <button
+            onClick={handleHairPayment}
+            disabled={isProcessingPayment}
+            style={{
+              width: '100%',
+              padding: '1.1rem 2rem',
+              fontSize: '1.05rem',
+              fontWeight: '700',
+              background: 'linear-gradient(135deg, #d4af37 0%, #f4d03f 100%)',
+              color: '#1a1a2e',
+              border: 'none',
+              borderRadius: '12px',
+              cursor: isProcessingPayment ? 'wait' : 'pointer',
+              opacity: isProcessingPayment ? 0.7 : 1,
+              boxShadow: '0 4px 20px rgba(212, 175, 55, 0.3)'
+            }}
+          >
+            {isProcessingPayment ? t.processingPayment : `🔓 ${t.hairPreviewUnlock} - $4.99`}
+          </button>
+
+          {/* Back button */}
+          <button
+            onClick={() => setPage('hair-selection')}
+            style={{
+              marginTop: '1rem',
+              background: 'transparent',
+              border: 'none',
+              color: 'rgba(255,255,255,0.5)',
+              cursor: 'pointer',
+              fontSize: '0.9rem'
+            }}
+          >
+            ← {t.backToHome}
+          </button>
+        </div>
+      </div>
+    )
+  }
+
   // Hair Selection Page
   if (page === 'hair-selection') {
     const getOccasionLabel = (o: HairOccasion) => lang === 'ko' ? o.labelKo : o.labelEn
@@ -2819,6 +3223,300 @@ function App() {
               {t.backToHome}
             </button>
           </div>
+        </div>
+      </div>
+    )
+  }
+
+  // Preview Page (Full Package - Value Gate + Curiosity Gap)
+  if (page === 'preview') {
+    const faceShapes = ['Oval', 'Round', 'Square', 'Heart', 'Long']
+    const faceShapeKo: Record<string, string> = {
+      'Oval': '계란형',
+      'Round': '둥근형',
+      'Square': '각진형',
+      'Heart': '하트형',
+      'Long': '긴형'
+    }
+    // Simulate a face shape based on simple heuristics (for demo)
+    const simulatedFaceShape = faceShapes[Math.floor(Date.now() / 10000) % faceShapes.length]
+    const displayFaceShape = lang === 'ko' ? faceShapeKo[simulatedFaceShape] : simulatedFaceShape
+
+    return (
+      <div className="app-container preview-container" style={{
+        minHeight: '100vh',
+        background: 'linear-gradient(135deg, #1a1a2e 0%, #16213e 100%)',
+        padding: '2rem 1rem'
+      }}>
+        <header className="app-header" style={{ marginBottom: '2rem' }}>
+          <div className="logo" onClick={handleRestart} style={{ cursor: 'pointer' }}>
+            <div className="logo-icon">
+              <svg viewBox="0 0 48 48" fill="currentColor">
+                <path d="M39.5563 34.1455V13.8546C39.5563 15.708 36.8773 17.3437 32.7927 18.3189C30.2914 18.916 27.263 19.2655 24 19.2655C20.737 19.2655 17.7086 18.916 15.2073 18.3189C11.1227 17.3437 8.44365 15.708 8.44365 13.8546V34.1455C8.44365 35.9988 11.1227 37.6346 15.2073 38.6098C17.7086 39.2069 20.737 39.5564 24 39.5564C27.1288 39.5564 30.2914 39.2069 32.7927 38.6098C36.8773 37.6346 39.5563 35.9988 39.5563 34.1455Z"/>
+              </svg>
+            </div>
+            <span className="logo-text">{t.title}</span>
+          </div>
+        </header>
+
+        <div style={{ maxWidth: '600px', margin: '0 auto', textAlign: 'center' }}>
+          {/* Progress Indicator */}
+          <div style={{
+            background: 'rgba(212, 175, 55, 0.1)',
+            borderRadius: '12px',
+            padding: '0.75rem 1.5rem',
+            marginBottom: '2rem',
+            border: '1px solid rgba(212, 175, 55, 0.3)'
+          }}>
+            <div style={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              marginBottom: '0.5rem'
+            }}>
+              <span style={{ color: '#d4af37', fontSize: '0.9rem' }}>{t.previewProgress}</span>
+              <span style={{ color: '#d4af37', fontWeight: '700' }}>87%</span>
+            </div>
+            <div style={{
+              height: '8px',
+              background: 'rgba(255,255,255,0.1)',
+              borderRadius: '4px',
+              overflow: 'hidden'
+            }}>
+              <div style={{
+                width: '87%',
+                height: '100%',
+                background: 'linear-gradient(90deg, #d4af37, #f4d03f)',
+                borderRadius: '4px',
+                animation: 'pulse 2s infinite'
+              }}/>
+            </div>
+          </div>
+
+          {/* Success Title */}
+          <div style={{ marginBottom: '2rem' }}>
+            <h1 style={{
+              fontSize: 'clamp(1.8rem, 5vw, 2.5rem)',
+              fontWeight: '700',
+              color: '#fff',
+              marginBottom: '0.5rem'
+            }}>
+              🎉 {t.previewTitle}
+            </h1>
+            <p style={{ color: 'rgba(255,255,255,0.7)', fontSize: '1.1rem' }}>
+              {t.previewSubtitle}
+            </p>
+          </div>
+
+          {/* Face Shape Result (Free) */}
+          <div style={{
+            background: 'rgba(255,255,255,0.05)',
+            borderRadius: '16px',
+            padding: '1.5rem',
+            marginBottom: '1.5rem',
+            border: '1px solid rgba(255,255,255,0.1)'
+          }}>
+            <div style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: '1rem',
+              marginBottom: '1rem'
+            }}>
+              <div style={{
+                width: '60px',
+                height: '60px',
+                borderRadius: '50%',
+                background: 'linear-gradient(135deg, #667eea, #764ba2)',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                fontSize: '1.5rem'
+              }}>
+                {profile.gender === 'female' ? '👩' : profile.gender === 'male' ? '👨' : '🧑'}
+              </div>
+              <div style={{ textAlign: 'left' }}>
+                <p style={{ color: 'rgba(255,255,255,0.6)', fontSize: '0.85rem', marginBottom: '0.25rem' }}>
+                  {t.previewFaceShape}
+                </p>
+                <p style={{ color: '#d4af37', fontSize: '1.4rem', fontWeight: '700' }}>
+                  {displayFaceShape}
+                </p>
+              </div>
+            </div>
+            <div style={{
+              display: 'flex',
+              gap: '0.5rem',
+              flexWrap: 'wrap',
+              justifyContent: 'center'
+            }}>
+              <span style={{
+                background: 'rgba(212, 175, 55, 0.2)',
+                color: '#d4af37',
+                padding: '0.4rem 0.8rem',
+                borderRadius: '20px',
+                fontSize: '0.85rem'
+              }}>
+                ✅ {t.previewHairStylesFound}
+              </span>
+              <span style={{
+                background: 'rgba(212, 175, 55, 0.2)',
+                color: '#d4af37',
+                padding: '0.4rem 0.8rem',
+                borderRadius: '20px',
+                fontSize: '0.85rem'
+              }}>
+                ✅ {t.previewFashionFound}
+              </span>
+            </div>
+          </div>
+
+          {/* Blurred Preview Images */}
+          <div style={{
+            background: 'rgba(255,255,255,0.05)',
+            borderRadius: '16px',
+            padding: '1.5rem',
+            marginBottom: '1.5rem',
+            border: '1px solid rgba(255,255,255,0.1)'
+          }}>
+            <p style={{
+              color: '#fff',
+              fontSize: '1rem',
+              marginBottom: '1rem',
+              fontWeight: '600'
+            }}>
+              {t.previewCuriosity1}
+            </p>
+
+            {/* Blurred Hairstyle Previews */}
+            <div style={{
+              display: 'grid',
+              gridTemplateColumns: 'repeat(5, 1fr)',
+              gap: '0.5rem',
+              marginBottom: '1rem'
+            }}>
+              {[1,2,3,4,5].map((i) => (
+                <div key={i} style={{
+                  aspectRatio: '1',
+                  background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+                  borderRadius: '12px',
+                  filter: 'blur(8px)',
+                  position: 'relative',
+                  overflow: 'hidden'
+                }}>
+                  <div style={{
+                    position: 'absolute',
+                    inset: 0,
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    background: 'rgba(0,0,0,0.3)',
+                    filter: 'blur(0)'
+                  }}>
+                    <span style={{ fontSize: '1.5rem' }}>🔒</span>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            <p style={{
+              color: 'rgba(255,255,255,0.8)',
+              fontSize: '0.95rem',
+              fontStyle: 'italic'
+            }}>
+              {t.previewCuriosity2}
+            </p>
+          </div>
+
+          {/* Price Comparison */}
+          <div style={{
+            background: 'rgba(255,255,255,0.05)',
+            borderRadius: '16px',
+            padding: '1.5rem',
+            marginBottom: '1.5rem',
+            border: '1px solid rgba(255,255,255,0.1)'
+          }}>
+            <div style={{
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+              marginBottom: '0.75rem',
+              padding: '0.5rem',
+              borderBottom: '1px solid rgba(255,255,255,0.1)'
+            }}>
+              <span style={{ color: 'rgba(255,255,255,0.6)', fontSize: '0.9rem' }}>
+                {t.previewCompare1}
+              </span>
+              <span style={{
+                color: 'rgba(255,255,255,0.4)',
+                textDecoration: 'line-through',
+                fontSize: '0.9rem'
+              }}>
+                $150+
+              </span>
+            </div>
+            <div style={{
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+              padding: '0.5rem'
+            }}>
+              <span style={{ color: '#d4af37', fontWeight: '600' }}>
+                {t.previewCompare2}
+              </span>
+              <span style={{
+                color: '#d4af37',
+                fontWeight: '700',
+                fontSize: '1.3rem'
+              }}>
+                $9.99
+              </span>
+            </div>
+            <p style={{
+              color: 'rgba(255,255,255,0.7)',
+              fontSize: '0.85rem',
+              marginTop: '0.75rem',
+              textAlign: 'center'
+            }}>
+              {t.previewCoffeeNote}
+            </p>
+          </div>
+
+          {/* CTA Button */}
+          <button
+            onClick={() => handlePayment('full')}
+            disabled={isProcessingPayment}
+            style={{
+              width: '100%',
+              padding: '1.2rem 2rem',
+              fontSize: '1.1rem',
+              fontWeight: '700',
+              background: 'linear-gradient(135deg, #d4af37 0%, #f4d03f 100%)',
+              color: '#1a1a2e',
+              border: 'none',
+              borderRadius: '12px',
+              cursor: isProcessingPayment ? 'wait' : 'pointer',
+              opacity: isProcessingPayment ? 0.7 : 1,
+              transition: 'transform 0.2s, box-shadow 0.2s',
+              boxShadow: '0 4px 20px rgba(212, 175, 55, 0.3)'
+            }}
+          >
+            {isProcessingPayment ? t.processingPayment : `🔓 ${t.previewUnlock} - $9.99`}
+          </button>
+
+          {/* Back button */}
+          <button
+            onClick={() => setPage('input')}
+            style={{
+              marginTop: '1rem',
+              background: 'transparent',
+              border: 'none',
+              color: 'rgba(255,255,255,0.5)',
+              cursor: 'pointer',
+              fontSize: '0.9rem'
+            }}
+          >
+            ← {t.backToHome}
+          </button>
         </div>
       </div>
     )
