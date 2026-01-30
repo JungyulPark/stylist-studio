@@ -1186,8 +1186,9 @@ function App() {
   const hairPhotoRef = useRef<HTMLInputElement>(null)
   const t = translations[lang]
 
-  // 미국 단위 변환 함수
-  const isImperial = lang === 'en'
+  // 단위 설정 (영어 사용자는 선택 가능, 기본값: 영어는 imperial, 그 외는 metric)
+  const [useMetric, setUseMetric] = useState(() => lang !== 'en')
+  const isImperial = !useMetric
 
   const feetInchesToCm = (feet: string, inches: string): string => {
     const ft = parseFloat(feet) || 0
@@ -3612,6 +3613,57 @@ function App() {
                 </div>
               </div>
 
+              {/* Unit Toggle (영어 사용자용) */}
+              {lang === 'en' && (
+                <div className="input-group" style={{ marginBottom: '0.5rem' }}>
+                  <div style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    gap: '0.5rem',
+                    background: 'rgba(255,255,255,0.05)',
+                    borderRadius: '8px',
+                    padding: '0.5rem'
+                  }}>
+                    <button
+                      type="button"
+                      onClick={() => setUseMetric(false)}
+                      style={{
+                        padding: '0.4rem 0.8rem',
+                        borderRadius: '6px',
+                        border: 'none',
+                        background: !useMetric ? 'rgba(212, 175, 55, 0.3)' : 'transparent',
+                        color: !useMetric ? '#d4af37' : 'rgba(255,255,255,0.6)',
+                        cursor: 'pointer',
+                        fontSize: '0.85rem',
+                        fontWeight: !useMetric ? '600' : '400',
+                        transition: 'all 0.2s'
+                      }}
+                    >
+                      ft / lbs
+                    </button>
+                    <span style={{ color: 'rgba(255,255,255,0.3)' }}>|</span>
+                    <button
+                      type="button"
+                      onClick={() => setUseMetric(true)}
+                      style={{
+                        padding: '0.4rem 0.8rem',
+                        borderRadius: '6px',
+                        border: 'none',
+                        background: useMetric ? 'rgba(212, 175, 55, 0.3)' : 'transparent',
+                        color: useMetric ? '#d4af37' : 'rgba(255,255,255,0.6)',
+                        cursor: 'pointer',
+                        fontSize: '0.85rem',
+                        fontWeight: useMetric ? '600' : '400',
+                        transition: 'all 0.2s'
+                      }}
+                    >
+                      cm / kg
+                    </button>
+                  </div>
+                </div>
+              )}
+
               {isImperial ? (
                 <div className="input-group">
                   <label>{t.height}</label>
@@ -3644,7 +3696,7 @@ function App() {
                 </div>
               ) : (
                 <div className="input-group">
-                  <label htmlFor="height">{t.height}</label>
+                  <label htmlFor="height">{lang === 'en' ? 'Height (cm)' : t.height}</label>
                   <input
                     id="height"
                     type="number"
@@ -3668,7 +3720,7 @@ function App() {
                 </div>
               ) : (
                 <div className="input-group">
-                  <label htmlFor="weight">{t.weight}</label>
+                  <label htmlFor="weight">{lang === 'en' ? 'Weight (kg)' : t.weight}</label>
                   <input
                     id="weight"
                     type="number"
