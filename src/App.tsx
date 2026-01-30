@@ -219,6 +219,12 @@ const translations: Record<Language, {
   hairPreviewSubtitle: string
   hairPreviewCuriosity: string
   hairPreviewUnlock: string
+  // Share modal
+  shareModalTitle: string
+  shareVia: string
+  downloadForSocial: string
+  copyLink: string
+  copiedToClipboard: string
 }> = {
   ko: {
     title: 'PERSONAL STYLIST',
@@ -347,7 +353,13 @@ const translations: Record<Language, {
     hairPreviewTitle: '헤어스타일 분석 완료!',
     hairPreviewSubtitle: '당신에게 어울리는 스타일을 찾았어요',
     hairPreviewCuriosity: '이 중 1개는 예상 못 하셨을 거예요! 👀',
-    hairPreviewUnlock: '헤어스타일 확인하기'
+    hairPreviewUnlock: '헤어스타일 확인하기',
+    // Share modal
+    shareModalTitle: '결과 공유하기',
+    shareVia: '공유하기',
+    downloadForSocial: '📷 이미지 저장 (Instagram/TikTok용)',
+    copyLink: '🔗 링크 복사',
+    copiedToClipboard: '클립보드에 복사되었습니다!'
   },
   en: {
     title: 'PERSONAL STYLIST',
@@ -476,7 +488,13 @@ const translations: Record<Language, {
     hairPreviewTitle: 'Hairstyle Analysis Complete!',
     hairPreviewSubtitle: 'We found styles that suit you',
     hairPreviewCuriosity: 'One of these will surprise you! 👀',
-    hairPreviewUnlock: 'Unlock Hairstyles'
+    hairPreviewUnlock: 'Unlock Hairstyles',
+    // Share modal
+    shareModalTitle: 'Share Your Results',
+    shareVia: 'Share via',
+    downloadForSocial: '📷 Save Image (for Instagram/TikTok)',
+    copyLink: '🔗 Copy Link',
+    copiedToClipboard: 'Copied to clipboard!'
   },
   ja: {
     title: 'PERSONAL STYLIST',
@@ -605,7 +623,13 @@ const translations: Record<Language, {
     hairPreviewTitle: 'ヘアスタイル分析完了！',
     hairPreviewSubtitle: 'お似合いのスタイルを見つけました',
     hairPreviewCuriosity: 'この中の1つは予想外かも！👀',
-    hairPreviewUnlock: 'ヘアスタイルを確認'
+    hairPreviewUnlock: 'ヘアスタイルを確認',
+    // Share modal
+    shareModalTitle: '結果をシェア',
+    shareVia: 'シェアする',
+    downloadForSocial: '📷 画像を保存 (Instagram/TikTok用)',
+    copyLink: '🔗 リンクをコピー',
+    copiedToClipboard: 'クリップボードにコピーしました！'
   },
   zh: {
     title: 'PERSONAL STYLIST',
@@ -734,7 +758,13 @@ const translations: Record<Language, {
     hairPreviewTitle: '发型分析完成！',
     hairPreviewSubtitle: '我们找到了适合您的风格',
     hairPreviewCuriosity: '其中1款会让您惊喜！👀',
-    hairPreviewUnlock: '查看发型'
+    hairPreviewUnlock: '查看发型',
+    // Share modal
+    shareModalTitle: '分享结果',
+    shareVia: '分享到',
+    downloadForSocial: '📷 保存图片 (用于Instagram/TikTok)',
+    copyLink: '🔗 复制链接',
+    copiedToClipboard: '已复制到剪贴板！'
   },
   es: {
     title: 'PERSONAL STYLIST',
@@ -863,7 +893,13 @@ const translations: Record<Language, {
     hairPreviewTitle: '¡Análisis de Peinado Completo!',
     hairPreviewSubtitle: 'Encontramos estilos que te quedan bien',
     hairPreviewCuriosity: '¡Uno de estos te sorprenderá! 👀',
-    hairPreviewUnlock: 'Desbloquear Peinados'
+    hairPreviewUnlock: 'Desbloquear Peinados',
+    // Share modal
+    shareModalTitle: 'Compartir Resultados',
+    shareVia: 'Compartir en',
+    downloadForSocial: '📷 Guardar Imagen (para Instagram/TikTok)',
+    copyLink: '🔗 Copiar Enlace',
+    copiedToClipboard: '¡Copiado al portapapeles!'
   }
 }
 
@@ -1177,6 +1213,8 @@ function App() {
   const [showEmailModal, setShowEmailModal] = useState(false)
   const [isSendingEmail, setIsSendingEmail] = useState(false)
   const [emailSent, setEmailSent] = useState(false)
+  const [showShareModal, setShowShareModal] = useState(false)
+  const [shareToast, setShareToast] = useState('')
   const [emailError, setEmailError] = useState('')
   const [checkoutId, setCheckoutId] = useState<string | null>(null)
   const [heightFeet, setHeightFeet] = useState('')
@@ -1931,30 +1969,105 @@ function App() {
     }
   }
 
-  // 결과 공유
-  const handleShareResult = async () => {
-    const shareData = {
-      title: 'AI Stylist - 나만의 스타일 추천',
-      text: '🪄 AI가 내 얼굴에 맞는 헤어스타일과 패션을 추천해줬어요! 당신도 체험해보세요!',
+  // 결과 공유 - 모달 열기
+  const handleShareResult = () => {
+    setShowShareModal(true)
+  }
+
+  // 소셜 미디어 공유 데이터
+  const getShareData = () => {
+    const titles: Record<Language, string> = {
+      ko: 'AI가 추천한 나만의 스타일! 🪄',
+      en: 'My AI-recommended style! 🪄',
+      ja: 'AIがおすすめする私だけのスタイル！🪄',
+      zh: 'AI推荐的我的专属风格！🪄',
+      es: '¡Mi estilo recomendado por IA! 🪄'
+    }
+    const texts: Record<Language, string> = {
+      ko: 'AI가 내 얼굴에 맞는 헤어스타일과 패션을 추천해줬어요! 당신도 체험해보세요!',
+      en: 'AI recommended hairstyles and fashion that suit my face! Try it yourself!',
+      ja: 'AIが私の顔に合うヘアスタイルとファッションをおすすめしてくれました！あなたも試してみて！',
+      zh: 'AI为我推荐了适合我脸型的发型和时尚！你也来试试吧！',
+      es: '¡La IA me recomendó peinados y moda que se adaptan a mi rostro! ¡Pruébalo tú también!'
+    }
+    return {
+      title: titles[lang],
+      text: texts[lang],
       url: 'https://kstylist.cc'
     }
+  }
 
+  // 플랫폼별 공유 함수
+  const shareToFacebook = () => {
+    const { url } = getShareData()
+    window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`, '_blank', 'width=600,height=400')
+  }
+
+  const shareToX = () => {
+    const { text, url } = getShareData()
+    window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(url)}`, '_blank', 'width=600,height=400')
+  }
+
+  const shareToWhatsApp = () => {
+    const { text, url } = getShareData()
+    window.open(`https://wa.me/?text=${encodeURIComponent(text + ' ' + url)}`, '_blank')
+  }
+
+  const shareToThreads = () => {
+    const { text, url } = getShareData()
+    window.open(`https://www.threads.net/intent/post?text=${encodeURIComponent(text + ' ' + url)}`, '_blank')
+  }
+
+  const shareToiMessage = () => {
+    const { text, url } = getShareData()
+    window.location.href = `sms:&body=${encodeURIComponent(text + ' ' + url)}`
+  }
+
+  const copyShareLink = async () => {
+    try {
+      await navigator.clipboard.writeText('https://kstylist.cc')
+      setShareToast(t.copiedToClipboard)
+      setTimeout(() => setShareToast(''), 2000)
+    } catch (err) {
+      console.error('Copy failed:', err)
+    }
+  }
+
+  const handleNativeShare = async () => {
+    const shareData = getShareData()
     if (navigator.share) {
       try {
         await navigator.share(shareData)
       } catch (err) {
-        // 사용자가 취소한 경우 무시
         if ((err as Error).name !== 'AbortError') {
           console.error('Share failed:', err)
         }
       }
-    } else {
-      // Web Share API 미지원 시 클립보드에 복사
+    }
+  }
+
+  // 이미지 다운로드 (Instagram/TikTok용)
+  const downloadFirstImage = async () => {
+    const images = [
+      ...styleImages.map(s => s.imageUrl).filter(Boolean) as string[],
+      ...transformedHairstyles.map(s => s.imageUrl).filter(Boolean) as string[]
+    ]
+    if (images.length > 0) {
       try {
-        await navigator.clipboard.writeText(shareData.url)
-        alert(t.linkCopied)
+        const response = await fetch(images[0])
+        const blob = await response.blob()
+        const url = window.URL.createObjectURL(blob)
+        const a = document.createElement('a')
+        a.href = url
+        a.download = `ai-stylist-result-${Date.now()}.png`
+        document.body.appendChild(a)
+        a.click()
+        document.body.removeChild(a)
+        window.URL.revokeObjectURL(url)
+        setShareToast(t.copiedToClipboard.replace('클립보드에', '').replace('已复制到剪贴板', '已下载').replace('Copied to clipboard', 'Downloaded') || 'Downloaded!')
+        setTimeout(() => setShareToast(''), 2000)
       } catch (err) {
-        console.error('Copy failed:', err)
+        console.error('Download failed:', err)
       }
     }
   }
@@ -2671,6 +2784,263 @@ function App() {
             </div>
           </div>
         )}
+
+        {/* Share Modal */}
+        {showShareModal && (
+          <div className="modal-overlay" onClick={() => setShowShareModal(false)}>
+            <div className="modal-content share-modal" onClick={(e) => e.stopPropagation()} style={{
+              maxWidth: '400px',
+              padding: '2rem'
+            }}>
+              <button className="modal-close" onClick={() => setShowShareModal(false)}>×</button>
+              <h2 style={{ marginBottom: '1.5rem', textAlign: 'center' }}>{t.shareModalTitle}</h2>
+
+              {/* Mobile native share */}
+              {'share' in navigator && (
+                <button
+                  onClick={handleNativeShare}
+                  style={{
+                    width: '100%',
+                    padding: '1rem',
+                    marginBottom: '1rem',
+                    background: 'linear-gradient(135deg, #d4af37 0%, #f4d03f 100%)',
+                    color: '#1a1a2e',
+                    border: 'none',
+                    borderRadius: '12px',
+                    fontSize: '1rem',
+                    fontWeight: '600',
+                    cursor: 'pointer',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    gap: '0.5rem'
+                  }}
+                >
+                  📤 {t.shareVia}
+                </button>
+              )}
+
+              <p style={{
+                fontSize: '0.85rem',
+                color: 'rgba(255,255,255,0.6)',
+                marginBottom: '1rem',
+                textAlign: 'center'
+              }}>
+                {t.shareVia}
+              </p>
+
+              {/* Social media grid */}
+              <div style={{
+                display: 'grid',
+                gridTemplateColumns: 'repeat(4, 1fr)',
+                gap: '0.75rem',
+                marginBottom: '1.5rem'
+              }}>
+                {/* Facebook */}
+                <button
+                  onClick={shareToFacebook}
+                  style={{
+                    aspectRatio: '1',
+                    background: '#1877F2',
+                    border: 'none',
+                    borderRadius: '12px',
+                    cursor: 'pointer',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    gap: '0.25rem',
+                    color: '#fff',
+                    fontSize: '1.5rem',
+                    transition: 'transform 0.2s'
+                  }}
+                  onMouseOver={(e) => e.currentTarget.style.transform = 'scale(1.05)'}
+                  onMouseOut={(e) => e.currentTarget.style.transform = 'scale(1)'}
+                >
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
+                  </svg>
+                </button>
+
+                {/* X (Twitter) */}
+                <button
+                  onClick={shareToX}
+                  style={{
+                    aspectRatio: '1',
+                    background: '#000',
+                    border: 'none',
+                    borderRadius: '12px',
+                    cursor: 'pointer',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    gap: '0.25rem',
+                    color: '#fff',
+                    fontSize: '1.5rem',
+                    transition: 'transform 0.2s'
+                  }}
+                  onMouseOver={(e) => e.currentTarget.style.transform = 'scale(1.05)'}
+                  onMouseOut={(e) => e.currentTarget.style.transform = 'scale(1)'}
+                >
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+                  </svg>
+                </button>
+
+                {/* WhatsApp */}
+                <button
+                  onClick={shareToWhatsApp}
+                  style={{
+                    aspectRatio: '1',
+                    background: '#25D366',
+                    border: 'none',
+                    borderRadius: '12px',
+                    cursor: 'pointer',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    gap: '0.25rem',
+                    color: '#fff',
+                    fontSize: '1.5rem',
+                    transition: 'transform 0.2s'
+                  }}
+                  onMouseOver={(e) => e.currentTarget.style.transform = 'scale(1.05)'}
+                  onMouseOut={(e) => e.currentTarget.style.transform = 'scale(1)'}
+                >
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+                  </svg>
+                </button>
+
+                {/* Threads */}
+                <button
+                  onClick={shareToThreads}
+                  style={{
+                    aspectRatio: '1',
+                    background: '#000',
+                    border: 'none',
+                    borderRadius: '12px',
+                    cursor: 'pointer',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    gap: '0.25rem',
+                    color: '#fff',
+                    fontSize: '1.5rem',
+                    transition: 'transform 0.2s'
+                  }}
+                  onMouseOver={(e) => e.currentTarget.style.transform = 'scale(1.05)'}
+                  onMouseOut={(e) => e.currentTarget.style.transform = 'scale(1)'}
+                >
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M12.186 24h-.007c-3.581-.024-6.334-1.205-8.184-3.509C2.35 18.44 1.5 15.586 1.472 12.01v-.017c.03-3.579.879-6.43 2.525-8.482C5.845 1.205 8.6.024 12.18 0h.014c2.746.02 5.043.725 6.826 2.098 1.677 1.29 2.858 3.13 3.509 5.467l-2.04.569c-1.104-3.96-3.898-5.984-8.304-6.015-2.91.022-5.11.936-6.54 2.717C4.307 6.504 3.616 8.914 3.59 12c.025 3.086.718 5.496 2.057 7.164 1.43 1.783 3.631 2.698 6.54 2.717 2.623-.02 4.358-.631 5.8-2.045 1.647-1.613 1.618-3.593 1.09-4.798-.31-.71-.873-1.3-1.634-1.75-.192 1.352-.622 2.446-1.284 3.272-.886 1.102-2.14 1.704-3.73 1.79-1.202.065-2.361-.218-3.259-.801-1.063-.689-1.685-1.74-1.752-2.96-.065-1.182.408-2.256 1.332-3.023.88-.73 2.088-1.146 3.5-1.208 1.028-.045 1.964.062 2.79.32-.09-.573-.26-1.075-.51-1.494-.403-.672-1.04-1.1-1.955-1.316l.305-2.023c1.36.162 2.478.803 3.227 1.756l.006.007.007.008c.632.788.994 1.756 1.136 2.86.376.18.727.39 1.05.63.89.661 1.57 1.502 2.015 2.508.753 1.706.776 4.405-1.37 6.503-1.812 1.77-4.123 2.535-7.267 2.56zm1.342-9.123c-.722.032-1.34.205-1.79.501-.394.26-.59.563-.572.88.018.333.208.612.55.808.392.224.94.336 1.548.302 1.032-.055 1.82-.424 2.343-1.096.306-.393.52-.876.642-1.44-.844-.212-1.725-.3-2.72-.255z"/>
+                  </svg>
+                </button>
+              </div>
+
+              {/* Second row */}
+              <div style={{
+                display: 'grid',
+                gridTemplateColumns: 'repeat(2, 1fr)',
+                gap: '0.75rem',
+                marginBottom: '1.5rem'
+              }}>
+                {/* iMessage */}
+                <button
+                  onClick={shareToiMessage}
+                  style={{
+                    padding: '0.75rem',
+                    background: '#34C759',
+                    border: 'none',
+                    borderRadius: '12px',
+                    cursor: 'pointer',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    gap: '0.5rem',
+                    color: '#fff',
+                    fontSize: '0.9rem',
+                    fontWeight: '500',
+                    transition: 'transform 0.2s'
+                  }}
+                  onMouseOver={(e) => e.currentTarget.style.transform = 'scale(1.02)'}
+                  onMouseOut={(e) => e.currentTarget.style.transform = 'scale(1)'}
+                >
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 14H6l-2 2V4h16v12z"/>
+                  </svg>
+                  iMessage
+                </button>
+
+                {/* Copy Link */}
+                <button
+                  onClick={copyShareLink}
+                  style={{
+                    padding: '0.75rem',
+                    background: 'rgba(255,255,255,0.1)',
+                    border: '1px solid rgba(255,255,255,0.2)',
+                    borderRadius: '12px',
+                    cursor: 'pointer',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    gap: '0.5rem',
+                    color: '#fff',
+                    fontSize: '0.9rem',
+                    fontWeight: '500',
+                    transition: 'transform 0.2s'
+                  }}
+                  onMouseOver={(e) => e.currentTarget.style.transform = 'scale(1.02)'}
+                  onMouseOut={(e) => e.currentTarget.style.transform = 'scale(1)'}
+                >
+                  {t.copyLink}
+                </button>
+              </div>
+
+              {/* Download for Instagram/TikTok */}
+              <button
+                onClick={downloadFirstImage}
+                style={{
+                  width: '100%',
+                  padding: '1rem',
+                  background: 'linear-gradient(45deg, #405DE6, #5851DB, #833AB4, #C13584, #E1306C, #FD1D1D)',
+                  border: 'none',
+                  borderRadius: '12px',
+                  cursor: 'pointer',
+                  color: '#fff',
+                  fontSize: '0.95rem',
+                  fontWeight: '600',
+                  transition: 'transform 0.2s'
+                }}
+                onMouseOver={(e) => e.currentTarget.style.transform = 'scale(1.02)'}
+                onMouseOut={(e) => e.currentTarget.style.transform = 'scale(1)'}
+              >
+                {t.downloadForSocial}
+              </button>
+
+              {/* Toast notification */}
+              {shareToast && (
+                <div style={{
+                  position: 'fixed',
+                  bottom: '2rem',
+                  left: '50%',
+                  transform: 'translateX(-50%)',
+                  background: 'rgba(0,0,0,0.9)',
+                  color: '#fff',
+                  padding: '0.75rem 1.5rem',
+                  borderRadius: '8px',
+                  fontSize: '0.9rem',
+                  zIndex: 1001
+                }}>
+                  {shareToast}
+                </div>
+              )}
+            </div>
+          </div>
+        )}
       </div>
     )
   }
@@ -3224,6 +3594,66 @@ function App() {
               {t.backToHome}
             </button>
           </div>
+
+          {/* Share Modal for Hair Result */}
+          {showShareModal && (
+            <div className="modal-overlay" onClick={() => setShowShareModal(false)}>
+              <div className="modal-content share-modal" onClick={(e) => e.stopPropagation()} style={{
+                maxWidth: '400px',
+                padding: '2rem'
+              }}>
+                <button className="modal-close" onClick={() => setShowShareModal(false)}>×</button>
+                <h2 style={{ marginBottom: '1.5rem', textAlign: 'center' }}>{t.shareModalTitle}</h2>
+
+                {'share' in navigator && (
+                  <button onClick={handleNativeShare} style={{
+                    width: '100%', padding: '1rem', marginBottom: '1rem',
+                    background: 'linear-gradient(135deg, #d4af37 0%, #f4d03f 100%)',
+                    color: '#1a1a2e', border: 'none', borderRadius: '12px',
+                    fontSize: '1rem', fontWeight: '600', cursor: 'pointer',
+                    display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem'
+                  }}>📤 {t.shareVia}</button>
+                )}
+
+                <p style={{ fontSize: '0.85rem', color: 'rgba(255,255,255,0.6)', marginBottom: '1rem', textAlign: 'center' }}>{t.shareVia}</p>
+
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '0.75rem', marginBottom: '1.5rem' }}>
+                  <button onClick={shareToFacebook} style={{ aspectRatio: '1', background: '#1877F2', border: 'none', borderRadius: '12px', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff', fontSize: '1.5rem' }}>
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+                  </button>
+                  <button onClick={shareToX} style={{ aspectRatio: '1', background: '#000', border: 'none', borderRadius: '12px', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff' }}>
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+                  </button>
+                  <button onClick={shareToWhatsApp} style={{ aspectRatio: '1', background: '#25D366', border: 'none', borderRadius: '12px', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff' }}>
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+                  </button>
+                  <button onClick={shareToThreads} style={{ aspectRatio: '1', background: '#000', border: 'none', borderRadius: '12px', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff' }}>
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12.186 24h-.007c-3.581-.024-6.334-1.205-8.184-3.509C2.35 18.44 1.5 15.586 1.472 12.01v-.017c.03-3.579.879-6.43 2.525-8.482C5.845 1.205 8.6.024 12.18 0h.014c2.746.02 5.043.725 6.826 2.098 1.677 1.29 2.858 3.13 3.509 5.467l-2.04.569c-1.104-3.96-3.898-5.984-8.304-6.015-2.91.022-5.11.936-6.54 2.717C4.307 6.504 3.616 8.914 3.59 12c.025 3.086.718 5.496 2.057 7.164 1.43 1.783 3.631 2.698 6.54 2.717 2.623-.02 4.358-.631 5.8-2.045 1.647-1.613 1.618-3.593 1.09-4.798-.31-.71-.873-1.3-1.634-1.75-.192 1.352-.622 2.446-1.284 3.272-.886 1.102-2.14 1.704-3.73 1.79-1.202.065-2.361-.218-3.259-.801-1.063-.689-1.685-1.74-1.752-2.96-.065-1.182.408-2.256 1.332-3.023.88-.73 2.088-1.146 3.5-1.208 1.028-.045 1.964.062 2.79.32-.09-.573-.26-1.075-.51-1.494-.403-.672-1.04-1.1-1.955-1.316l.305-2.023c1.36.162 2.478.803 3.227 1.756l.006.007.007.008c.632.788.994 1.756 1.136 2.86.376.18.727.39 1.05.63.89.661 1.57 1.502 2.015 2.508.753 1.706.776 4.405-1.37 6.503-1.812 1.77-4.123 2.535-7.267 2.56zm1.342-9.123c-.722.032-1.34.205-1.79.501-.394.26-.59.563-.572.88.018.333.208.612.55.808.392.224.94.336 1.548.302 1.032-.055 1.82-.424 2.343-1.096.306-.393.52-.876.642-1.44-.844-.212-1.725-.3-2.72-.255z"/></svg>
+                  </button>
+                </div>
+
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '0.75rem', marginBottom: '1.5rem' }}>
+                  <button onClick={shareToiMessage} style={{ padding: '0.75rem', background: '#34C759', border: 'none', borderRadius: '12px', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem', color: '#fff', fontSize: '0.9rem', fontWeight: '500' }}>
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 14H6l-2 2V4h16v12z"/></svg>
+                    iMessage
+                  </button>
+                  <button onClick={copyShareLink} style={{ padding: '0.75rem', background: 'rgba(255,255,255,0.1)', border: '1px solid rgba(255,255,255,0.2)', borderRadius: '12px', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem', color: '#fff', fontSize: '0.9rem', fontWeight: '500' }}>
+                    {t.copyLink}
+                  </button>
+                </div>
+
+                <button onClick={downloadFirstImage} style={{
+                  width: '100%', padding: '1rem',
+                  background: 'linear-gradient(45deg, #405DE6, #5851DB, #833AB4, #C13584, #E1306C, #FD1D1D)',
+                  border: 'none', borderRadius: '12px', cursor: 'pointer', color: '#fff', fontSize: '0.95rem', fontWeight: '600'
+                }}>{t.downloadForSocial}</button>
+
+                {shareToast && (
+                  <div style={{ position: 'fixed', bottom: '2rem', left: '50%', transform: 'translateX(-50%)', background: 'rgba(0,0,0,0.9)', color: '#fff', padding: '0.75rem 1.5rem', borderRadius: '8px', fontSize: '0.9rem', zIndex: 1001 }}>{shareToast}</div>
+                )}
+              </div>
+            </div>
+          )}
         </div>
       </div>
     )
