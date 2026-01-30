@@ -779,7 +779,7 @@ We may update these Terms at any time. Continued use of the Service constitutes 
 
 ## 11. Contact
 
-For questions about these Terms, contact us at support@kstylist.cc
+For questions about these Terms, please reach out through our website.
     `
   },
   privacy: {
@@ -861,7 +861,7 @@ We may update this Privacy Policy periodically. We will notify users of signific
 
 ## 11. Contact
 
-For privacy inquiries: privacy@kstylist.cc
+For privacy inquiries, please reach out through our website.
     `
   },
   refund: {
@@ -911,7 +911,7 @@ Unlike physical products, digital services cannot be "returned."
 
 If you believe you qualify for a refund:
 
-1. Email us at **support@kstylist.cc** within **7 days** of purchase
+1. Contact us within **7 days** of purchase
 2. Include:
    - Your payment confirmation/receipt
    - Description of the issue
@@ -929,7 +929,7 @@ Approved refunds are processed through Polar, our payment provider:
 ## 6. Dispute Resolution
 
 Before filing a payment dispute:
-- Please contact us first at support@kstylist.cc
+- Please contact us first through our website
 - We aim to resolve all issues fairly and promptly
 - Chargebacks without prior contact may result in account restrictions
 
@@ -941,9 +941,7 @@ Unsatisfied with your results? Instead of a refund, we offer:
 
 ## 8. Contact Us
 
-For refund requests or questions:
-- Email: support@kstylist.cc
-- Please allow 1-3 business days for response
+For refund requests or questions, please contact us through our website. We typically respond within 1-3 business days.
 
 ---
 
@@ -2015,10 +2013,6 @@ function App() {
                 <a href="#" onClick={(e) => { e.preventDefault(); setPolicyModal('terms') }}>Terms of Service</a>
                 <a href="#" onClick={(e) => { e.preventDefault(); setPolicyModal('privacy') }}>Privacy Policy</a>
                 <a href="#" onClick={(e) => { e.preventDefault(); setPolicyModal('refund') }}>Refund Policy</a>
-              </div>
-              <div className="footer-col">
-                <h5>CONTACT</h5>
-                <a href="mailto:support@kstylist.cc">support@kstylist.cc</a>
               </div>
             </div>
           </div>
