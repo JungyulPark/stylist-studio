@@ -1212,7 +1212,8 @@ function App() {
   const [isTransformingHair, setIsTransformingHair] = useState(false)
   const [loadingProgress, setLoadingProgress] = useState(0)
   const [loadingStep, setLoadingStep] = useState('')
-  const [isPaid, setIsPaid] = useState(false)
+  const [isFullPaid, setIsFullPaid] = useState(false)
+  const [isHairPaid, setIsHairPaid] = useState(false)
   const [isProcessingPayment, setIsProcessingPayment] = useState(false)
   const [policyModal, setPolicyModal] = useState<'terms' | 'privacy' | 'refund' | null>(null)
   const [emailInput, setEmailInput] = useState('')
@@ -1351,7 +1352,7 @@ function App() {
                 setSelectedOccasion(savedData.selectedOccasion || null)
                 setSelectedVibe(savedData.selectedVibe || null)
                 setProfile(prev => ({ ...prev, gender: savedData.gender }))
-                setIsPaid(true)
+                setIsHairPaid(true)
                 await clearIndexedDB()
                 localStorage.removeItem('pendingAnalysisFlag')
                 localStorage.removeItem('productType')
@@ -1372,7 +1373,7 @@ function App() {
                 gender: savedData.gender,
                 photo: savedData.photo
               })
-              setIsPaid(true)
+              setIsFullPaid(true)
               await clearIndexedDB()
               localStorage.removeItem('pendingAnalysisFlag')
               localStorage.removeItem('productType')
@@ -1390,16 +1391,28 @@ function App() {
             console.error('Failed to load saved data from IndexedDB:', e)
           }
           // 저장된 데이터 없으면 입력 페이지로
-          setIsPaid(true)
-          setPageState('input')
-          window.history.replaceState({ page: 'input' }, '', '#input')
+          if (purchasedProductType === 'hair') {
+            setIsHairPaid(true)
+            setPageState('hair-selection')
+            window.history.replaceState({ page: 'hair-selection' }, '', '#hair-selection')
+          } else {
+            setIsFullPaid(true)
+            setPageState('input')
+            window.history.replaceState({ page: 'input' }, '', '#input')
+          }
         })()
         return
       }
       // 저장된 데이터 없으면 입력 페이지로
-      setIsPaid(true)
-      setPageState('input')
-      window.history.replaceState({ page: 'input' }, '', '#input')
+      if (purchasedProductType === 'hair') {
+        setIsHairPaid(true)
+        setPageState('hair-selection')
+        window.history.replaceState({ page: 'hair-selection' }, '', '#hair-selection')
+      } else {
+        setIsFullPaid(true)
+        setPageState('input')
+        window.history.replaceState({ page: 'input' }, '', '#input')
+      }
       return
     }
 
@@ -1869,7 +1882,7 @@ function App() {
     e.preventDefault()
 
     // 결제가 완료된 경우 바로 분석 시작
-    if (isPaid) {
+    if (isFullPaid) {
       performAnalysis()
     } else {
       // 결제가 안된 경우 프리뷰 페이지로 이동 (Value Gate)
@@ -2135,8 +2148,20 @@ function App() {
   const handleHairRecommendation = async () => {
     if (!selectedOccasion || !selectedVibe) return
 
-    // 사진이 있으면 항상 프리뷰 페이지로 이동 (Value Gate)
-    if (hairPhoto) {
+    // 사진이 있고 헤어 결제 완료된 경우 바로 결과 생성
+    if (hairPhoto && isHairPaid) {
+      setPage('loading')
+      startHairGenerationAfterPayment({
+        hairPhoto,
+        selectedOccasion,
+        selectedVibe,
+        gender: profile.gender
+      })
+      return
+    }
+
+    // 사진이 있고 결제 안됨 → 프리뷰 페이지로 이동 (Value Gate)
+    if (hairPhoto && !isHairPaid) {
       setPage('hair-preview')
       return
     }
@@ -3929,7 +3954,7 @@ function App() {
               >
                 {isProcessingPayment
                   ? t.processingPayment
-                  : isPaid
+                  : isFullPaid
                     ? t.startAnalysis
                     : t.purchaseBtn}
               </button>
