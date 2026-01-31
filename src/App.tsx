@@ -241,6 +241,7 @@ const translations: Record<Language, {
   signupBtn: string
   noAccount: string
   haveAccount: string
+  forgotPassword: string
   authError: string
   passwordMismatch: string
   passwordTooShort: string
@@ -416,6 +417,7 @@ const translations: Record<Language, {
     signupBtn: '가입하기',
     noAccount: '계정이 없으신가요?',
     haveAccount: '이미 계정이 있으신가요?',
+    forgotPassword: '비밀번호를 잊으셨나요?',
     authError: '인증 오류가 발생했습니다',
     passwordMismatch: '비밀번호가 일치하지 않습니다',
     passwordTooShort: '비밀번호는 6자 이상이어야 합니다',
@@ -591,6 +593,7 @@ const translations: Record<Language, {
     signupBtn: 'Sign Up',
     noAccount: "Don't have an account?",
     haveAccount: 'Already have an account?',
+    forgotPassword: 'Forgot your password?',
     authError: 'Authentication error occurred',
     passwordMismatch: 'Passwords do not match',
     passwordTooShort: 'Password must be at least 6 characters',
@@ -766,6 +769,7 @@ const translations: Record<Language, {
     signupBtn: '登録する',
     noAccount: 'アカウントをお持ちでないですか？',
     haveAccount: 'すでにアカウントをお持ちですか？',
+    forgotPassword: 'パスワードをお忘れですか？',
     authError: '認証エラーが発生しました',
     passwordMismatch: 'パスワードが一致しません',
     passwordTooShort: 'パスワードは6文字以上必要です',
@@ -941,6 +945,7 @@ const translations: Record<Language, {
     signupBtn: '注册',
     noAccount: '还没有账户？',
     haveAccount: '已有账户？',
+    forgotPassword: '忘记密码？',
     authError: '认证错误',
     passwordMismatch: '密码不匹配',
     passwordTooShort: '密码至少需要6个字符',
@@ -1116,6 +1121,7 @@ const translations: Record<Language, {
     signupBtn: 'Registrarse',
     noAccount: '¿No tienes una cuenta?',
     haveAccount: '¿Ya tienes una cuenta?',
+    forgotPassword: '¿Olvidaste tu contraseña?',
     authError: 'Error de autenticación',
     passwordMismatch: 'Las contraseñas no coinciden',
     passwordTooShort: 'La contraseña debe tener al menos 6 caracteres',
@@ -1477,6 +1483,7 @@ function App() {
   const [authError, setAuthError] = useState('')
   const [isAuthSubmitting, setIsAuthSubmitting] = useState(false)
   const [authSuccess, setAuthSuccess] = useState('')
+  const [showForgotPassword, setShowForgotPassword] = useState(false)
 
   // 단위 설정 (영어 사용자는 선택 가능, 기본값: 영어는 imperial, 그 외는 metric)
   const [useMetric, setUseMetric] = useState(() => lang !== 'en')
@@ -2858,6 +2865,23 @@ function App() {
     setIsAuthSubmitting(false)
   }
 
+  const handleForgotPassword = async (e: React.FormEvent) => {
+    e.preventDefault()
+    if (!authEmail) return
+    setAuthError('')
+    setAuthSuccess('')
+    setIsAuthSubmitting(true)
+
+    const { error } = await resetPassword(authEmail)
+
+    if (error) {
+      setAuthError(error.message || t.authError)
+    } else {
+      setAuthSuccess(t.resetPasswordSent)
+    }
+    setIsAuthSubmitting(false)
+  }
+
   const handleUpdatePassword = async (e: React.FormEvent) => {
     e.preventDefault()
     setAuthError('')
@@ -2981,46 +3005,84 @@ function App() {
               <span>{t.orContinueWith}</span>
             </div>
 
-            <form onSubmit={handleLogin}>
-              <div className="input-group">
-                <label htmlFor="auth-email">{t.email}</label>
-                <input
-                  id="auth-email"
-                  type="email"
-                  value={authEmail}
-                  onChange={(e) => setAuthEmail(e.target.value)}
-                  required
-                  autoComplete="email"
-                />
-              </div>
+            {showForgotPassword ? (
+              <form onSubmit={handleForgotPassword}>
+                <div className="input-group">
+                  <label htmlFor="forgot-email">{t.email}</label>
+                  <input
+                    id="forgot-email"
+                    type="email"
+                    value={authEmail}
+                    onChange={(e) => setAuthEmail(e.target.value)}
+                    required
+                    autoComplete="email"
+                  />
+                </div>
 
-              <div className="input-group">
-                <label htmlFor="auth-password">{t.password}</label>
-                <input
-                  id="auth-password"
-                  type="password"
-                  value={authPassword}
-                  onChange={(e) => setAuthPassword(e.target.value)}
-                  required
-                  autoComplete="current-password"
-                />
-              </div>
+                <button
+                  type="submit"
+                  className="btn-gold submit-btn"
+                  disabled={isAuthSubmitting}
+                >
+                  {isAuthSubmitting ? '...' : t.resetPasswordBtn}
+                </button>
 
-              <button
-                type="submit"
-                className="btn-gold submit-btn"
-                disabled={isAuthSubmitting}
-              >
-                {isAuthSubmitting ? '...' : t.loginBtn}
-              </button>
-            </form>
+                <div className="auth-switch">
+                  <button onClick={() => { setShowForgotPassword(false); setAuthError(''); setAuthSuccess(''); }}>
+                    {t.login}
+                  </button>
+                </div>
+              </form>
+            ) : (
+              <>
+                <form onSubmit={handleLogin}>
+                  <div className="input-group">
+                    <label htmlFor="auth-email">{t.email}</label>
+                    <input
+                      id="auth-email"
+                      type="email"
+                      value={authEmail}
+                      onChange={(e) => setAuthEmail(e.target.value)}
+                      required
+                      autoComplete="email"
+                    />
+                  </div>
 
-            <div className="auth-switch">
-              <span>{t.noAccount}</span>
-              <button onClick={() => { setPage('signup'); setAuthError(''); setAuthSuccess(''); }}>
-                {t.signup}
-              </button>
-            </div>
+                  <div className="input-group">
+                    <label htmlFor="auth-password">{t.password}</label>
+                    <input
+                      id="auth-password"
+                      type="password"
+                      value={authPassword}
+                      onChange={(e) => setAuthPassword(e.target.value)}
+                      required
+                      autoComplete="current-password"
+                    />
+                  </div>
+
+                  <div className="forgot-password-link">
+                    <button type="button" onClick={() => { setShowForgotPassword(true); setAuthError(''); setAuthSuccess(''); }}>
+                      {t.forgotPassword}
+                    </button>
+                  </div>
+
+                  <button
+                    type="submit"
+                    className="btn-gold submit-btn"
+                    disabled={isAuthSubmitting}
+                  >
+                    {isAuthSubmitting ? '...' : t.loginBtn}
+                  </button>
+                </form>
+
+                <div className="auth-switch">
+                  <span>{t.noAccount}</span>
+                  <button onClick={() => { setPage('signup'); setAuthError(''); setAuthSuccess(''); }}>
+                    {t.signup}
+                  </button>
+                </div>
+              </>
+            )}
 
             <div className="auth-guest">
               <button onClick={() => setPage('landing')} className="btn-outline-sm">

@@ -3510,6 +3510,26 @@
   padding: 0.75rem;
 }
 
+/* Forgot password link */
+.forgot-password-link {
+  text-align: right;
+  margin-bottom: 1rem;
+}
+
+.forgot-password-link button {
+  background: none;
+  border: none;
+  color: var(--primary);
+  font-size: 0.875rem;
+  cursor: pointer;
+  padding: 0;
+}
+
+.forgot-password-link button:hover {
+  color: var(--primary-light);
+  text-decoration: underline;
+}
+
 /* Auth buttons in header */
 .auth-buttons {
   display: flex;
