@@ -3471,6 +3471,45 @@
   color: #ff6b6b;
 }
 
+/* Password change form */
+.password-change-form {
+  background: rgba(255, 255, 255, 0.05);
+  padding: 1.5rem;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+}
+
+.password-change-form .input-group {
+  margin-bottom: 1rem;
+}
+
+.password-change-form .input-group label {
+  display: block;
+  margin-bottom: 0.5rem;
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 0.875rem;
+}
+
+.password-change-form .input-group input {
+  width: 100%;
+  padding: 0.75rem;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.1);
+  color: white;
+  font-size: 1rem;
+}
+
+.password-change-form .input-group input:focus {
+  outline: none;
+  border-color: var(--primary);
+}
+
+.password-change-form button {
+  width: 100%;
+  padding: 0.75rem;
+}
+
 /* Auth buttons in header */
 .auth-buttons {
   display: flex;

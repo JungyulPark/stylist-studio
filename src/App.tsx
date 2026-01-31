@@ -1468,7 +1468,9 @@ function App() {
   const t = translations[lang]
 
   // Auth state
-  const { user, signIn, signUp, signInWithGoogle, signOut, resetPassword, deleteAccount, updateProfile: updateAuthProfile, profile: authProfile, isSupabaseConfigured } = useAuth()
+  const { user, signIn, signUp, signInWithGoogle, signOut, resetPassword, updatePassword, deleteAccount, updateProfile: updateAuthProfile, profile: authProfile, isSupabaseConfigured } = useAuth()
+  const [newPassword, setNewPassword] = useState('')
+  const [confirmNewPassword, setConfirmNewPassword] = useState('')
   const [authEmail, setAuthEmail] = useState('')
   const [authPassword, setAuthPassword] = useState('')
   const [authConfirmPassword, setAuthConfirmPassword] = useState('')
@@ -2856,6 +2858,34 @@ function App() {
     setIsAuthSubmitting(false)
   }
 
+  const handleUpdatePassword = async (e: React.FormEvent) => {
+    e.preventDefault()
+    setAuthError('')
+    setAuthSuccess('')
+
+    if (newPassword.length < 6) {
+      setAuthError(t.passwordTooShort)
+      return
+    }
+
+    if (newPassword !== confirmNewPassword) {
+      setAuthError(t.passwordMismatch)
+      return
+    }
+
+    setIsAuthSubmitting(true)
+    const { error } = await updatePassword(newPassword)
+
+    if (error) {
+      setAuthError(error.message || t.authError)
+    } else {
+      setAuthSuccess(t.passwordUpdated)
+      setNewPassword('')
+      setConfirmNewPassword('')
+    }
+    setIsAuthSubmitting(false)
+  }
+
   const handleDeleteAccount = async () => {
     if (!window.confirm(t.deleteAccountConfirm)) return
 
@@ -3168,7 +3198,38 @@ function App() {
             <div className="profile-section account-settings">
               <h3>{t.accountSettings}</h3>
 
-              <div className="setting-item">
+              <form onSubmit={handleUpdatePassword} className="password-change-form">
+                <div className="input-group">
+                  <label htmlFor="new-password">{t.newPassword}</label>
+                  <input
+                    id="new-password"
+                    type="password"
+                    value={newPassword}
+                    onChange={(e) => setNewPassword(e.target.value)}
+                    minLength={6}
+                    autoComplete="new-password"
+                  />
+                </div>
+                <div className="input-group">
+                  <label htmlFor="confirm-new-password">{t.confirmNewPassword}</label>
+                  <input
+                    id="confirm-new-password"
+                    type="password"
+                    value={confirmNewPassword}
+                    onChange={(e) => setConfirmNewPassword(e.target.value)}
+                    autoComplete="new-password"
+                  />
+                </div>
+                <button
+                  type="submit"
+                  className="btn-outline-sm"
+                  disabled={isAuthSubmitting || !newPassword || !confirmNewPassword}
+                >
+                  {t.updatePasswordBtn}
+                </button>
+              </form>
+
+              <div className="setting-item" style={{ marginTop: '1.5rem' }}>
                 <div className="setting-info">
                   <strong>{t.resetPassword}</strong>
                   <p>{t.resetPasswordDesc}</p>
@@ -3237,8 +3298,8 @@ function App() {
             {isSupabaseConfigured && (
               user ? (
                 <div className="auth-buttons">
-                  <button onClick={() => setPage('profile')} className="btn-outline-sm user-email">
-                    {user.email?.split('@')[0]}
+                  <button onClick={() => setPage('profile')} className="btn-primary-sm">
+                    {t.myProfile}
                   </button>
                   <button onClick={handleLogout} className="btn-outline-sm">
                     {t.logout}
