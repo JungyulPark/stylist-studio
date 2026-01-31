@@ -1,6 +1,8 @@
 import { useState, useRef, useEffect, useCallback } from 'react'
 import './App.css'
 import { renderMarkdownToHtml } from './utils/markdown'
+import { useAuth } from './contexts/AuthContext'
+import { supabase } from './lib/supabase'
 
 // IndexedDB 헬퍼 함수 (큰 데이터 저장용)
 const DB_NAME = 'StylistStudioDB'
@@ -55,7 +57,7 @@ const clearIndexedDB = async (): Promise<void> => {
 
 type Language = 'ko' | 'en' | 'ja' | 'zh' | 'es'
 type Gender = 'male' | 'female' | 'other' | null
-type Page = 'landing' | 'input' | 'loading' | 'result' | 'hair-selection' | 'hair-result' | 'how-to-use' | 'preview' | 'hair-preview'
+type Page = 'landing' | 'input' | 'loading' | 'result' | 'hair-selection' | 'hair-result' | 'how-to-use' | 'preview' | 'hair-preview' | 'login' | 'signup' | 'profile'
 
 // 헤어스타일 상황 옵션
 interface HairOccasion {
@@ -226,6 +228,29 @@ const translations: Record<Language, {
   downloadForSocial: string
   copyLink: string
   copiedToClipboard: string
+  // Auth
+  login: string
+  signup: string
+  logout: string
+  email: string
+  password: string
+  confirmPassword: string
+  loginTitle: string
+  signupTitle: string
+  loginBtn: string
+  signupBtn: string
+  noAccount: string
+  haveAccount: string
+  authError: string
+  passwordMismatch: string
+  passwordTooShort: string
+  loginSuccess: string
+  signupSuccess: string
+  continueAsGuest: string
+  myProfile: string
+  analysisHistory: string
+  noHistory: string
+  historySaved: string
 }> = {
   ko: {
     title: 'PERSONAL STYLIST',
@@ -361,7 +386,30 @@ const translations: Record<Language, {
     shareVia: '공유하기',
     downloadForSocial: '📷 이미지 저장 (Instagram/TikTok용)',
     copyLink: '🔗 링크 복사',
-    copiedToClipboard: '클립보드에 복사되었습니다!'
+    copiedToClipboard: '클립보드에 복사되었습니다!',
+    // Auth
+    login: '로그인',
+    signup: '회원가입',
+    logout: '로그아웃',
+    email: '이메일',
+    password: '비밀번호',
+    confirmPassword: '비밀번호 확인',
+    loginTitle: '로그인',
+    signupTitle: '회원가입',
+    loginBtn: '로그인',
+    signupBtn: '가입하기',
+    noAccount: '계정이 없으신가요?',
+    haveAccount: '이미 계정이 있으신가요?',
+    authError: '인증 오류가 발생했습니다',
+    passwordMismatch: '비밀번호가 일치하지 않습니다',
+    passwordTooShort: '비밀번호는 6자 이상이어야 합니다',
+    loginSuccess: '로그인되었습니다',
+    signupSuccess: '가입이 완료되었습니다',
+    continueAsGuest: '게스트로 계속하기',
+    myProfile: '내 프로필',
+    analysisHistory: '분석 히스토리',
+    noHistory: '저장된 분석 결과가 없습니다',
+    historySaved: '분석 결과가 저장되었습니다'
   },
   en: {
     title: 'PERSONAL STYLIST',
@@ -497,7 +545,30 @@ const translations: Record<Language, {
     shareVia: 'Share via',
     downloadForSocial: '📷 Save Image (for Instagram/TikTok)',
     copyLink: '🔗 Copy Link',
-    copiedToClipboard: 'Copied to clipboard!'
+    copiedToClipboard: 'Copied to clipboard!',
+    // Auth
+    login: 'Login',
+    signup: 'Sign Up',
+    logout: 'Logout',
+    email: 'Email',
+    password: 'Password',
+    confirmPassword: 'Confirm Password',
+    loginTitle: 'Welcome Back',
+    signupTitle: 'Create Account',
+    loginBtn: 'Login',
+    signupBtn: 'Sign Up',
+    noAccount: "Don't have an account?",
+    haveAccount: 'Already have an account?',
+    authError: 'Authentication error occurred',
+    passwordMismatch: 'Passwords do not match',
+    passwordTooShort: 'Password must be at least 6 characters',
+    loginSuccess: 'Successfully logged in',
+    signupSuccess: 'Account created successfully',
+    continueAsGuest: 'Continue as Guest',
+    myProfile: 'My Profile',
+    analysisHistory: 'Analysis History',
+    noHistory: 'No saved analysis results',
+    historySaved: 'Analysis saved to your history'
   },
   ja: {
     title: 'PERSONAL STYLIST',
@@ -633,7 +704,30 @@ const translations: Record<Language, {
     shareVia: 'シェアする',
     downloadForSocial: '📷 画像を保存 (Instagram/TikTok用)',
     copyLink: '🔗 リンクをコピー',
-    copiedToClipboard: 'クリップボードにコピーしました！'
+    copiedToClipboard: 'クリップボードにコピーしました！',
+    // Auth
+    login: 'ログイン',
+    signup: '新規登録',
+    logout: 'ログアウト',
+    email: 'メールアドレス',
+    password: 'パスワード',
+    confirmPassword: 'パスワード確認',
+    loginTitle: 'ログイン',
+    signupTitle: 'アカウント作成',
+    loginBtn: 'ログイン',
+    signupBtn: '登録する',
+    noAccount: 'アカウントをお持ちでないですか？',
+    haveAccount: 'すでにアカウントをお持ちですか？',
+    authError: '認証エラーが発生しました',
+    passwordMismatch: 'パスワードが一致しません',
+    passwordTooShort: 'パスワードは6文字以上必要です',
+    loginSuccess: 'ログインしました',
+    signupSuccess: 'アカウントが作成されました',
+    continueAsGuest: 'ゲストとして続ける',
+    myProfile: 'マイプロフィール',
+    analysisHistory: '分析履歴',
+    noHistory: '保存された分析結果はありません',
+    historySaved: '分析結果が保存されました'
   },
   zh: {
     title: 'PERSONAL STYLIST',
@@ -769,7 +863,30 @@ const translations: Record<Language, {
     shareVia: '分享到',
     downloadForSocial: '📷 保存图片 (用于Instagram/TikTok)',
     copyLink: '🔗 复制链接',
-    copiedToClipboard: '已复制到剪贴板！'
+    copiedToClipboard: '已复制到剪贴板！',
+    // Auth
+    login: '登录',
+    signup: '注册',
+    logout: '退出登录',
+    email: '邮箱',
+    password: '密码',
+    confirmPassword: '确认密码',
+    loginTitle: '登录',
+    signupTitle: '创建账户',
+    loginBtn: '登录',
+    signupBtn: '注册',
+    noAccount: '还没有账户？',
+    haveAccount: '已有账户？',
+    authError: '认证错误',
+    passwordMismatch: '密码不匹配',
+    passwordTooShort: '密码至少需要6个字符',
+    loginSuccess: '登录成功',
+    signupSuccess: '注册成功',
+    continueAsGuest: '以游客身份继续',
+    myProfile: '我的资料',
+    analysisHistory: '分析历史',
+    noHistory: '暂无保存的分析结果',
+    historySaved: '分析结果已保存'
   },
   es: {
     title: 'PERSONAL STYLIST',
@@ -905,7 +1022,30 @@ const translations: Record<Language, {
     shareVia: 'Compartir en',
     downloadForSocial: '📷 Guardar Imagen (para Instagram/TikTok)',
     copyLink: '🔗 Copiar Enlace',
-    copiedToClipboard: '¡Copiado al portapapeles!'
+    copiedToClipboard: '¡Copiado al portapapeles!',
+    // Auth
+    login: 'Iniciar Sesión',
+    signup: 'Registrarse',
+    logout: 'Cerrar Sesión',
+    email: 'Correo Electrónico',
+    password: 'Contraseña',
+    confirmPassword: 'Confirmar Contraseña',
+    loginTitle: 'Bienvenido',
+    signupTitle: 'Crear Cuenta',
+    loginBtn: 'Iniciar Sesión',
+    signupBtn: 'Registrarse',
+    noAccount: '¿No tienes una cuenta?',
+    haveAccount: '¿Ya tienes una cuenta?',
+    authError: 'Error de autenticación',
+    passwordMismatch: 'Las contraseñas no coinciden',
+    passwordTooShort: 'La contraseña debe tener al menos 6 caracteres',
+    loginSuccess: 'Sesión iniciada correctamente',
+    signupSuccess: 'Cuenta creada correctamente',
+    continueAsGuest: 'Continuar como Invitado',
+    myProfile: 'Mi Perfil',
+    analysisHistory: 'Historial de Análisis',
+    noHistory: 'No hay resultados de análisis guardados',
+    historySaved: 'Análisis guardado en tu historial'
   }
 }
 
@@ -1230,6 +1370,15 @@ function App() {
   const fileInputRef = useRef<HTMLInputElement>(null)
   const hairPhotoRef = useRef<HTMLInputElement>(null)
   const t = translations[lang]
+
+  // Auth state
+  const { user, signIn, signUp, signOut, updateProfile: updateAuthProfile, profile: authProfile, isSupabaseConfigured } = useAuth()
+  const [authEmail, setAuthEmail] = useState('')
+  const [authPassword, setAuthPassword] = useState('')
+  const [authConfirmPassword, setAuthConfirmPassword] = useState('')
+  const [authError, setAuthError] = useState('')
+  const [isAuthSubmitting, setIsAuthSubmitting] = useState(false)
+  const [authSuccess, setAuthSuccess] = useState('')
 
   // 단위 설정 (영어 사용자는 선택 가능, 기본값: 영어는 imperial, 그 외는 metric)
   const [useMetric, setUseMetric] = useState(() => lang !== 'en')
@@ -1613,6 +1762,14 @@ function App() {
       }
       setReport(analyzeData.report)
 
+      // Save to history if user is logged in (do not await - don't block UI)
+      saveAnalysisToHistory('full', analyzeData.report, null, null, {
+        height: profileData.height,
+        weight: profileData.weight,
+        gender: profileData.gender,
+        language: lang
+      })
+
       setLoadingProgress(100)
       setLoadingStep(lang === 'ko' ? '완료!' : 'Complete!')
       await new Promise(resolve => setTimeout(resolve, 400))
@@ -1780,6 +1937,20 @@ function App() {
 
     setIsGeneratingHair(false)
     setPage('hair-result')
+
+    // Save hair analysis to history (after navigating to results)
+    if (generatedHairImages.length > 0) {
+      saveAnalysisToHistory('hair', null, null, generatedHairImages.map((img, i) => ({
+        id: `hair-${i}`,
+        label: img.style,
+        imageUrl: img.imageUrl
+      })), {
+        occasion: selectedOccasion,
+        vibe: selectedVibe,
+        gender: profile.gender,
+        language: lang
+      })
+    }
   }
 
   // 실제 분석 수행 함수
@@ -1810,6 +1981,14 @@ function App() {
 
       const analyzeData = await analyzeResponse.json()
       setReport(analyzeData.report)
+
+      // Save to history if user is logged in (do not await - don't block UI)
+      saveAnalysisToHistory('full', analyzeData.report, null, null, {
+        height: profile.height,
+        weight: profile.weight,
+        gender: profile.gender,
+        language: lang
+      })
 
       setLoadingProgress(100)
       setLoadingStep(lang === 'ko' ? '완료!' : 'Complete!')
@@ -2245,6 +2424,18 @@ function App() {
     }
 
     setIsGeneratingHair(false)
+
+    // Save hair analysis to history after images are set
+    saveAnalysisToHistory('hair', null, null, generatedHairImages.map((img, i) => ({
+      id: `hair-${i}`,
+      label: img.style,
+      imageUrl: img.imageUrl
+    })), {
+      occasion: selectedOccasion,
+      vibe: selectedVibe,
+      language: lang
+    })
+
     setPage('hair-result')
   }
 
@@ -2483,6 +2674,331 @@ function App() {
     )
   }
 
+  // Auth handlers
+  const handleLogin = async (e: React.FormEvent) => {
+    e.preventDefault()
+    setAuthError('')
+    setAuthSuccess('')
+    setIsAuthSubmitting(true)
+
+    const { error } = await signIn(authEmail, authPassword)
+
+    if (error) {
+      setAuthError(error.message || t.authError)
+    } else {
+      setAuthSuccess(t.loginSuccess)
+      setAuthEmail('')
+      setAuthPassword('')
+      setTimeout(() => {
+        setPage('landing')
+        setAuthSuccess('')
+      }, 1000)
+    }
+    setIsAuthSubmitting(false)
+  }
+
+  const handleSignup = async (e: React.FormEvent) => {
+    e.preventDefault()
+    setAuthError('')
+    setAuthSuccess('')
+
+    if (authPassword.length < 6) {
+      setAuthError(t.passwordTooShort)
+      return
+    }
+
+    if (authPassword !== authConfirmPassword) {
+      setAuthError(t.passwordMismatch)
+      return
+    }
+
+    setIsAuthSubmitting(true)
+    const { error } = await signUp(authEmail, authPassword)
+
+    if (error) {
+      setAuthError(error.message || t.authError)
+    } else {
+      setAuthSuccess(t.signupSuccess)
+      setAuthEmail('')
+      setAuthPassword('')
+      setAuthConfirmPassword('')
+      setTimeout(() => {
+        setPage('landing')
+        setAuthSuccess('')
+      }, 1500)
+    }
+    setIsAuthSubmitting(false)
+  }
+
+  const handleLogout = async () => {
+    await signOut()
+    setPage('landing')
+  }
+
+  // Save analysis to history for logged-in users
+  const saveAnalysisToHistory = async (
+    analysisType: 'full' | 'hair',
+    reportContent: string | null,
+    styleImagesData: { id: string; label: string; imageUrl: string | null }[] | null,
+    hairImagesData: { id: string; label: string; imageUrl: string | null }[] | null,
+    inputData: Record<string, unknown>
+  ) => {
+    if (!user || !supabase) return
+
+    try {
+      const { error } = await supabase.from('analysis_history').insert({
+        user_id: user.id,
+        analysis_type: analysisType,
+        report_content: reportContent,
+        style_images: styleImagesData,
+        hair_images: hairImagesData,
+        input_data: inputData
+      })
+
+      if (error) {
+        console.error('Failed to save analysis history:', error)
+      } else {
+        console.log('Analysis saved to history')
+      }
+
+      // Also update user profile with the latest analysis data
+      if (profile.height || profile.weight || profile.gender) {
+        await updateAuthProfile({
+          height_cm: profile.height ? parseInt(profile.height) : null,
+          weight_kg: profile.weight ? parseInt(profile.weight) : null,
+          gender: profile.gender,
+          preferred_language: lang
+        })
+      }
+    } catch (e) {
+      console.error('Error saving analysis:', e)
+    }
+  }
+
+  // Login Page
+  if (page === 'login') {
+    return (
+      <div className="app-container auth-page">
+        <header className="app-header">
+          <div className="logo" onClick={() => setPage('landing')} style={{ cursor: 'pointer' }}>
+            <div className="logo-icon">
+              <svg viewBox="0 0 48 48" fill="currentColor">
+                <path d="M39.5563 34.1455V13.8546C39.5563 15.708 36.8773 17.3437 32.7927 18.3189C30.2914 18.916 27.263 19.2655 24 19.2655C20.737 19.2655 17.7086 18.916 15.2073 18.3189C11.1227 17.3437 8.44365 15.708 8.44365 13.8546V34.1455C8.44365 35.9988 11.1227 37.6346 15.2073 38.6098C17.7086 39.2069 20.737 39.5564 24 39.5564C27.1288 39.5564 30.2914 39.2069 32.7927 38.6098C36.8773 37.6346 39.5563 35.9988 39.5563 34.1455Z"/>
+              </svg>
+            </div>
+            <span className="logo-text">{t.title}</span>
+          </div>
+        </header>
+
+        <main className="auth-content">
+          <div className="profile-form auth-form">
+            <h2>{t.loginTitle}</h2>
+
+            {authError && <div className="auth-error">{authError}</div>}
+            {authSuccess && <div className="auth-success">{authSuccess}</div>}
+
+            <form onSubmit={handleLogin}>
+              <div className="input-group">
+                <label htmlFor="auth-email">{t.email}</label>
+                <input
+                  id="auth-email"
+                  type="email"
+                  value={authEmail}
+                  onChange={(e) => setAuthEmail(e.target.value)}
+                  required
+                  autoComplete="email"
+                />
+              </div>
+
+              <div className="input-group">
+                <label htmlFor="auth-password">{t.password}</label>
+                <input
+                  id="auth-password"
+                  type="password"
+                  value={authPassword}
+                  onChange={(e) => setAuthPassword(e.target.value)}
+                  required
+                  autoComplete="current-password"
+                />
+              </div>
+
+              <button
+                type="submit"
+                className="btn-gold submit-btn"
+                disabled={isAuthSubmitting}
+              >
+                {isAuthSubmitting ? '...' : t.loginBtn}
+              </button>
+            </form>
+
+            <div className="auth-switch">
+              <span>{t.noAccount}</span>
+              <button onClick={() => { setPage('signup'); setAuthError(''); setAuthSuccess(''); }}>
+                {t.signup}
+              </button>
+            </div>
+
+            <div className="auth-guest">
+              <button onClick={() => setPage('landing')} className="btn-outline-sm">
+                {t.continueAsGuest}
+              </button>
+            </div>
+          </div>
+        </main>
+      </div>
+    )
+  }
+
+  // Signup Page
+  if (page === 'signup') {
+    return (
+      <div className="app-container auth-page">
+        <header className="app-header">
+          <div className="logo" onClick={() => setPage('landing')} style={{ cursor: 'pointer' }}>
+            <div className="logo-icon">
+              <svg viewBox="0 0 48 48" fill="currentColor">
+                <path d="M39.5563 34.1455V13.8546C39.5563 15.708 36.8773 17.3437 32.7927 18.3189C30.2914 18.916 27.263 19.2655 24 19.2655C20.737 19.2655 17.7086 18.916 15.2073 18.3189C11.1227 17.3437 8.44365 15.708 8.44365 13.8546V34.1455C8.44365 35.9988 11.1227 37.6346 15.2073 38.6098C17.7086 39.2069 20.737 39.5564 24 39.5564C27.1288 39.5564 30.2914 39.2069 32.7927 38.6098C36.8773 37.6346 39.5563 35.9988 39.5563 34.1455Z"/>
+              </svg>
+            </div>
+            <span className="logo-text">{t.title}</span>
+          </div>
+        </header>
+
+        <main className="auth-content">
+          <div className="profile-form auth-form">
+            <h2>{t.signupTitle}</h2>
+
+            {authError && <div className="auth-error">{authError}</div>}
+            {authSuccess && <div className="auth-success">{authSuccess}</div>}
+
+            <form onSubmit={handleSignup}>
+              <div className="input-group">
+                <label htmlFor="signup-email">{t.email}</label>
+                <input
+                  id="signup-email"
+                  type="email"
+                  value={authEmail}
+                  onChange={(e) => setAuthEmail(e.target.value)}
+                  required
+                  autoComplete="email"
+                />
+              </div>
+
+              <div className="input-group">
+                <label htmlFor="signup-password">{t.password}</label>
+                <input
+                  id="signup-password"
+                  type="password"
+                  value={authPassword}
+                  onChange={(e) => setAuthPassword(e.target.value)}
+                  required
+                  autoComplete="new-password"
+                  minLength={6}
+                />
+              </div>
+
+              <div className="input-group">
+                <label htmlFor="signup-confirm-password">{t.confirmPassword}</label>
+                <input
+                  id="signup-confirm-password"
+                  type="password"
+                  value={authConfirmPassword}
+                  onChange={(e) => setAuthConfirmPassword(e.target.value)}
+                  required
+                  autoComplete="new-password"
+                />
+              </div>
+
+              <button
+                type="submit"
+                className="btn-gold submit-btn"
+                disabled={isAuthSubmitting}
+              >
+                {isAuthSubmitting ? '...' : t.signupBtn}
+              </button>
+            </form>
+
+            <div className="auth-switch">
+              <span>{t.haveAccount}</span>
+              <button onClick={() => { setPage('login'); setAuthError(''); setAuthSuccess(''); }}>
+                {t.login}
+              </button>
+            </div>
+
+            <div className="auth-guest">
+              <button onClick={() => setPage('landing')} className="btn-outline-sm">
+                {t.continueAsGuest}
+              </button>
+            </div>
+          </div>
+        </main>
+      </div>
+    )
+  }
+
+  // Profile Page
+  if (page === 'profile') {
+    return (
+      <div className="app-container auth-page">
+        <header className="app-header">
+          <div className="logo" onClick={() => setPage('landing')} style={{ cursor: 'pointer' }}>
+            <div className="logo-icon">
+              <svg viewBox="0 0 48 48" fill="currentColor">
+                <path d="M39.5563 34.1455V13.8546C39.5563 15.708 36.8773 17.3437 32.7927 18.3189C30.2914 18.916 27.263 19.2655 24 19.2655C20.737 19.2655 17.7086 18.916 15.2073 18.3189C11.1227 17.3437 8.44365 15.708 8.44365 13.8546V34.1455C8.44365 35.9988 11.1227 37.6346 15.2073 38.6098C17.7086 39.2069 20.737 39.5564 24 39.5564C27.1288 39.5564 30.2914 39.2069 32.7927 38.6098C36.8773 37.6346 39.5563 35.9988 39.5563 34.1455Z"/>
+              </svg>
+            </div>
+            <span className="logo-text">{t.title}</span>
+          </div>
+          <div className="header-actions">
+            <button onClick={handleLogout} className="btn-outline-sm">
+              {t.logout}
+            </button>
+          </div>
+        </header>
+
+        <main className="auth-content">
+          <div className="profile-form">
+            <h2>{t.myProfile}</h2>
+
+            <div className="profile-info">
+              <div className="profile-field">
+                <label>{t.email}</label>
+                <span>{user?.email}</span>
+              </div>
+              {authProfile?.height_cm && (
+                <div className="profile-field">
+                  <label>{t.height}</label>
+                  <span>{authProfile.height_cm} cm</span>
+                </div>
+              )}
+              {authProfile?.weight_kg && (
+                <div className="profile-field">
+                  <label>{t.weight}</label>
+                  <span>{authProfile.weight_kg} kg</span>
+                </div>
+              )}
+              {authProfile?.gender && (
+                <div className="profile-field">
+                  <label>{t.gender}</label>
+                  <span>{authProfile.gender === 'male' ? t.male : authProfile.gender === 'female' ? t.female : t.other}</span>
+                </div>
+              )}
+            </div>
+
+            <div className="profile-section">
+              <h3>{t.analysisHistory}</h3>
+              <p className="no-history">{t.noHistory}</p>
+            </div>
+
+            <button onClick={() => setPage('landing')} className="btn-gold">
+              {t.backToHome}
+            </button>
+          </div>
+        </main>
+      </div>
+    )
+  }
+
   // Landing Page
   if (page === 'landing') {
     return (
@@ -2511,6 +3027,27 @@ function App() {
                 </button>
               ))}
             </div>
+            {isSupabaseConfigured && (
+              user ? (
+                <div className="auth-buttons">
+                  <button onClick={() => setPage('profile')} className="btn-outline-sm user-email">
+                    {user.email?.split('@')[0]}
+                  </button>
+                  <button onClick={handleLogout} className="btn-outline-sm">
+                    {t.logout}
+                  </button>
+                </div>
+              ) : (
+                <div className="auth-buttons">
+                  <button onClick={() => setPage('login')} className="btn-outline-sm">
+                    {t.login}
+                  </button>
+                  <button onClick={() => setPage('signup')} className="btn-primary-sm">
+                    {t.signup}
+                  </button>
+                </div>
+              )
+            )}
             <button className="btn-primary" onClick={() => document.getElementById('features')?.scrollIntoView({ behavior: 'smooth' })}>
               {t.startBtn}
             </button>
