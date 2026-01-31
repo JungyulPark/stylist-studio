@@ -154,24 +154,34 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, [])
 
   const signOut = useCallback(async () => {
-    if (!supabase) return
-
-    try {
-      await supabase.auth.signOut({ scope: 'global' })
-    } catch (e) {
-      console.error('Sign out error:', e)
-    }
-
-    // Clear all Supabase auth data from localStorage
+    // Clear all Supabase auth data from localStorage first
     Object.keys(localStorage).forEach(key => {
-      if (key.startsWith('sb-') || key.includes('supabase')) {
+      if (key.startsWith('sb-') || key.includes('supabase') || key.includes('auth')) {
         localStorage.removeItem(key)
       }
     })
 
+    // Clear sessionStorage too
+    Object.keys(sessionStorage).forEach(key => {
+      if (key.startsWith('sb-') || key.includes('supabase') || key.includes('auth')) {
+        sessionStorage.removeItem(key)
+      }
+    })
+
+    if (supabase) {
+      try {
+        await supabase.auth.signOut({ scope: 'global' })
+      } catch (e) {
+        console.error('Sign out error:', e)
+      }
+    }
+
     setUser(null)
     setSession(null)
     setProfile(null)
+
+    // Force reload to clear all state
+    window.location.href = '/'
   }, [])
 
   const resetPassword = useCallback(async (email: string) => {
