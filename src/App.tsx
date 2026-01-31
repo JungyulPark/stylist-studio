@@ -247,6 +247,8 @@ const translations: Record<Language, {
   loginSuccess: string
   signupSuccess: string
   continueAsGuest: string
+  orContinueWith: string
+  googleLogin: string
   myProfile: string
   analysisHistory: string
   noHistory: string
@@ -406,6 +408,8 @@ const translations: Record<Language, {
     loginSuccess: '로그인되었습니다',
     signupSuccess: '가입이 완료되었습니다',
     continueAsGuest: '게스트로 계속하기',
+    orContinueWith: '또는',
+    googleLogin: 'Google로 계속하기',
     myProfile: '내 프로필',
     analysisHistory: '분석 히스토리',
     noHistory: '저장된 분석 결과가 없습니다',
@@ -565,6 +569,8 @@ const translations: Record<Language, {
     loginSuccess: 'Successfully logged in',
     signupSuccess: 'Account created successfully',
     continueAsGuest: 'Continue as Guest',
+    orContinueWith: 'or',
+    googleLogin: 'Continue with Google',
     myProfile: 'My Profile',
     analysisHistory: 'Analysis History',
     noHistory: 'No saved analysis results',
@@ -724,6 +730,8 @@ const translations: Record<Language, {
     loginSuccess: 'ログインしました',
     signupSuccess: 'アカウントが作成されました',
     continueAsGuest: 'ゲストとして続ける',
+    orContinueWith: 'または',
+    googleLogin: 'Googleで続ける',
     myProfile: 'マイプロフィール',
     analysisHistory: '分析履歴',
     noHistory: '保存された分析結果はありません',
@@ -883,6 +891,8 @@ const translations: Record<Language, {
     loginSuccess: '登录成功',
     signupSuccess: '注册成功',
     continueAsGuest: '以游客身份继续',
+    orContinueWith: '或',
+    googleLogin: '使用Google继续',
     myProfile: '我的资料',
     analysisHistory: '分析历史',
     noHistory: '暂无保存的分析结果',
@@ -1042,6 +1052,8 @@ const translations: Record<Language, {
     loginSuccess: 'Sesión iniciada correctamente',
     signupSuccess: 'Cuenta creada correctamente',
     continueAsGuest: 'Continuar como Invitado',
+    orContinueWith: 'o',
+    googleLogin: 'Continuar con Google',
     myProfile: 'Mi Perfil',
     analysisHistory: 'Historial de Análisis',
     noHistory: 'No hay resultados de análisis guardados',
@@ -1372,7 +1384,7 @@ function App() {
   const t = translations[lang]
 
   // Auth state
-  const { user, signIn, signUp, signOut, updateProfile: updateAuthProfile, profile: authProfile, isSupabaseConfigured } = useAuth()
+  const { user, signIn, signUp, signInWithGoogle, signOut, updateProfile: updateAuthProfile, profile: authProfile, isSupabaseConfigured } = useAuth()
   const [authEmail, setAuthEmail] = useState('')
   const [authPassword, setAuthPassword] = useState('')
   const [authConfirmPassword, setAuthConfirmPassword] = useState('')
@@ -2735,6 +2747,15 @@ function App() {
     setPage('landing')
   }
 
+  const handleGoogleLogin = async () => {
+    setAuthError('')
+    setAuthSuccess('')
+    const { error } = await signInWithGoogle()
+    if (error) {
+      setAuthError(error.message || t.authError)
+    }
+  }
+
   // Save analysis to history for logged-in users
   const saveAnalysisToHistory = async (
     analysisType: 'full' | 'hair',
@@ -2831,6 +2852,24 @@ function App() {
               </button>
             </form>
 
+            <div className="auth-divider">
+              <span>{t.orContinueWith}</span>
+            </div>
+
+            <button
+              type="button"
+              className="btn-google"
+              onClick={handleGoogleLogin}
+            >
+              <svg viewBox="0 0 24 24" width="20" height="20">
+                <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+                <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+                <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
+                <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+              </svg>
+              {t.googleLogin}
+            </button>
+
             <div className="auth-switch">
               <span>{t.noAccount}</span>
               <button onClick={() => { setPage('signup'); setAuthError(''); setAuthSuccess(''); }}>
@@ -2917,6 +2956,24 @@ function App() {
                 {isAuthSubmitting ? '...' : t.signupBtn}
               </button>
             </form>
+
+            <div className="auth-divider">
+              <span>{t.orContinueWith}</span>
+            </div>
+
+            <button
+              type="button"
+              className="btn-google"
+              onClick={handleGoogleLogin}
+            >
+              <svg viewBox="0 0 24 24" width="20" height="20">
+                <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+                <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+                <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
+                <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+              </svg>
+              {t.googleLogin}
+            </button>
 
             <div className="auth-switch">
               <span>{t.haveAccount}</span>
