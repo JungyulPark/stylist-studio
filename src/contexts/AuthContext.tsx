@@ -156,12 +156,22 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const signOut = useCallback(async () => {
     if (!supabase) return
 
-    await supabase.auth.signOut({ scope: 'local' })
+    try {
+      await supabase.auth.signOut({ scope: 'global' })
+    } catch (e) {
+      console.error('Sign out error:', e)
+    }
+
+    // Clear all Supabase auth data from localStorage
+    Object.keys(localStorage).forEach(key => {
+      if (key.startsWith('sb-') || key.includes('supabase')) {
+        localStorage.removeItem(key)
+      }
+    })
+
     setUser(null)
     setSession(null)
     setProfile(null)
-    // Clear any cached auth data
-    localStorage.removeItem('supabase.auth.token')
   }, [])
 
   const resetPassword = useCallback(async (email: string) => {
