@@ -218,15 +218,31 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       const { error } = await supabase.rpc('delete_user')
 
       if (error) {
+        console.error('Delete account RPC error:', error)
         return { error: new Error(error.message) }
       }
+
+      // Clear all storage
+      Object.keys(localStorage).forEach(key => {
+        if (key.startsWith('sb-') || key.includes('supabase') || key.includes('auth')) {
+          localStorage.removeItem(key)
+        }
+      })
+      Object.keys(sessionStorage).forEach(key => {
+        if (key.startsWith('sb-') || key.includes('supabase') || key.includes('auth')) {
+          sessionStorage.removeItem(key)
+        }
+      })
 
       setUser(null)
       setSession(null)
       setProfile(null)
 
+      // Force reload
+      window.location.href = '/'
       return { error: null }
     } catch (e) {
+      console.error('Delete account error:', e)
       return { error: e as Error }
     }
   }, [user])

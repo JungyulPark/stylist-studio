@@ -2911,16 +2911,25 @@ function App() {
   }
 
   const handleDeleteAccount = async () => {
-    if (!window.confirm(t.deleteAccountConfirm)) return
+    const confirmed = window.confirm(t.deleteAccountConfirm)
+    if (!confirmed) return
 
+    setAuthError('')
+    setAuthSuccess('')
     setIsAuthSubmitting(true)
-    const { error } = await deleteAccount()
 
-    if (error) {
-      setAuthError(error.message || t.authError)
-      setIsAuthSubmitting(false)
-    } else {
-      setPage('landing')
+    try {
+      const { error } = await deleteAccount()
+
+      if (error) {
+        console.error('Delete account failed:', error)
+        setAuthError(error.message || t.authError)
+        setIsAuthSubmitting(false)
+      }
+      // If success, deleteAccount will reload the page
+    } catch (e) {
+      console.error('Delete account exception:', e)
+      setAuthError(t.authError)
       setIsAuthSubmitting(false)
     }
   }
