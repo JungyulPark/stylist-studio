@@ -2135,14 +2135,14 @@ function App() {
   const handleHairRecommendation = async () => {
     if (!selectedOccasion || !selectedVibe) return
 
-    // 사진이 있고 결제 안 됐으면 프리뷰 페이지로 이동 (Value Gate)
-    if (hairPhoto && !isPaid) {
+    // 사진이 있으면 항상 프리뷰 페이지로 이동 (Value Gate)
+    if (hairPhoto) {
       setPage('hair-preview')
       return
     }
 
     // 사진 없이 데모 모드로 진행하는 경우 (기존 로직)
-    if (!hairPhoto && !isPaid) {
+    if (!hairPhoto) {
       setIsProcessingPayment(true)
       try {
         // 결제 전 데이터 저장
