@@ -194,20 +194,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
 
     try {
-      // Delete user's analysis history
-      await supabase
-        .from('analysis_history')
-        .delete()
-        .eq('user_id', user.id)
+      // Call RPC function to delete user completely
+      const { error } = await supabase.rpc('delete_user')
 
-      // Delete user's profile
-      await supabase
-        .from('profiles')
-        .delete()
-        .eq('id', user.id)
+      if (error) {
+        return { error: new Error(error.message) }
+      }
 
-      // Sign out the user (account deletion requires admin API)
-      await supabase.auth.signOut({ scope: 'local' })
       setUser(null)
       setSession(null)
       setProfile(null)
