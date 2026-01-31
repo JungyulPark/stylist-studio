@@ -1722,9 +1722,10 @@ function App() {
 
     const occasion = savedData.selectedOccasion || 'daily'
     const vibe = savedData.selectedVibe || 'natural'
+    const hairGender = savedData.gender || 'male'
 
     // 데모 추천 가져오기
-    const demoRecommendations = getHairDemoRecommendations(occasion, vibe, lang)
+    const demoRecommendations = getHairDemoRecommendations(occasion, vibe, lang, hairGender as Gender)
     setHairRecommendations(demoRecommendations)
 
     // 사진으로 AI 이미지 생성
@@ -1961,6 +1962,8 @@ function App() {
     setHairPhoto(null)
     setGeneratedHairImages([])
     setTransformedHairstyles([])
+    setIsFullPaid(false)
+    setIsHairPaid(false)
     setPage('landing')
   }
 
@@ -2211,7 +2214,8 @@ function App() {
     setIsGeneratingHair(true)
 
     // 데모 추천 가져오기
-    const demoRecommendations = getHairDemoRecommendations(selectedOccasion, selectedVibe, lang)
+    const hairGender = profile.gender || 'male'
+    const demoRecommendations = getHairDemoRecommendations(selectedOccasion, selectedVibe, lang, hairGender)
     setHairRecommendations(demoRecommendations)
 
     // 사진이 있으면 AI 이미지 생성 시도
@@ -2224,7 +2228,7 @@ function App() {
             photo: hairPhoto,
             occasion: selectedOccasion,
             vibe: selectedVibe,
-            gender: profile.gender,
+            gender: hairGender,
             styles: demoRecommendations,
             language: lang
           })
@@ -2245,8 +2249,89 @@ function App() {
   }
 
   // 데모용 헤어스타일 추천
-  const getHairDemoRecommendations = (occasion: string, vibe: string, language: string): string[] => {
-    const recommendations: Record<string, Record<string, string[]>> = {
+  const getHairDemoRecommendations = (occasion: string, vibe: string, language: string, gender: Gender): string[] => {
+    // 남성용 스타일
+    const maleRecommendations: Record<string, Record<string, string[]>> = {
+      ko: {
+        'daily-elegant': ['클래식 투블럭', '단정한 사이드파트', '깔끔한 댄디컷', '포마드 스타일', '슬릭백'],
+        'daily-cute': ['소프트 투블럭', '내추럴 가르마', '에어리 숏컷', '레이어드 숏', '플러피 프린지'],
+        'daily-chic': ['언더컷 사이드파트', '텍스쳐드 크롭', '모던 퀴프', '클린 페이드', '슬릭 사이드'],
+        'daily-natural': ['내추럴 숏컷', '자연스러운 투블럭', '에어 펌', '소프트 웨이브', '캐주얼 레이어드'],
+        'daily-trendy': ['멀렛 스타일', '울프컷', '허쉬컷', '커튼 뱅', '텍스쳐드 프린지'],
+        'daily-classic': ['클래식 사이드파트', '올백 스타일', '젠틀맨 컷', '타임리스 크롭', '클래식 테이퍼'],
+        'date-elegant': ['포마드 사이드파트', '슬릭백', '클래식 퀴프', '단정한 레이어드', '엘레강트 웨이브'],
+        'date-cute': ['소프트 뱅', '내추럴 파마', '플러피 숏', '에어리 레이어드', '캐주얼 투블럭'],
+        'date-chic': ['웨트룩 스타일', '샤프 언더컷', '모던 슬릭백', '텍스쳐드 퀴프', '클린 페이드'],
+        'date-natural': ['자연스러운 웨이브', '루즈 스타일', '캐주얼 레이어드', '비치 웨이브', '소프트 컬'],
+        'date-trendy': ['커튼 뱅', '울프 펌', '레이어드 멀렛', 'K-스타일 펌', '텍스쳐드 숏'],
+        'date-classic': ['클래식 포마드', '젠틀맨 슬릭백', '빈티지 사이드파트', '올드스쿨 스타일', '레트로 웨이브'],
+        'interview-elegant': ['깔끔한 사이드파트', '단정한 투블럭', '프로페셔널 크롭', '클린 테이퍼', '비즈니스 스타일'],
+        'interview-cute': ['소프트 레이어드', '내추럴 숏', '깔끔한 가르마', '에어리 크롭', '단정한 프린지'],
+        'interview-chic': ['샤프 사이드파트', '모던 언더컷', '클린 슬릭백', '미니멀 크롭', '프로 페이드'],
+        'interview-natural': ['자연스러운 숏', '소프트 사이드파트', '내추럴 레이어드', '클린 웨이브', '캐주얼 크롭'],
+        'interview-trendy': ['모던 투블럭', '텍스쳐드 사이드파트', '트렌디 크롭', '클린 레이어드', '스마트 스타일'],
+        'interview-classic': ['클래식 비즈니스 컷', '젠틀맨 사이드파트', '포멀 슬릭백', '타임리스 크롭', '클래식 테이퍼'],
+        'party-elegant': ['글램 슬릭백', '볼륨 퀴프', '스타일리시 포마드', '엘레강트 웨이브', '럭셔리 사이드파트'],
+        'party-cute': ['플러피 스타일', '소프트 펌', '캐주얼 웨이브', '에어리 스타일', '내추럴 볼륨'],
+        'party-chic': ['웨트룩 슬릭백', '샤프 언더컷', '모던 퀴프', '텍스쳐드 스타일', '클린 하이페이드'],
+        'party-natural': ['자연스러운 웨이브', '루즈 컬', '비치 스타일', '캐주얼 볼륨', '에어드라이 룩'],
+        'party-trendy': ['울프 스타일', '멀렛 펌', '커튼 뱅', '레이어드 텍스쳐', 'K-스타일'],
+        'party-classic': ['올드스쿨 포마드', '빈티지 슬릭백', '레트로 퀴프', '클래식 웨이브', '젠틀맨 스타일'],
+        'wedding-elegant': ['포멀 사이드파트', '클래식 슬릭백', '우아한 포마드', '엘레강트 퀴프', '웨딩 스타일'],
+        'wedding-cute': ['소프트 스타일', '내추럴 웨이브', '깔끔한 레이어드', '에어리 볼륨', '로맨틱 숏'],
+        'wedding-chic': ['모던 슬릭백', '샤프 사이드파트', '클린 언더컷', '미니멀 스타일', '세련된 크롭'],
+        'wedding-natural': ['자연스러운 스타일', '소프트 웨이브', '캐주얼 사이드파트', '내추럴 볼륨', '에어드라이 룩'],
+        'wedding-trendy': ['트렌디 사이드파트', '모던 텍스쳐', '스타일리시 크롭', '컨템포러리 스타일', '모던 웨이브'],
+        'wedding-classic': ['클래식 젠틀맨', '타임리스 사이드파트', '포멀 포마드', '빈티지 슬릭백', '올드스쿨 웨이브'],
+        'vacation-elegant': ['리조트 스타일', '비치 슬릭백', '썸머 사이드파트', '엘레강트 웨이브', '휴양지 룩'],
+        'vacation-cute': ['비치 웨이브', '캐주얼 숏', '서머 레이어드', '플레이풀 스타일', '선샤인 룩'],
+        'vacation-chic': ['웨트룩 비치', '쿨 슬릭백', '모던 비치 스타일', '클린 숏', '서머 언더컷'],
+        'vacation-natural': ['솔트 스프레이 웨이브', '자연스러운 비치헤어', '에어드라이 스타일', '캐주얼 웨이브', '서퍼 룩'],
+        'vacation-trendy': ['비치 울프', '서머 멀렛', '트렌디 비치', '페스티벌 스타일', '홀리데이 룩'],
+        'vacation-classic': ['클래식 비치 웨이브', '젠틀맨 리조트', '타임리스 서머', '빈티지 비치', '올드스쿨 휴양지'],
+      },
+      en: {
+        'daily-elegant': ['Classic Two-Block', 'Neat Side Part', 'Clean Dandy Cut', 'Pomade Style', 'Slick Back'],
+        'daily-cute': ['Soft Two-Block', 'Natural Part', 'Airy Short Cut', 'Layered Short', 'Fluffy Fringe'],
+        'daily-chic': ['Undercut Side Part', 'Textured Crop', 'Modern Quiff', 'Clean Fade', 'Sleek Side'],
+        'daily-natural': ['Natural Short Cut', 'Casual Two-Block', 'Air Perm', 'Soft Waves', 'Casual Layered'],
+        'daily-trendy': ['Mullet Style', 'Wolf Cut', 'Hush Cut', 'Curtain Bangs', 'Textured Fringe'],
+        'daily-classic': ['Classic Side Part', 'Slick Back Style', 'Gentleman Cut', 'Timeless Crop', 'Classic Taper'],
+        'date-elegant': ['Pomade Side Part', 'Slick Back', 'Classic Quiff', 'Neat Layered', 'Elegant Wave'],
+        'date-cute': ['Soft Bangs', 'Natural Perm', 'Fluffy Short', 'Airy Layered', 'Casual Two-Block'],
+        'date-chic': ['Wet Look Style', 'Sharp Undercut', 'Modern Slick Back', 'Textured Quiff', 'Clean Fade'],
+        'date-natural': ['Natural Waves', 'Loose Style', 'Casual Layered', 'Beach Waves', 'Soft Curls'],
+        'date-trendy': ['Curtain Bangs', 'Wolf Perm', 'Layered Mullet', 'K-Style Perm', 'Textured Short'],
+        'date-classic': ['Classic Pomade', 'Gentleman Slick Back', 'Vintage Side Part', 'Old School Style', 'Retro Wave'],
+        'interview-elegant': ['Clean Side Part', 'Neat Two-Block', 'Professional Crop', 'Clean Taper', 'Business Style'],
+        'interview-cute': ['Soft Layered', 'Natural Short', 'Clean Part', 'Airy Crop', 'Neat Fringe'],
+        'interview-chic': ['Sharp Side Part', 'Modern Undercut', 'Clean Slick Back', 'Minimal Crop', 'Pro Fade'],
+        'interview-natural': ['Natural Short', 'Soft Side Part', 'Natural Layered', 'Clean Wave', 'Casual Crop'],
+        'interview-trendy': ['Modern Two-Block', 'Textured Side Part', 'Trendy Crop', 'Clean Layered', 'Smart Style'],
+        'interview-classic': ['Classic Business Cut', 'Gentleman Side Part', 'Formal Slick Back', 'Timeless Crop', 'Classic Taper'],
+        'party-elegant': ['Glam Slick Back', 'Volume Quiff', 'Stylish Pomade', 'Elegant Wave', 'Luxury Side Part'],
+        'party-cute': ['Fluffy Style', 'Soft Perm', 'Casual Wave', 'Airy Style', 'Natural Volume'],
+        'party-chic': ['Wet Look Slick Back', 'Sharp Undercut', 'Modern Quiff', 'Textured Style', 'Clean High Fade'],
+        'party-natural': ['Natural Waves', 'Loose Curls', 'Beach Style', 'Casual Volume', 'Air Dry Look'],
+        'party-trendy': ['Wolf Style', 'Mullet Perm', 'Curtain Bangs', 'Layered Texture', 'K-Style'],
+        'party-classic': ['Old School Pomade', 'Vintage Slick Back', 'Retro Quiff', 'Classic Wave', 'Gentleman Style'],
+        'wedding-elegant': ['Formal Side Part', 'Classic Slick Back', 'Elegant Pomade', 'Elegant Quiff', 'Wedding Style'],
+        'wedding-cute': ['Soft Style', 'Natural Wave', 'Clean Layered', 'Airy Volume', 'Romantic Short'],
+        'wedding-chic': ['Modern Slick Back', 'Sharp Side Part', 'Clean Undercut', 'Minimal Style', 'Sleek Crop'],
+        'wedding-natural': ['Natural Style', 'Soft Wave', 'Casual Side Part', 'Natural Volume', 'Air Dry Look'],
+        'wedding-trendy': ['Trendy Side Part', 'Modern Texture', 'Stylish Crop', 'Contemporary Style', 'Modern Wave'],
+        'wedding-classic': ['Classic Gentleman', 'Timeless Side Part', 'Formal Pomade', 'Vintage Slick Back', 'Old School Wave'],
+        'vacation-elegant': ['Resort Style', 'Beach Slick Back', 'Summer Side Part', 'Elegant Wave', 'Vacation Look'],
+        'vacation-cute': ['Beach Waves', 'Casual Short', 'Summer Layered', 'Playful Style', 'Sunshine Look'],
+        'vacation-chic': ['Wet Look Beach', 'Cool Slick Back', 'Modern Beach Style', 'Clean Short', 'Summer Undercut'],
+        'vacation-natural': ['Salt Spray Waves', 'Natural Beach Hair', 'Air Dry Style', 'Casual Waves', 'Surfer Look'],
+        'vacation-trendy': ['Beach Wolf', 'Summer Mullet', 'Trendy Beach', 'Festival Style', 'Holiday Look'],
+        'vacation-classic': ['Classic Beach Waves', 'Gentleman Resort', 'Timeless Summer', 'Vintage Beach', 'Old School Vacation'],
+      }
+    }
+
+    // 여성용 스타일
+    const femaleRecommendations: Record<string, Record<string, string[]>> = {
       ko: {
         'daily-elegant': ['클래식 웨이브 롱헤어', '단정한 로우번', '볼륨 레이어드컷', '사이드 스윕 뱅', '엘레강트 하프업'],
         'daily-cute': ['볼륨 단발머리', '리본 포니테일', '부드러운 C컬 단발', '에어리 뱅헤어', '플러피 레이어드'],
@@ -2327,6 +2412,7 @@ function App() {
 
     const key = `${occasion}-${vibe}`
     const langKey = language === 'ko' ? 'ko' : 'en'
+    const recommendations = gender === 'male' ? maleRecommendations : femaleRecommendations
     return recommendations[langKey]?.[key] || recommendations[langKey]?.['daily-natural'] || []
   }
 
