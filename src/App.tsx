@@ -4169,11 +4169,8 @@ function App() {
                   border: '1px solid rgba(212, 175, 55, 0.3)',
                   textAlign: 'center'
                 }}>
-                  <p style={{ margin: '0 0 0.5rem 0', color: '#d4af37', fontWeight: '600' }}>
+                  <p style={{ margin: 0, color: '#d4af37', fontWeight: '600' }}>
                     {t.purchaseRequired}
-                  </p>
-                  <p style={{ margin: 0, fontSize: '0.9rem', opacity: 0.8 }}>
-                    {t.price}
                   </p>
                 </div>
               )}
