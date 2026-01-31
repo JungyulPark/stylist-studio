@@ -308,7 +308,7 @@ const translations: Record<Language, {
     step4Desc: '개인화된 헤어스타일과 패션 코디를 확인하세요',
     getStarted: '시작하기',
     purchaseRequired: '프리미엄 스타일 분석 서비스',
-    purchaseBtn: '결제하고 분석 시작',
+    purchaseBtn: '미리보기 및 분석 시작',
     processingPayment: '결제 처리 중...',
     price: '$4.99',
     hairPrice: '$2.99',
@@ -444,7 +444,7 @@ const translations: Record<Language, {
     step4Desc: 'Get your customized hairstyles and fashion outfits',
     getStarted: 'Get Started',
     purchaseRequired: 'Premium Styling Service',
-    purchaseBtn: 'Purchase & Start Analysis',
+    purchaseBtn: 'Preview & Start Analysis',
     processingPayment: 'Processing payment...',
     price: '$4.99',
     hairPrice: '$2.99',
@@ -580,7 +580,7 @@ const translations: Record<Language, {
     step4Desc: 'カスタマイズされたヘアスタイルとファッションを確認',
     getStarted: '始める',
     purchaseRequired: 'プレミアムスタイリングサービス',
-    purchaseBtn: '購入して分析開始',
+    purchaseBtn: 'プレビュー＆分析開始',
     processingPayment: '支払い処理中...',
     price: '$4.99',
     hairPrice: '$2.99',
@@ -716,7 +716,7 @@ const translations: Record<Language, {
     step4Desc: '查看定制的发型和时尚搭配',
     getStarted: '开始',
     purchaseRequired: '高级造型服务',
-    purchaseBtn: '购买并开始分析',
+    purchaseBtn: '预览并开始分析',
     processingPayment: '支付处理中...',
     price: '$4.99',
     hairPrice: '$2.99',
@@ -852,7 +852,7 @@ const translations: Record<Language, {
     step4Desc: 'Obtén tus peinados y outfits personalizados',
     getStarted: 'Comenzar',
     purchaseRequired: 'Servicio de Estilismo Premium',
-    purchaseBtn: 'Comprar e Iniciar Análisis',
+    purchaseBtn: 'Vista Previa e Iniciar Análisis',
     processingPayment: 'Procesando pago...',
     price: '$4.99',
     hairPrice: '$2.99',
@@ -3919,22 +3919,6 @@ function App() {
                     value={profile.weight}
                     onChange={(e) => setProfile(prev => ({ ...prev, weight: e.target.value }))}
                   />
-                </div>
-              )}
-
-              {/* 결제 안내 */}
-              {!isPaid && (
-                <div className="payment-info" style={{
-                  marginTop: '1.5rem',
-                  padding: '1rem',
-                  background: 'rgba(212, 175, 55, 0.1)',
-                  borderRadius: '12px',
-                  border: '1px solid rgba(212, 175, 55, 0.3)',
-                  textAlign: 'center'
-                }}>
-                  <p style={{ margin: 0, color: '#d4af37', fontWeight: '600' }}>
-                    {t.purchaseRequired}
-                  </p>
                 </div>
               )}
 
