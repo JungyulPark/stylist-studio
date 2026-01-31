@@ -2381,8 +2381,6 @@ function App() {
             <span className="logo-text">{t.title}</span>
           </div>
           <div className="nav-links">
-            <a href="#features">Features</a>
-            <a href="#algorithm">Algorithm</a>
           </div>
           <div className="header-actions">
             <div className="lang-selector">
