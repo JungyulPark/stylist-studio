@@ -2475,7 +2475,6 @@ function App() {
                 <div className="path-glass">
                   <div className="path-header">
                     <span className="path-module">HAIR ONLY</span>
-                    <span className="path-price">$4.99</span>
                   </div>
                   <h3 className="path-title">{t.module1Title}</h3>
                   <p className="path-desc">{t.module1Desc}</p>
@@ -2498,7 +2497,6 @@ function App() {
                   <div className="path-header">
                     <span className="path-module">FULL PACKAGE</span>
                     <span className="path-badge">{t.bestValue}</span>
-                    <span className="path-price best">$9.99</span>
                   </div>
                   <h3 className="path-title">{t.module2Title}</h3>
                   <p className="path-desc">{t.module2Desc}</p>

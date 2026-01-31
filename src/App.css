@@ -1173,6 +1173,7 @@
   border-radius: 14px;
   outline: none;
   background: #fafafa;
+  color: var(--charcoal);
   transition: all 0.3s ease;
 }
 
@@ -2492,9 +2493,9 @@
   }
 
   .input-group input {
-    background: rgba(255, 255, 255, 0.05);
-    border-color: rgba(255, 255, 255, 0.1);
-    color: var(--white);
+    background: #fafafa;
+    border-color: rgba(26, 26, 26, 0.08);
+    color: var(--charcoal);
   }
 
   .input-group input::placeholder {
