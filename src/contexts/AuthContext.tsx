@@ -14,6 +14,9 @@ interface AuthContextType {
   signIn: (email: string, password: string) => Promise<{ error: AuthError | null }>
   signInWithGoogle: () => Promise<{ error: AuthError | null }>
   signOut: () => Promise<void>
+  resetPassword: (email: string) => Promise<{ error: AuthError | null }>
+  updatePassword: (newPassword: string) => Promise<{ error: AuthError | null }>
+  deleteAccount: () => Promise<{ error: Error | null }>
   updateProfile: (updates: Partial<Profile>) => Promise<{ error: Error | null }>
   refreshProfile: () => Promise<void>
 }
@@ -153,11 +156,67 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const signOut = useCallback(async () => {
     if (!supabase) return
 
-    await supabase.auth.signOut()
+    await supabase.auth.signOut({ scope: 'local' })
     setUser(null)
     setSession(null)
     setProfile(null)
+    // Clear any cached auth data
+    localStorage.removeItem('supabase.auth.token')
   }, [])
+
+  const resetPassword = useCallback(async (email: string) => {
+    if (!supabase) {
+      return { error: { message: 'Supabase is not configured' } as AuthError }
+    }
+
+    const { error } = await supabase.auth.resetPasswordForEmail(email, {
+      redirectTo: `${window.location.origin}?reset=true`,
+    })
+
+    return { error }
+  }, [])
+
+  const updatePassword = useCallback(async (newPassword: string) => {
+    if (!supabase) {
+      return { error: { message: 'Supabase is not configured' } as AuthError }
+    }
+
+    const { error } = await supabase.auth.updateUser({
+      password: newPassword,
+    })
+
+    return { error }
+  }, [])
+
+  const deleteAccount = useCallback(async () => {
+    if (!supabase || !user) {
+      return { error: new Error('Not authenticated') }
+    }
+
+    try {
+      // Delete user's analysis history
+      await supabase
+        .from('analysis_history')
+        .delete()
+        .eq('user_id', user.id)
+
+      // Delete user's profile
+      await supabase
+        .from('profiles')
+        .delete()
+        .eq('id', user.id)
+
+      // Sign out the user (account deletion requires admin API)
+      await supabase.auth.signOut({ scope: 'local' })
+      setUser(null)
+      setSession(null)
+      setProfile(null)
+
+      return { error: null }
+    } catch (e) {
+      return { error: e as Error }
+    }
+  }, [user])
 
   const updateProfile = useCallback(async (updates: Partial<Profile>) => {
     if (!supabase || !user) {
@@ -190,6 +249,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     signIn,
     signInWithGoogle,
     signOut,
+    resetPassword,
+    updatePassword,
+    deleteAccount,
     updateProfile,
     refreshProfile,
   }

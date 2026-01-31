@@ -253,6 +253,20 @@ const translations: Record<Language, {
   analysisHistory: string
   noHistory: string
   historySaved: string
+  accountSettings: string
+  resetPassword: string
+  resetPasswordDesc: string
+  resetPasswordBtn: string
+  resetPasswordSent: string
+  deleteAccount: string
+  deleteAccountDesc: string
+  deleteAccountBtn: string
+  deleteAccountConfirm: string
+  newPassword: string
+  confirmNewPassword: string
+  updatePasswordBtn: string
+  passwordUpdated: string
+  cancel: string
 }> = {
   ko: {
     title: 'PERSONAL STYLIST',
@@ -413,7 +427,21 @@ const translations: Record<Language, {
     myProfile: '내 프로필',
     analysisHistory: '분석 히스토리',
     noHistory: '저장된 분석 결과가 없습니다',
-    historySaved: '분석 결과가 저장되었습니다'
+    historySaved: '분석 결과가 저장되었습니다',
+    accountSettings: '계정 설정',
+    resetPassword: '비밀번호 재설정',
+    resetPasswordDesc: '가입하신 이메일로 비밀번호 재설정 링크를 보내드립니다.',
+    resetPasswordBtn: '재설정 링크 보내기',
+    resetPasswordSent: '비밀번호 재설정 링크가 이메일로 발송되었습니다.',
+    deleteAccount: '회원 탈퇴',
+    deleteAccountDesc: '계정을 삭제하면 모든 데이터가 영구적으로 삭제됩니다.',
+    deleteAccountBtn: '계정 삭제',
+    deleteAccountConfirm: '정말 탈퇴하시겠습니까? 이 작업은 되돌릴 수 없습니다.',
+    newPassword: '새 비밀번호',
+    confirmNewPassword: '새 비밀번호 확인',
+    updatePasswordBtn: '비밀번호 변경',
+    passwordUpdated: '비밀번호가 변경되었습니다.',
+    cancel: '취소'
   },
   en: {
     title: 'PERSONAL STYLIST',
@@ -574,7 +602,21 @@ const translations: Record<Language, {
     myProfile: 'My Profile',
     analysisHistory: 'Analysis History',
     noHistory: 'No saved analysis results',
-    historySaved: 'Analysis saved to your history'
+    historySaved: 'Analysis saved to your history',
+    accountSettings: 'Account Settings',
+    resetPassword: 'Reset Password',
+    resetPasswordDesc: 'We will send a password reset link to your email.',
+    resetPasswordBtn: 'Send Reset Link',
+    resetPasswordSent: 'Password reset link has been sent to your email.',
+    deleteAccount: 'Delete Account',
+    deleteAccountDesc: 'Deleting your account will permanently remove all your data.',
+    deleteAccountBtn: 'Delete Account',
+    deleteAccountConfirm: 'Are you sure you want to delete your account? This action cannot be undone.',
+    newPassword: 'New Password',
+    confirmNewPassword: 'Confirm New Password',
+    updatePasswordBtn: 'Update Password',
+    passwordUpdated: 'Password has been updated.',
+    cancel: 'Cancel'
   },
   ja: {
     title: 'PERSONAL STYLIST',
@@ -735,7 +777,21 @@ const translations: Record<Language, {
     myProfile: 'マイプロフィール',
     analysisHistory: '分析履歴',
     noHistory: '保存された分析結果はありません',
-    historySaved: '分析結果が保存されました'
+    historySaved: '分析結果が保存されました',
+    accountSettings: 'アカウント設定',
+    resetPassword: 'パスワードリセット',
+    resetPasswordDesc: 'パスワードリセットリンクをメールでお送りします。',
+    resetPasswordBtn: 'リセットリンクを送信',
+    resetPasswordSent: 'パスワードリセットリンクがメールで送信されました。',
+    deleteAccount: 'アカウント削除',
+    deleteAccountDesc: 'アカウントを削除すると、すべてのデータが永久に削除されます。',
+    deleteAccountBtn: 'アカウントを削除',
+    deleteAccountConfirm: '本当にアカウントを削除しますか？この操作は取り消せません。',
+    newPassword: '新しいパスワード',
+    confirmNewPassword: '新しいパスワードの確認',
+    updatePasswordBtn: 'パスワードを変更',
+    passwordUpdated: 'パスワードが変更されました。',
+    cancel: 'キャンセル'
   },
   zh: {
     title: 'PERSONAL STYLIST',
@@ -896,7 +952,21 @@ const translations: Record<Language, {
     myProfile: '我的资料',
     analysisHistory: '分析历史',
     noHistory: '暂无保存的分析结果',
-    historySaved: '分析结果已保存'
+    historySaved: '分析结果已保存',
+    accountSettings: '账户设置',
+    resetPassword: '重置密码',
+    resetPasswordDesc: '我们将向您的邮箱发送密码重置链接。',
+    resetPasswordBtn: '发送重置链接',
+    resetPasswordSent: '密码重置链接已发送到您的邮箱。',
+    deleteAccount: '删除账户',
+    deleteAccountDesc: '删除账户将永久删除所有数据。',
+    deleteAccountBtn: '删除账户',
+    deleteAccountConfirm: '确定要删除账户吗？此操作无法撤销。',
+    newPassword: '新密码',
+    confirmNewPassword: '确认新密码',
+    updatePasswordBtn: '更新密码',
+    passwordUpdated: '密码已更新。',
+    cancel: '取消'
   },
   es: {
     title: 'PERSONAL STYLIST',
@@ -1057,7 +1127,21 @@ const translations: Record<Language, {
     myProfile: 'Mi Perfil',
     analysisHistory: 'Historial de Análisis',
     noHistory: 'No hay resultados de análisis guardados',
-    historySaved: 'Análisis guardado en tu historial'
+    historySaved: 'Análisis guardado en tu historial',
+    accountSettings: 'Configuración de Cuenta',
+    resetPassword: 'Restablecer Contraseña',
+    resetPasswordDesc: 'Enviaremos un enlace de restablecimiento a tu correo.',
+    resetPasswordBtn: 'Enviar Enlace',
+    resetPasswordSent: 'El enlace de restablecimiento se ha enviado a tu correo.',
+    deleteAccount: 'Eliminar Cuenta',
+    deleteAccountDesc: 'Eliminar tu cuenta borrará permanentemente todos tus datos.',
+    deleteAccountBtn: 'Eliminar Cuenta',
+    deleteAccountConfirm: '¿Estás seguro de que quieres eliminar tu cuenta? Esta acción no se puede deshacer.',
+    newPassword: 'Nueva Contraseña',
+    confirmNewPassword: 'Confirmar Nueva Contraseña',
+    updatePasswordBtn: 'Actualizar Contraseña',
+    passwordUpdated: 'La contraseña ha sido actualizada.',
+    cancel: 'Cancelar'
   }
 }
 
@@ -1384,7 +1468,7 @@ function App() {
   const t = translations[lang]
 
   // Auth state
-  const { user, signIn, signUp, signInWithGoogle, signOut, updateProfile: updateAuthProfile, profile: authProfile, isSupabaseConfigured } = useAuth()
+  const { user, signIn, signUp, signInWithGoogle, signOut, resetPassword, deleteAccount, updateProfile: updateAuthProfile, profile: authProfile, isSupabaseConfigured } = useAuth()
   const [authEmail, setAuthEmail] = useState('')
   const [authPassword, setAuthPassword] = useState('')
   const [authConfirmPassword, setAuthConfirmPassword] = useState('')
@@ -2756,6 +2840,37 @@ function App() {
     }
   }
 
+  const handleResetPassword = async () => {
+    if (!user?.email) return
+    setAuthError('')
+    setAuthSuccess('')
+    setIsAuthSubmitting(true)
+
+    const { error } = await resetPassword(user.email)
+
+    if (error) {
+      setAuthError(error.message || t.authError)
+    } else {
+      setAuthSuccess(t.resetPasswordSent)
+    }
+    setIsAuthSubmitting(false)
+  }
+
+  const handleDeleteAccount = async () => {
+    if (!window.confirm(t.deleteAccountConfirm)) return
+
+    setIsAuthSubmitting(true)
+    const { error } = await deleteAccount()
+
+    if (error) {
+      setAuthError(error.message || t.authError)
+      setIsAuthSubmitting(false)
+    } else {
+      setPage('landing')
+      setIsAuthSubmitting(false)
+    }
+  }
+
   // Save analysis to history for logged-in users
   const saveAnalysisToHistory = async (
     analysisType: 'full' | 'hair',
@@ -2818,6 +2933,24 @@ function App() {
             {authError && <div className="auth-error">{authError}</div>}
             {authSuccess && <div className="auth-success">{authSuccess}</div>}
 
+            <button
+              type="button"
+              className="btn-google"
+              onClick={handleGoogleLogin}
+            >
+              <svg viewBox="0 0 24 24" width="20" height="20">
+                <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+                <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+                <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
+                <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+              </svg>
+              {t.googleLogin}
+            </button>
+
+            <div className="auth-divider">
+              <span>{t.orContinueWith}</span>
+            </div>
+
             <form onSubmit={handleLogin}>
               <div className="input-group">
                 <label htmlFor="auth-email">{t.email}</label>
@@ -2851,24 +2984,6 @@ function App() {
                 {isAuthSubmitting ? '...' : t.loginBtn}
               </button>
             </form>
-
-            <div className="auth-divider">
-              <span>{t.orContinueWith}</span>
-            </div>
-
-            <button
-              type="button"
-              className="btn-google"
-              onClick={handleGoogleLogin}
-            >
-              <svg viewBox="0 0 24 24" width="20" height="20">
-                <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
-                <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
-                <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
-                <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
-              </svg>
-              {t.googleLogin}
-            </button>
 
             <div className="auth-switch">
               <span>{t.noAccount}</span>
@@ -2909,6 +3024,24 @@ function App() {
 
             {authError && <div className="auth-error">{authError}</div>}
             {authSuccess && <div className="auth-success">{authSuccess}</div>}
+
+            <button
+              type="button"
+              className="btn-google"
+              onClick={handleGoogleLogin}
+            >
+              <svg viewBox="0 0 24 24" width="20" height="20">
+                <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+                <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+                <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
+                <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+              </svg>
+              {t.googleLogin}
+            </button>
+
+            <div className="auth-divider">
+              <span>{t.orContinueWith}</span>
+            </div>
 
             <form onSubmit={handleSignup}>
               <div className="input-group">
@@ -2957,24 +3090,6 @@ function App() {
               </button>
             </form>
 
-            <div className="auth-divider">
-              <span>{t.orContinueWith}</span>
-            </div>
-
-            <button
-              type="button"
-              className="btn-google"
-              onClick={handleGoogleLogin}
-            >
-              <svg viewBox="0 0 24 24" width="20" height="20">
-                <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
-                <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
-                <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
-                <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
-              </svg>
-              {t.googleLogin}
-            </button>
-
             <div className="auth-switch">
               <span>{t.haveAccount}</span>
               <button onClick={() => { setPage('login'); setAuthError(''); setAuthSuccess(''); }}>
@@ -3017,6 +3132,9 @@ function App() {
           <div className="profile-form">
             <h2>{t.myProfile}</h2>
 
+            {authError && <div className="auth-error">{authError}</div>}
+            {authSuccess && <div className="auth-success">{authSuccess}</div>}
+
             <div className="profile-info">
               <div className="profile-field">
                 <label>{t.email}</label>
@@ -3045,6 +3163,38 @@ function App() {
             <div className="profile-section">
               <h3>{t.analysisHistory}</h3>
               <p className="no-history">{t.noHistory}</p>
+            </div>
+
+            <div className="profile-section account-settings">
+              <h3>{t.accountSettings}</h3>
+
+              <div className="setting-item">
+                <div className="setting-info">
+                  <strong>{t.resetPassword}</strong>
+                  <p>{t.resetPasswordDesc}</p>
+                </div>
+                <button
+                  onClick={handleResetPassword}
+                  className="btn-outline-sm"
+                  disabled={isAuthSubmitting}
+                >
+                  {t.resetPasswordBtn}
+                </button>
+              </div>
+
+              <div className="setting-item danger">
+                <div className="setting-info">
+                  <strong>{t.deleteAccount}</strong>
+                  <p>{t.deleteAccountDesc}</p>
+                </div>
+                <button
+                  onClick={handleDeleteAccount}
+                  className="btn-danger"
+                  disabled={isAuthSubmitting}
+                >
+                  {t.deleteAccountBtn}
+                </button>
+              </div>
             </div>
 
             <button onClick={() => setPage('landing')} className="btn-gold">
