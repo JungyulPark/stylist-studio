@@ -3269,28 +3269,13 @@ function App() {
             </div>
             <div style={{
               display: 'flex',
-              justifyContent: 'space-between',
+              justifyContent: 'center',
               alignItems: 'center'
             }}>
               <span style={{ color: '#d4af37', fontWeight: '600' }}>
                 {t.previewCompare2}
               </span>
-              <span style={{
-                color: '#d4af37',
-                fontWeight: '700',
-                fontSize: '1.2rem'
-              }}>
-                $4.99
-              </span>
             </div>
-            <p style={{
-              color: 'rgba(255,255,255,0.6)',
-              fontSize: '0.8rem',
-              marginTop: '0.5rem',
-              textAlign: 'center'
-            }}>
-              {t.previewCoffeeNote}
-            </p>
           </div>
 
           {/* CTA Button */}
@@ -3311,7 +3296,7 @@ function App() {
               boxShadow: '0 4px 20px rgba(212, 175, 55, 0.3)'
             }}
           >
-            {isProcessingPayment ? t.processingPayment : `🔓 ${t.hairPreviewUnlock} - $4.99`}
+            {isProcessingPayment ? t.processingPayment : `🔓 ${t.hairPreviewUnlock}`}
           </button>
 
           {/* Back button */}
@@ -3885,29 +3870,14 @@ function App() {
             </div>
             <div style={{
               display: 'flex',
-              justifyContent: 'space-between',
+              justifyContent: 'center',
               alignItems: 'center',
               padding: '0.5rem'
             }}>
               <span style={{ color: '#d4af37', fontWeight: '600' }}>
                 {t.previewCompare2}
               </span>
-              <span style={{
-                color: '#d4af37',
-                fontWeight: '700',
-                fontSize: '1.3rem'
-              }}>
-                $9.99
-              </span>
             </div>
-            <p style={{
-              color: 'rgba(255,255,255,0.7)',
-              fontSize: '0.85rem',
-              marginTop: '0.75rem',
-              textAlign: 'center'
-            }}>
-              {t.previewCoffeeNote}
-            </p>
           </div>
 
           {/* CTA Button */}
@@ -3929,7 +3899,7 @@ function App() {
               boxShadow: '0 4px 20px rgba(212, 175, 55, 0.3)'
             }}
           >
-            {isProcessingPayment ? t.processingPayment : `🔓 ${t.previewUnlock} - $9.99`}
+            {isProcessingPayment ? t.processingPayment : `🔓 ${t.previewUnlock}`}
           </button>
 
           {/* Back button */}
@@ -4049,7 +4019,7 @@ function App() {
                     alignItems: 'center',
                     justifyContent: 'center',
                     gap: '0.5rem',
-                    background: 'rgba(255,255,255,0.05)',
+                    background: 'rgba(26, 26, 26, 0.05)',
                     borderRadius: '8px',
                     padding: '0.5rem'
                   }}>
@@ -4061,7 +4031,7 @@ function App() {
                         borderRadius: '6px',
                         border: 'none',
                         background: !useMetric ? 'rgba(212, 175, 55, 0.3)' : 'transparent',
-                        color: !useMetric ? '#d4af37' : 'rgba(255,255,255,0.6)',
+                        color: !useMetric ? '#d4af37' : 'rgba(26, 26, 26, 0.6)',
                         cursor: 'pointer',
                         fontSize: '0.85rem',
                         fontWeight: !useMetric ? '600' : '400',
@@ -4070,7 +4040,7 @@ function App() {
                     >
                       ft / lbs
                     </button>
-                    <span style={{ color: 'rgba(255,255,255,0.3)' }}>|</span>
+                    <span style={{ color: 'rgba(26, 26, 26, 0.3)' }}>|</span>
                     <button
                       type="button"
                       onClick={() => setUseMetric(true)}
@@ -4079,7 +4049,7 @@ function App() {
                         borderRadius: '6px',
                         border: 'none',
                         background: useMetric ? 'rgba(212, 175, 55, 0.3)' : 'transparent',
-                        color: useMetric ? '#d4af37' : 'rgba(255,255,255,0.6)',
+                        color: useMetric ? '#d4af37' : 'rgba(26, 26, 26, 0.6)',
                         cursor: 'pointer',
                         fontSize: '0.85rem',
                         fontWeight: useMetric ? '600' : '400',
