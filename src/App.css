@@ -3422,7 +3422,18 @@
 
 @media (max-width: 640px) {
   .auth-buttons {
-    display: none;
+    display: flex;
+    gap: 0.25rem;
+  }
+
+  .auth-buttons .btn-outline-sm,
+  .auth-buttons .btn-primary-sm {
+    padding: 0.4rem 0.6rem;
+    font-size: 0.75rem;
+  }
+
+  .auth-buttons .user-email {
+    max-width: 80px;
   }
 
   .auth-content {
