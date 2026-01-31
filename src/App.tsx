@@ -2835,9 +2835,20 @@ function App() {
     setIsAuthSubmitting(false)
   }
 
-  const handleLogout = async () => {
-    await signOut()
-    setPage('landing')
+  const handleLogout = () => {
+    // Clear all storage directly
+    Object.keys(localStorage).forEach(key => {
+      if (key.startsWith('sb-') || key.includes('supabase') || key.includes('auth')) {
+        localStorage.removeItem(key)
+      }
+    })
+    Object.keys(sessionStorage).forEach(key => {
+      if (key.startsWith('sb-') || key.includes('supabase') || key.includes('auth')) {
+        sessionStorage.removeItem(key)
+      }
+    })
+    // Force reload
+    window.location.href = '/'
   }
 
   const handleGoogleLogin = async () => {
@@ -2910,28 +2921,26 @@ function App() {
     setIsAuthSubmitting(false)
   }
 
-  const handleDeleteAccount = async () => {
-    const confirmed = window.confirm(t.deleteAccountConfirm)
-    if (!confirmed) return
+  const handleDeleteAccount = () => {
+    if (!window.confirm(t.deleteAccountConfirm)) return
 
-    setAuthError('')
-    setAuthSuccess('')
-    setIsAuthSubmitting(true)
-
-    try {
-      const { error } = await deleteAccount()
-
+    // Call delete and handle result
+    deleteAccount().then(({ error }) => {
       if (error) {
-        console.error('Delete account failed:', error)
-        setAuthError(error.message || t.authError)
-        setIsAuthSubmitting(false)
+        alert(error.message || t.authError)
+      } else {
+        // Clear storage and reload
+        Object.keys(localStorage).forEach(key => {
+          if (key.startsWith('sb-') || key.includes('supabase') || key.includes('auth')) {
+            localStorage.removeItem(key)
+          }
+        })
+        window.location.href = '/'
       }
-      // If success, deleteAccount will reload the page
-    } catch (e) {
-      console.error('Delete account exception:', e)
-      setAuthError(t.authError)
-      setIsAuthSubmitting(false)
-    }
+    }).catch((e) => {
+      alert(t.authError)
+      console.error(e)
+    })
   }
 
   // Save analysis to history for logged-in users
