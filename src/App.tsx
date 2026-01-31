@@ -1474,7 +1474,7 @@ function App() {
   const t = translations[lang]
 
   // Auth state
-  const { user, signIn, signUp, signInWithGoogle, signOut, resetPassword, updatePassword, deleteAccount, updateProfile: updateAuthProfile, profile: authProfile, isSupabaseConfigured } = useAuth()
+  const { user, signIn, signUp, signInWithGoogle, resetPassword, updatePassword, deleteAccount, updateProfile: updateAuthProfile, profile: authProfile, isSupabaseConfigured } = useAuth()
   const [newPassword, setNewPassword] = useState('')
   const [confirmNewPassword, setConfirmNewPassword] = useState('')
   const [authEmail, setAuthEmail] = useState('')
