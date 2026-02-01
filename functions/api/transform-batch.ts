@@ -38,10 +38,10 @@ const fashionStyles: Record<string, StyleOption[]> = {
     { id: 'luxury', ko: '럭셔리', en: 'Luxury', prompt: 'designer luxury outfit, high-end fashion, premium' }
   ],
   female: [
-    { id: 'business', ko: '비즈니스', en: 'Business', prompt: 'tailored blazer, pencil skirt, professional elegant' },
-    { id: 'casual', ko: '캐주얼', en: 'Casual', prompt: 'cozy sweater, comfortable jeans, casual chic' },
-    { id: 'elegant', ko: '엘레강스', en: 'Elegant', prompt: 'elegant midi dress, sophisticated feminine' },
-    { id: 'luxury', ko: '럭셔리', en: 'Luxury', prompt: 'designer luxury outfit, high fashion, premium' }
+    { id: 'feminine', ko: '페미닌', en: 'Feminine', prompt: 'soft feminine blouse or knit top in pastel colors with elegant skirt or dress pants, warm and approachable feminine style - NO blazers or masculine suits' },
+    { id: 'casual', ko: '캐주얼', en: 'Casual', prompt: 'cozy cardigan or soft sweater with comfortable jeans, cute and relaxed feminine casual style' },
+    { id: 'elegant', ko: '엘레강스', en: 'Elegant', prompt: 'beautiful flowy dress or elegant blouse with skirt in romantic colors, graceful and sophisticated feminine elegance' },
+    { id: 'lovely', ko: '러블리', en: 'Lovely', prompt: 'pretty dress or cute top with skirt in soft pink, cream or floral patterns, charming and lovely feminine style' }
   ]
 }
 
@@ -66,8 +66,16 @@ async function transformWithGemini(
       : 'This is a MAN. The hairstyle should suit a man naturally. Perms, soft waves, textured styles are fine. Just avoid overly feminine or women\'s hairstyles.'
 
     const genderGuideFashion = gender === 'female'
-      ? 'This is a WOMAN. The outfit MUST be feminine and designed for women. Use dresses, skirts, blouses, or feminine pants - NOT men\'s clothing.'
+      ? 'This is a WOMAN. The outfit MUST be soft and feminine - use dresses, blouses, cardigans, skirts in soft/pastel colors. NO masculine suits, NO blazers, NO formal business wear.'
       : 'This is a MAN. The outfit MUST be masculine and designed for men. Use suits, shirts, masculine jackets, pants - NOT women\'s clothing.'
+
+    const beautyRetouch = gender === 'female'
+      ? `BEAUTY ENHANCEMENT for the face:
+- Apply soft, natural skin smoothing (reduce wrinkles and blemishes subtly)
+- Add gentle soft-focus glow effect on the face
+- Even out skin tone with warm, healthy glow
+- Keep the face looking NATURAL - not overly edited`
+      : ''
 
     const editPrompt = type === 'hairstyle'
       ? `EDIT this photo - ONLY change the HAIRSTYLE to: ${style.prompt}
@@ -94,6 +102,8 @@ Generate the edited photo.`
 
 CRITICAL: ${genderGuideFashion}
 
+${beautyRetouch}
+
 INPAINTING RULES - THIS IS AN INPAINTING TASK:
 1. ONLY replace the clothing/fabric within the EXISTING body silhouette
 2. DO NOT generate a new person or body - use the EXACT existing body outline
@@ -106,8 +116,8 @@ ABSOLUTE REQUIREMENTS - VIOLATION IS FAILURE:
 2. NEVER change aspect ratio - if input is portrait, output is portrait
 3. Face position, size, and features MUST be PIXEL-PERFECT identical
 4. If this is a FULL BODY shot, keep the ENTIRE body visible from head to toe
-5. Hairstyle, hair color, skin tone - ZERO changes allowed
-6. Background, lighting, pose - ZERO changes allowed
+5. Hairstyle, hair color, skin tone base - ZERO changes allowed
+6. Background and pose - ZERO changes allowed
 7. Output resolution MUST match input resolution exactly
 8. Legs must be BEHIND/INSIDE pants or skirt - NEVER on top of clothing
 9. Arms must be THROUGH sleeves - NEVER floating above clothes

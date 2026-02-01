@@ -26,7 +26,7 @@ const styleScenarios: StyleScenario[] = [
     labelZh: '最佳搭配',
     labelEs: 'Mejor Combinación',
     promptMale: 'clean minimalist everyday outfit for a man, simple solid colors, basic wardrobe essentials like white tee and well-fitted jeans or chinos, understated and versatile masculine style',
-    promptFemale: 'clean minimalist everyday outfit for a woman, simple solid colors, basic wardrobe essentials like fitted blouse and well-fitted jeans or elegant trousers, understated feminine style'
+    promptFemale: 'soft feminine everyday outfit for a woman, pretty blouse or knit top in soft colors (pink, cream, lavender), comfortable pants or flowy skirt, gentle and approachable feminine style'
   },
   {
     id: 'interview',
@@ -36,7 +36,7 @@ const styleScenarios: StyleScenario[] = [
     labelZh: '面试装',
     labelEs: 'Entrevista',
     promptMale: 'professional interview outfit for a man, business formal navy or charcoal suit with white dress shirt and tie, confident masculine look',
-    promptFemale: 'professional interview outfit for a woman, elegant blazer with blouse and pencil skirt or tailored trousers, confident feminine business attire'
+    promptFemale: 'elegant professional outfit for a woman, soft feminine blouse with cardigan or light jacket in pastel or neutral colors, elegant skirt or dress pants, polished but warm and approachable look - NOT a masculine suit'
   },
   {
     id: 'date',
@@ -46,7 +46,7 @@ const styleScenarios: StyleScenario[] = [
     labelZh: '约会装',
     labelEs: 'Cita',
     promptMale: 'romantic evening date outfit for a man, stylish blazer or leather jacket, dark sophisticated colors, charming and attractive masculine look for dinner date',
-    promptFemale: 'romantic evening date outfit for a woman, elegant dress or stylish blouse with skirt, feminine and attractive look with sophisticated colors for dinner date'
+    promptFemale: 'romantic feminine date outfit for a woman, beautiful flowy dress or elegant blouse with skirt in romantic colors (rose, burgundy, soft pink), delicate and charming feminine look for dinner date'
   },
   {
     id: 'luxury',
@@ -56,7 +56,7 @@ const styleScenarios: StyleScenario[] = [
     labelZh: '奢华',
     labelEs: 'Lujo',
     promptMale: 'high-end luxury designer fashion for a man, premium quality tailored suit or designer casual wear, sophisticated masculine elegance',
-    promptFemale: 'high-end luxury designer fashion for a woman, premium quality elegant dress or designer outfit, sophisticated feminine elegance'
+    promptFemale: 'high-end luxury feminine fashion for a woman, elegant designer dress or premium silk blouse with beautiful skirt, luxurious feminine elegance with soft textures and graceful silhouette'
   },
   {
     id: 'casual',
@@ -66,7 +66,7 @@ const styleScenarios: StyleScenario[] = [
     labelZh: '休闲',
     labelEs: 'Casual',
     promptMale: 'relaxed casual outfit for a man, comfortable t-shirt or hoodie with jeans, sneakers, laid-back weekend masculine style',
-    promptFemale: 'relaxed casual outfit for a woman, comfortable sweater or cardigan with jeans or casual skirt, sneakers or flats, laid-back weekend feminine style'
+    promptFemale: 'cozy feminine casual outfit for a woman, soft sweater or cute cardigan with comfortable jeans or casual dress, relaxed but pretty weekend feminine style'
   },
   {
     id: 'daily',
@@ -76,7 +76,7 @@ const styleScenarios: StyleScenario[] = [
     labelZh: '日常',
     labelEs: 'Diario',
     promptMale: 'everyday practical outfit for a man, simple and neat casual wear, comfortable for daily activities, effortless masculine style',
-    promptFemale: 'everyday practical outfit for a woman, simple and neat casual wear, comfortable for daily activities, effortless feminine style'
+    promptFemale: 'everyday pretty outfit for a woman, comfortable yet feminine daily wear like soft knit top or blouse with easy pants or skirt, effortless feminine charm'
   }
 ]
 
@@ -106,9 +106,23 @@ async function editPhotoWithGemini(
     const stylePrompt = gender === 'female' ? scenario.promptFemale : scenario.promptMale
     const genderWord = gender === 'female' ? 'woman' : 'man'
 
+    const beautyRetouch = gender === 'female'
+      ? `BEAUTY ENHANCEMENT for the face:
+- Apply soft, natural skin smoothing (reduce wrinkles and blemishes subtly)
+- Add gentle soft-focus glow effect on the face
+- Even out skin tone with warm, healthy glow
+- Enhance with soft studio lighting effect
+- Keep the face looking NATURAL - not overly edited`
+      : `SUBTLE ENHANCEMENT:
+- Apply minimal natural skin smoothing
+- Keep the face looking natural and authentic`
+
     const editPrompt = `EDIT this photo - ONLY change the OUTFIT to: ${stylePrompt}
 
 CRITICAL: This is a ${genderWord}. The outfit MUST be appropriate for a ${genderWord}.
+${gender === 'female' ? 'For women: Use soft, feminine clothing - NO masculine suits or blazers. Prefer dresses, blouses, cardigans, skirts in soft colors.' : ''}
+
+${beautyRetouch}
 
 INPAINTING RULES - THIS IS AN INPAINTING TASK:
 1. ONLY replace the clothing/fabric within the EXISTING body silhouette
@@ -122,8 +136,8 @@ ABSOLUTE REQUIREMENTS - VIOLATION IS FAILURE:
 2. NEVER change aspect ratio - if input is portrait, output is portrait
 3. Face position, size, and features MUST be PIXEL-PERFECT identical
 4. If this is a FULL BODY shot, keep the ENTIRE body visible from head to toe
-5. Hairstyle, hair color, skin tone - ZERO changes allowed
-6. Background, lighting, pose - ZERO changes allowed
+5. Hairstyle, hair color, skin tone base - ZERO changes allowed
+6. Background and pose - ZERO changes allowed
 7. Output resolution MUST match input resolution exactly
 8. Legs must be BEHIND/INSIDE pants or skirt - NEVER on top of clothing
 9. Arms must be THROUGH sleeves - NEVER floating above clothes
