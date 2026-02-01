@@ -1908,6 +1908,10 @@ function App() {
 
   // 결제 후 분석 수행 (프로필 데이터를 직접 받음)
   const startAnalysisAfterPayment = async (profileData: typeof profile, paymentCheckoutId?: string | null) => {
+    // 결제 1회 사용 제한: 분석 시작 시 결제 상태 제거
+    localStorage.removeItem('paidCustomer')
+    setIsFullPaid(false)
+
     setError('')
     setStyleImages([])
     setLoadingProgress(0)
@@ -2055,6 +2059,10 @@ function App() {
   const startHairGenerationAfterPayment = async (savedData: {
     hairPhoto?: string; selectedOccasion?: string; selectedVibe?: string; gender?: Gender
   }, paymentCheckoutId?: string | null) => {
+    // 결제 1회 사용 제한: 분석 시작 시 결제 상태 제거
+    localStorage.removeItem('paidCustomer')
+    setIsHairPaid(false)
+
     setIsGeneratingHair(true)
 
     const activeCheckoutId = paymentCheckoutId || checkoutId || localStorage.getItem('lastCheckoutId')
