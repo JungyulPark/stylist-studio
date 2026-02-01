@@ -119,34 +119,42 @@ async function editPhotoWithGemini(
 - Even out skin tone slightly for a clean, fresh look
 - Keep the face looking NATURAL and masculine - not overly edited`
 
-    const editPrompt = `EDIT this photo - ONLY change the OUTFIT to: ${stylePrompt}
+    const editPrompt = `EDIT this photo - ONLY change the OUTFIT of the MAIN PERSON to: ${stylePrompt}
 
 CRITICAL: This is a ${genderWord}. The outfit MUST be appropriate for a ${genderWord}.
 ${gender === 'female' ? 'For women: Use soft, feminine clothing - NO masculine suits or blazers. Prefer dresses, blouses, cardigans, skirts in soft colors.' : ''}
 
 ${beautyRetouch}
 
+FOCUS ON MAIN SUBJECT ONLY:
+- Only edit the MAIN person in the center/foreground of the photo
+- If there are OTHER PEOPLE in the background, LEAVE THEM COMPLETELY UNCHANGED
+- Do NOT modify, remove, or add any other people
+- Keep all background elements exactly as they are
+
 INPAINTING RULES - THIS IS AN INPAINTING TASK:
-1. ONLY replace the clothing/fabric within the EXISTING body silhouette
+1. ONLY replace the clothing/fabric within the MAIN PERSON's body silhouette
 2. DO NOT generate a new person or body - use the EXACT existing body outline
 3. The new clothes must fit WITHIN the original body boundaries
 4. Body parts (arms, legs, torso) stay in EXACT same position
 5. Clothing layers: body underneath, clothes on top - NEVER overlap incorrectly
+6. DO NOT extend the image or add new body parts that weren't visible
 
 ABSOLUTE REQUIREMENTS - VIOLATION IS FAILURE:
 1. NEVER CROP OR ZOOM - output must have IDENTICAL framing as input
 2. NEVER change aspect ratio - if input is portrait, output is portrait
 3. Face position, size, and features MUST be PIXEL-PERFECT identical
-4. If this is a FULL BODY shot, keep the ENTIRE body visible from head to toe
+4. Keep EXACTLY what is visible in the original - do not extend or add content
 5. Hairstyle, hair color, skin tone base - ZERO changes allowed
-6. Background and pose - ZERO changes allowed
+6. Background and OTHER PEOPLE - ZERO changes allowed
 7. Output resolution MUST match input resolution exactly
 8. Legs must be BEHIND/INSIDE pants or skirt - NEVER on top of clothing
 9. Arms must be THROUGH sleeves - NEVER floating above clothes
 
-This is a clothing REPLACEMENT task, not image generation.
+This is a clothing REPLACEMENT task for the MAIN PERSON only.
 Keep the person's HEAD and FACE at the EXACT same position.
 The clothes should naturally fit the existing body shape.
+DO NOT generate full body if original only shows partial body.
 
 Generate the edited photo with IDENTICAL composition to the input.`
 

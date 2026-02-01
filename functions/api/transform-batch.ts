@@ -102,33 +102,41 @@ ONLY modify the hair shape and style, keeping it natural and realistic.
 Also apply subtle beauty retouching: smooth clear skin, even skin tone, soft professional studio lighting.
 
 Generate the edited photo.`
-      : `EDIT this photo - ONLY change the OUTFIT to: ${style.prompt}
+      : `EDIT this photo - ONLY change the OUTFIT of the MAIN PERSON to: ${style.prompt}
 
 CRITICAL: ${genderGuideFashion}
 
 ${beautyRetouch}
 
+FOCUS ON MAIN SUBJECT ONLY:
+- Only edit the MAIN person in the center/foreground of the photo
+- If there are OTHER PEOPLE in the background, LEAVE THEM COMPLETELY UNCHANGED
+- Do NOT modify, remove, or add any other people
+- Keep all background elements exactly as they are
+
 INPAINTING RULES - THIS IS AN INPAINTING TASK:
-1. ONLY replace the clothing/fabric within the EXISTING body silhouette
+1. ONLY replace the clothing/fabric within the MAIN PERSON's body silhouette
 2. DO NOT generate a new person or body - use the EXACT existing body outline
 3. The new clothes must fit WITHIN the original body boundaries
 4. Body parts (arms, legs, torso) stay in EXACT same position
 5. Clothing layers: body underneath, clothes on top - NEVER overlap incorrectly
+6. DO NOT extend the image or add new body parts that weren't visible
 
 ABSOLUTE REQUIREMENTS - VIOLATION IS FAILURE:
 1. NEVER CROP OR ZOOM - output must have IDENTICAL framing as input
 2. NEVER change aspect ratio - if input is portrait, output is portrait
 3. Face position, size, and features MUST be PIXEL-PERFECT identical
-4. If this is a FULL BODY shot, keep the ENTIRE body visible from head to toe
+4. Keep EXACTLY what is visible in the original - do not extend or add content
 5. Hairstyle, hair color, skin tone base - ZERO changes allowed
-6. Background and pose - ZERO changes allowed
+6. Background and OTHER PEOPLE - ZERO changes allowed
 7. Output resolution MUST match input resolution exactly
 8. Legs must be BEHIND/INSIDE pants or skirt - NEVER on top of clothing
 9. Arms must be THROUGH sleeves - NEVER floating above clothes
 
-This is a clothing REPLACEMENT task for a ${genderWord}, not image generation.
+This is a clothing REPLACEMENT task for the MAIN ${genderWord} only.
 Keep the person's HEAD and FACE at the EXACT same position.
 The ${genderWord}'s clothes should naturally fit the existing body shape.
+DO NOT generate full body if original only shows partial body.
 
 Generate the edited photo with IDENTICAL composition to the input.`
 
