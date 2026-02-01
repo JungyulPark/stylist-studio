@@ -10,6 +10,7 @@ interface Env {
 async function generateFashionImageWithGemini(
   photo: string,
   styleName: string,
+  gender: string,
   apiKey: string
 ): Promise<{ style: string; imageUrl: string | null }> {
   try {
@@ -21,7 +22,21 @@ async function generateFashionImageWithGemini(
     const mimeType = `image/${base64Match[1]}`
     const base64Data = base64Match[2]
 
+    const genderWord = gender === 'female' ? 'woman' : 'man'
+    const genderGuide = gender === 'female'
+      ? 'This is a WOMAN. The outfit MUST be feminine and designed for women.'
+      : 'This is a MAN. The outfit MUST be masculine and designed for men.'
+
     const editPrompt = `EDIT this photo - ONLY change the OUTFIT to match the style: ${styleName}
+
+CRITICAL: ${genderGuide}
+
+INPAINTING RULES - THIS IS AN INPAINTING TASK:
+1. ONLY replace the clothing/fabric within the EXISTING body silhouette
+2. DO NOT generate a new person or body - use the EXACT existing body outline
+3. The new clothes must fit WITHIN the original body boundaries
+4. Body parts (arms, legs, torso) stay in EXACT same position
+5. Clothing layers: body underneath, clothes on top - NEVER overlap incorrectly
 
 CRITICAL RULES - MUST FOLLOW:
 1. DO NOT CROP the image - keep EXACT same framing and composition
@@ -30,9 +45,12 @@ CRITICAL RULES - MUST FOLLOW:
 4. Body proportions and pose MUST stay identical
 5. Background MUST stay the same
 6. Output image MUST have same dimensions as input
+7. Legs must be BEHIND/INSIDE pants or skirt - NEVER on top of clothing
+8. Arms must be THROUGH sleeves - NEVER floating above clothes
 
-ONLY change the clothing to "${styleName}" style. Nothing else.
+ONLY change the clothing to "${styleName}" style appropriate for a ${genderWord}. Nothing else.
 Keep the person's face and head FULLY VISIBLE in the frame.
+This is a clothing REPLACEMENT task, not image generation.
 
 Generate the edited photo maintaining the original composition.`
 
@@ -117,7 +135,7 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
       return createValidationErrorResponse(validation.errors!, corsHeaders)
     }
 
-    const { photo, styles } = validation.data!
+    const { photo, styles, gender } = validation.data!
 
     const geminiKey = context.env.GEMINI_API_KEY
 
@@ -126,10 +144,10 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
       return errors.configError(corsHeaders)
     }
 
-    console.log(`[API Fashion] Generating ${styles.length} fashion styles with Gemini`)
+    console.log(`[API Fashion] Generating ${styles.length} fashion styles with Gemini for ${gender}`)
 
     const images = await Promise.all(
-      styles.map(styleName => generateFashionImageWithGemini(photo, styleName, geminiKey))
+      styles.map(styleName => generateFashionImageWithGemini(photo, styleName, gender, geminiKey))
     )
 
     const successCount = images.filter(r => r.imageUrl).length

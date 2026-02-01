@@ -23,7 +23,10 @@ async function generateHairImageWithGemini(
     const base64Data = base64Match[2]
 
     const genderGuide = gender === 'female'
-      ? 'This is a WOMAN. Apply a feminine, elegant hairstyle that suits women. Make it look natural and attractive for a woman.'
+      ? `This is a WOMAN. Apply a feminine, elegant hairstyle that suits women. Make it look natural and attractive for a woman.
+- Keep it classic and natural - NO extreme or avant-garde styles
+- NO hair accessories (clips, pins, ribbons, bows, headbands, butterfly clips, flower clips)
+- Style must be practical and wearable for everyday life`
       : `This is a MAN. STRICT REQUIREMENTS for men's hair:
 - Hair length must be SHORT to MEDIUM (above shoulders, typically ear-length or shorter)
 - NO long flowing hair, NO hair past the shoulders
@@ -40,7 +43,11 @@ CRITICAL REQUIREMENTS:
 - The person's FACE must remain EXACTLY identical (same eyes, nose, mouth, face shape)
 - Skin tone must stay the same
 - Expression and pose must not change
-- Only the HAIR should be modified to "${styleName}" style
+- Only the HAIR SHAPE/STYLE should be modified to "${styleName}" style
+- KEEP the ORIGINAL natural hair color - do NOT change hair color
+- NO hair accessories of any kind (no clips, pins, ribbons, flowers, bows, headbands)
+- NO unnatural or fantasy hair colors
+- Keep the hairstyle natural, classic and wearable
 
 Also apply subtle beauty retouching: smooth clear skin, even skin tone, soft professional studio lighting.
 
@@ -138,17 +145,8 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
 
     console.log(`[API Hair] Generating ${styles.length} hairstyles with Gemini`)
 
-    // Hair color variations for last 2 styles
-    const hairColors = ['with warm chestnut brown hair color', 'with cool ash brown hair color']
-
     const images = await Promise.all(
-      styles.map((styleName, index) => {
-        // Add hair color variation to last 2 styles (index 3 and 4)
-        const styleWithColor = index >= 3 && index < 5
-          ? `${styleName} ${hairColors[index - 3]}`
-          : styleName
-        return generateHairImageWithGemini(photo, styleWithColor, gender || 'male', geminiKey)
-      })
+      styles.map(styleName => generateHairImageWithGemini(photo, styleName, gender || 'male', geminiKey))
     )
 
     const successCount = images.filter(r => r.imageUrl).length

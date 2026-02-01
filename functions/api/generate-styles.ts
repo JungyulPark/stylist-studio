@@ -13,7 +13,8 @@ interface StyleScenario {
   labelJa: string
   labelZh: string
   labelEs: string
-  prompt: string
+  promptMale: string
+  promptFemale: string
 }
 
 const styleScenarios: StyleScenario[] = [
@@ -24,7 +25,8 @@ const styleScenarios: StyleScenario[] = [
     labelJa: 'ベストマッチ',
     labelZh: '最佳搭配',
     labelEs: 'Mejor Combinación',
-    prompt: 'clean minimalist everyday outfit, simple solid colors, basic wardrobe essentials like white tee and well-fitted jeans or chinos, understated and versatile'
+    promptMale: 'clean minimalist everyday outfit for a man, simple solid colors, basic wardrobe essentials like white tee and well-fitted jeans or chinos, understated and versatile masculine style',
+    promptFemale: 'clean minimalist everyday outfit for a woman, simple solid colors, basic wardrobe essentials like fitted blouse and well-fitted jeans or elegant trousers, understated feminine style'
   },
   {
     id: 'interview',
@@ -33,7 +35,8 @@ const styleScenarios: StyleScenario[] = [
     labelJa: 'インタビュー',
     labelZh: '面试装',
     labelEs: 'Entrevista',
-    prompt: 'professional interview outfit, business formal suit, confident'
+    promptMale: 'professional interview outfit for a man, business formal navy or charcoal suit with white dress shirt and tie, confident masculine look',
+    promptFemale: 'professional interview outfit for a woman, elegant blazer with blouse and pencil skirt or tailored trousers, confident feminine business attire'
   },
   {
     id: 'date',
@@ -42,7 +45,8 @@ const styleScenarios: StyleScenario[] = [
     labelJa: 'デートルック',
     labelZh: '约会装',
     labelEs: 'Cita',
-    prompt: 'romantic evening date outfit, stylish blazer or leather jacket, dark sophisticated colors, charming and attractive look for dinner date'
+    promptMale: 'romantic evening date outfit for a man, stylish blazer or leather jacket, dark sophisticated colors, charming and attractive masculine look for dinner date',
+    promptFemale: 'romantic evening date outfit for a woman, elegant dress or stylish blouse with skirt, feminine and attractive look with sophisticated colors for dinner date'
   },
   {
     id: 'luxury',
@@ -51,7 +55,8 @@ const styleScenarios: StyleScenario[] = [
     labelJa: 'ラグジュアリー',
     labelZh: '奢华',
     labelEs: 'Lujo',
-    prompt: 'high-end luxury designer fashion, premium quality, sophisticated'
+    promptMale: 'high-end luxury designer fashion for a man, premium quality tailored suit or designer casual wear, sophisticated masculine elegance',
+    promptFemale: 'high-end luxury designer fashion for a woman, premium quality elegant dress or designer outfit, sophisticated feminine elegance'
   },
   {
     id: 'casual',
@@ -60,7 +65,8 @@ const styleScenarios: StyleScenario[] = [
     labelJa: 'カジュアル',
     labelZh: '休闲',
     labelEs: 'Casual',
-    prompt: 'relaxed casual outfit, comfortable t-shirt or hoodie with jeans, sneakers, laid-back weekend style'
+    promptMale: 'relaxed casual outfit for a man, comfortable t-shirt or hoodie with jeans, sneakers, laid-back weekend masculine style',
+    promptFemale: 'relaxed casual outfit for a woman, comfortable sweater or cardigan with jeans or casual skirt, sneakers or flats, laid-back weekend feminine style'
   },
   {
     id: 'daily',
@@ -69,7 +75,8 @@ const styleScenarios: StyleScenario[] = [
     labelJa: 'デイリー',
     labelZh: '日常',
     labelEs: 'Diario',
-    prompt: 'everyday practical outfit, simple and neat, comfortable for daily activities, effortless style'
+    promptMale: 'everyday practical outfit for a man, simple and neat casual wear, comfortable for daily activities, effortless masculine style',
+    promptFemale: 'everyday practical outfit for a woman, simple and neat casual wear, comfortable for daily activities, effortless feminine style'
   }
 ]
 
@@ -82,6 +89,7 @@ async function sleep(ms: number): Promise<void> {
 async function editPhotoWithGemini(
   photo: string,
   scenario: StyleScenario,
+  gender: string,
   apiKey: string,
   retryCount: number = 0
 ): Promise<string | null> {
@@ -94,7 +102,20 @@ async function editPhotoWithGemini(
     const mimeType = `image/${base64Match[1]}`
     const base64Data = base64Match[2]
 
-    const editPrompt = `EDIT this photo - ONLY change the OUTFIT to: ${scenario.prompt}
+    // Select gender-appropriate prompt
+    const stylePrompt = gender === 'female' ? scenario.promptFemale : scenario.promptMale
+    const genderWord = gender === 'female' ? 'woman' : 'man'
+
+    const editPrompt = `EDIT this photo - ONLY change the OUTFIT to: ${stylePrompt}
+
+CRITICAL: This is a ${genderWord}. The outfit MUST be appropriate for a ${genderWord}.
+
+INPAINTING RULES - THIS IS AN INPAINTING TASK:
+1. ONLY replace the clothing/fabric within the EXISTING body silhouette
+2. DO NOT generate a new person or body - use the EXACT existing body outline
+3. The new clothes must fit WITHIN the original body boundaries
+4. Body parts (arms, legs, torso) stay in EXACT same position
+5. Clothing layers: body underneath, clothes on top - NEVER overlap incorrectly
 
 ABSOLUTE REQUIREMENTS - VIOLATION IS FAILURE:
 1. NEVER CROP OR ZOOM - output must have IDENTICAL framing as input
@@ -104,11 +125,12 @@ ABSOLUTE REQUIREMENTS - VIOLATION IS FAILURE:
 5. Hairstyle, hair color, skin tone - ZERO changes allowed
 6. Background, lighting, pose - ZERO changes allowed
 7. Output resolution MUST match input resolution exactly
+8. Legs must be BEHIND/INSIDE pants or skirt - NEVER on top of clothing
+9. Arms must be THROUGH sleeves - NEVER floating above clothes
 
-This is a FULL BODY photo editing task. DO NOT zoom in on the torso.
-The person's HEAD and FACE must remain at the EXACT same position in the frame.
-
-ONLY replace the clothing/outfit textures. Nothing else changes.
+This is a clothing REPLACEMENT task, not image generation.
+Keep the person's HEAD and FACE at the EXACT same position.
+The clothes should naturally fit the existing body shape.
 
 Generate the edited photo with IDENTICAL composition to the input.`
 
@@ -165,7 +187,7 @@ Generate the edited photo with IDENTICAL composition to the input.`
         const delay = (retryCount + 1) * 2000 // 2s, 4s
         console.log(`[Gemini] Retrying ${scenario.id} in ${delay}ms (attempt ${retryCount + 2}/${MAX_RETRIES + 1})`)
         await sleep(delay)
-        return editPhotoWithGemini(photo, scenario, apiKey, retryCount + 1)
+        return editPhotoWithGemini(photo, scenario, gender, apiKey, retryCount + 1)
       }
       return null
     }
@@ -189,7 +211,7 @@ Generate the edited photo with IDENTICAL composition to the input.`
       const delay = (retryCount + 1) * 2000
       console.log(`[Gemini] No image returned for ${scenario.id}, retrying in ${delay}ms`)
       await sleep(delay)
-      return editPhotoWithGemini(photo, scenario, apiKey, retryCount + 1)
+      return editPhotoWithGemini(photo, scenario, gender, apiKey, retryCount + 1)
     }
 
     return null
@@ -200,7 +222,7 @@ Generate the edited photo with IDENTICAL composition to the input.`
       const delay = (retryCount + 1) * 2000
       console.log(`[Gemini] Exception for ${scenario.id}, retrying in ${delay}ms`)
       await sleep(delay)
-      return editPhotoWithGemini(photo, scenario, apiKey, retryCount + 1)
+      return editPhotoWithGemini(photo, scenario, gender, apiKey, retryCount + 1)
     }
     return null
   }
@@ -218,7 +240,7 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
       return createValidationErrorResponse(validation.errors!, corsHeaders)
     }
 
-    const { photo, language } = validation.data!
+    const { photo, language, gender } = validation.data!
 
     const geminiKey = context.env.GEMINI_API_KEY
     const hasPhoto = photo && photo.length > 100
@@ -250,7 +272,7 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
         let imageUrl: string | null = null
 
         if (hasPhoto) {
-          imageUrl = await editPhotoWithGemini(photo, scenario, geminiKey)
+          imageUrl = await editPhotoWithGemini(photo, scenario, gender, geminiKey)
         }
 
         const labelKey = `label${language === 'ko' ? 'Ko' : language === 'ja' ? 'Ja' : language === 'zh' ? 'Zh' : language === 'es' ? 'Es' : 'En'}` as keyof StyleScenario
