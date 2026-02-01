@@ -32,16 +32,16 @@ const hairstyles: Record<string, StyleOption[]> = {
 
 const fashionStyles: Record<string, StyleOption[]> = {
   male: [
-    { id: 'business', ko: '비즈니스', en: 'Business', prompt: 'navy suit with white shirt and silk tie, professional' },
-    { id: 'casual', ko: '캐주얼', en: 'Casual', prompt: 'white t-shirt, slim blue jeans, white sneakers' },
-    { id: 'streetwear', ko: '스트릿', en: 'Streetwear', prompt: 'oversized hoodie, jogger pants, chunky sneakers' },
-    { id: 'luxury', ko: '럭셔리', en: 'Luxury', prompt: 'designer luxury outfit, high-end fashion, premium' }
+    { id: 'business', ko: '비즈니스', en: 'Business', prompt: 'sophisticated business outfit inspired by Tom Ford and Zegna - impeccably tailored navy or charcoal suit, crisp white shirt, modern professional elegance' },
+    { id: 'casual', ko: '캐주얼', en: 'Casual', prompt: 'elevated casual outfit inspired by Auralee and Lemaire - premium cotton shirt or fine knit, well-cut chinos, modern minimalist weekend style' },
+    { id: 'smart', ko: '스마트캐주얼', en: 'Smart Casual', prompt: 'refined smart casual inspired by Loro Piana and Brunello Cucinelli - cashmere sweater or quality polo, tailored trousers, understated luxury' },
+    { id: 'luxury', ko: '럭셔리', en: 'Luxury', prompt: 'high-end luxury outfit inspired by Loro Piana and Kiton - finest cashmere or premium wool, exceptional craftsmanship, quiet luxury aesthetic' }
   ],
   female: [
-    { id: 'feminine', ko: '페미닌', en: 'Feminine', prompt: 'soft feminine blouse or knit top in pastel colors with elegant skirt or dress pants, warm and approachable feminine style - NO blazers or masculine suits' },
-    { id: 'casual', ko: '캐주얼', en: 'Casual', prompt: 'cozy cardigan or soft sweater with comfortable jeans, cute and relaxed feminine casual style' },
-    { id: 'elegant', ko: '엘레강스', en: 'Elegant', prompt: 'beautiful flowy dress or elegant blouse with skirt in romantic colors, graceful and sophisticated feminine elegance' },
-    { id: 'lovely', ko: '러블리', en: 'Lovely', prompt: 'pretty dress or cute top with skirt in soft pink, cream or floral patterns, charming and lovely feminine style' }
+    { id: 'modern', ko: '모던시크', en: 'Modern Chic', prompt: 'modern chic outfit inspired by The Row and Celine - elegant minimalist pieces, luxurious cashmere knit or silk blouse in neutral tones, refined contemporary feminine style' },
+    { id: 'casual', ko: '캐주얼', en: 'Casual', prompt: 'elevated casual outfit inspired by Auralee and Toteme - soft oversized cashmere sweater or relaxed silk shirt, comfortable wide-leg pants, effortless weekend elegance' },
+    { id: 'elegant', ko: '엘레강스', en: 'Elegant', prompt: 'elegant outfit inspired by Dior and Chanel - beautiful refined dress or sophisticated tweed ensemble, graceful silhouette with timeless French elegance' },
+    { id: 'romantic', ko: '로맨틱', en: 'Romantic', prompt: 'romantic feminine outfit inspired by Valentino and Zimmermann - flowing dress or delicate blouse with skirt in soft blush or champagne, graceful and dreamy aesthetic' }
   ]
 }
 

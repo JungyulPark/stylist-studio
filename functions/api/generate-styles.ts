@@ -25,8 +25,8 @@ const styleScenarios: StyleScenario[] = [
     labelJa: 'ベストマッチ',
     labelZh: '最佳搭配',
     labelEs: 'Mejor Combinación',
-    promptMale: 'clean minimalist everyday outfit for a man, simple solid colors, basic wardrobe essentials like white tee and well-fitted jeans or chinos, understated and versatile masculine style',
-    promptFemale: 'soft feminine everyday outfit for a woman, pretty blouse or knit top in soft colors (pink, cream, lavender), comfortable pants or flowy skirt, gentle and approachable feminine style'
+    promptMale: 'modern minimalist everyday outfit inspired by Loro Piana and Brunello Cucinelli style - clean cashmere knit or premium cotton shirt, well-fitted chinos or tailored pants, understated luxury with impeccable quality fabrics',
+    promptFemale: 'modern elegant everyday outfit inspired by The Row and Loro Piana style - luxurious cashmere knit or silk blouse in neutral tones (ivory, camel, soft grey), relaxed tailored pants or midi skirt, effortless quiet luxury aesthetic'
   },
   {
     id: 'interview',
@@ -35,8 +35,8 @@ const styleScenarios: StyleScenario[] = [
     labelJa: 'インタビュー',
     labelZh: '面试装',
     labelEs: 'Entrevista',
-    promptMale: 'professional interview outfit for a man, business formal navy or charcoal suit with white dress shirt and tie, confident masculine look',
-    promptFemale: 'elegant professional outfit for a woman, soft feminine blouse with cardigan or light jacket in pastel or neutral colors, elegant skirt or dress pants, polished but warm and approachable look - NOT a masculine suit'
+    promptMale: 'sophisticated professional outfit inspired by Tom Ford and Zegna - impeccably tailored navy or charcoal suit, crisp white shirt, modern confident look with attention to fit and fabric quality',
+    promptFemale: 'chic professional outfit inspired by Chanel and Celine style - elegant tweed jacket or soft structured blazer with feminine blouse, tailored skirt or wide-leg trousers, sophisticated yet approachable - modern French elegance'
   },
   {
     id: 'date',
@@ -45,8 +45,8 @@ const styleScenarios: StyleScenario[] = [
     labelJa: 'デートルック',
     labelZh: '约会装',
     labelEs: 'Cita',
-    promptMale: 'romantic evening date outfit for a man, stylish blazer or leather jacket, dark sophisticated colors, charming and attractive masculine look for dinner date',
-    promptFemale: 'romantic feminine date outfit for a woman, beautiful flowy dress or elegant blouse with skirt in romantic colors (rose, burgundy, soft pink), delicate and charming feminine look for dinner date'
+    promptMale: 'stylish evening outfit inspired by Saint Laurent and Tom Ford - sleek dark blazer or premium leather jacket, well-fitted dark trousers, sophisticated and attractive masculine elegance for dinner',
+    promptFemale: 'romantic evening outfit inspired by Dior and Valentino style - beautiful flowing dress or elegant silk blouse with skirt in refined colors (blush, champagne, soft burgundy), graceful feminine silhouette with modern sophistication'
   },
   {
     id: 'luxury',
@@ -55,8 +55,8 @@ const styleScenarios: StyleScenario[] = [
     labelJa: 'ラグジュアリー',
     labelZh: '奢华',
     labelEs: 'Lujo',
-    promptMale: 'high-end luxury designer fashion for a man, premium quality tailored suit or designer casual wear, sophisticated masculine elegance',
-    promptFemale: 'high-end luxury feminine fashion for a woman, elegant designer dress or premium silk blouse with beautiful skirt, luxurious feminine elegance with soft textures and graceful silhouette'
+    promptMale: 'high-end luxury outfit inspired by Loro Piana and Kiton - finest cashmere coat or premium wool suit, exceptional craftsmanship, understated elegance with the finest fabrics and impeccable tailoring',
+    promptFemale: 'high-end luxury outfit inspired by Chanel, Dior and Loro Piana - exquisite designer dress or premium cashmere ensemble, beautiful textures and refined details, timeless feminine elegance with exceptional quality'
   },
   {
     id: 'casual',
@@ -65,8 +65,8 @@ const styleScenarios: StyleScenario[] = [
     labelJa: 'カジュアル',
     labelZh: '休闲',
     labelEs: 'Casual',
-    promptMale: 'relaxed casual outfit for a man, comfortable t-shirt or hoodie with jeans, sneakers, laid-back weekend masculine style',
-    promptFemale: 'cozy feminine casual outfit for a woman, soft sweater or cute cardigan with comfortable jeans or casual dress, relaxed but pretty weekend feminine style'
+    promptMale: 'elevated casual outfit inspired by Auralee and Lemaire - relaxed premium cotton or linen shirt, comfortable well-cut chinos or relaxed trousers, modern minimalist weekend style with quality basics',
+    promptFemale: 'refined casual outfit inspired by Auralee and The Row - soft oversized cashmere sweater or relaxed silk shirt, comfortable wide-leg pants or casual midi skirt, elevated effortless weekend style'
   },
   {
     id: 'daily',
@@ -75,8 +75,8 @@ const styleScenarios: StyleScenario[] = [
     labelJa: 'デイリー',
     labelZh: '日常',
     labelEs: 'Diario',
-    promptMale: 'everyday practical outfit for a man, simple and neat casual wear, comfortable for daily activities, effortless masculine style',
-    promptFemale: 'everyday pretty outfit for a woman, comfortable yet feminine daily wear like soft knit top or blouse with easy pants or skirt, effortless feminine charm'
+    promptMale: 'everyday refined outfit inspired by COS and Lemaire - clean modern basics with quality fabrics, simple knit or oxford shirt with comfortable tailored pants, effortless contemporary masculine style',
+    promptFemale: 'everyday chic outfit inspired by Toteme and Celine - modern minimalist pieces with beautiful draping, elegant knit top or relaxed blouse with easy tailored pants, contemporary feminine simplicity'
   }
 ]
 
