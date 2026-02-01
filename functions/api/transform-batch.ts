@@ -15,18 +15,18 @@ interface StyleOption {
 
 const hairstyles: Record<string, StyleOption[]> = {
   male: [
-    { id: 'two-block', ko: '투블럭', en: 'Two Block', prompt: 'Korean two-block haircut with volume on top, natural hair color, clean and neat style' },
-    { id: 'textured-crop', ko: '텍스처드 크롭', en: 'Textured Crop', prompt: 'textured crop with clean sides, natural hair color, modern and neat' },
-    { id: 'slick-back', ko: '슬릭백', en: 'Slick Back', prompt: 'slicked back neat hair, natural hair color, professional look' },
-    { id: 'pompadour', ko: '폼파두르', en: 'Pompadour', prompt: 'modern pompadour with volume on top, natural hair color, classic masculine style' },
-    { id: 'curtain-bangs', ko: '커튼뱅', en: 'Curtain Bangs', prompt: 'middle part curtain bangs, natural hair color, soft and natural look' }
+    { id: 'korean-actor', ko: '코리안 시크', en: 'Korean Chic', prompt: 'sophisticated Korean actor hairstyle like Park Seo-jun or Gong Yoo - clean textured cut with natural volume, effortlessly stylish and modern, natural hair color' },
+    { id: 'classic-gentleman', ko: '클래식 젠틀맨', en: 'Classic Gentleman', prompt: 'timeless gentleman hairstyle inspired by George Clooney or David Beckham - refined side part or slicked back, polished and sophisticated, natural hair color' },
+    { id: 'modern-textured', ko: '모던 텍스처', en: 'Modern Textured', prompt: 'modern textured cut inspired by Timothée Chalamet or BTS style - soft natural texture with movement, contemporary and youthful, natural hair color' },
+    { id: 'business-elite', ko: '비즈니스 엘리트', en: 'Business Elite', prompt: 'executive business hairstyle like Korean CEO or Wall Street style - impeccably groomed, clean and professional, commands respect, natural hair color' },
+    { id: 'soft-natural', ko: '소프트 내추럴', en: 'Soft Natural', prompt: 'natural relaxed hairstyle like Song Joong-ki or Won Bin - soft layers with gentle movement, approachable and charming, natural hair color' }
   ],
   female: [
-    { id: 'long-layers', ko: '롱 레이어드', en: 'Long Layers', prompt: 'long layered hair with face framing, natural hair color, elegant and feminine' },
-    { id: 'bob', ko: '단발', en: 'Bob Cut', prompt: 'sleek chin-length bob cut, natural hair color, clean and modern' },
-    { id: 'korean-perm', ko: '코리안 펌', en: 'Korean Perm', prompt: 'soft Korean style perm with gentle waves, natural hair color, feminine and soft' },
-    { id: 'straight-long', ko: '롱스트레이트', en: 'Long Straight', prompt: 'long sleek straight hair with shine, natural hair color, classic and elegant' },
-    { id: 'shoulder-length', ko: '미디엄 기장', en: 'Shoulder Length', prompt: 'shoulder length hair with soft ends, natural hair color, versatile and natural look' }
+    { id: 'korean-actress', ko: '코리안 엘레강스', en: 'Korean Elegance', prompt: 'elegant Korean actress hairstyle like Song Hye-kyo or Jun Ji-hyun - graceful long layers with soft face framing, luxurious shine and movement, natural hair color' },
+    { id: 'french-chic', ko: '프렌치 시크', en: 'French Chic', prompt: 'effortless French chic hairstyle inspired by Charlotte Gainsbourg or Jeanne Damas - relaxed waves or subtle texture, understated Parisian elegance, natural hair color' },
+    { id: 'modern-bob', ko: '모던 밥', en: 'Modern Bob', prompt: 'sophisticated modern bob inspired by fashion editors and Celine models - clean lines with subtle movement, chic and contemporary, natural hair color' },
+    { id: 'romantic-waves', ko: '로맨틱 웨이브', en: 'Romantic Waves', prompt: 'romantic soft waves like Suzy or IU style - gentle flowing waves with beautiful volume, feminine and dreamy, natural hair color' },
+    { id: 'sleek-luxury', ko: '슬릭 럭셔리', en: 'Sleek Luxury', prompt: 'sleek polished hair like runway models or Kim Tae-hee - smooth glossy finish with perfect shine, refined luxury aesthetic, natural hair color' }
   ]
 }
 
