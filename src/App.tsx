@@ -194,6 +194,18 @@ const translations: Record<Language, {
   serviceStep2Desc: string
   serviceStep3: string
   serviceStep3Desc: string
+  // Style References
+  styleReferenceTitle: string
+  styleReferenceDesc: string
+  fashionReferenceTitle: string
+  fashionReferenceDesc: string
+  fashionBrands: string[]
+  hairReferenceTitle: string
+  hairReferenceDesc: string
+  hairReferenceFemale: string[]
+  hairReferenceMale: string[]
+  // Style Labels
+  styleLabels: Record<string, string>
   downloadResult: string
   shareResult: string
   linkCopied: string
@@ -370,6 +382,24 @@ const translations: Record<Language, {
     serviceStep2Desc: '헤어 또는 패션 변환을 선택하세요',
     serviceStep3: '결과 확인',
     serviceStep3Desc: '내 얼굴 그대로, 다양한 스타일을 미리 체험',
+    // Style References
+    styleReferenceTitle: '프리미엄 스타일 레퍼런스',
+    styleReferenceDesc: '세계적인 디자이너 브랜드와 셀러브리티 스타일을 참고하여 최고의 스타일을 추천합니다',
+    fashionReferenceTitle: '👗 패션 레퍼런스',
+    fashionReferenceDesc: '럭셔리 디자이너 브랜드 스타일 참고',
+    fashionBrands: ['Loro Piana', 'The Row', 'Chanel', 'Dior', 'Celine', 'Brunello Cucinelli', 'Tom Ford', 'Valentino', 'Auralee'],
+    hairReferenceTitle: '💇 헤어 레퍼런스',
+    hairReferenceDesc: '한류 스타 & 글로벌 셀럽 스타일 참고',
+    hairReferenceFemale: ['송혜교', '전지현', '손예진', '수지', 'Charlotte Gainsbourg'],
+    hairReferenceMale: ['공유', '박서준', 'George Clooney', 'David Beckham', 'Timothée Chalamet'],
+    styleLabels: {
+      'best-match': '베스트 매치',
+      'interview': '인터뷰룩',
+      'date': '데이트룩',
+      'luxury': '럭셔리',
+      'casual': '캐주얼',
+      'daily': '데일리'
+    },
     downloadResult: '📥 결과 저장',
     shareResult: '📤 공유하기',
     linkCopied: '링크가 복사되었습니다!',
@@ -546,6 +576,24 @@ const translations: Record<Language, {
     serviceStep2Desc: 'Select hair or fashion transformation',
     serviceStep3: 'See Results',
     serviceStep3Desc: 'Preview styles on your actual face instantly',
+    // Style References
+    styleReferenceTitle: 'Premium Style References',
+    styleReferenceDesc: 'We recommend the best styles inspired by world-renowned designer brands and celebrity looks',
+    fashionReferenceTitle: '👗 Fashion References',
+    fashionReferenceDesc: 'Inspired by luxury designer brands',
+    fashionBrands: ['Loro Piana', 'The Row', 'Chanel', 'Dior', 'Celine', 'Brunello Cucinelli', 'Tom Ford', 'Valentino', 'Auralee'],
+    hairReferenceTitle: '💇 Hair References',
+    hairReferenceDesc: 'Inspired by K-stars & global celebrities',
+    hairReferenceFemale: ['Song Hye-kyo', 'Jun Ji-hyun', 'Son Ye-jin', 'Suzy', 'Charlotte Gainsbourg'],
+    hairReferenceMale: ['Gong Yoo', 'Park Seo-jun', 'George Clooney', 'David Beckham', 'Timothée Chalamet'],
+    styleLabels: {
+      'best-match': 'Best Match',
+      'interview': 'Interview',
+      'date': 'Date Night',
+      'luxury': 'Luxury',
+      'casual': 'Casual',
+      'daily': 'Daily'
+    },
     downloadResult: '📥 Save Results',
     shareResult: '📤 Share',
     linkCopied: 'Link copied!',
@@ -722,6 +770,24 @@ const translations: Record<Language, {
     serviceStep2Desc: 'ヘアまたはファッション変換を選択',
     serviceStep3: '結果を確認',
     serviceStep3Desc: 'あなたの顔のまま様々なスタイルをプレビュー',
+    // Style References
+    styleReferenceTitle: 'プレミアムスタイルリファレンス',
+    styleReferenceDesc: '世界的なデザイナーブランドとセレブリティスタイルを参考に最高のスタイルをご提案',
+    fashionReferenceTitle: '👗 ファッションリファレンス',
+    fashionReferenceDesc: 'ラグジュアリーデザイナーブランドを参考',
+    fashionBrands: ['Loro Piana', 'The Row', 'Chanel', 'Dior', 'Celine', 'Brunello Cucinelli', 'Tom Ford', 'Valentino', 'Auralee'],
+    hairReferenceTitle: '💇 ヘアリファレンス',
+    hairReferenceDesc: '韓流スター＆グローバルセレブを参考',
+    hairReferenceFemale: ['ソン・ヘギョ', 'チョン・ジヒョン', 'ソン・イェジン', 'スジ', 'Charlotte Gainsbourg'],
+    hairReferenceMale: ['コン・ユ', 'パク・ソジュン', 'George Clooney', 'David Beckham', 'Timothée Chalamet'],
+    styleLabels: {
+      'best-match': 'ベストマッチ',
+      'interview': 'インタビュー',
+      'date': 'デートルック',
+      'luxury': 'ラグジュアリー',
+      'casual': 'カジュアル',
+      'daily': 'デイリー'
+    },
     downloadResult: '📥 結果を保存',
     shareResult: '📤 シェア',
     linkCopied: 'リンクがコピーされました！',
@@ -898,6 +964,24 @@ const translations: Record<Language, {
     serviceStep2Desc: '选择发型或时尚变换',
     serviceStep3: '查看结果',
     serviceStep3Desc: '保留您的面容，即时预览各种风格',
+    // Style References
+    styleReferenceTitle: '高端风格参考',
+    styleReferenceDesc: '参考世界顶级设计师品牌和明星造型，为您推荐最佳风格',
+    fashionReferenceTitle: '👗 时尚参考',
+    fashionReferenceDesc: '参考奢侈品牌设计风格',
+    fashionBrands: ['Loro Piana', 'The Row', 'Chanel', 'Dior', 'Celine', 'Brunello Cucinelli', 'Tom Ford', 'Valentino', 'Auralee'],
+    hairReferenceTitle: '💇 发型参考',
+    hairReferenceDesc: '参考韩流明星和国际名人造型',
+    hairReferenceFemale: ['宋慧乔', '全智贤', '孙艺珍', 'Suzy', 'Charlotte Gainsbourg'],
+    hairReferenceMale: ['孔刘', '朴叙俊', 'George Clooney', 'David Beckham', 'Timothée Chalamet'],
+    styleLabels: {
+      'best-match': '最佳搭配',
+      'interview': '面试装',
+      'date': '约会装',
+      'luxury': '奢华',
+      'casual': '休闲',
+      'daily': '日常'
+    },
     downloadResult: '📥 保存结果',
     shareResult: '📤 分享',
     linkCopied: '链接已复制！',
@@ -1074,6 +1158,24 @@ const translations: Record<Language, {
     serviceStep2Desc: 'Selecciona cambio de peinado o moda',
     serviceStep3: 'Ver Resultados',
     serviceStep3Desc: 'Vista previa de estilos en tu rostro al instante',
+    // Style References
+    styleReferenceTitle: 'Referencias de Estilo Premium',
+    styleReferenceDesc: 'Recomendamos los mejores estilos inspirados en marcas de diseñadores de renombre mundial y celebridades',
+    fashionReferenceTitle: '👗 Referencias de Moda',
+    fashionReferenceDesc: 'Inspirado en marcas de diseñadores de lujo',
+    fashionBrands: ['Loro Piana', 'The Row', 'Chanel', 'Dior', 'Celine', 'Brunello Cucinelli', 'Tom Ford', 'Valentino', 'Auralee'],
+    hairReferenceTitle: '💇 Referencias de Peinado',
+    hairReferenceDesc: 'Inspirado en estrellas coreanas y celebridades globales',
+    hairReferenceFemale: ['Song Hye-kyo', 'Jun Ji-hyun', 'Son Ye-jin', 'Suzy', 'Charlotte Gainsbourg'],
+    hairReferenceMale: ['Gong Yoo', 'Park Seo-jun', 'George Clooney', 'David Beckham', 'Timothée Chalamet'],
+    styleLabels: {
+      'best-match': 'Mejor Combinación',
+      'interview': 'Entrevista',
+      'date': 'Cita',
+      'luxury': 'Lujo',
+      'casual': 'Casual',
+      'daily': 'Diario'
+    },
     downloadResult: '📥 Guardar',
     shareResult: '📤 Compartir',
     linkCopied: '¡Enlace copiado!',
@@ -3463,6 +3565,42 @@ function App() {
           </div>
         </section>
 
+        {/* Style References Section */}
+        <section className="style-reference-section">
+          <h2 className="section-title">{t.styleReferenceTitle}</h2>
+          <div className="section-divider"></div>
+          <p className="reference-desc">{t.styleReferenceDesc}</p>
+          <div className="reference-grid">
+            <div className="reference-card">
+              <h3>{t.fashionReferenceTitle}</h3>
+              <p>{t.fashionReferenceDesc}</p>
+              <div className="brand-tags">
+                {t.fashionBrands.map((brand, i) => (
+                  <span key={i} className="brand-tag">{brand}</span>
+                ))}
+              </div>
+            </div>
+            <div className="reference-card">
+              <h3>{t.hairReferenceTitle}</h3>
+              <p>{t.hairReferenceDesc}</p>
+              <div className="reference-names">
+                <div className="reference-group">
+                  <span className="reference-label">👩 </span>
+                  {t.hairReferenceFemale.map((name, i) => (
+                    <span key={i} className="celeb-name">{name}{i < t.hairReferenceFemale.length - 1 ? ', ' : ''}</span>
+                  ))}
+                </div>
+                <div className="reference-group">
+                  <span className="reference-label">👨 </span>
+                  {t.hairReferenceMale.map((name, i) => (
+                    <span key={i} className="celeb-name">{name}{i < t.hairReferenceMale.length - 1 ? ', ' : ''}</span>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
         {/* Path Section */}
         <section className="path-section" id="features">
           <h2 className="section-title">{t.pathTitle}</h2>
@@ -3644,14 +3782,14 @@ function App() {
                   <div key={style.id} className="style-card">
                     <div className="style-image-container">
                       {style.imageUrl ? (
-                        <img src={style.imageUrl} alt={style.label} className="style-image" />
+                        <img src={style.imageUrl} alt={t.styleLabels[style.id] || style.label} className="style-image" />
                       ) : (
                         <div className="style-placeholder">
                           <span className="style-icon">👔</span>
                         </div>
                       )}
                     </div>
-                    <span className="style-label">{style.label}</span>
+                    <span className="style-label">{t.styleLabels[style.id] || style.label}</span>
                   </div>
                 ))}
               </div>
