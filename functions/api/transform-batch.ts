@@ -75,7 +75,11 @@ async function transformWithGemini(
 - Add gentle soft-focus glow effect on the face
 - Even out skin tone with warm, healthy glow
 - Keep the face looking NATURAL - not overly edited`
-      : ''
+      : `SUBTLE BEAUTY ENHANCEMENT for the face:
+- Apply light natural skin smoothing (reduce blemishes subtly)
+- Add subtle soft-focus glow effect on the face
+- Even out skin tone slightly for a clean, fresh look
+- Keep the face looking NATURAL and masculine - not overly edited`
 
     const editPrompt = type === 'hairstyle'
       ? `EDIT this photo - ONLY change the HAIRSTYLE to: ${style.prompt}

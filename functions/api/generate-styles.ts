@@ -113,9 +113,11 @@ async function editPhotoWithGemini(
 - Even out skin tone with warm, healthy glow
 - Enhance with soft studio lighting effect
 - Keep the face looking NATURAL - not overly edited`
-      : `SUBTLE ENHANCEMENT:
-- Apply minimal natural skin smoothing
-- Keep the face looking natural and authentic`
+      : `SUBTLE BEAUTY ENHANCEMENT for the face:
+- Apply light natural skin smoothing (reduce blemishes subtly)
+- Add subtle soft-focus glow effect on the face
+- Even out skin tone slightly for a clean, fresh look
+- Keep the face looking NATURAL and masculine - not overly edited`
 
     const editPrompt = `EDIT this photo - ONLY change the OUTFIT to: ${stylePrompt}
 
