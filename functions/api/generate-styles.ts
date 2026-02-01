@@ -25,8 +25,8 @@ const styleScenarios: StyleScenario[] = [
     labelJa: 'ベストマッチ',
     labelZh: '最佳搭配',
     labelEs: 'Mejor Combinación',
-    promptMale: 'modern minimalist everyday outfit inspired by Loro Piana and Brunello Cucinelli style - clean cashmere knit or premium cotton shirt, well-fitted chinos or tailored pants, understated luxury with impeccable quality fabrics',
-    promptFemale: 'modern elegant everyday outfit inspired by The Row and Loro Piana style - luxurious cashmere knit or silk blouse in neutral tones (ivory, camel, soft grey), relaxed tailored pants or midi skirt, effortless quiet luxury aesthetic'
+    promptMale: 'clean modern outfit: cream or light grey fine-knit cashmere sweater, perfectly fitted navy or khaki chinos, brown leather belt, clean white sneakers or suede loafers - polished minimalist style',
+    promptFemale: 'elegant everyday outfit: soft cream cashmere V-neck sweater or ivory silk blouse, high-waisted camel or beige wide-leg trousers, delicate gold jewelry, nude ballet flats - refined effortless chic'
   },
   {
     id: 'interview',
@@ -35,8 +35,8 @@ const styleScenarios: StyleScenario[] = [
     labelJa: 'インタビュー',
     labelZh: '面试装',
     labelEs: 'Entrevista',
-    promptMale: 'sophisticated professional outfit inspired by Tom Ford and Zegna - impeccably tailored navy or charcoal suit, crisp white shirt, modern confident look with attention to fit and fabric quality',
-    promptFemale: 'chic professional outfit inspired by Chanel and Celine style - elegant tweed jacket or soft structured blazer with feminine blouse, tailored skirt or wide-leg trousers, sophisticated yet approachable - modern French elegance'
+    promptMale: 'professional business outfit: perfectly tailored navy blue suit with subtle texture, crisp white dress shirt, burgundy silk tie, polished oxford shoes - confident executive style',
+    promptFemale: 'sophisticated professional outfit: soft pink or cream silk blouse with elegant neckline, tailored beige or soft grey pencil skirt or wide-leg pants, delicate pearl earrings, nude pointed heels - feminine yet powerful'
   },
   {
     id: 'date',
@@ -45,8 +45,8 @@ const styleScenarios: StyleScenario[] = [
     labelJa: 'デートルック',
     labelZh: '约会装',
     labelEs: 'Cita',
-    promptMale: 'stylish evening outfit inspired by Saint Laurent and Tom Ford - sleek dark blazer or premium leather jacket, well-fitted dark trousers, sophisticated and attractive masculine elegance for dinner',
-    promptFemale: 'romantic evening outfit inspired by Dior and Valentino style - beautiful flowing dress or elegant silk blouse with skirt in refined colors (blush, champagne, soft burgundy), graceful feminine silhouette with modern sophistication'
+    promptMale: 'stylish evening outfit: slim-fit black or midnight blue blazer, charcoal turtleneck or dark dress shirt, dark fitted trousers, sleek black leather shoes - sophisticated romantic elegance',
+    promptFemale: 'romantic evening outfit: elegant midi dress in dusty rose, champagne, or soft burgundy with flattering draping, delicate fabric that catches light, gold or rose gold jewelry, strappy heels - graceful feminine allure'
   },
   {
     id: 'luxury',
@@ -55,8 +55,8 @@ const styleScenarios: StyleScenario[] = [
     labelJa: 'ラグジュアリー',
     labelZh: '奢华',
     labelEs: 'Lujo',
-    promptMale: 'high-end luxury outfit inspired by Loro Piana and Kiton - finest cashmere coat or premium wool suit, exceptional craftsmanship, understated elegance with the finest fabrics and impeccable tailoring',
-    promptFemale: 'high-end luxury outfit inspired by Chanel, Dior and Loro Piana - exquisite designer dress or premium cashmere ensemble, beautiful textures and refined details, timeless feminine elegance with exceptional quality'
+    promptMale: 'luxurious outfit: camel cashmere overcoat or premium charcoal wool suit, fine merino turtleneck in cream, perfectly tailored trousers, Italian leather shoes - understated opulence',
+    promptFemale: 'luxurious outfit: stunning camel cashmere coat over cream silk blouse, elegant pleated midi skirt in soft taupe, gold statement jewelry, premium leather bag, classic pumps - timeless haute couture elegance'
   },
   {
     id: 'casual',
@@ -65,8 +65,8 @@ const styleScenarios: StyleScenario[] = [
     labelJa: 'カジュアル',
     labelZh: '休闲',
     labelEs: 'Casual',
-    promptMale: 'elevated casual outfit inspired by Auralee and Lemaire - relaxed premium cotton or linen shirt, comfortable well-cut chinos or relaxed trousers, modern minimalist weekend style with quality basics',
-    promptFemale: 'refined casual outfit inspired by Auralee and The Row - soft oversized cashmere sweater or relaxed silk shirt, comfortable wide-leg pants or casual midi skirt, elevated effortless weekend style'
+    promptMale: 'relaxed weekend outfit: soft grey or oatmeal cotton sweater, well-fitted light blue or white oxford shirt underneath, comfortable dark indigo jeans, clean white sneakers - effortlessly put-together',
+    promptFemale: 'chic casual outfit: oversized soft beige or pale pink cashmere cardigan, simple white t-shirt, high-waisted light wash or cream straight-leg jeans, white sneakers or tan loafers - cozy yet stylish'
   },
   {
     id: 'daily',
@@ -75,8 +75,8 @@ const styleScenarios: StyleScenario[] = [
     labelJa: 'デイリー',
     labelZh: '日常',
     labelEs: 'Diario',
-    promptMale: 'everyday refined outfit inspired by COS and Lemaire - clean modern basics with quality fabrics, simple knit or oxford shirt with comfortable tailored pants, effortless contemporary masculine style',
-    promptFemale: 'everyday chic outfit inspired by Toteme and Celine - modern minimalist pieces with beautiful draping, elegant knit top or relaxed blouse with easy tailored pants, contemporary feminine simplicity'
+    promptMale: 'smart daily outfit: clean navy or charcoal polo shirt or simple crew-neck sweater, well-fitted khaki or grey chinos, minimalist leather watch, clean sneakers or loafers - polished everyday look',
+    promptFemale: 'effortless daily outfit: soft knit top in dusty blue or sage green, flowing midi skirt or comfortable tailored pants in neutral tone, simple gold necklace, comfortable flats - modern feminine ease'
   }
 ]
 

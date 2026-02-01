@@ -32,16 +32,16 @@ const hairstyles: Record<string, StyleOption[]> = {
 
 const fashionStyles: Record<string, StyleOption[]> = {
   male: [
-    { id: 'business', ko: '비즈니스', en: 'Business', prompt: 'sophisticated business outfit inspired by Tom Ford and Zegna - impeccably tailored navy or charcoal suit, crisp white shirt, modern professional elegance' },
-    { id: 'casual', ko: '캐주얼', en: 'Casual', prompt: 'elevated casual outfit inspired by Auralee and Lemaire - premium cotton shirt or fine knit, well-cut chinos, modern minimalist weekend style' },
-    { id: 'smart', ko: '스마트캐주얼', en: 'Smart Casual', prompt: 'refined smart casual inspired by Loro Piana and Brunello Cucinelli - cashmere sweater or quality polo, tailored trousers, understated luxury' },
-    { id: 'luxury', ko: '럭셔리', en: 'Luxury', prompt: 'high-end luxury outfit inspired by Loro Piana and Kiton - finest cashmere or premium wool, exceptional craftsmanship, quiet luxury aesthetic' }
+    { id: 'business', ko: '비즈니스', en: 'Business', prompt: 'professional business outfit: perfectly tailored navy blue suit, crisp white dress shirt, silk tie in burgundy or navy, polished black oxford shoes - confident executive style' },
+    { id: 'casual', ko: '캐주얼', en: 'Casual', prompt: 'relaxed weekend outfit: soft grey cotton sweater, well-fitted light blue oxford shirt underneath, dark indigo jeans, clean white sneakers - effortlessly put-together' },
+    { id: 'smart', ko: '스마트캐주얼', en: 'Smart Casual', prompt: 'smart casual outfit: cream or light grey cashmere V-neck sweater, navy polo or simple shirt, tailored chinos in khaki or navy, suede loafers - refined weekend style' },
+    { id: 'luxury', ko: '럭셔리', en: 'Luxury', prompt: 'luxurious outfit: camel cashmere overcoat, cream merino turtleneck, perfectly tailored charcoal trousers, Italian leather shoes - understated opulence' }
   ],
   female: [
-    { id: 'modern', ko: '모던시크', en: 'Modern Chic', prompt: 'modern chic outfit inspired by The Row and Celine - elegant minimalist pieces, luxurious cashmere knit or silk blouse in neutral tones, refined contemporary feminine style' },
-    { id: 'casual', ko: '캐주얼', en: 'Casual', prompt: 'elevated casual outfit inspired by Auralee and Toteme - soft oversized cashmere sweater or relaxed silk shirt, comfortable wide-leg pants, effortless weekend elegance' },
-    { id: 'elegant', ko: '엘레강스', en: 'Elegant', prompt: 'elegant outfit inspired by Dior and Chanel - beautiful refined dress or sophisticated tweed ensemble, graceful silhouette with timeless French elegance' },
-    { id: 'romantic', ko: '로맨틱', en: 'Romantic', prompt: 'romantic feminine outfit inspired by Valentino and Zimmermann - flowing dress or delicate blouse with skirt in soft blush or champagne, graceful and dreamy aesthetic' }
+    { id: 'modern', ko: '모던시크', en: 'Modern Chic', prompt: 'modern chic outfit: ivory silk blouse with elegant neckline, high-waisted camel wide-leg trousers, delicate gold jewelry, nude pointed flats - refined contemporary elegance' },
+    { id: 'casual', ko: '캐주얼', en: 'Casual', prompt: 'chic casual outfit: oversized pale pink or beige cashmere cardigan, simple white t-shirt, high-waisted cream straight-leg jeans, white sneakers - cozy yet stylish' },
+    { id: 'elegant', ko: '엘레강스', en: 'Elegant', prompt: 'elegant outfit: beautiful midi dress in soft champagne or dusty rose with flattering draping, delicate pearl earrings, gold bracelet, classic nude heels - timeless feminine grace' },
+    { id: 'romantic', ko: '로맨틱', en: 'Romantic', prompt: 'romantic outfit: flowing chiffon blouse in blush pink with soft ruffles, elegant pleated midi skirt in cream, rose gold jewelry, strappy sandals - dreamy feminine allure' }
   ]
 }
 
