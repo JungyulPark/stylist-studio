@@ -26,7 +26,7 @@ const hairstyles: Record<string, StyleOption[]> = {
     { id: 'french-chic', ko: '프렌치 시크', en: 'French Chic', prompt: 'effortless French chic hairstyle inspired by Charlotte Gainsbourg or Jeanne Damas - relaxed waves or subtle texture, understated Parisian elegance, natural hair color' },
     { id: 'modern-bob', ko: '모던 밥', en: 'Modern Bob', prompt: 'sophisticated modern bob inspired by fashion editors and Celine models - clean lines with subtle movement, chic and contemporary, natural hair color' },
     { id: 'romantic-waves', ko: '로맨틱 웨이브', en: 'Romantic Waves', prompt: 'romantic soft waves like Suzy or IU style - gentle flowing waves with beautiful volume, feminine and dreamy, natural hair color' },
-    { id: 'sleek-luxury', ko: '슬릭 럭셔리', en: 'Sleek Luxury', prompt: 'sleek polished hair like runway models or Kim Tae-hee - smooth glossy finish with perfect shine, refined luxury aesthetic, natural hair color' }
+    { id: 'natural-goddess', ko: '내추럴 여신', en: 'Natural Goddess', prompt: 'effortlessly beautiful natural hairstyle like Son Ye-jin or Han Ji-min - soft flowing layers with gentle movement, healthy shine and feminine grace, natural hair color' }
   ]
 }
 
