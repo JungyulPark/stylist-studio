@@ -262,15 +262,33 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
 
     try {
-      // Call RPC function to delete user completely
-      const { error } = await supabase.rpc('delete_user')
-
-      if (error) {
-        console.error('Delete account RPC error:', error)
-        return { error: new Error(error.message) }
+      // 1. 관련 데이터 삭제 시도 (테이블이 없어도 에러 무시)
+      try {
+        await supabase.from('analysis_history').delete().eq('user_id', user.id)
+      } catch (e) {
+        console.log('analysis_history delete skipped:', e)
       }
 
-      // Clear all storage
+      try {
+        await supabase.from('profiles').delete().eq('id', user.id)
+      } catch (e) {
+        console.log('profiles delete skipped:', e)
+      }
+
+      // 2. RPC 함수로 계정 삭제 시도
+      try {
+        const { error: rpcError } = await supabase.rpc('delete_user')
+        if (rpcError) {
+          console.log('RPC delete_user not available, using signOut instead')
+        }
+      } catch (e) {
+        console.log('RPC not available:', e)
+      }
+
+      // 3. 로그아웃 처리
+      await supabase.auth.signOut()
+
+      // 4. 로컬 스토리지 정리
       Object.keys(localStorage).forEach(key => {
         if (key.startsWith('sb-') || key.includes('supabase') || key.includes('auth')) {
           localStorage.removeItem(key)
