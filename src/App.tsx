@@ -2963,8 +2963,11 @@ function App() {
   }
 
   const handleLogout = async () => {
+    console.log('Logout button clicked!')
     try {
+      console.log('Calling signOut...')
       await signOut()
+      console.log('signOut completed')
       // signOut 함수에서 이미 리다이렉트 처리함
     } catch (error) {
       console.error('Logout error:', error)
@@ -3369,7 +3372,7 @@ function App() {
             <span className="logo-text">{t.title}</span>
           </div>
           <div className="header-actions">
-            <button onClick={handleLogout} className="btn-outline-sm">
+            <button type="button" onClick={handleLogout} className="btn-outline-sm">
               {t.logout}
             </button>
           </div>
@@ -3515,10 +3518,10 @@ function App() {
             {isSupabaseConfigured && (
               user ? (
                 <div className="auth-buttons">
-                  <button onClick={() => setPage('profile')} className="btn-primary-sm">
+                  <button type="button" onClick={() => setPage('profile')} className="btn-primary-sm">
                     {t.myProfile}
                   </button>
-                  <button onClick={handleLogout} className="btn-outline-sm">
+                  <button type="button" onClick={handleLogout} className="btn-outline-sm">
                     {t.logout}
                   </button>
                 </div>

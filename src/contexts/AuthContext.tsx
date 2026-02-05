@@ -193,7 +193,23 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, [])
 
   const signOut = useCallback(async () => {
-    // Clear all Supabase auth data from localStorage first
+    console.log('signOut called')
+
+    // Supabase signOut 먼저 호출
+    if (supabase) {
+      try {
+        const { error } = await supabase.auth.signOut()
+        if (error) {
+          console.error('Supabase signOut error:', error)
+        } else {
+          console.log('Supabase signOut success')
+        }
+      } catch (e) {
+        console.error('Sign out exception:', e)
+      }
+    }
+
+    // Clear all Supabase auth data from localStorage
     Object.keys(localStorage).forEach(key => {
       if (key.startsWith('sb-') || key.includes('supabase') || key.includes('auth')) {
         localStorage.removeItem(key)
@@ -207,18 +223,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       }
     })
 
-    if (supabase) {
-      try {
-        await supabase.auth.signOut({ scope: 'global' })
-      } catch (e) {
-        console.error('Sign out error:', e)
-      }
-    }
-
     setUser(null)
     setSession(null)
     setProfile(null)
 
+    console.log('Redirecting to home...')
     // Force reload to clear all state
     window.location.href = '/'
   }, [])
