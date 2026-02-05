@@ -1576,7 +1576,7 @@ function App() {
   const t = translations[lang]
 
   // Auth state
-  const { user, signIn, signUp, signInWithGoogle, resetPassword, updatePassword, deleteAccount, updateProfile: updateAuthProfile, profile: authProfile, isSupabaseConfigured } = useAuth()
+  const { user, signIn, signUp, signInWithGoogle, signOut, resetPassword, updatePassword, deleteAccount, updateProfile: updateAuthProfile, profile: authProfile, isSupabaseConfigured } = useAuth()
   const [newPassword, setNewPassword] = useState('')
   const [confirmNewPassword, setConfirmNewPassword] = useState('')
   const [authEmail, setAuthEmail] = useState('')
@@ -1772,10 +1772,27 @@ function App() {
       return
     }
 
+    // OAuth 콜백 처리 (Google 로그인 등)
+    // OAuth 리다이렉트 후 URL hash에 access_token이 포함되어 있음
+    const hash = window.location.hash
+    if (hash && (hash.includes('access_token=') || hash.includes('refresh_token=') || hash.includes('error_description='))) {
+      // Supabase가 OAuth 토큰을 처리하도록 대기
+      // onAuthStateChange에서 자동으로 세션이 설정됨
+      // URL 정리는 Supabase가 처리한 후에 수행
+      console.log('OAuth callback detected, waiting for Supabase to process...')
+
+      // Supabase가 토큰을 처리한 후 URL 정리
+      setTimeout(() => {
+        window.history.replaceState({ page: 'landing' }, '', '#landing')
+        setPageState('landing')
+      }, 1000)
+      return () => window.removeEventListener('popstate', handlePopState)
+    }
+
     // 초기 상태 설정
-    const hash = window.location.hash.slice(1) as Page
-    if (hash && ['landing', 'input', 'hair-selection', 'hair-result', 'how-to-use', 'result'].includes(hash)) {
-      setPageState(hash)
+    const hashPage = window.location.hash.slice(1) as Page
+    if (hashPage && ['landing', 'input', 'hair-selection', 'hair-result', 'how-to-use', 'result', 'login', 'signup', 'profile'].includes(hashPage)) {
+      setPageState(hashPage)
     } else {
       window.history.replaceState({ page: 'landing' }, '', '#landing')
     }
@@ -2945,28 +2962,38 @@ function App() {
     setIsAuthSubmitting(false)
   }
 
-  const handleLogout = () => {
-    // Clear all storage directly
-    Object.keys(localStorage).forEach(key => {
-      if (key.startsWith('sb-') || key.includes('supabase') || key.includes('auth')) {
-        localStorage.removeItem(key)
-      }
-    })
-    Object.keys(sessionStorage).forEach(key => {
-      if (key.startsWith('sb-') || key.includes('supabase') || key.includes('auth')) {
-        sessionStorage.removeItem(key)
-      }
-    })
-    // Force reload
-    window.location.href = '/'
+  const handleLogout = async () => {
+    try {
+      await signOut()
+      // signOut 함수에서 이미 리다이렉트 처리함
+    } catch (error) {
+      console.error('Logout error:', error)
+      // 에러 발생 시에도 강제 로그아웃
+      Object.keys(localStorage).forEach(key => {
+        if (key.startsWith('sb-') || key.includes('supabase') || key.includes('auth')) {
+          localStorage.removeItem(key)
+        }
+      })
+      window.location.href = '/'
+    }
   }
 
   const handleGoogleLogin = async () => {
     setAuthError('')
     setAuthSuccess('')
-    const { error } = await signInWithGoogle()
-    if (error) {
-      setAuthError(error.message || t.authError)
+    setIsAuthSubmitting(true)
+    try {
+      const { error } = await signInWithGoogle()
+      if (error) {
+        console.error('Google login error:', error)
+        setAuthError(error.message || t.authError)
+        setIsAuthSubmitting(false)
+      }
+      // OAuth 리다이렉트가 발생하므로 성공 시 isAuthSubmitting은 리셋되지 않음
+    } catch (err) {
+      console.error('Unexpected error during Google login:', err)
+      setAuthError(t.authError)
+      setIsAuthSubmitting(false)
     }
   }
 

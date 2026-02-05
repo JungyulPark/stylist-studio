@@ -64,10 +64,26 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
     let mounted = true
 
+    // OAuth 콜백 처리: URL hash에서 토큰 추출 시도
+    const handleOAuthCallback = async () => {
+      const hash = window.location.hash
+      if (hash && (hash.includes('access_token=') || hash.includes('error='))) {
+        console.log('Processing OAuth callback from URL hash...')
+        // Supabase가 URL에서 자동으로 토큰을 추출하므로 getSession 호출
+      }
+    }
+
+    handleOAuthCallback()
+
     // Get initial session
-    supabase.auth.getSession().then(async ({ data: { session: initialSession } }) => {
+    supabase.auth.getSession().then(async ({ data: { session: initialSession }, error }) => {
       if (!mounted) return
 
+      if (error) {
+        console.error('Error getting session:', error)
+      }
+
+      console.log('Initial session:', initialSession ? 'Found' : 'None')
       setSession(initialSession)
       setUser(initialSession?.user ?? null)
 
@@ -88,10 +104,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       async (event, newSession) => {
         if (!mounted) return
 
+        console.log('Auth state changed:', event, newSession ? 'Session exists' : 'No session')
+
         setSession(newSession)
         setUser(newSession?.user ?? null)
 
         if (newSession?.user) {
+          console.log('User signed in:', newSession.user.email)
           const profileData = await fetchProfile(newSession.user.id)
           if (mounted) {
             setProfile(profileData)
@@ -101,7 +120,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         }
 
         if (event === 'SIGNED_OUT') {
+          console.log('User signed out')
           setProfile(null)
+        }
+
+        // OAuth 콜백 후 성공적으로 로그인되면 URL hash 정리
+        if (event === 'SIGNED_IN' && window.location.hash.includes('access_token=')) {
+          console.log('Cleaning up OAuth callback URL')
+          window.history.replaceState({ page: 'landing' }, '', '#landing')
         }
       }
     )
@@ -143,12 +169,25 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       return { error: { message: 'Supabase is not configured' } as AuthError }
     }
 
-    const { error } = await supabase.auth.signInWithOAuth({
+    console.log('Starting Google OAuth sign in...')
+    console.log('Redirect URL:', window.location.origin)
+
+    const { data, error } = await supabase.auth.signInWithOAuth({
       provider: 'google',
       options: {
         redirectTo: window.location.origin,
+        queryParams: {
+          access_type: 'offline',
+          prompt: 'consent',
+        },
       },
     })
+
+    if (error) {
+      console.error('Google OAuth error:', error)
+    } else {
+      console.log('Google OAuth initiated, redirecting to:', data?.url)
+    }
 
     return { error }
   }, [])
