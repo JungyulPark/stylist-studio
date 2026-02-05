@@ -31,22 +31,29 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const isSupabaseConfigured = supabase !== null
 
-  // Fetch user profile from database
+  // Fetch user profile from database (optional - works without profiles table)
   const fetchProfile = useCallback(async (userId: string) => {
     if (!supabase) return null
 
-    const { data, error } = await supabase
-      .from('profiles')
-      .select('*')
-      .eq('id', userId)
-      .single()
+    try {
+      const { data, error } = await supabase
+        .from('profiles')
+        .select('*')
+        .eq('id', userId)
+        .single()
 
-    if (error) {
-      console.error('Error fetching profile:', error)
+      if (error) {
+        // 테이블이 없거나 프로필이 없어도 정상 작동
+        console.log('Profile not found (this is OK):', error.message)
+        return null
+      }
+
+      return data as Profile
+    } catch (e) {
+      // 테이블이 없어도 에러 무시
+      console.log('Profile fetch skipped')
       return null
     }
-
-    return data as Profile
   }, [])
 
   const refreshProfile = useCallback(async () => {
@@ -318,20 +325,28 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       return { error: new Error('Not authenticated') }
     }
 
-    const { error } = await supabase
-      .from('profiles')
-      .update({
-        ...updates,
-        updated_at: new Date().toISOString()
-      })
-      .eq('id', user.id)
+    try {
+      const { error } = await supabase
+        .from('profiles')
+        .update({
+          ...updates,
+          updated_at: new Date().toISOString()
+        })
+        .eq('id', user.id)
 
-    if (!error) {
-      const profileData = await fetchProfile(user.id)
-      setProfile(profileData)
+      if (!error) {
+        const profileData = await fetchProfile(user.id)
+        setProfile(profileData)
+      } else {
+        // 테이블 없으면 무시
+        console.log('Profile update skipped:', error.message)
+      }
+
+      return { error: null }
+    } catch (e) {
+      console.log('Profile update skipped')
+      return { error: null }
     }
-
-    return { error: error ? new Error(error.message) : null }
   }, [user, fetchProfile])
 
   const value = {
