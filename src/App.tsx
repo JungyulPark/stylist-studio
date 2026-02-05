@@ -2,7 +2,7 @@ import { useState, useRef, useEffect, useCallback } from 'react'
 import './App.css'
 import { renderMarkdownToHtml } from './utils/markdown'
 import { useAuth } from './contexts/AuthContext'
-import { supabase } from './lib/supabase'
+import { supabase, type AnalysisHistory } from './lib/supabase'
 
 // IndexedDB 헬퍼 함수 (큰 데이터 저장용)
 const DB_NAME = 'StylistStudioDB'
@@ -266,6 +266,9 @@ const translations: Record<Language, {
   analysisHistory: string
   noHistory: string
   historySaved: string
+  viewResult: string
+  fullAnalysis: string
+  hairAnalysis: string
   accountSettings: string
   resetPassword: string
   resetPasswordDesc: string
@@ -460,6 +463,9 @@ const translations: Record<Language, {
     analysisHistory: '분석 히스토리',
     noHistory: '저장된 분석 결과가 없습니다',
     historySaved: '분석 결과가 저장되었습니다',
+    viewResult: '결과 보기',
+    fullAnalysis: '풀 스타일 분석',
+    hairAnalysis: '헤어 스타일 분석',
     accountSettings: '계정 설정',
     resetPassword: '비밀번호 재설정',
     resetPasswordDesc: '가입하신 이메일로 비밀번호 재설정 링크를 보내드립니다.',
@@ -654,6 +660,9 @@ const translations: Record<Language, {
     analysisHistory: 'Analysis History',
     noHistory: 'No saved analysis results',
     historySaved: 'Analysis saved to your history',
+    viewResult: 'View Result',
+    fullAnalysis: 'Full Style Analysis',
+    hairAnalysis: 'Hair Style Analysis',
     accountSettings: 'Account Settings',
     resetPassword: 'Reset Password',
     resetPasswordDesc: 'We will send a password reset link to your email.',
@@ -848,6 +857,9 @@ const translations: Record<Language, {
     analysisHistory: '分析履歴',
     noHistory: '保存された分析結果はありません',
     historySaved: '分析結果が保存されました',
+    viewResult: '結果を見る',
+    fullAnalysis: 'フルスタイル分析',
+    hairAnalysis: 'ヘアスタイル分析',
     accountSettings: 'アカウント設定',
     resetPassword: 'パスワードリセット',
     resetPasswordDesc: 'パスワードリセットリンクをメールでお送りします。',
@@ -1042,6 +1054,9 @@ const translations: Record<Language, {
     analysisHistory: '分析历史',
     noHistory: '暂无保存的分析结果',
     historySaved: '分析结果已保存',
+    viewResult: '查看结果',
+    fullAnalysis: '全面风格分析',
+    hairAnalysis: '发型分析',
     accountSettings: '账户设置',
     resetPassword: '重置密码',
     resetPasswordDesc: '我们将向您的邮箱发送密码重置链接。',
@@ -1236,6 +1251,9 @@ const translations: Record<Language, {
     analysisHistory: 'Historial de Análisis',
     noHistory: 'No hay resultados de análisis guardados',
     historySaved: 'Análisis guardado en tu historial',
+    viewResult: 'Ver Resultado',
+    fullAnalysis: 'Análisis de Estilo Completo',
+    hairAnalysis: 'Análisis de Peinado',
     accountSettings: 'Configuración de Cuenta',
     resetPassword: 'Restablecer Contraseña',
     resetPasswordDesc: 'Enviaremos un enlace de restablecimiento a tu correo.',
@@ -1586,6 +1604,8 @@ function App() {
   const [isAuthSubmitting, setIsAuthSubmitting] = useState(false)
   const [authSuccess, setAuthSuccess] = useState('')
   const [showForgotPassword, setShowForgotPassword] = useState(false)
+  const [analysisHistory, setAnalysisHistory] = useState<AnalysisHistory[]>([])
+  const [isLoadingHistory, setIsLoadingHistory] = useState(false)
 
   // 단위 설정 (영어 사용자는 선택 가능, 기본값: 영어는 imperial, 그 외는 metric)
   const [useMetric, setUseMetric] = useState(() => lang !== 'en')
@@ -3083,6 +3103,37 @@ function App() {
     })
   }
 
+  // Fetch analysis history for logged-in users
+  const fetchAnalysisHistory = useCallback(async () => {
+    if (!user || !supabase) return
+
+    setIsLoadingHistory(true)
+    try {
+      const { data, error } = await supabase
+        .from('analysis_history')
+        .select('*')
+        .eq('user_id', user.id)
+        .order('created_at', { ascending: false })
+
+      if (error) {
+        console.error('Failed to fetch analysis history:', error)
+      } else {
+        setAnalysisHistory(data || [])
+      }
+    } catch (e) {
+      console.error('Error fetching analysis history:', e)
+    } finally {
+      setIsLoadingHistory(false)
+    }
+  }, [user])
+
+  // Fetch history when profile page is opened
+  useEffect(() => {
+    if (page === 'profile' && user) {
+      fetchAnalysisHistory()
+    }
+  }, [page, user, fetchAnalysisHistory])
+
   // Save analysis to history for logged-in users
   const saveAnalysisToHistory = async (
     analysisType: 'full' | 'hair',
@@ -3412,7 +3463,57 @@ function App() {
 
             <div className="profile-section">
               <h3>{t.analysisHistory}</h3>
-              <p className="no-history">{t.noHistory}</p>
+              {isLoadingHistory ? (
+                <p className="no-history">Loading...</p>
+              ) : analysisHistory.length === 0 ? (
+                <p className="no-history">{t.noHistory}</p>
+              ) : (
+                <div className="history-list">
+                  {analysisHistory.map((item) => (
+                    <div key={item.id} className="history-item">
+                      <div className="history-item-info">
+                        <span className="history-type">
+                          {item.analysis_type === 'full' ? t.fullAnalysis : t.hairAnalysis}
+                        </span>
+                        <span className="history-date">
+                          {new Date(item.created_at).toLocaleDateString(lang === 'ko' ? 'ko-KR' : lang === 'ja' ? 'ja-JP' : lang === 'zh' ? 'zh-CN' : lang === 'es' ? 'es-ES' : 'en-US', {
+                            year: 'numeric',
+                            month: 'short',
+                            day: 'numeric',
+                            hour: '2-digit',
+                            minute: '2-digit'
+                          })}
+                        </span>
+                      </div>
+                      <button
+                        type="button"
+                        className="btn-outline-sm"
+                        onClick={() => {
+                          // Load the analysis result and navigate to result page
+                          if (item.analysis_type === 'full' && item.report_content) {
+                            setReport(item.report_content)
+                            // Restore style images if available
+                            if (item.style_images && Array.isArray(item.style_images)) {
+                              const images = item.style_images as unknown as { id: string; label: string; imageUrl: string | null }[]
+                              setStyleImages(images.map(img => ({ ...img, isDemo: false })))
+                            }
+                            setPage('result')
+                          } else if (item.analysis_type === 'hair') {
+                            // Restore hair images if available
+                            if (item.hair_images && Array.isArray(item.hair_images)) {
+                              const hairImages = item.hair_images as unknown as { id: string; label: string; imageUrl: string | null }[]
+                              setGeneratedHairImages(hairImages.map(img => ({ style: img.label, imageUrl: img.imageUrl })))
+                            }
+                            setPage('hair-result')
+                          }
+                        }}
+                      >
+                        {t.viewResult}
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              )}
             </div>
 
             <div className="profile-section account-settings">

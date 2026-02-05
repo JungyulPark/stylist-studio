@@ -3568,10 +3568,11 @@
 
 /* Password change form */
 .password-change-form {
-  background: rgba(255, 255, 255, 0.05);
+  background: rgba(212, 114, 140, 0.05);
   padding: 1.5rem;
-  border-radius: 8px;
+  border-radius: 12px;
   margin-bottom: 1rem;
+  border: 1px solid rgba(212, 114, 140, 0.1);
 }
 
 .password-change-form .input-group {
@@ -3581,23 +3582,25 @@
 .password-change-form .input-group label {
   display: block;
   margin-bottom: 0.5rem;
-  color: rgba(255, 255, 255, 0.8);
+  color: var(--charcoal);
   font-size: 0.875rem;
+  font-weight: 500;
 }
 
 .password-change-form .input-group input {
   width: 100%;
   padding: 0.75rem;
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  border-radius: 6px;
-  background: rgba(255, 255, 255, 0.1);
-  color: white;
+  border: 1px solid rgba(212, 114, 140, 0.2);
+  border-radius: 8px;
+  background: white;
+  color: var(--charcoal);
   font-size: 1rem;
 }
 
 .password-change-form .input-group input:focus {
   outline: none;
   border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(212, 114, 140, 0.1);
 }
 
 .password-change-form button {
@@ -3684,6 +3687,58 @@
   padding: 2rem;
   background: rgba(26, 26, 26, 0.03);
   border-radius: 8px;
+}
+
+.history-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.history-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem;
+  background: rgba(212, 114, 140, 0.05);
+  border: 1px solid rgba(212, 114, 140, 0.15);
+  border-radius: 12px;
+  transition: all 0.2s;
+}
+
+.history-item:hover {
+  background: rgba(212, 114, 140, 0.1);
+  border-color: rgba(212, 114, 140, 0.25);
+}
+
+.history-item-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.history-type {
+  font-weight: 600;
+  color: var(--charcoal);
+  font-size: 0.95rem;
+}
+
+.history-date {
+  font-size: 0.8rem;
+  color: rgba(26, 26, 26, 0.5);
+}
+
+@media (max-width: 640px) {
+  .history-item {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.75rem;
+  }
+
+  .history-item .btn-outline-sm {
+    width: 100%;
+    text-align: center;
+  }
 }
 
 @media (max-width: 640px) {
