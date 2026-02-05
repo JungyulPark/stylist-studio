@@ -1,5 +1,22 @@
 # Stylist Studio - Task & Roadmap
 
+## 🚨 긴급 수정 필요 (2026-02-05)
+
+### 현재 문제
+- [ ] **로그아웃 버튼 클릭 안됨**
+- [ ] **회원탈퇴 버튼 클릭 안됨**
+
+### 다음 작업 (돌아오면 바로 시작)
+1. Supabase service_role key 받기
+2. 버튼 클릭 문제 디버깅 (CSS z-index? JS 에러?)
+3. 로그아웃/탈퇴 기능 수정
+
+### Supabase 설정 정보
+- **Project URL**: https://gplgnygyikmxnwbwztnk.supabase.co
+- **service_role key**: (받아야 함 - Dashboard > Settings > API > service_role)
+
+---
+
 ## 현재 상태 (2026-02-05)
 
 ### 완료된 기능
@@ -7,13 +24,20 @@
 - [x] 헤어 스타일 분석 (Hair Style Analysis)
 - [x] Polar 결제 연동
 - [x] 다국어 지원 (한/영/일/중/스페인어)
-- [x] Google OAuth 로그인
-- [x] 마이페이지
-  - [x] 내 정보 표시
-  - [x] 분석 히스토리 조회/보기
-  - [x] 비밀번호 변경
-  - [x] 비밀번호 재설정 (이메일)
-  - [x] 계정 탈퇴
+- [x] Google OAuth 로그인 ✅ 작동 확인됨
+
+### 마이페이지 (부분 완료)
+- [x] 내 정보 표시
+- [x] 분석 히스토리 UI 구현 (DB 연결 선택적)
+- [x] 비밀번호 변경 UI
+- [x] 비밀번호 재설정 (이메일)
+- [ ] **로그아웃** ❌ 버튼 클릭 안됨
+- [ ] **계정 탈퇴** ❌ 버튼 클릭 안됨
+
+### Supabase DB 테이블 (선택적)
+- profiles 테이블 - 생성됨 (SQL 실행함)
+- analysis_history 테이블 - 생성됨 (SQL 실행함)
+- RLS 정책 - 설정 필요할 수 있음
 
 ---
 
