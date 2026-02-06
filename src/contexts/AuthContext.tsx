@@ -287,20 +287,19 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       )
 
       const deletePromise = async () => {
-        // RPC 함수로 계정 + 모든 관련 데이터 한번에 삭제
         console.log('Calling delete_user RPC...')
         const { error: rpcError } = await sb.rpc('delete_user')
         if (rpcError) {
-          console.error('RPC delete_user FAILED:', rpcError.message, rpcError)
-        } else {
-          console.log('RPC delete_user SUCCESS - user deleted from Supabase')
+          throw new Error(`RPC FAILED: ${rpcError.message}`)
         }
+        return 'SUCCESS'
       }
 
-      await Promise.race([deletePromise(), timeoutPromise])
-      console.log('Account deleted from server')
-    } catch (e) {
-      console.log('Server deletion incomplete (will clean up locally):', e)
+      const result = await Promise.race([deletePromise(), timeoutPromise])
+      alert(`Account deletion: ${result}`)
+    } catch (e: unknown) {
+      const msg = e instanceof Error ? e.message : String(e)
+      alert(`Account deletion error: ${msg}`)
     }
 
     // 2. 로컬 상태 정리
