@@ -278,7 +278,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       return { error: new Error('Not authenticated') }
     }
 
-    const userId = user.id
     const sb = supabase
 
     // 1. 서버에서 계정 삭제 시도 (5초 타임아웃)
@@ -288,12 +287,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       )
 
       const deletePromise = async () => {
-        // 관련 데이터 삭제
-        try { await sb.from('analysis_history').delete().eq('user_id', userId) } catch {}
-        try { await sb.from('profiles').delete().eq('id', userId) } catch {}
-        // auth.users에서 삭제 (RPC 함수 필요)
+        // RPC 함수로 계정 + 모든 관련 데이터 한번에 삭제
+        console.log('Calling delete_user RPC...')
         const { error: rpcError } = await sb.rpc('delete_user')
-        if (rpcError) console.log('RPC delete_user:', rpcError.message)
+        if (rpcError) {
+          console.error('RPC delete_user FAILED:', rpcError.message, rpcError)
+        } else {
+          console.log('RPC delete_user SUCCESS - user deleted from Supabase')
+        }
       }
 
       await Promise.race([deletePromise(), timeoutPromise])
