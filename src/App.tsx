@@ -283,6 +283,18 @@ const translations: Record<Language, {
   updatePasswordBtn: string
   passwordUpdated: string
   cancel: string
+  // Free Trial & Upsell
+  freeTrialBadge: string
+  freeTrialCta: string
+  freeTrialDesc: string
+  upsellTitle: string
+  upsellSubtitle: string
+  upsellHairAgain: string
+  upsellFullPackage: string
+  upsellFullDesc: string
+  upsellDismiss: string
+  shareMyResult: string
+  freeUploadText: string
 }> = {
   ko: {
     title: 'PERSONAL STYLIST',
@@ -479,7 +491,18 @@ const translations: Record<Language, {
     confirmNewPassword: '새 비밀번호 확인',
     updatePasswordBtn: '비밀번호 변경',
     passwordUpdated: '비밀번호가 변경되었습니다.',
-    cancel: '취소'
+    cancel: '취소',
+    freeTrialBadge: 'FREE',
+    freeTrialCta: '무료 헤어 분석 체험',
+    freeTrialDesc: '첫 방문 특별 혜택 - 무료 1회 헤어 분석',
+    upsellTitle: '결과가 마음에 드셨나요?',
+    upsellSubtitle: '더 많은 스타일을 만나보세요',
+    upsellHairAgain: '헤어 분석 추가',
+    upsellFullPackage: '풀 스타일 컨설팅',
+    upsellFullDesc: '헤어 + 패션 + 체형 분석',
+    upsellDismiss: '나중에 할게요',
+    shareMyResult: '내 결과 공유하기',
+    freeUploadText: '내 사진 업로드 (무료!)',
   },
   en: {
     title: 'PERSONAL STYLIST',
@@ -676,7 +699,18 @@ const translations: Record<Language, {
     confirmNewPassword: 'Confirm New Password',
     updatePasswordBtn: 'Update Password',
     passwordUpdated: 'Password has been updated.',
-    cancel: 'Cancel'
+    cancel: 'Cancel',
+    freeTrialBadge: 'FREE',
+    freeTrialCta: 'Try Free Hair Analysis',
+    freeTrialDesc: 'First visit special - 1 free hair analysis',
+    upsellTitle: 'Love your results?',
+    upsellSubtitle: 'Discover even more styles',
+    upsellHairAgain: 'Get Another Hair Analysis',
+    upsellFullPackage: 'Full Style Consultation',
+    upsellFullDesc: 'Hair + Fashion + Body Analysis',
+    upsellDismiss: 'Maybe Later',
+    shareMyResult: 'Share My Result',
+    freeUploadText: 'Upload My Photo (Free!)',
   },
   ja: {
     title: 'PERSONAL STYLIST',
@@ -873,7 +907,18 @@ const translations: Record<Language, {
     confirmNewPassword: '新しいパスワードの確認',
     updatePasswordBtn: 'パスワードを変更',
     passwordUpdated: 'パスワードが変更されました。',
-    cancel: 'キャンセル'
+    cancel: 'キャンセル',
+    freeTrialBadge: 'FREE',
+    freeTrialCta: '無料ヘア分析を体験',
+    freeTrialDesc: '初回限定 - 無料ヘア分析1回',
+    upsellTitle: '結果はいかがでしたか？',
+    upsellSubtitle: 'もっと多くのスタイルを発見',
+    upsellHairAgain: 'ヘア分析をもう一度',
+    upsellFullPackage: 'フルスタイルコンサル',
+    upsellFullDesc: 'ヘア + ファッション + 体型分析',
+    upsellDismiss: 'また今度',
+    shareMyResult: '結果をシェア',
+    freeUploadText: '写真をアップロード（無料！）',
   },
   zh: {
     title: 'PERSONAL STYLIST',
@@ -1070,7 +1115,18 @@ const translations: Record<Language, {
     confirmNewPassword: '确认新密码',
     updatePasswordBtn: '更新密码',
     passwordUpdated: '密码已更新。',
-    cancel: '取消'
+    cancel: '取消',
+    freeTrialBadge: 'FREE',
+    freeTrialCta: '免费体验发型分析',
+    freeTrialDesc: '首次访问特惠 - 免费1次发型分析',
+    upsellTitle: '对结果满意吗？',
+    upsellSubtitle: '发现更多风格',
+    upsellHairAgain: '再来一次发型分析',
+    upsellFullPackage: '全套风格咨询',
+    upsellFullDesc: '发型 + 时尚 + 体型分析',
+    upsellDismiss: '以后再说',
+    shareMyResult: '分享我的结果',
+    freeUploadText: '上传我的照片（免费！）',
   },
   es: {
     title: 'PERSONAL STYLIST',
@@ -1267,7 +1323,18 @@ const translations: Record<Language, {
     confirmNewPassword: 'Confirmar Nueva Contraseña',
     updatePasswordBtn: 'Actualizar Contraseña',
     passwordUpdated: 'La contraseña ha sido actualizada.',
-    cancel: 'Cancelar'
+    cancel: 'Cancelar',
+    freeTrialBadge: 'FREE',
+    freeTrialCta: 'Prueba Análisis Capilar Gratis',
+    freeTrialDesc: 'Especial primera visita - 1 análisis capilar gratis',
+    upsellTitle: '¿Te gustan los resultados?',
+    upsellSubtitle: 'Descubre aún más estilos',
+    upsellHairAgain: 'Otro Análisis Capilar',
+    upsellFullPackage: 'Consulta de Estilo Completa',
+    upsellFullDesc: 'Cabello + Moda + Análisis Corporal',
+    upsellDismiss: 'Quizás Después',
+    shareMyResult: 'Compartir Mi Resultado',
+    freeUploadText: 'Subir Mi Foto (¡Gratis!)',
   }
 }
 
@@ -1610,6 +1677,10 @@ function App() {
   // 단위 설정 (영어 사용자는 선택 가능, 기본값: 영어는 imperial, 그 외는 metric)
   const [useMetric, setUseMetric] = useState(() => lang !== 'en')
   const isImperial = !useMetric
+
+  // Free Trial state
+  const [hasUsedFreeTrial, setHasUsedFreeTrial] = useState(() => localStorage.getItem('stylist_free_trial_used') === 'true')
+  const [isFreeTrial, setIsFreeTrial] = useState(false)
 
   const feetInchesToCm = (feet: string, inches: string): string => {
     const ft = parseFloat(feet) || 0
@@ -2205,6 +2276,67 @@ function App() {
     }
   }
 
+  // 무료 체험 헤어 생성 (결제 없음)
+  const startFreeTrialHairGeneration = async () => {
+    // 즉시 localStorage에 저장 (악용 방지)
+    localStorage.setItem('stylist_free_trial_used', 'true')
+    setHasUsedFreeTrial(true)
+    setIsFreeTrial(true)
+
+    setPage('loading')
+    setIsGeneratingHair(true)
+
+    const occasion = selectedOccasion || 'daily'
+    const vibe = selectedVibe || 'natural'
+    const hairGender = profile.gender || 'male'
+
+    const demoRecommendations = getHairDemoRecommendations(occasion, vibe, lang, hairGender as Gender)
+    setHairRecommendations(demoRecommendations)
+
+    if (hairPhoto) {
+      try {
+        const response = await fetch('/api/generate-hair-styles', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            photo: hairPhoto,
+            occasion,
+            vibe,
+            gender: profile.gender,
+            styles: demoRecommendations,
+            language: lang
+          })
+        })
+
+        if (response.ok) {
+          const data = await response.json()
+          if (data.images && data.images.length > 0) {
+            setGeneratedHairImages(data.images)
+          } else {
+            setGeneratedHairImages([])
+            setError(lang === 'ko'
+              ? '헤어스타일 생성에 실패했습니다. 다시 시도해주세요.'
+              : 'Hair style generation failed. Please try again.')
+          }
+        } else {
+          setGeneratedHairImages([])
+          setError(lang === 'ko'
+            ? '헤어스타일 생성에 실패했습니다. 다시 시도해주세요.'
+            : 'Hair style generation failed. Please try again.')
+        }
+      } catch (e) {
+        console.error('Free trial hair generation error:', e)
+        setGeneratedHairImages([])
+        setError(lang === 'ko'
+          ? '헤어스타일 생성에 실패했습니다. 다시 시도해주세요.'
+          : 'Hair style generation failed. Please try again.')
+      }
+    }
+
+    setIsGeneratingHair(false)
+    setPage('hair-result')
+  }
+
   // 실제 분석 수행 함수
   const performAnalysis = async () => {
     setPage('loading')
@@ -2395,6 +2527,7 @@ function App() {
     setTransformedHairstyles([])
     setIsFullPaid(false)
     setIsHairPaid(false)
+    setIsFreeTrial(false)
     setPage('landing')
   }
 
@@ -2591,6 +2724,12 @@ function App() {
         selectedVibe,
         gender: profile.gender
       })
+      return
+    }
+
+    // 사진이 있고 결제 안됨 + 무료 체험 미사용 → 무료 체험 실행
+    if (hairPhoto && !isHairPaid && !hasUsedFreeTrial) {
+      startFreeTrialHairGeneration()
       return
     }
 
@@ -3633,9 +3772,15 @@ function App() {
             </h1>
             <p className="hero-desc">{t.heroDesc}</p>
             <div className="hero-buttons">
-              <button className="btn-dark" onClick={() => document.getElementById('features')?.scrollIntoView({ behavior: 'smooth' })}>
-                {t.startBtn}
-              </button>
+              {!hasUsedFreeTrial ? (
+                <button className="free-cta-pulse" onClick={() => setPage('hair-selection')}>
+                  {t.freeTrialCta}
+                </button>
+              ) : (
+                <button className="btn-dark" onClick={() => document.getElementById('features')?.scrollIntoView({ behavior: 'smooth' })}>
+                  {t.startBtn}
+                </button>
+              )}
               <button className="btn-outline" onClick={() => setPage('how-to-use')}>
                 {t.learnMore}
               </button>
@@ -3722,9 +3867,10 @@ function App() {
                 <div className="path-glass">
                   <div className="path-header">
                     <span className="path-module">HAIR ONLY</span>
+                    {!hasUsedFreeTrial && <span className="free-badge">{t.freeTrialBadge}</span>}
                   </div>
                   <h3 className="path-title">{t.module1Title}</h3>
-                  <p className="path-desc">{t.module1Desc}</p>
+                  <p className="path-desc">{!hasUsedFreeTrial ? t.freeTrialDesc : t.module1Desc}</p>
                   <ul className="path-features">
                     {t.module1Features.map((feature, i) => (
                       <li key={i}>✓ {feature}</li>
@@ -4558,7 +4704,7 @@ function App() {
 
             <div className="photo-upload-section">
               <h3 className="selection-title">
-                {lang === 'ko' ? '내 사진 업로드 (선택)' : 'Upload My Photo (Optional)'}
+                {!hasUsedFreeTrial ? t.freeUploadText : (lang === 'ko' ? '내 사진 업로드 (선택)' : 'Upload My Photo (Optional)')}
               </h3>
               <p className="photo-upload-desc">
                 {lang === 'ko'
@@ -4696,6 +4842,49 @@ function App() {
                   </div>
                 </div>
               )}
+            </div>
+          )}
+
+          {/* Share My Result - Prominent CTA for viral loop */}
+          {isFreeTrial && generatedHairImages.some(img => img.imageUrl) && (
+            <div className="share-result-section">
+              <button className="share-result-btn" onClick={handleShareResult}>
+                {t.shareMyResult}
+              </button>
+              <p className="share-result-hint">kstylist.cc</p>
+            </div>
+          )}
+
+          {/* Upsell Section - Only for free trial users */}
+          {isFreeTrial && (
+            <div className="upsell-section">
+              <h3 className="upsell-title">{t.upsellTitle}</h3>
+              <p className="upsell-subtitle">{t.upsellSubtitle}</p>
+              <div className="upsell-cards">
+                <div className="upsell-option" onClick={() => {
+                  setIsFreeTrial(false)
+                  setSelectedOccasion(null)
+                  setSelectedVibe(null)
+                  setHairRecommendations([])
+                  setGeneratedHairImages([])
+                  setPage('hair-selection')
+                }}>
+                  <h4>{t.upsellHairAgain}</h4>
+                  <p className="upsell-price">$2.99</p>
+                </div>
+                <div className="upsell-option featured" onClick={() => {
+                  setIsFreeTrial(false)
+                  setPage('input')
+                }}>
+                  <span className="upsell-best-badge">BEST</span>
+                  <h4>{t.upsellFullPackage}</h4>
+                  <p className="upsell-full-desc">{t.upsellFullDesc}</p>
+                  <p className="upsell-price">$4.99</p>
+                </div>
+              </div>
+              <button className="upsell-dismiss" onClick={() => setIsFreeTrial(false)}>
+                {t.upsellDismiss}
+              </button>
             </div>
           )}
 

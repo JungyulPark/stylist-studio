@@ -3765,3 +3765,186 @@
     font-size: 1.5rem;
   }
 }
+
+/* ===== FREE TRIAL & UPSELL ===== */
+
+/* FREE badge on hair card */
+.free-badge {
+  display: inline-block;
+  padding: 0.25rem 0.75rem;
+  background: linear-gradient(135deg, #00c853, #64dd17);
+  color: #fff;
+  font-size: 0.7rem;
+  font-weight: 800;
+  border-radius: 20px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  animation: badge-glow 2s ease-in-out infinite;
+}
+
+@keyframes badge-glow {
+  0%, 100% { box-shadow: 0 0 8px rgba(0, 200, 83, 0.4); }
+  50% { box-shadow: 0 0 20px rgba(0, 200, 83, 0.7); }
+}
+
+/* Green pulse CTA button */
+.free-cta-pulse {
+  padding: 0.875rem 2rem;
+  font-size: 1rem;
+  font-weight: 700;
+  color: #fff;
+  background: linear-gradient(135deg, #00c853, #00e676);
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  position: relative;
+  transition: all 0.3s;
+  box-shadow: 0 4px 20px rgba(0, 200, 83, 0.35);
+  animation: pulse-green 2s ease-in-out infinite;
+}
+
+.free-cta-pulse:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 28px rgba(0, 200, 83, 0.5);
+}
+
+@keyframes pulse-green {
+  0%, 100% { box-shadow: 0 4px 20px rgba(0, 200, 83, 0.35); }
+  50% { box-shadow: 0 4px 30px rgba(0, 200, 83, 0.6), 0 0 0 8px rgba(0, 200, 83, 0.1); }
+}
+
+/* Share Result section */
+.share-result-section {
+  text-align: center;
+  padding: 1.5rem;
+  margin-bottom: 1rem;
+}
+
+.share-result-btn {
+  padding: 1rem 2.5rem;
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #fff;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border: none;
+  border-radius: 16px;
+  cursor: pointer;
+  transition: all 0.3s;
+  box-shadow: 0 4px 20px rgba(102, 126, 234, 0.35);
+}
+
+.share-result-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 28px rgba(102, 126, 234, 0.5);
+}
+
+.share-result-hint {
+  margin-top: 0.5rem;
+  font-size: 0.75rem;
+  color: rgba(255, 255, 255, 0.5);
+  letter-spacing: 0.05em;
+}
+
+/* Upsell section */
+.upsell-section {
+  text-align: center;
+  padding: 2rem 1.5rem;
+  margin: 1rem 0;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(212, 114, 140, 0.15);
+  border-radius: 20px;
+}
+
+.upsell-title {
+  font-family: var(--font-serif);
+  font-size: 1.5rem;
+  margin-bottom: 0.25rem;
+  color: #fff;
+}
+
+.upsell-subtitle {
+  font-size: 0.9rem;
+  color: rgba(255, 255, 255, 0.6);
+  margin-bottom: 1.5rem;
+}
+
+.upsell-cards {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+@media (max-width: 480px) {
+  .upsell-cards {
+    grid-template-columns: 1fr;
+  }
+}
+
+.upsell-option {
+  padding: 1.5rem 1rem;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 16px;
+  cursor: pointer;
+  transition: all 0.3s;
+  position: relative;
+}
+
+.upsell-option:hover {
+  border-color: var(--primary);
+  background: rgba(212, 114, 140, 0.08);
+  transform: translateY(-2px);
+}
+
+.upsell-option h4 {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #fff;
+  margin-bottom: 0.5rem;
+}
+
+.upsell-option.featured {
+  border-color: var(--primary);
+  background: rgba(212, 114, 140, 0.1);
+  box-shadow: 0 4px 20px rgba(212, 114, 140, 0.2);
+}
+
+.upsell-price {
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: var(--primary-light);
+}
+
+.upsell-full-desc {
+  font-size: 0.8rem;
+  color: rgba(255, 255, 255, 0.5);
+  margin-bottom: 0.5rem;
+}
+
+.upsell-best-badge {
+  position: absolute;
+  top: -8px;
+  right: 12px;
+  padding: 0.2rem 0.6rem;
+  background: linear-gradient(135deg, #d4af37, #f4d03f);
+  color: #1a1a2e;
+  font-size: 0.65rem;
+  font-weight: 800;
+  border-radius: 6px;
+  letter-spacing: 0.1em;
+}
+
+.upsell-dismiss {
+  padding: 0.5rem 1.5rem;
+  font-size: 0.85rem;
+  color: rgba(255, 255, 255, 0.4);
+  background: none;
+  border: none;
+  cursor: pointer;
+  transition: color 0.2s;
+}
+
+.upsell-dismiss:hover {
+  color: rgba(255, 255, 255, 0.7);
+}
