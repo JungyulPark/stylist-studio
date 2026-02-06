@@ -290,16 +290,15 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         console.log('Calling delete_user RPC...')
         const { error: rpcError } = await sb.rpc('delete_user')
         if (rpcError) {
-          throw new Error(`RPC FAILED: ${rpcError.message}`)
+          console.error('RPC delete_user FAILED:', rpcError.message)
+        } else {
+          console.log('RPC delete_user SUCCESS')
         }
-        return 'SUCCESS'
       }
 
-      const result = await Promise.race([deletePromise(), timeoutPromise])
-      alert(`Account deletion: ${result}`)
-    } catch (e: unknown) {
-      const msg = e instanceof Error ? e.message : String(e)
-      alert(`Account deletion error: ${msg}`)
+      await Promise.race([deletePromise(), timeoutPromise])
+    } catch (e) {
+      console.log('Server deletion incomplete:', e)
     }
 
     // 2. 로컬 상태 정리
