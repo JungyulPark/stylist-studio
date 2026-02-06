@@ -31,26 +31,46 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const isSupabaseConfigured = supabase !== null
 
-  // Fetch user profile from database (optional - works without profiles table)
-  const fetchProfile = useCallback(async (userId: string) => {
+  // Fetch user profile from database, create if not exists
+  const fetchProfile = useCallback(async (userId: string, email?: string) => {
     if (!supabase) return null
 
     try {
+      // 1. 프로필 조회 시도
       const { data, error } = await supabase
         .from('profiles')
         .select('*')
         .eq('id', userId)
         .single()
 
-      if (error) {
-        // 테이블이 없거나 프로필이 없어도 정상 작동
-        console.log('Profile not found (this is OK):', error.message)
-        return null
+      if (data) return data as Profile
+
+      // 2. 프로필 없으면 자동 생성 (upsert)
+      if (error && email) {
+        console.log('Profile not found, creating new profile...')
+        const { data: newProfile, error: upsertError } = await supabase
+          .from('profiles')
+          .upsert({
+            id: userId,
+            email: email,
+            display_name: email.split('@')[0],
+            preferred_language: 'ko',
+            created_at: new Date().toISOString(),
+            updated_at: new Date().toISOString(),
+          }, { onConflict: 'id' })
+          .select()
+          .single()
+
+        if (upsertError) {
+          console.log('Profile creation skipped:', upsertError.message)
+          return null
+        }
+        console.log('Profile created successfully')
+        return newProfile as Profile
       }
 
-      return data as Profile
+      return null
     } catch (e) {
-      // 테이블이 없어도 에러 무시
       console.log('Profile fetch skipped')
       return null
     }
@@ -95,7 +115,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       setUser(initialSession?.user ?? null)
 
       if (initialSession?.user) {
-        const profileData = await fetchProfile(initialSession.user.id)
+        const profileData = await fetchProfile(initialSession.user.id, initialSession.user.email ?? undefined)
         if (mounted) {
           setProfile(profileData)
         }
@@ -118,7 +138,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
         if (newSession?.user) {
           console.log('User signed in:', newSession.user.email)
-          const profileData = await fetchProfile(newSession.user.id)
+          const profileData = await fetchProfile(newSession.user.id, newSession.user.email ?? undefined)
           if (mounted) {
             setProfile(profileData)
           }
@@ -259,13 +279,34 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
 
     const userId = user.id
+    const sb = supabase
 
-    // 1. 로컬 상태 먼저 정리 (네트워크 대기 없이 즉시)
+    // 1. 서버에서 계정 삭제 시도 (5초 타임아웃)
+    try {
+      const timeoutPromise = new Promise((_, reject) =>
+        setTimeout(() => reject(new Error('timeout')), 5000)
+      )
+
+      const deletePromise = async () => {
+        // 관련 데이터 삭제
+        try { await sb.from('analysis_history').delete().eq('user_id', userId) } catch {}
+        try { await sb.from('profiles').delete().eq('id', userId) } catch {}
+        // auth.users에서 삭제 (RPC 함수 필요)
+        const { error: rpcError } = await sb.rpc('delete_user')
+        if (rpcError) console.log('RPC delete_user:', rpcError.message)
+      }
+
+      await Promise.race([deletePromise(), timeoutPromise])
+      console.log('Account deleted from server')
+    } catch (e) {
+      console.log('Server deletion incomplete (will clean up locally):', e)
+    }
+
+    // 2. 로컬 상태 정리
     setUser(null)
     setSession(null)
     setProfile(null)
 
-    // 2. localStorage/sessionStorage 정리
     Object.keys(localStorage).forEach(key => {
       if (key.startsWith('sb-') || key.includes('supabase') || key.includes('auth')) {
         localStorage.removeItem(key)
@@ -277,30 +318,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       }
     })
 
-    // 3. 서버 정리는 비동기로 (UI 블로킹 없이)
-    const sb = supabase // TypeScript narrowing을 위해 로컬 변수로 캡처
-    const serverCleanup = async () => {
-      try {
-        await sb.from('analysis_history').delete().eq('user_id', userId)
-      } catch (e) { console.log('analysis_history delete skipped:', e) }
+    // 3. signOut은 대기 안함
+    sb.auth.signOut().catch(() => {})
 
-      try {
-        await sb.from('profiles').delete().eq('id', userId)
-      } catch (e) { console.log('profiles delete skipped:', e) }
-
-      try {
-        await sb.rpc('delete_user')
-      } catch (e) { console.log('RPC not available:', e) }
-
-      try {
-        await sb.auth.signOut()
-      } catch (e) { console.log('signOut skipped:', e) }
-    }
-
-    // 서버 정리는 백그라운드로 실행 (대기하지 않음)
-    serverCleanup().catch(e => console.error('Server cleanup error:', e))
-
-    // 4. 즉시 리다이렉트
+    // 4. 리다이렉트
     window.location.href = '/'
     return { error: null }
   }, [user])
