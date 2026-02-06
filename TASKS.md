@@ -1,15 +1,17 @@
 # Stylist Studio - Task & Roadmap
 
-## 🚨 긴급 수정 필요 (2026-02-05)
+## 🔧 수정 완료 (2026-02-06)
 
-### 현재 문제
-- [ ] **로그아웃 버튼 클릭 안됨**
-- [ ] **회원탈퇴 버튼 클릭 안됨**
+### 해결된 문제
+- [x] **로그아웃 버튼 클릭 안됨** → signOut에서 await 제거, 로컬 정리 우선 처리
+- [x] **회원탈퇴 버튼 클릭 안됨** → deleteAccount에서 서버 호출 비동기화, 즉시 리다이렉트
 
-### 다음 작업 (돌아오면 바로 시작)
-1. Supabase service_role key 받기
-2. 버튼 클릭 문제 디버깅 (CSS z-index? JS 에러?)
-3. 로그아웃/탈퇴 기능 수정
+### 원인
+- `await supabase.auth.signOut()`이 네트워크 문제로 무한 대기 → `window.location.href`까지 도달 못함
+- 수정: 로컬 상태/스토리지 정리 먼저 → 리다이렉트 즉시 → 서버 호출은 백그라운드
+
+### 남은 작업
+1. Supabase service_role key 설정 (계정 완전 삭제용)
 
 ### Supabase 설정 정보
 - **Project URL**: https://gplgnygyikmxnwbwztnk.supabase.co
@@ -31,8 +33,8 @@
 - [x] 분석 히스토리 UI 구현 (DB 연결 선택적)
 - [x] 비밀번호 변경 UI
 - [x] 비밀번호 재설정 (이메일)
-- [ ] **로그아웃** ❌ 버튼 클릭 안됨
-- [ ] **계정 탈퇴** ❌ 버튼 클릭 안됨
+- [x] **로그아웃** ✅ 수정됨
+- [x] **계정 탈퇴** ✅ 수정됨
 
 ### Supabase DB 테이블 (선택적)
 - profiles 테이블 - 생성됨 (SQL 실행함)

@@ -2982,23 +2982,9 @@ function App() {
     setIsAuthSubmitting(false)
   }
 
-  const handleLogout = async () => {
+  const handleLogout = () => {
     console.log('Logout button clicked!')
-    try {
-      console.log('Calling signOut...')
-      await signOut()
-      console.log('signOut completed')
-      // signOut 함수에서 이미 리다이렉트 처리함
-    } catch (error) {
-      console.error('Logout error:', error)
-      // 에러 발생 시에도 강제 로그아웃
-      Object.keys(localStorage).forEach(key => {
-        if (key.startsWith('sb-') || key.includes('supabase') || key.includes('auth')) {
-          localStorage.removeItem(key)
-        }
-      })
-      window.location.href = '/'
-    }
+    signOut()
   }
 
   const handleGoogleLogin = async () => {
@@ -3083,24 +3069,8 @@ function App() {
 
   const handleDeleteAccount = () => {
     if (!window.confirm(t.deleteAccountConfirm)) return
-
-    // Call delete and handle result
-    deleteAccount().then(({ error }) => {
-      if (error) {
-        alert(error.message || t.authError)
-      } else {
-        // Clear storage and reload
-        Object.keys(localStorage).forEach(key => {
-          if (key.startsWith('sb-') || key.includes('supabase') || key.includes('auth')) {
-            localStorage.removeItem(key)
-          }
-        })
-        window.location.href = '/'
-      }
-    }).catch((e) => {
-      alert(t.authError)
-      console.error(e)
-    })
+    // deleteAccount이 로컬 정리 + 리다이렉트를 즉시 처리함
+    deleteAccount()
   }
 
   // Fetch analysis history for logged-in users

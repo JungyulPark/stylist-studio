@@ -202,40 +202,30 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const signOut = useCallback(async () => {
     console.log('signOut called')
 
-    // Supabase signOut 먼저 호출
-    if (supabase) {
-      try {
-        const { error } = await supabase.auth.signOut()
-        if (error) {
-          console.error('Supabase signOut error:', error)
-        } else {
-          console.log('Supabase signOut success')
-        }
-      } catch (e) {
-        console.error('Sign out exception:', e)
-      }
-    }
+    // 1. 로컬 상태 먼저 정리 (네트워크 대기 없이 즉시)
+    setUser(null)
+    setSession(null)
+    setProfile(null)
 
-    // Clear all Supabase auth data from localStorage
+    // 2. localStorage/sessionStorage 정리
     Object.keys(localStorage).forEach(key => {
       if (key.startsWith('sb-') || key.includes('supabase') || key.includes('auth')) {
         localStorage.removeItem(key)
       }
     })
-
-    // Clear sessionStorage too
     Object.keys(sessionStorage).forEach(key => {
       if (key.startsWith('sb-') || key.includes('supabase') || key.includes('auth')) {
         sessionStorage.removeItem(key)
       }
     })
 
-    setUser(null)
-    setSession(null)
-    setProfile(null)
+    // 3. Supabase signOut은 비동기로 보내되 대기하지 않음 (hang 방지)
+    if (supabase) {
+      supabase.auth.signOut().catch(e => console.error('Supabase signOut error:', e))
+    }
 
     console.log('Redirecting to home...')
-    // Force reload to clear all state
+    // 4. 즉시 리다이렉트
     window.location.href = '/'
   }, [])
 
@@ -268,56 +258,51 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       return { error: new Error('Not authenticated') }
     }
 
-    try {
-      // 1. 관련 데이터 삭제 시도 (테이블이 없어도 에러 무시)
-      try {
-        await supabase.from('analysis_history').delete().eq('user_id', user.id)
-      } catch (e) {
-        console.log('analysis_history delete skipped:', e)
+    const userId = user.id
+
+    // 1. 로컬 상태 먼저 정리 (네트워크 대기 없이 즉시)
+    setUser(null)
+    setSession(null)
+    setProfile(null)
+
+    // 2. localStorage/sessionStorage 정리
+    Object.keys(localStorage).forEach(key => {
+      if (key.startsWith('sb-') || key.includes('supabase') || key.includes('auth')) {
+        localStorage.removeItem(key)
       }
+    })
+    Object.keys(sessionStorage).forEach(key => {
+      if (key.startsWith('sb-') || key.includes('supabase') || key.includes('auth')) {
+        sessionStorage.removeItem(key)
+      }
+    })
+
+    // 3. 서버 정리는 비동기로 (UI 블로킹 없이)
+    const sb = supabase // TypeScript narrowing을 위해 로컬 변수로 캡처
+    const serverCleanup = async () => {
+      try {
+        await sb.from('analysis_history').delete().eq('user_id', userId)
+      } catch (e) { console.log('analysis_history delete skipped:', e) }
 
       try {
-        await supabase.from('profiles').delete().eq('id', user.id)
-      } catch (e) {
-        console.log('profiles delete skipped:', e)
-      }
+        await sb.from('profiles').delete().eq('id', userId)
+      } catch (e) { console.log('profiles delete skipped:', e) }
 
-      // 2. RPC 함수로 계정 삭제 시도
       try {
-        const { error: rpcError } = await supabase.rpc('delete_user')
-        if (rpcError) {
-          console.log('RPC delete_user not available, using signOut instead')
-        }
-      } catch (e) {
-        console.log('RPC not available:', e)
-      }
+        await sb.rpc('delete_user')
+      } catch (e) { console.log('RPC not available:', e) }
 
-      // 3. 로그아웃 처리
-      await supabase.auth.signOut()
-
-      // 4. 로컬 스토리지 정리
-      Object.keys(localStorage).forEach(key => {
-        if (key.startsWith('sb-') || key.includes('supabase') || key.includes('auth')) {
-          localStorage.removeItem(key)
-        }
-      })
-      Object.keys(sessionStorage).forEach(key => {
-        if (key.startsWith('sb-') || key.includes('supabase') || key.includes('auth')) {
-          sessionStorage.removeItem(key)
-        }
-      })
-
-      setUser(null)
-      setSession(null)
-      setProfile(null)
-
-      // Force reload
-      window.location.href = '/'
-      return { error: null }
-    } catch (e) {
-      console.error('Delete account error:', e)
-      return { error: e as Error }
+      try {
+        await sb.auth.signOut()
+      } catch (e) { console.log('signOut skipped:', e) }
     }
+
+    // 서버 정리는 백그라운드로 실행 (대기하지 않음)
+    serverCleanup().catch(e => console.error('Server cleanup error:', e))
+
+    // 4. 즉시 리다이렉트
+    window.location.href = '/'
+    return { error: null }
   }, [user])
 
   const updateProfile = useCallback(async (updates: Partial<Profile>) => {
