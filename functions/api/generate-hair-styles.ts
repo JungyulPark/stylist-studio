@@ -35,7 +35,9 @@ async function generateHairImageWithGemini(
 - Acceptable: short cuts, fades, textured crops, pompadours, slicked back, natural waves
 - NOT acceptable: long ponytails, braids, feminine updos, anything that looks like women's styling`
 
-    const editPrompt = `EDIT this photo - ONLY change the HAIRSTYLE to: ${styleName}
+    const editPrompt = `You are the world's most sought-after celebrity hair designer, known for transforming clients with hairstyles that perfectly complement their face shape, facial features, and personal style. Your cuts are famous for enhancing each person's natural beauty.
+
+EDIT this photo - ONLY change the HAIRSTYLE to: ${styleName}
 
 ${genderGuide}
 

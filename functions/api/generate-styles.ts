@@ -17,68 +17,67 @@ interface StyleScenario {
   promptFemale: string
 }
 
-const styleScenarios: StyleScenario[] = [
-  {
-    id: 'best-match',
-    labelKo: '베스트 매치',
-    labelEn: 'Best Match',
-    labelJa: 'ベストマッチ',
-    labelZh: '最佳搭配',
-    labelEs: 'Mejor Combinación',
-    promptMale: 'clean modern outfit: cream or light grey fine-knit cashmere sweater, perfectly fitted navy or khaki chinos, brown leather belt, clean white sneakers or suede loafers - polished minimalist style',
-    promptFemale: 'elegant everyday outfit: soft cream cashmere V-neck sweater or ivory silk blouse, high-waisted camel or beige wide-leg trousers, delicate gold jewelry, nude ballet flats - refined effortless chic'
-  },
-  {
-    id: 'interview',
-    labelKo: '인터뷰룩',
-    labelEn: 'Interview',
-    labelJa: 'インタビュー',
-    labelZh: '面试装',
-    labelEs: 'Entrevista',
-    promptMale: 'professional business outfit: perfectly tailored navy blue suit with subtle texture, crisp white dress shirt, burgundy silk tie, polished oxford shoes - confident executive style',
-    promptFemale: 'sophisticated professional outfit: soft pink or cream silk blouse with elegant neckline, tailored beige or soft grey pencil skirt or wide-leg pants, delicate pearl earrings, nude pointed heels - feminine yet powerful'
-  },
-  {
-    id: 'date',
-    labelKo: '데이트룩',
-    labelEn: 'Date Night',
-    labelJa: 'デートルック',
-    labelZh: '约会装',
-    labelEs: 'Cita',
-    promptMale: 'stylish evening outfit: slim-fit black or midnight blue blazer, charcoal turtleneck or dark dress shirt, dark fitted trousers, sleek black leather shoes - sophisticated romantic elegance',
-    promptFemale: 'romantic evening outfit: elegant midi dress in dusty rose, champagne, or soft burgundy with flattering draping, delicate fabric that catches light, gold or rose gold jewelry, strappy heels - graceful feminine allure'
-  },
-  {
-    id: 'luxury',
-    labelKo: '럭셔리',
-    labelEn: 'Luxury',
-    labelJa: 'ラグジュアリー',
-    labelZh: '奢华',
-    labelEs: 'Lujo',
-    promptMale: 'luxurious outfit: camel cashmere overcoat or premium charcoal wool suit, fine merino turtleneck in cream, perfectly tailored trousers, Italian leather shoes - understated opulence',
-    promptFemale: 'luxurious outfit: stunning camel cashmere coat over cream silk blouse, elegant pleated midi skirt in soft taupe, gold statement jewelry, premium leather bag, classic pumps - timeless haute couture elegance'
-  },
-  {
-    id: 'casual',
-    labelKo: '캐주얼',
-    labelEn: 'Casual',
-    labelJa: 'カジュアル',
-    labelZh: '休闲',
-    labelEs: 'Casual',
-    promptMale: 'relaxed weekend outfit: soft grey or oatmeal cotton sweater, well-fitted light blue or white oxford shirt underneath, comfortable dark indigo jeans, clean white sneakers - effortlessly put-together',
-    promptFemale: 'chic casual outfit: oversized soft beige or pale pink cashmere cardigan, simple white t-shirt, high-waisted light wash or cream straight-leg jeans, white sneakers or tan loafers - cozy yet stylish'
-  },
-  {
-    id: 'daily',
-    labelKo: '데일리',
-    labelEn: 'Daily',
-    labelJa: 'デイリー',
-    labelZh: '日常',
-    labelEs: 'Diario',
-    promptMale: 'smart daily outfit: clean navy or charcoal polo shirt or simple crew-neck sweater, well-fitted khaki or grey chinos, minimalist leather watch, clean sneakers or loafers - polished everyday look',
-    promptFemale: 'effortless daily outfit: soft knit top in dusty blue or sage green, flowing midi skirt or comfortable tailored pants in neutral tone, simple gold necklace, comfortable flats - modern feminine ease'
-  }
+// Multiple color palettes for variety — selected by diversitySeed
+const maleColorPalettes = [
+  { tone: 'classic', colors: 'navy, charcoal, white, cream', accent: 'burgundy' },
+  { tone: 'warm', colors: 'olive, rust, camel, warm brown', accent: 'burnt orange' },
+  { tone: 'cool', colors: 'slate blue, sage green, stone grey, off-white', accent: 'teal' },
+  { tone: 'earth', colors: 'terracotta, forest green, tan, chocolate brown', accent: 'mustard' },
+  { tone: 'modern', colors: 'black, ivory, silver grey, deep burgundy', accent: 'emerald' },
 ]
+const femaleColorPalettes = [
+  { tone: 'soft', colors: 'cream, dusty rose, beige, champagne', accent: 'gold' },
+  { tone: 'warm', colors: 'terracotta, amber, warm ivory, cinnamon', accent: 'copper' },
+  { tone: 'cool', colors: 'lavender, ice blue, soft grey, pearl white', accent: 'silver' },
+  { tone: 'rich', colors: 'emerald, burgundy, deep plum, midnight blue', accent: 'bronze' },
+  { tone: 'fresh', colors: 'sage green, blush pink, sky blue, lemon cream', accent: 'rose gold' },
+]
+
+function getVariedScenarios(diversitySeed: number): StyleScenario[] {
+  const mi = diversitySeed % maleColorPalettes.length
+  const fi = diversitySeed % femaleColorPalettes.length
+  const mp = maleColorPalettes[mi]
+  const fp = femaleColorPalettes[fi]
+
+  return [
+    {
+      id: 'best-match',
+      labelKo: '베스트 매치', labelEn: 'Best Match', labelJa: 'ベストマッチ', labelZh: '最佳搭配', labelEs: 'Mejor Combinación',
+      promptMale: `clean modern outfit in ${mp.tone} tones: fine-knit sweater in ${mp.colors.split(', ')[2]}, perfectly fitted chinos in ${mp.colors.split(', ')[1]}, leather belt, clean sneakers or suede loafers - polished minimalist style with ${mp.accent} accent details`,
+      promptFemale: `elegant everyday outfit in ${fp.tone} tones: soft ${fp.colors.split(', ')[0]} cashmere V-neck or silk blouse in ${fp.colors.split(', ')[1]}, high-waisted wide-leg trousers in ${fp.colors.split(', ')[2]}, delicate ${fp.accent} jewelry, ballet flats - refined effortless chic`,
+    },
+    {
+      id: 'interview',
+      labelKo: '인터뷰룩', labelEn: 'Interview', labelJa: 'インタビュー', labelZh: '面试装', labelEs: 'Entrevista',
+      promptMale: `professional business outfit: tailored suit in ${mp.colors.split(', ')[0]} with subtle texture, crisp dress shirt in ${mp.colors.split(', ')[2]}, ${mp.accent} silk tie, polished oxford shoes - confident executive style`,
+      promptFemale: `sophisticated professional outfit: silk blouse in ${fp.colors.split(', ')[1]}, tailored pencil skirt or wide-leg pants in ${fp.colors.split(', ')[2]}, delicate pearl earrings, pointed heels - feminine yet powerful`,
+    },
+    {
+      id: 'date',
+      labelKo: '데이트룩', labelEn: 'Date Night', labelJa: 'デートルック', labelZh: '约会装', labelEs: 'Cita',
+      promptMale: `relaxed stylish evening outfit: unstructured soft blazer in ${mp.colors.split(', ')[3] || mp.colors.split(', ')[0]}, comfortable crew-neck knit or open-collar shirt in ${mp.colors.split(', ')[2]}, relaxed-fit trousers with natural drape, clean leather shoes - effortlessly charming, NOT too formal or tight`,
+      promptFemale: `romantic evening outfit: elegant midi dress in ${fp.colors.split(', ')[1]} with flattering draping, delicate fabric that catches light, ${fp.accent} jewelry, strappy heels - graceful feminine allure`,
+    },
+    {
+      id: 'luxury',
+      labelKo: '럭셔리', labelEn: 'Luxury', labelJa: 'ラグジュアリー', labelZh: '奢华', labelEs: 'Lujo',
+      promptMale: `luxurious outfit: premium cashmere overcoat in ${mp.colors.split(', ')[1]}, fine merino turtleneck in ${mp.colors.split(', ')[2]}, perfectly tailored trousers in ${mp.colors.split(', ')[0]}, Italian leather shoes - understated opulence`,
+      promptFemale: `luxurious outfit: stunning cashmere coat in ${fp.colors.split(', ')[2]} over silk blouse in ${fp.colors.split(', ')[0]}, elegant pleated midi skirt, ${fp.accent} statement jewelry, premium leather bag, classic pumps - timeless haute couture`,
+    },
+    {
+      id: 'casual',
+      labelKo: '캐주얼', labelEn: 'Casual', labelJa: 'カジュアル', labelZh: '休闲', labelEs: 'Casual',
+      promptMale: `relaxed weekend outfit: soft cotton sweater in ${mp.colors.split(', ')[2]}, well-fitted oxford shirt in ${mp.colors.split(', ')[3] || 'white'} underneath, comfortable dark jeans, clean white sneakers - effortlessly put-together`,
+      promptFemale: `chic casual outfit: oversized cashmere cardigan in ${fp.colors.split(', ')[0]}, simple fitted t-shirt, high-waisted straight-leg jeans or cream pants, ${fp.colors.split(', ')[3] || 'tan'} loafers - cozy yet stylish`,
+    },
+    {
+      id: 'daily',
+      labelKo: '데일리', labelEn: 'Daily', labelJa: 'デイリー', labelZh: '日常', labelEs: 'Diario',
+      promptMale: `smart daily outfit: clean polo or crew-neck sweater in ${mp.colors.split(', ')[0]}, well-fitted chinos in ${mp.colors.split(', ')[2]}, minimalist leather watch, clean sneakers or loafers with ${mp.accent} accent - polished everyday look`,
+      promptFemale: `effortless daily outfit: soft knit top in ${fp.colors.split(', ')[1]}, flowing midi skirt or comfortable tailored pants in ${fp.colors.split(', ')[2]}, simple ${fp.accent} necklace, comfortable flats - modern feminine ease`,
+    }
+  ]
+}
 
 // ===== Retry Helper =====
 async function sleep(ms: number): Promise<void> {
@@ -119,10 +118,12 @@ async function editPhotoWithGemini(
 - Even out skin tone slightly for a clean, fresh look
 - Keep the face looking NATURAL and masculine - not overly edited`
 
-    const editPrompt = `EDIT this photo - ONLY change the OUTFIT of the MAIN PERSON to: ${stylePrompt}
+    const editPrompt = `You are the world's top celebrity stylist, trusted by A-list celebrities and fashion icons. Your styling choices are renowned for being perfectly tailored to each individual's unique body type, skin tone, and personal aura.
 
-CRITICAL: This is a ${genderWord}. The outfit MUST be appropriate for a ${genderWord}.
-${gender === 'female' ? 'For women: Use soft, feminine clothing - NO masculine suits or blazers. Prefer dresses, blouses, cardigans, skirts in soft colors.' : ''}
+EDIT this photo - ONLY change the OUTFIT of the MAIN PERSON to: ${stylePrompt}
+
+CRITICAL: This is a ${genderWord}. The outfit MUST be appropriate for a ${genderWord}. Choose clothing that flatters THIS specific person's body proportions and complexion.
+${gender === 'female' ? 'For women: Use soft, feminine clothing - NO masculine suits or blazers. Prefer dresses, blouses, cardigans, skirts in soft colors.' : 'For men: Ensure natural relaxed fit - NOT skin-tight. Trousers should have comfortable drape, jackets should sit naturally on shoulders.'}
 
 ${beautyRetouch}
 
@@ -264,10 +265,14 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
       return createValidationErrorResponse(validation.errors!, corsHeaders)
     }
 
-    const { photo, language, gender } = validation.data!
+    const { photo, language, gender, height, weight } = validation.data!
 
     const geminiKey = context.env.GEMINI_API_KEY
     const hasPhoto = photo && photo.length > 100
+
+    // Generate diversity seed from user characteristics + timestamp
+    const diversitySeed = (parseInt(height || '170') + parseInt(weight || '70') + Date.now()) % maleColorPalettes.length
+    const styleScenarios = getVariedScenarios(diversitySeed)
 
     if (!geminiKey) {
       const demoResults = styleScenarios.map(scenario => ({
@@ -283,7 +288,7 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
       )
     }
 
-    console.log(`[API Styles] Generating ${styleScenarios.length} styles with Gemini, hasPhoto: ${hasPhoto}, keyLength: ${geminiKey.length}`)
+    console.log(`[API Styles] Generating ${styleScenarios.length} styles (palette: ${diversitySeed}) with Gemini, hasPhoto: ${hasPhoto}`)
 
     // Stagger requests to avoid rate limiting (500ms between each start)
     const results = await Promise.all(

@@ -4,6 +4,7 @@ import { errors } from '../lib/errors'
 interface Env {
   SUPABASE_URL: string
   SUPABASE_SERVICE_KEY: string
+  DAILY_IMAGES_BUCKET: R2Bucket
 }
 
 interface FavoriteRequest {
@@ -11,6 +12,40 @@ interface FavoriteRequest {
   image_url: string
   image_type: 'style' | 'hair' | 'daily'
   label?: string
+}
+
+// Generate a short hash from a string (for data URI comparison)
+async function shortHash(input: string): Promise<string> {
+  const encoder = new TextEncoder()
+  const data = encoder.encode(input)
+  const hashBuffer = await crypto.subtle.digest('SHA-256', data)
+  const hashArray = Array.from(new Uint8Array(hashBuffer))
+  return hashArray.slice(0, 16).map(b => b.toString(16).padStart(2, '0')).join('')
+}
+
+// Upload data URI to R2 and return public URL
+async function uploadDataUriToR2(
+  dataUri: string,
+  bucket: R2Bucket,
+  userId: string,
+  imageType: string
+): Promise<string> {
+  const match = dataUri.match(/^data:image\/(\w+);base64,(.+)/)
+  if (!match) throw new Error('Invalid data URI')
+
+  const ext = match[1] === 'jpeg' ? 'jpg' : match[1]
+  const base64 = match[2]
+  const binaryData = Uint8Array.from(atob(base64), c => c.charCodeAt(0))
+
+  const timestamp = Date.now()
+  const hash = await shortHash(dataUri)
+  const r2Key = `favorites/${userId}/${imageType}-${timestamp}-${hash.slice(0, 8)}.${ext}`
+
+  await bucket.put(r2Key, binaryData, {
+    httpMetadata: { contentType: `image/${match[1]}` },
+  })
+
+  return `https://pub-80118c62e29d4373b70d5e0fe9503ff0.r2.dev/${r2Key}`
 }
 
 // POST: Add favorite
@@ -37,9 +72,28 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
       return errors.validation('image_type must be style, hair, or daily', corsHeaders)
     }
 
-    // Check if already favorited
+    // If image_url is a data URI, upload to R2 first
+    let permanentUrl = body.image_url
+    if (body.image_url.startsWith('data:') && context.env.DAILY_IMAGES_BUCKET) {
+      try {
+        permanentUrl = await uploadDataUriToR2(
+          body.image_url,
+          context.env.DAILY_IMAGES_BUCKET,
+          body.user_id,
+          body.image_type
+        )
+      } catch (e) {
+        console.error('[favorite] R2 upload error:', e)
+        return errors.internal(corsHeaders)
+      }
+    }
+
+    // Generate hash for duplicate check (works for both short URLs and data URIs)
+    const urlHash = await shortHash(body.image_url)
+
+    // Check if already favorited using url_hash
     const checkRes = await fetch(
-      `${context.env.SUPABASE_URL}/rest/v1/favorite_images?user_id=eq.${body.user_id}&image_url=eq.${encodeURIComponent(body.image_url)}&select=id&limit=1`,
+      `${context.env.SUPABASE_URL}/rest/v1/favorite_images?user_id=eq.${body.user_id}&url_hash=eq.${urlHash}&select=id&limit=1`,
       {
         headers: {
           'apikey': context.env.SUPABASE_SERVICE_KEY,
@@ -69,7 +123,7 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
       }
     }
 
-    // Add favorite
+    // Add favorite with permanent URL
     const insertRes = await fetch(
       `${context.env.SUPABASE_URL}/rest/v1/favorite_images`,
       {
@@ -82,9 +136,10 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
         },
         body: JSON.stringify({
           user_id: body.user_id,
-          image_url: body.image_url,
+          image_url: permanentUrl,
           image_type: body.image_type,
           label: body.label || null,
+          url_hash: urlHash,
         }),
       }
     )

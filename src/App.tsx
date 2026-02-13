@@ -459,10 +459,10 @@ const translations: Record<Language, {
     fashionReferenceTitle: '👗 패션 레퍼런스',
     fashionReferenceDesc: '럭셔리 디자이너 브랜드 스타일 참고',
     fashionBrands: ['Loro Piana', 'The Row', 'Chanel', 'Dior', 'Celine', 'Brunello Cucinelli', 'Tom Ford', 'Valentino', 'Auralee'],
-    hairReferenceTitle: '💇 헤어 레퍼런스',
-    hairReferenceDesc: '한류 스타 & 글로벌 셀럽 스타일 참고',
-    hairReferenceFemale: ['송혜교', '전지현', '손예진', '수지', 'Charlotte Gainsbourg'],
-    hairReferenceMale: ['공유', '박서준', 'George Clooney', 'David Beckham', 'Timothée Chalamet'],
+    hairReferenceTitle: '💇 헤어 스타일 AI 분석',
+    hairReferenceDesc: '얼굴형·이목구비 기반 맞춤 추천',
+    hairReferenceFemale: ['Zendaya', 'BLACKPINK Lisa', 'Jennifer Aniston', 'Halle Berry', 'Anne Hathaway'],
+    hairReferenceMale: ['BTS V', 'Brad Pitt', 'Chris Hemsworth', 'Timothée Chalamet', 'Hyun Bin'],
     styleLabels: {
       'best-match': '베스트 매치',
       'interview': '인터뷰룩',
@@ -717,10 +717,10 @@ const translations: Record<Language, {
     fashionReferenceTitle: '👗 Fashion References',
     fashionReferenceDesc: 'Inspired by luxury designer brands',
     fashionBrands: ['Loro Piana', 'The Row', 'Chanel', 'Dior', 'Celine', 'Brunello Cucinelli', 'Tom Ford', 'Valentino', 'Auralee'],
-    hairReferenceTitle: '💇 Hair References',
-    hairReferenceDesc: 'Inspired by K-stars & global celebrities',
-    hairReferenceFemale: ['Song Hye-kyo', 'Jun Ji-hyun', 'Son Ye-jin', 'Suzy', 'Charlotte Gainsbourg'],
-    hairReferenceMale: ['Gong Yoo', 'Park Seo-jun', 'George Clooney', 'David Beckham', 'Timothée Chalamet'],
+    hairReferenceTitle: '💇 AI Hair Analysis',
+    hairReferenceDesc: 'Personalized by face shape & features',
+    hairReferenceFemale: ['Zendaya', 'BLACKPINK Lisa', 'Jennifer Aniston', 'Halle Berry', 'Anne Hathaway'],
+    hairReferenceMale: ['BTS V', 'Brad Pitt', 'Chris Hemsworth', 'Timothée Chalamet', 'Hyun Bin'],
     styleLabels: {
       'best-match': 'Best Match',
       'interview': 'Interview',
@@ -975,10 +975,10 @@ const translations: Record<Language, {
     fashionReferenceTitle: '👗 ファッションリファレンス',
     fashionReferenceDesc: 'ラグジュアリーデザイナーブランドを参考',
     fashionBrands: ['Loro Piana', 'The Row', 'Chanel', 'Dior', 'Celine', 'Brunello Cucinelli', 'Tom Ford', 'Valentino', 'Auralee'],
-    hairReferenceTitle: '💇 ヘアリファレンス',
-    hairReferenceDesc: '韓流スター＆グローバルセレブを参考',
-    hairReferenceFemale: ['ソン・ヘギョ', 'チョン・ジヒョン', 'ソン・イェジン', 'スジ', 'Charlotte Gainsbourg'],
-    hairReferenceMale: ['コン・ユ', 'パク・ソジュン', 'George Clooney', 'David Beckham', 'Timothée Chalamet'],
+    hairReferenceTitle: '💇 AIヘア分析',
+    hairReferenceDesc: '顔の形と特徴に基づくパーソナル提案',
+    hairReferenceFemale: ['Zendaya', 'BLACKPINK Lisa', 'Jennifer Aniston', 'Halle Berry', 'Anne Hathaway'],
+    hairReferenceMale: ['BTS V', 'Brad Pitt', 'Chris Hemsworth', 'Timothée Chalamet', 'Hyun Bin'],
     styleLabels: {
       'best-match': 'ベストマッチ',
       'interview': 'インタビュー',
@@ -1233,10 +1233,10 @@ const translations: Record<Language, {
     fashionReferenceTitle: '👗 时尚参考',
     fashionReferenceDesc: '参考奢侈品牌设计风格',
     fashionBrands: ['Loro Piana', 'The Row', 'Chanel', 'Dior', 'Celine', 'Brunello Cucinelli', 'Tom Ford', 'Valentino', 'Auralee'],
-    hairReferenceTitle: '💇 发型参考',
-    hairReferenceDesc: '参考韩流明星和国际名人造型',
-    hairReferenceFemale: ['宋慧乔', '全智贤', '孙艺珍', 'Suzy', 'Charlotte Gainsbourg'],
-    hairReferenceMale: ['孔刘', '朴叙俊', 'George Clooney', 'David Beckham', 'Timothée Chalamet'],
+    hairReferenceTitle: '💇 AI发型分析',
+    hairReferenceDesc: '基于脸型和五官的个性化推荐',
+    hairReferenceFemale: ['Zendaya', 'BLACKPINK Lisa', 'Jennifer Aniston', 'Halle Berry', 'Anne Hathaway'],
+    hairReferenceMale: ['BTS V', 'Brad Pitt', 'Chris Hemsworth', 'Timothée Chalamet', 'Hyun Bin'],
     styleLabels: {
       'best-match': '最佳搭配',
       'interview': '面试装',
@@ -1491,10 +1491,10 @@ const translations: Record<Language, {
     fashionReferenceTitle: '👗 Referencias de Moda',
     fashionReferenceDesc: 'Inspirado en marcas de diseñadores de lujo',
     fashionBrands: ['Loro Piana', 'The Row', 'Chanel', 'Dior', 'Celine', 'Brunello Cucinelli', 'Tom Ford', 'Valentino', 'Auralee'],
-    hairReferenceTitle: '💇 Referencias de Peinado',
-    hairReferenceDesc: 'Inspirado en estrellas coreanas y celebridades globales',
-    hairReferenceFemale: ['Song Hye-kyo', 'Jun Ji-hyun', 'Son Ye-jin', 'Suzy', 'Charlotte Gainsbourg'],
-    hairReferenceMale: ['Gong Yoo', 'Park Seo-jun', 'George Clooney', 'David Beckham', 'Timothée Chalamet'],
+    hairReferenceTitle: '💇 Análisis Capilar AI',
+    hairReferenceDesc: 'Personalizado por forma facial y rasgos',
+    hairReferenceFemale: ['Zendaya', 'BLACKPINK Lisa', 'Jennifer Aniston', 'Halle Berry', 'Anne Hathaway'],
+    hairReferenceMale: ['BTS V', 'Brad Pitt', 'Chris Hemsworth', 'Timothée Chalamet', 'Hyun Bin'],
     styleLabels: {
       'best-match': 'Mejor Combinación',
       'interview': 'Entrevista',
@@ -3737,6 +3737,23 @@ function App() {
 
   const handleLogout = () => {
     console.log('Logout button clicked!')
+    // Clear user-specific localStorage data on logout
+    localStorage.removeItem('stylist_free_trial_used')
+    localStorage.removeItem('stylist_subscription_active')
+    localStorage.removeItem('stylist_subscription_checkout_id')
+    localStorage.removeItem('paidCustomer')
+    localStorage.removeItem('lastCheckoutId')
+    localStorage.removeItem('pendingAnalysisFlag')
+    localStorage.removeItem('productType')
+    localStorage.removeItem('pending_subscription_data')
+    // Reset state
+    setHasUsedFreeTrial(false)
+    setIsSubscribed(false)
+    setStyleImages([])
+    setGeneratedHairImages([])
+    setDailyStyle(null)
+    setFavorites([])
+    setFavoriteUrls(new Set())
     signOut()
   }
 
@@ -4616,144 +4633,97 @@ function App() {
               </button>
             </div>
             <div className="featured-in">
-              <span className="magazine">VOGUE</span>
-              <span className="magazine">BAZAAR</span>
-              <span className="magazine">ELLE</span>
-              <span className="magazine">WWD</span>
+              <span className="magazine">AI-POWERED</span>
+              <span className="magazine">PERSONALIZED</span>
+              <span className="magazine">WEATHER-AWARE</span>
             </div>
           </div>
         </section>
 
-        {/* Service Intro Section */}
-        <section className="service-intro-section">
-          <h2 className="section-title">{t.serviceIntroTitle}</h2>
-          <div className="section-divider"></div>
-          <div className="service-steps">
-            <div className="service-step">
-              <div className="service-step-icon">1</div>
-              <h3>{t.serviceStep1}</h3>
-              <p>{t.serviceStep1Desc}</p>
-            </div>
-            <div className="service-step-arrow">→</div>
-            <div className="service-step">
-              <div className="service-step-icon">2</div>
-              <h3>{t.serviceStep2}</h3>
-              <p>{t.serviceStep2Desc}</p>
-            </div>
-            <div className="service-step-arrow">→</div>
-            <div className="service-step">
-              <div className="service-step-icon">3</div>
-              <h3>{t.serviceStep3}</h3>
-              <p>{t.serviceStep3Desc}</p>
-            </div>
-          </div>
-        </section>
-
-        {/* Style References Section */}
-        <section className="style-reference-section">
-          <h2 className="section-title">{t.styleReferenceTitle}</h2>
-          <div className="section-divider"></div>
-          <p className="reference-desc">{t.styleReferenceDesc}</p>
-          <div className="reference-grid">
-            <div className="reference-card">
-              <h3>{t.fashionReferenceTitle}</h3>
-              <p>{t.fashionReferenceDesc}</p>
-              <div className="brand-tags">
-                {t.fashionBrands.map((brand, i) => (
-                  <span key={i} className="brand-tag">{brand}</span>
-                ))}
-              </div>
-            </div>
-            <div className="reference-card">
-              <h3>{t.hairReferenceTitle}</h3>
-              <p>{t.hairReferenceDesc}</p>
-              <div className="reference-names">
-                <div className="reference-group">
-                  <span className="reference-label">👩 </span>
-                  {t.hairReferenceFemale.map((name, i) => (
-                    <span key={i} className="celeb-name">{name}{i < t.hairReferenceFemale.length - 1 ? ', ' : ''}</span>
-                  ))}
-                </div>
-                <div className="reference-group">
-                  <span className="reference-label">👨 </span>
-                  {t.hairReferenceMale.map((name, i) => (
-                    <span key={i} className="celeb-name">{name}{i < t.hairReferenceMale.length - 1 ? ', ' : ''}</span>
-                  ))}
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* Path Section */}
+        {/* Services Section — unified 3-card grid */}
         <section className="path-section" id="features">
           <h2 className="section-title">{t.pathTitle}</h2>
           <div className="section-divider"></div>
-          <div className="path-grid">
-            <div className="path-card" onClick={() => setPage('hair-selection')}>
+          <div className="path-grid-3">
+            {/* Card 1: Hair Styling */}
+            <div className="path-card-v2" onClick={() => setPage('hair-selection')}>
               <div className="path-image path-image-1"></div>
               <div className="path-overlay"></div>
-              <div className="path-content">
-                <div className="path-glass">
-                  <div className="path-header">
-                    <span className="path-module">HAIR ONLY</span>
-                    {!hasUsedFreeTrial && <span className="free-badge">{t.freeTrialBadge}</span>}
-                  </div>
-                  <h3 className="path-title">{t.module1Title}</h3>
-                  <p className="path-desc">{!hasUsedFreeTrial ? t.freeTrialDesc : t.module1Desc}</p>
-                  <ul className="path-features">
-                    {t.module1Features.map((feature, i) => (
-                      <li key={i}>✓ {feature}</li>
-                    ))}
-                  </ul>
-                  <div className="path-explore">
-                    {t.explore} <span>→</span>
-                  </div>
+              <div className="path-content-v2">
+                <div className="path-header-v2">
+                  <span className="path-module-v2">HAIR STYLING</span>
+                  {!hasUsedFreeTrial && <span className="free-badge">{t.freeTrialBadge}</span>}
                 </div>
+                <h3 className="path-title-v2">{t.module1Title}</h3>
+                <p className="path-desc-v2">{!hasUsedFreeTrial ? t.freeTrialDesc : t.module1Desc}</p>
+                <ul className="path-features-v2">
+                  {t.module1Features.map((feature, i) => (
+                    <li key={i}>{feature}</li>
+                  ))}
+                </ul>
+                <div className="path-cta-v2">{t.explore} →</div>
               </div>
             </div>
-            <div className="path-card featured" onClick={() => setPage('input')}>
+
+            {/* Card 2: Full Package (Featured) */}
+            <div className="path-card-v2 featured" onClick={() => setPage('input')}>
               <div className="path-image path-image-2"></div>
               <div className="path-overlay"></div>
-              <div className="path-content">
-                <div className="path-glass">
-                  <div className="path-header">
-                    <span className="path-module">FULL PACKAGE</span>
-                    <span className="path-badge">{t.bestValue}</span>
-                  </div>
-                  <h3 className="path-title">{t.module2Title}</h3>
-                  <p className="path-desc">{t.module2Desc}</p>
-                  <ul className="path-features">
-                    {t.module2Features.map((feature, i) => (
-                      <li key={i}>✓ {feature}</li>
-                    ))}
-                  </ul>
-                  <div className="path-explore">
-                    {t.explore} <span>→</span>
-                  </div>
+              <span className="path-popular-badge">{t.bestValue}</span>
+              <div className="path-content-v2">
+                <div className="path-header-v2">
+                  <span className="path-module-v2">FULL PACKAGE</span>
+                </div>
+                <h3 className="path-title-v2">{t.module2Title}</h3>
+                <p className="path-desc-v2">{t.module2Desc}</p>
+                <ul className="path-features-v2">
+                  {t.module2Features.map((feature, i) => (
+                    <li key={i}>{feature}</li>
+                  ))}
+                </ul>
+                <div className="path-cta-v2 gold">{t.explore} →</div>
+              </div>
+            </div>
+
+            {/* Card 3: Daily Style Subscription */}
+            <div className="path-card-v2 subscription" onClick={handleSubscription}>
+              <div className="path-image path-image-3"></div>
+              <div className="path-overlay"></div>
+              {isSubscribed && <span className="path-popular-badge active">{t.subscriptionActive}</span>}
+              <div className="path-content-v2">
+                <div className="path-header-v2">
+                  <span className="path-module-v2">DAILY STYLE</span>
+                  {!isSubscribed && <span className="trial-badge">{t.subscriptionTrialDays}</span>}
+                </div>
+                <h3 className="path-title-v2">{t.subscriptionTitle}</h3>
+                <p className="path-desc-v2">{isSubscribed ? t.dashboardSubtitle : t.subscriptionDesc}</p>
+                <div className="path-price-v2">{t.subscriptionPrice}</div>
+                <div className={`path-cta-v2 ${isSubscribed ? 'green' : ''}`}>
+                  {isSubscribed ? `${t.dashboardTitle} →` : t.subscriptionCta}
                 </div>
               </div>
             </div>
           </div>
-          {/* Subscription Card */}
-          {!isSubscribed ? (
-            <div className="subscription-card landing-subscription" onClick={handleSubscription}>
-              <span className="subscription-badge">{t.subscriptionTrialDays}</span>
-              <h4>{t.subscriptionTitle}</h4>
-              <p className="subscription-desc">{t.subscriptionDesc}</p>
-              <div className="subscription-pricing">
-                <span className="subscription-price">{t.subscriptionPrice}</span>
-              </div>
-              <div className="subscription-cta">{t.subscriptionCta}</div>
+        </section>
+
+        {/* How It Works — compact strip */}
+        <section className="how-strip">
+          <div className="how-strip-inner">
+            <div className="how-strip-step">
+              <span className="how-strip-num">1</span>
+              <span>{t.serviceStep1}</span>
             </div>
-          ) : (
-            <div className="subscription-card landing-subscription active" onClick={handleSubscription}>
-              <span className="subscription-badge active">{t.subscriptionActive}</span>
-              <h4>{t.subscriptionTitle}</h4>
-              <p className="subscription-desc">{t.dashboardSubtitle}</p>
-              <div className="subscription-cta" style={{ background: 'linear-gradient(135deg, #22c55e, #10b981)' }}>{t.dashboardTitle} →</div>
+            <span className="how-strip-arrow">→</span>
+            <div className="how-strip-step">
+              <span className="how-strip-num">2</span>
+              <span>{t.serviceStep2}</span>
             </div>
-          )}
+            <span className="how-strip-arrow">→</span>
+            <div className="how-strip-step">
+              <span className="how-strip-num">3</span>
+              <span>{t.serviceStep3}</span>
+            </div>
+          </div>
         </section>
 
         {/* Footer */}
