@@ -2806,8 +2806,10 @@ function App() {
     }
   }, [user?.id])
 
+  const [isFavoriteLoading, setIsFavoriteLoading] = useState(false)
   const toggleFavorite = async (imageUrl: string, imageType: 'style' | 'hair' | 'daily', label?: string) => {
-    if (!user?.id) return
+    if (!user?.id || isFavoriteLoading) return
+    setIsFavoriteLoading(true)
     try {
       const res = await fetch('/api/favorite-image', {
         method: 'POST',
@@ -2837,6 +2839,8 @@ function App() {
       }
     } catch (e) {
       console.error('Toggle favorite error:', e)
+    } finally {
+      setIsFavoriteLoading(false)
     }
   }
 
@@ -4697,10 +4701,10 @@ function App() {
                 </div>
                 <h3 className="path-title-v2">{t.subscriptionTitle}</h3>
                 <p className="path-desc-v2">{isSubscribed ? t.dashboardSubtitle : t.subscriptionDesc}</p>
-                <div className="path-price-v2">{t.subscriptionPrice}</div>
                 <div className={`path-cta-v2 ${isSubscribed ? 'green' : ''}`}>
                   {isSubscribed ? `${t.dashboardTitle} →` : t.subscriptionCta}
                 </div>
+                {!isSubscribed && <p className="path-plan-label">Monthly Plan · 7-day free trial</p>}
               </div>
             </div>
           </div>
