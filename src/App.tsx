@@ -57,7 +57,7 @@ const clearIndexedDB = async (): Promise<void> => {
 
 type Language = 'ko' | 'en' | 'ja' | 'zh' | 'es'
 type Gender = 'male' | 'female' | 'other' | null
-type Page = 'landing' | 'input' | 'loading' | 'result' | 'hair-selection' | 'hair-result' | 'how-to-use' | 'preview' | 'hair-preview' | 'login' | 'signup' | 'profile'
+type Page = 'landing' | 'input' | 'loading' | 'result' | 'hair-selection' | 'hair-result' | 'how-to-use' | 'preview' | 'hair-preview' | 'login' | 'signup' | 'profile' | 'subscription-dashboard'
 
 // 헤어스타일 상황 옵션
 interface HairOccasion {
@@ -309,6 +309,20 @@ const translations: Record<Language, {
   subscriptionFormTitle: string
   subscriptionFormDesc: string
   subscriptionFormStart: string
+  subscriptionLoginRequired: string
+  // Dashboard
+  dashboardTitle: string
+  dashboardSubtitle: string
+  dashboardLoading: string
+  dashboardError: string
+  dashboardRetry: string
+  dashboardToday: string
+  dashboardFeelsLike: string
+  dashboardHumidity: string
+  dashboardWind: string
+  dashboardStyleTip: string
+  dashboardBack: string
+  dashboardNewDay: string
 }> = {
   ko: {
     title: 'PERSONAL STYLIST',
@@ -530,6 +544,19 @@ const translations: Record<Language, {
     subscriptionFormTitle: '구독 정보 입력',
     subscriptionFormDesc: '매일 아침 6시, 날씨에 맞는 스타일을 추천해드립니다',
     subscriptionFormStart: '무료 체험 시작하기',
+    subscriptionLoginRequired: '구독하려면 먼저 로그인해주세요',
+    dashboardTitle: '오늘의 스타일',
+    dashboardSubtitle: '날씨 기반 AI 맞춤 스타일링',
+    dashboardLoading: '오늘의 스타일을 준비하고 있어요...',
+    dashboardError: '추천을 불러오지 못했습니다',
+    dashboardRetry: '다시 시도',
+    dashboardToday: '오늘',
+    dashboardFeelsLike: '체감',
+    dashboardHumidity: '습도',
+    dashboardWind: '바람',
+    dashboardStyleTip: '오늘의 스타일 추천',
+    dashboardBack: '← 홈으로',
+    dashboardNewDay: '매일 아침 새로운 스타일이 업데이트됩니다',
   },
   en: {
     title: 'PERSONAL STYLIST',
@@ -751,6 +778,19 @@ const translations: Record<Language, {
     subscriptionFormTitle: 'Set Up Your Daily Style',
     subscriptionFormDesc: 'Every morning at 6AM, get weather-based outfit picks',
     subscriptionFormStart: 'Start Free Trial',
+    subscriptionLoginRequired: 'Please log in to subscribe',
+    dashboardTitle: "Today's Style",
+    dashboardSubtitle: 'AI-powered outfit based on weather',
+    dashboardLoading: 'Preparing your style...',
+    dashboardError: 'Failed to load recommendation',
+    dashboardRetry: 'Try Again',
+    dashboardToday: 'Today',
+    dashboardFeelsLike: 'Feels',
+    dashboardHumidity: 'Humidity',
+    dashboardWind: 'Wind',
+    dashboardStyleTip: "Today's Style Pick",
+    dashboardBack: '← Home',
+    dashboardNewDay: 'A new style is curated for you every morning',
   },
   ja: {
     title: 'PERSONAL STYLIST',
@@ -972,6 +1012,19 @@ const translations: Record<Language, {
     subscriptionFormTitle: '毎日スタイル設定',
     subscriptionFormDesc: '毎朝6時に天気に合わせたスタイルをお届け',
     subscriptionFormStart: '無料体験を始める',
+    subscriptionLoginRequired: '購読するにはログインしてください',
+    dashboardTitle: '今日のスタイル',
+    dashboardSubtitle: '天気に基づくAIスタイリング',
+    dashboardLoading: '今日のスタイルを準備中...',
+    dashboardError: 'おすすめの読み込みに失敗しました',
+    dashboardRetry: 'もう一度',
+    dashboardToday: '今日',
+    dashboardFeelsLike: '体感',
+    dashboardHumidity: '湿度',
+    dashboardWind: '風',
+    dashboardStyleTip: '今日のスタイル提案',
+    dashboardBack: '← ホームへ',
+    dashboardNewDay: '毎朝新しいスタイルが届きます',
   },
   zh: {
     title: 'PERSONAL STYLIST',
@@ -1193,6 +1246,19 @@ const translations: Record<Language, {
     subscriptionFormTitle: '设置每日穿搭',
     subscriptionFormDesc: '每天早上6点，根据天气推荐穿搭',
     subscriptionFormStart: '开始免费试用',
+    subscriptionLoginRequired: '请先登录以订阅',
+    dashboardTitle: '今日穿搭',
+    dashboardSubtitle: '基于天气的AI穿搭推荐',
+    dashboardLoading: '正在准备今日穿搭...',
+    dashboardError: '加载推荐失败',
+    dashboardRetry: '重试',
+    dashboardToday: '今天',
+    dashboardFeelsLike: '体感',
+    dashboardHumidity: '湿度',
+    dashboardWind: '风速',
+    dashboardStyleTip: '今日穿搭推荐',
+    dashboardBack: '← 返回首页',
+    dashboardNewDay: '每天早上为你更新新的穿搭',
   },
   es: {
     title: 'PERSONAL STYLIST',
@@ -1414,6 +1480,19 @@ const translations: Record<Language, {
     subscriptionFormTitle: 'Configura Tu Estilo Diario',
     subscriptionFormDesc: 'Cada mañana a las 6AM, outfits según el clima',
     subscriptionFormStart: 'Iniciar Prueba Gratis',
+    subscriptionLoginRequired: 'Inicia sesión para suscribirte',
+    dashboardTitle: 'Estilo de Hoy',
+    dashboardSubtitle: 'Outfit con IA según el clima',
+    dashboardLoading: 'Preparando tu estilo...',
+    dashboardError: 'No se pudo cargar la recomendación',
+    dashboardRetry: 'Reintentar',
+    dashboardToday: 'Hoy',
+    dashboardFeelsLike: 'Sensación',
+    dashboardHumidity: 'Humedad',
+    dashboardWind: 'Viento',
+    dashboardStyleTip: 'Estilo del Día',
+    dashboardBack: '← Inicio',
+    dashboardNewDay: 'Cada mañana un nuevo estilo para ti',
   }
 }
 
@@ -1766,6 +1845,9 @@ function App() {
   const [showSubscriptionForm, setShowSubscriptionForm] = useState(false)
   const [subscriptionCity, setSubscriptionCity] = useState('')
   const [subscriptionCityError, setSubscriptionCityError] = useState('')
+  const [dailyStyle, setDailyStyle] = useState<{ recommendation: string; weather: { temp: number; feels_like: number; humidity: number; condition: string; description: string; icon: string; wind_speed: number }; city: string; date: string } | null>(null)
+  const [isDailyStyleLoading, setIsDailyStyleLoading] = useState(false)
+  const [dailyStyleError, setDailyStyleError] = useState('')
 
   const feetInchesToCm = (feet: string, inches: string): string => {
     const ft = parseFloat(feet) || 0
@@ -2470,9 +2552,36 @@ function App() {
 
   // 구독 폼 열기
   const handleSubscription = () => {
+    if (isSubscribed) {
+      setPageState('subscription-dashboard')
+      loadDailyStyle()
+      return
+    }
+    if (!user) {
+      setError(t.subscriptionLoginRequired)
+      setPageState('login')
+      return
+    }
     setSubscriptionCity('')
     setSubscriptionCityError('')
     setShowSubscriptionForm(true)
+  }
+
+  const loadDailyStyle = async () => {
+    const email = user?.email
+    if (!email) return
+    setIsDailyStyleLoading(true)
+    setDailyStyleError('')
+    try {
+      const res = await fetch(`/api/daily-style?email=${encodeURIComponent(email)}`)
+      if (!res.ok) throw new Error('Failed')
+      const data = await res.json()
+      setDailyStyle(data)
+    } catch {
+      setDailyStyleError(t.dashboardError)
+    } finally {
+      setIsDailyStyleLoading(false)
+    }
   }
 
   // 구독 폼 제출 → 데이터 저장 후 Polar 결제
@@ -3724,6 +3833,73 @@ function App() {
     )
   }
 
+  // Subscription Dashboard Page
+  if (page === 'subscription-dashboard') {
+    const weatherEmoji: Record<string, string> = {
+      'Clear': '☀️', 'Clouds': '☁️', 'Rain': '🌧️', 'Drizzle': '🌦️',
+      'Thunderstorm': '⛈️', 'Snow': '❄️', 'Mist': '🌫️', 'Fog': '🌫️',
+    }
+
+    return (
+      <div className="app-container" style={{ background: 'var(--bg-light)', minHeight: '100vh' }}>
+        <div className="dashboard-page">
+          <button className="dashboard-back" onClick={() => setPageState('landing')}>
+            {t.dashboardBack}
+          </button>
+
+          <div className="dashboard-header">
+            <h1 className="dashboard-title">{t.dashboardTitle}</h1>
+            <p className="dashboard-subtitle">{t.dashboardSubtitle}</p>
+          </div>
+
+          {isDailyStyleLoading && (
+            <div className="dashboard-loading">
+              <div className="dashboard-loading-spinner" />
+              <p>{t.dashboardLoading}</p>
+            </div>
+          )}
+
+          {dailyStyleError && (
+            <div className="dashboard-error">
+              <p>{dailyStyleError}</p>
+              <button onClick={loadDailyStyle}>{t.dashboardRetry}</button>
+            </div>
+          )}
+
+          {dailyStyle && !isDailyStyleLoading && (
+            <>
+              <div className="dashboard-weather-card">
+                <div className="dashboard-weather-main">
+                  <span className="dashboard-weather-emoji">
+                    {weatherEmoji[dailyStyle.weather.condition] || '🌤️'}
+                  </span>
+                  <span className="dashboard-weather-temp">{dailyStyle.weather.temp}°C</span>
+                  <span className="dashboard-weather-city">{dailyStyle.city}</span>
+                </div>
+                <div className="dashboard-weather-details">
+                  <span>{t.dashboardFeelsLike} {dailyStyle.weather.feels_like}°C</span>
+                  <span>{t.dashboardHumidity} {dailyStyle.weather.humidity}%</span>
+                  <span>{t.dashboardWind} {dailyStyle.weather.wind_speed}m/s</span>
+                </div>
+              </div>
+
+              <div className="dashboard-recommendation">
+                <h3>{t.dashboardStyleTip}</h3>
+                <div className="dashboard-recommendation-text">
+                  {dailyStyle.recommendation.split('\n').map((line, i) => (
+                    <p key={i}>{line || '\u00A0'}</p>
+                  ))}
+                </div>
+              </div>
+
+              <p className="dashboard-footer-note">{t.dashboardNewDay}</p>
+            </>
+          )}
+        </div>
+      </div>
+    )
+  }
+
   // Profile Page
   if (page === 'profile') {
     return (
@@ -4123,10 +4299,11 @@ function App() {
               <div className="subscription-cta">{t.subscriptionCta}</div>
             </div>
           ) : (
-            <div className="subscription-card landing-subscription active">
+            <div className="subscription-card landing-subscription active" onClick={handleSubscription}>
               <span className="subscription-badge active">{t.subscriptionActive}</span>
               <h4>{t.subscriptionTitle}</h4>
-              <p className="subscription-desc">{t.subscriptionDesc}</p>
+              <p className="subscription-desc">{t.dashboardSubtitle}</p>
+              <div className="subscription-cta" style={{ background: 'linear-gradient(135deg, #22c55e, #10b981)' }}>{t.dashboardTitle} →</div>
             </div>
           )}
         </section>
