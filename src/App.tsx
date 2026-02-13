@@ -2576,7 +2576,7 @@ function App() {
     setIsDailyStyleLoading(true)
     setDailyStyleError('')
     try {
-      const res = await fetch(`/api/daily-style?email=${encodeURIComponent(email)}`)
+      const res = await fetch(`/api/daily-style?email=${encodeURIComponent(email)}&lang=${lang}`)
       if (!res.ok) throw new Error('Failed')
       const data = await res.json()
       setDailyStyle(data)

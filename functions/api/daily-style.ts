@@ -162,6 +162,7 @@ export const onRequestGet: PagesFunction<Env> = async (context) => {
 
     const url = new URL(context.request.url)
     const email = url.searchParams.get('email')
+    const langOverride = url.searchParams.get('lang')
     if (!email) {
       return errors.validation('email parameter is required', corsHeaders)
     }
@@ -188,6 +189,10 @@ export const onRequestGet: PagesFunction<Env> = async (context) => {
     }
 
     const sub = subscribers[0]
+    // 프론트엔드 언어 설정 우선 사용
+    if (langOverride && ['ko', 'en', 'ja', 'zh', 'es'].includes(langOverride)) {
+      sub.preferred_language = langOverride
+    }
     const today = new Date().toISOString().split('T')[0]
 
     // 2. 오늘 이미 생성된 추천이 있는지 확인
