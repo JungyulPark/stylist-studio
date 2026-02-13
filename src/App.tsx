@@ -2528,6 +2528,32 @@ function App() {
       }
       setIsTransformingHair(false)
 
+      // Update history with generated images (best effort)
+      if (user && supabase) {
+        const styleImgs = stylesResult.status === 'fulfilled' && stylesResult.value.ok
+          ? (await stylesResult.value.clone().json().catch(() => null))?.styles || null
+          : null
+        const hairImgs = hairResult.status === 'fulfilled' && hairResult.value.ok
+          ? (await hairResult.value.clone().json().catch(() => null))?.results || null
+          : null
+        if (styleImgs || hairImgs) {
+          // Find the most recent history entry and update it
+          const { data: recent } = await supabase
+            .from('analysis_history')
+            .select('id')
+            .eq('user_id', user.id)
+            .eq('analysis_type', 'full')
+            .order('created_at', { ascending: false })
+            .limit(1)
+          if (recent && recent.length > 0) {
+            await supabase.from('analysis_history').update({
+              style_images: styleImgs,
+              hair_images: hairImgs?.map((h: { id: string; label: string; imageUrl: string | null }) => ({ id: h.id, label: h.label, imageUrl: h.imageUrl })) || null,
+            }).eq('id', recent[0].id)
+          }
+        }
+      }
+
       // 리포트 성공 후 checkout ID 정리 (환불 불가 상태)
       localStorage.removeItem('lastCheckoutId')
       setCheckoutId(null)
@@ -2809,6 +2835,13 @@ function App() {
   const [isFavoriteLoading, setIsFavoriteLoading] = useState(false)
   const toggleFavorite = async (imageUrl: string, imageType: 'style' | 'hair' | 'daily', label?: string) => {
     if (!user?.id || isFavoriteLoading) return
+    // Optimistic UI — toggle immediately
+    const wasActive = favoriteUrls.has(imageUrl)
+    if (wasActive) {
+      setFavoriteUrls(prev => { const next = new Set(prev); next.delete(imageUrl); return next })
+    } else {
+      setFavoriteUrls(prev => new Set([...prev, imageUrl]))
+    }
     setIsFavoriteLoading(true)
     try {
       const res = await fetch('/api/favorite-image', {
@@ -2824,21 +2857,28 @@ function App() {
       if (res.ok) {
         const data = await res.json()
         if (data.action === 'added') {
-          setFavoriteUrls(prev => new Set([...prev, imageUrl]))
           setFavoriteToast(t.favoriteSaved)
         } else {
-          setFavoriteUrls(prev => {
-            const next = new Set(prev)
-            next.delete(imageUrl)
-            return next
-          })
           setFavoriteToast(t.favoriteRemoved)
         }
         setTimeout(() => setFavoriteToast(''), 2000)
-        loadFavorites()
+        // Don't call loadFavorites — local state is already correct
+      } else {
+        // Revert on error
+        if (wasActive) {
+          setFavoriteUrls(prev => new Set([...prev, imageUrl]))
+        } else {
+          setFavoriteUrls(prev => { const next = new Set(prev); next.delete(imageUrl); return next })
+        }
       }
     } catch (e) {
       console.error('Toggle favorite error:', e)
+      // Revert on error
+      if (wasActive) {
+        setFavoriteUrls(prev => new Set([...prev, imageUrl]))
+      } else {
+        setFavoriteUrls(prev => { const next = new Set(prev); next.delete(imageUrl); return next })
+      }
     } finally {
       setIsFavoriteLoading(false)
     }
