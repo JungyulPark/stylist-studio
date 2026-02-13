@@ -2552,14 +2552,14 @@ function App() {
 
   // 구독 폼 열기
   const handleSubscription = () => {
-    if (isSubscribed) {
-      setPageState('subscription-dashboard')
-      loadDailyStyle()
-      return
-    }
     if (!user) {
       setError(t.subscriptionLoginRequired)
       setPageState('login')
+      return
+    }
+    if (isSubscribed) {
+      setPageState('subscription-dashboard')
+      loadDailyStyle()
       return
     }
     setSubscriptionCity('')
@@ -2569,7 +2569,10 @@ function App() {
 
   const loadDailyStyle = async () => {
     const email = user?.email
-    if (!email) return
+    if (!email) {
+      setDailyStyleError(t.subscriptionLoginRequired)
+      return
+    }
     setIsDailyStyleLoading(true)
     setDailyStyleError('')
     try {
