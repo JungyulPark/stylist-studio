@@ -31,6 +31,12 @@ interface WeatherData {
   wind_speed: number
 }
 
+interface OutfitImage {
+  id: string
+  label: string
+  url: string
+}
+
 interface DailyRecommendation {
   id: string
   recommendation_html: string
@@ -39,6 +45,8 @@ interface DailyRecommendation {
   humidity: number
   weather_data: WeatherData
   sent_date: string
+  outfit_images: OutfitImage[]
+  image_generation_status: string
 }
 
 async function getWeather(lat: number, lon: number, apiKey: string): Promise<WeatherData | null> {
@@ -216,6 +224,7 @@ export const onRequestGet: PagesFunction<Env> = async (context) => {
             city: sub.city,
             date: today,
             cached: true,
+            outfit_images: existing[0].outfit_images || [],
           }),
           { status: 200, headers: { 'Content-Type': 'application/json', ...corsHeaders } }
         )
@@ -269,6 +278,7 @@ export const onRequestGet: PagesFunction<Env> = async (context) => {
         city: sub.city,
         date: today,
         cached: false,
+        outfit_images: [],
       }),
       { status: 200, headers: { 'Content-Type': 'application/json', ...corsHeaders } }
     )

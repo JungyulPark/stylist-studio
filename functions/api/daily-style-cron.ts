@@ -1,5 +1,7 @@
 import { getCorsHeaders, createCorsPreflightResponse } from '../lib/cors'
 import { errors } from '../lib/errors'
+import { editPhotoWithGemini } from '../lib/gemini-image'
+import { getDailyScenarios, dailyScenarioLabels } from '../lib/daily-style-scenarios'
 import { Resend } from 'resend'
 
 interface Env {
@@ -7,9 +9,11 @@ interface Env {
   SUPABASE_SERVICE_KEY: string
   OPENWEATHER_API_KEY: string
   OPENAI_API_KEY: string
+  GEMINI_API_KEY: string
   RESEND_API_KEY: string
   CRON_SECRET: string
   PHOTOS_BUCKET: R2Bucket
+  DAILY_IMAGES_BUCKET: R2Bucket
 }
 
 interface Subscriber {
@@ -19,6 +23,7 @@ interface Subscriber {
   weight_kg: number | null
   gender: string | null
   photo_r2_key: string | null
+  profile_complete: boolean
   city: string
   timezone: string
   latitude: number | null
@@ -37,7 +42,12 @@ interface WeatherData {
   wind_speed: number
 }
 
-// 시간대별 현재 시각 계산
+interface OutfitImage {
+  id: string
+  label: string
+  url: string
+}
+
 function getLocalHour(timezone: string): number {
   try {
     const now = new Date()
@@ -52,7 +62,6 @@ function getLocalHour(timezone: string): number {
   }
 }
 
-// OpenWeatherMap 날씨 조회
 async function getWeather(lat: number, lon: number, apiKey: string): Promise<WeatherData | null> {
   try {
     const res = await fetch(
@@ -78,7 +87,6 @@ async function getWeather(lat: number, lon: number, apiKey: string): Promise<Wea
   }
 }
 
-// AI로 스타일 추천 생성
 async function generateStyleRecommendation(
   subscriber: Subscriber,
   weather: WeatherData,
@@ -149,7 +157,6 @@ OUTPUT FORMAT:
   }
 }
 
-// AI 실패 시 폴백 추천
 function getFallbackRecommendation(weather: WeatherData, lang: string): string {
   const isKo = lang === 'ko'
   const isCold = weather.temp < 10
@@ -157,7 +164,7 @@ function getFallbackRecommendation(weather: WeatherData, lang: string): string {
   const isRainy = ['Rain', 'Drizzle', 'Thunderstorm'].includes(weather.condition)
 
   if (isKo) {
-    let msg = `오늘 ${weather.city || ''}의 날씨는 ${weather.temp}°C, ${weather.description}입니다.\n\n`
+    let msg = `오늘 날씨는 ${weather.temp}°C, ${weather.description}입니다.\n\n`
     if (isCold) msg += '따뜻한 코트와 니트를 추천합니다. 목도리도 잊지 마세요!'
     else if (isHot) msg += '시원한 린넨 셔츠와 면바지를 추천합니다. 선글라스 필수!'
     else if (isRainy) msg += '방수 재킷과 부츠를 추천합니다. 우산 챙기세요!'
@@ -173,8 +180,93 @@ function getFallbackRecommendation(weather: WeatherData, lang: string): string {
   return msg
 }
 
-// 이메일 HTML 생성
-function buildEmailHtml(recommendation: string, weather: WeatherData, subscriber: Subscriber): string {
+// Generate outfit images for a subscriber with a complete profile
+async function generateOutfitImages(
+  subscriber: Subscriber,
+  weather: WeatherData,
+  geminiApiKey: string,
+  photosBucket: R2Bucket,
+  imagesBucket: R2Bucket
+): Promise<OutfitImage[]> {
+  if (!subscriber.photo_r2_key || !subscriber.gender) {
+    console.log(`[cron] Skipping image gen for ${subscriber.email}: no photo or gender`)
+    return []
+  }
+
+  // Fetch subscriber's photo from R2
+  let photoDataUri: string
+  try {
+    const photoObj = await photosBucket.get(subscriber.photo_r2_key)
+    if (!photoObj) {
+      console.error(`[cron] Photo not found in R2: ${subscriber.photo_r2_key}`)
+      return []
+    }
+    const photoBuffer = await photoObj.arrayBuffer()
+    const base64 = btoa(String.fromCharCode(...new Uint8Array(photoBuffer)))
+    photoDataUri = `data:image/jpeg;base64,${base64}`
+  } catch (e) {
+    console.error(`[cron] Failed to read photo from R2:`, e)
+    return []
+  }
+
+  const scenarios = getDailyScenarios(weather, subscriber.gender)
+  const today = new Date().toISOString().split('T')[0]
+  const lang = subscriber.preferred_language || 'en'
+  const outfitImages: OutfitImage[] = []
+
+  // Generate images sequentially with stagger to avoid rate limits
+  for (let i = 0; i < scenarios.length; i++) {
+    const scenario = scenarios[i]
+
+    if (i > 0) {
+      await new Promise(resolve => setTimeout(resolve, 1000))
+    }
+
+    try {
+      console.log(`[cron] Generating image ${scenario.id} for ${subscriber.email}`)
+      const resultDataUri = await editPhotoWithGemini(
+        photoDataUri,
+        scenario,
+        subscriber.gender,
+        geminiApiKey
+      )
+
+      if (resultDataUri) {
+        // Upload to public R2 bucket
+        const base64Match = resultDataUri.match(/^data:image\/\w+;base64,(.+)/)
+        if (base64Match) {
+          const binaryData = Uint8Array.from(atob(base64Match[1]), c => c.charCodeAt(0))
+          const r2Key = `daily/${subscriber.id}/${today}/${scenario.id}.jpg`
+
+          await imagesBucket.put(r2Key, binaryData, {
+            httpMetadata: { contentType: 'image/jpeg' },
+          })
+
+          // Public URL from R2
+          const publicUrl = `https://pub-80118c62e29d4373b70d5e0fe9503ff0.r2.dev/${r2Key}`
+          const label = dailyScenarioLabels[scenario.id]?.[lang] || scenario.id
+
+          outfitImages.push({ id: scenario.id, label, url: publicUrl })
+          console.log(`[cron] Image ${scenario.id} uploaded for ${subscriber.email}`)
+        }
+      } else {
+        console.warn(`[cron] Image generation returned null for ${scenario.id}`)
+      }
+    } catch (e) {
+      console.error(`[cron] Image gen error for ${scenario.id}:`, e)
+    }
+  }
+
+  return outfitImages
+}
+
+// Build email HTML with outfit images
+function buildEmailHtml(
+  recommendation: string,
+  weather: WeatherData,
+  subscriber: Subscriber,
+  outfitImages: OutfitImage[]
+): string {
   const weatherEmoji: Record<string, string> = {
     'Clear': '☀️', 'Clouds': '☁️', 'Rain': '🌧️', 'Drizzle': '🌦️',
     'Thunderstorm': '⛈️', 'Snow': '❄️', 'Mist': '🌫️', 'Fog': '🌫️',
@@ -187,6 +279,37 @@ function buildEmailHtml(recommendation: string, weather: WeatherData, subscriber
     ja: 'サブスクリプションの管理は以下のリンクから。',
     zh: '管理您的订阅，请使用以下链接。',
     es: 'Para gestionar tu suscripción, usa el enlace a continuación.',
+  }
+
+  const outfitTitle: Record<string, string> = {
+    ko: '오늘의 스타일 이미지',
+    en: "Today's Style Looks",
+    ja: '今日のスタイルイメージ',
+    zh: '今日穿搭图',
+    es: 'Looks de Hoy',
+  }
+
+  const lang = subscriber.preferred_language || 'en'
+
+  // Build outfit images HTML section
+  let imagesHtml = ''
+  if (outfitImages.length > 0) {
+    const imageCards = outfitImages.map(img => `
+      <div style="flex:1;min-width:150px;max-width:180px;text-align:center;">
+        <img src="${img.url}" alt="${img.label}" style="width:100%;border-radius:12px;border:1px solid rgba(201,169,98,0.3);margin-bottom:8px;" />
+        <p style="color:#c9a962;font-size:12px;font-weight:600;margin:0;">${img.label}</p>
+      </div>
+    `).join('')
+
+    imagesHtml = `
+    <!-- Outfit Images -->
+    <div style="margin-bottom:24px;">
+      <h2 style="color:#c9a962;font-size:14px;letter-spacing:2px;text-align:center;margin-bottom:16px;">${outfitTitle[lang] || outfitTitle.en}</h2>
+      <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;">
+        ${imageCards}
+      </div>
+    </div>
+    `
   }
 
   return `<!DOCTYPE html>
@@ -208,6 +331,8 @@ function buildEmailHtml(recommendation: string, weather: WeatherData, subscriber
         <span style="color:rgba(255,255,255,0.5);font-size:14px;">${subscriber.city}</span>
       </div>
     </div>
+
+    ${imagesHtml}
 
     <!-- Recommendation -->
     <div style="background:rgba(255,255,255,0.04);border:1px solid rgba(201,169,98,0.2);border-radius:16px;padding:24px;margin-bottom:24px;">
@@ -234,7 +359,6 @@ ${recommendation}
 </html>`
 }
 
-// 이메일 제목
 const emailSubjects: Record<string, string> = {
   ko: '오늘의 스타일 추천',
   en: 'Your Daily Style Pick',
@@ -250,7 +374,6 @@ const emailSubjects: Record<string, string> = {
 export const onRequestGet: PagesFunction<Env> = async (context) => {
   const corsHeaders = getCorsHeaders(context.request)
 
-  // 인증: CRON_SECRET 확인
   const url = new URL(context.request.url)
   const secret = url.searchParams.get('secret') || context.request.headers.get('x-cron-secret')
   if (!context.env.CRON_SECRET || secret !== context.env.CRON_SECRET) {
@@ -261,10 +384,10 @@ export const onRequestGet: PagesFunction<Env> = async (context) => {
     return errors.configError(corsHeaders)
   }
 
-  const results: Array<{ email: string; status: string; error?: string }> = []
+  const results: Array<{ email: string; status: string; images?: number; error?: string }> = []
 
   try {
-    // 1. 모든 활성 구독자 조회
+    // 1. Fetch all active subscribers
     const subRes = await fetch(
       `${context.env.SUPABASE_URL}/rest/v1/subscribers?status=in.(trialing,active)&select=*`,
       {
@@ -289,7 +412,7 @@ export const onRequestGet: PagesFunction<Env> = async (context) => {
       )
     }
 
-    // 2. 각 구독자의 로컬 시간이 6시(6AM)인지 확인
+    // 2. Filter subscribers at 6AM local time
     const targetHour = 6
     const eligibleSubscribers = subscribers.filter(sub => {
       const localHour = getLocalHour(sub.timezone)
@@ -307,14 +430,14 @@ export const onRequestGet: PagesFunction<Env> = async (context) => {
       )
     }
 
-    // 3. Resend 클라이언트 초기화
     const resend = context.env.RESEND_API_KEY ? new Resend(context.env.RESEND_API_KEY) : null
 
-    // 4. 각 구독자에게 추천 생성 + 이메일 발송
+    // 3. Process each eligible subscriber
     for (const sub of eligibleSubscribers) {
       try {
-        // 오늘 이미 발송했는지 확인
         const today = new Date().toISOString().split('T')[0]
+
+        // Check if already sent today
         const checkRes = await fetch(
           `${context.env.SUPABASE_URL}/rest/v1/daily_recommendations?subscriber_id=eq.${sub.id}&sent_date=eq.${today}&limit=1`,
           {
@@ -330,12 +453,11 @@ export const onRequestGet: PagesFunction<Env> = async (context) => {
           continue
         }
 
-        // 날씨 조회
+        // Fetch weather
         let weather: WeatherData | null = null
         if (sub.latitude && sub.longitude && context.env.OPENWEATHER_API_KEY) {
           weather = await getWeather(sub.latitude, sub.longitude, context.env.OPENWEATHER_API_KEY)
         }
-
         if (!weather) {
           weather = {
             temp: 20, feels_like: 20, humidity: 50,
@@ -344,16 +466,37 @@ export const onRequestGet: PagesFunction<Env> = async (context) => {
           }
         }
 
-        // AI 추천 생성
+        // Generate text recommendation
         const recommendation = await generateStyleRecommendation(sub, weather, context.env.OPENAI_API_KEY)
 
-        // 이메일 발송
+        // Generate outfit images for profile-complete subscribers
+        let outfitImages: OutfitImage[] = []
+        let imageStatus = 'skipped'
+
+        if (sub.profile_complete && sub.photo_r2_key && sub.gender && context.env.GEMINI_API_KEY && context.env.DAILY_IMAGES_BUCKET) {
+          try {
+            imageStatus = 'generating'
+            outfitImages = await generateOutfitImages(
+              sub,
+              weather,
+              context.env.GEMINI_API_KEY,
+              context.env.PHOTOS_BUCKET,
+              context.env.DAILY_IMAGES_BUCKET
+            )
+            imageStatus = outfitImages.length > 0 ? 'generated' : 'failed'
+          } catch (e) {
+            console.error(`[cron] Image generation failed for ${sub.email}:`, e)
+            imageStatus = 'failed'
+          }
+        }
+
+        // Send email
         let emailSent = false
         let emailError: string | null = null
 
         if (resend) {
           try {
-            const html = buildEmailHtml(recommendation, weather, sub)
+            const html = buildEmailHtml(recommendation, weather, sub, outfitImages)
             const subject = emailSubjects[sub.preferred_language] || emailSubjects.en
 
             await resend.emails.send({
@@ -369,7 +512,7 @@ export const onRequestGet: PagesFunction<Env> = async (context) => {
           }
         }
 
-        // 발송 기록 저장
+        // Save recommendation to DB
         await fetch(
           `${context.env.SUPABASE_URL}/rest/v1/daily_recommendations`,
           {
@@ -388,6 +531,8 @@ export const onRequestGet: PagesFunction<Env> = async (context) => {
               humidity: weather.humidity,
               recommendation_html: recommendation,
               outfit_description: recommendation.substring(0, 500),
+              outfit_images: outfitImages,
+              image_generation_status: imageStatus,
               email_sent: emailSent,
               email_sent_at: emailSent ? new Date().toISOString() : null,
               email_error: emailError,
@@ -398,6 +543,7 @@ export const onRequestGet: PagesFunction<Env> = async (context) => {
         results.push({
           email: sub.email,
           status: emailSent ? 'sent' : 'generated_not_sent',
+          images: outfitImages.length,
           error: emailError || undefined,
         })
 
@@ -416,6 +562,7 @@ export const onRequestGet: PagesFunction<Env> = async (context) => {
         total_active: subscribers.length,
         eligible_6am: eligibleSubscribers.length,
         sent: results.filter(r => r.status === 'sent').length,
+        images_generated: results.reduce((sum, r) => sum + (r.images || 0), 0),
         results,
       }),
       { status: 200, headers: { 'Content-Type': 'application/json', ...corsHeaders } }

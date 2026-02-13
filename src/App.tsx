@@ -323,6 +323,34 @@ const translations: Record<Language, {
   dashboardStyleTip: string
   dashboardBack: string
   dashboardNewDay: string
+  // Dashboard Profile
+  dashboardProfileTitle: string
+  dashboardProfileDesc: string
+  dashboardProfileHeight: string
+  dashboardProfileWeight: string
+  dashboardProfileGender: string
+  dashboardProfilePhoto: string
+  dashboardProfileSave: string
+  dashboardProfileSaving: string
+  dashboardProfileComplete: string
+  dashboardProfileIncomplete: string
+  // Dashboard Gallery
+  dashboardGalleryTitle: string
+  dashboardGalleryEmpty: string
+  dashboardGalleryTodaysPick: string
+  dashboardGalleryCasual: string
+  dashboardGalleryEvening: string
+  // Preview (free image)
+  previewFreeLabel: string
+  previewBlurredLabel: string
+  previewUnlockAll: string
+  // Favorites
+  favoriteSaved: string
+  favoriteRemoved: string
+  favoritesTitle: string
+  favoritesEmpty: string
+  favoritesGallery: string
+  saveImage: string
 }> = {
   ko: {
     title: 'PERSONAL STYLIST',
@@ -557,6 +585,30 @@ const translations: Record<Language, {
     dashboardStyleTip: '오늘의 스타일 추천',
     dashboardBack: '← 홈으로',
     dashboardNewDay: '매일 아침 새로운 스타일이 업데이트됩니다',
+    dashboardProfileTitle: '프로필 완성하기',
+    dashboardProfileDesc: '프로필을 완성하면 매일 AI 의상 이미지를 받을 수 있어요',
+    dashboardProfileHeight: '키 (cm)',
+    dashboardProfileWeight: '몸무게 (kg)',
+    dashboardProfileGender: '성별',
+    dashboardProfilePhoto: '전신 사진 업로드',
+    dashboardProfileSave: '프로필 저장',
+    dashboardProfileSaving: '저장 중...',
+    dashboardProfileComplete: '프로필 완성',
+    dashboardProfileIncomplete: '프로필 미완성',
+    dashboardGalleryTitle: '오늘의 스타일 룩',
+    dashboardGalleryEmpty: '내일 아침 6시에 맞춤 스타일이 도착합니다',
+    dashboardGalleryTodaysPick: '오늘의 추천',
+    dashboardGalleryCasual: '캐주얼',
+    dashboardGalleryEvening: '이브닝',
+    previewFreeLabel: 'Best Match (무료 미리보기)',
+    previewBlurredLabel: '잠금 해제하여 모두 보기',
+    previewUnlockAll: '전체 잠금 해제',
+    favoriteSaved: '즐겨찾기에 저장됨',
+    favoriteRemoved: '즐겨찾기에서 제거됨',
+    favoritesTitle: '내 즐겨찾기',
+    favoritesEmpty: '아직 즐겨찾기가 없습니다',
+    favoritesGallery: '즐겨찾기',
+    saveImage: '이미지 저장',
   },
   en: {
     title: 'PERSONAL STYLIST',
@@ -791,6 +843,30 @@ const translations: Record<Language, {
     dashboardStyleTip: "Today's Style Pick",
     dashboardBack: '← Home',
     dashboardNewDay: 'A new style is curated for you every morning',
+    dashboardProfileTitle: 'Complete Your Profile',
+    dashboardProfileDesc: 'Complete your profile to receive daily AI outfit images',
+    dashboardProfileHeight: 'Height (cm)',
+    dashboardProfileWeight: 'Weight (kg)',
+    dashboardProfileGender: 'Gender',
+    dashboardProfilePhoto: 'Upload Full-Body Photo',
+    dashboardProfileSave: 'Save Profile',
+    dashboardProfileSaving: 'Saving...',
+    dashboardProfileComplete: 'Profile Complete',
+    dashboardProfileIncomplete: 'Profile Incomplete',
+    dashboardGalleryTitle: "Today's Style Looks",
+    dashboardGalleryEmpty: 'Your personalized styles arrive tomorrow at 6AM',
+    dashboardGalleryTodaysPick: "Today's Pick",
+    dashboardGalleryCasual: 'Casual',
+    dashboardGalleryEvening: 'Evening',
+    previewFreeLabel: 'Best Match (Free Preview)',
+    previewBlurredLabel: 'Unlock to see all',
+    previewUnlockAll: 'Unlock All Styles',
+    favoriteSaved: 'Saved to favorites',
+    favoriteRemoved: 'Removed from favorites',
+    favoritesTitle: 'My Favorites',
+    favoritesEmpty: 'No favorites yet',
+    favoritesGallery: 'Favorites',
+    saveImage: 'Save Image',
   },
   ja: {
     title: 'PERSONAL STYLIST',
@@ -1025,6 +1101,30 @@ const translations: Record<Language, {
     dashboardStyleTip: '今日のスタイル提案',
     dashboardBack: '← ホームへ',
     dashboardNewDay: '毎朝新しいスタイルが届きます',
+    dashboardProfileTitle: 'プロフィールを完成',
+    dashboardProfileDesc: 'プロフィールを完成させると毎日AIコーデ画像が届きます',
+    dashboardProfileHeight: '身長 (cm)',
+    dashboardProfileWeight: '体重 (kg)',
+    dashboardProfileGender: '性別',
+    dashboardProfilePhoto: '全身写真をアップロード',
+    dashboardProfileSave: 'プロフィール保存',
+    dashboardProfileSaving: '保存中...',
+    dashboardProfileComplete: 'プロフィール完了',
+    dashboardProfileIncomplete: 'プロフィール未完了',
+    dashboardGalleryTitle: '今日のスタイルルック',
+    dashboardGalleryEmpty: '明日朝6時にパーソナルスタイルが届きます',
+    dashboardGalleryTodaysPick: '今日のおすすめ',
+    dashboardGalleryCasual: 'カジュアル',
+    dashboardGalleryEvening: 'イブニング',
+    previewFreeLabel: 'ベストマッチ（無料プレビュー）',
+    previewBlurredLabel: 'ロック解除してすべて見る',
+    previewUnlockAll: '全スタイルをロック解除',
+    favoriteSaved: 'お気に入りに保存しました',
+    favoriteRemoved: 'お気に入りから削除しました',
+    favoritesTitle: 'お気に入り',
+    favoritesEmpty: 'まだお気に入りがありません',
+    favoritesGallery: 'お気に入り',
+    saveImage: '画像を保存',
   },
   zh: {
     title: 'PERSONAL STYLIST',
@@ -1259,6 +1359,30 @@ const translations: Record<Language, {
     dashboardStyleTip: '今日穿搭推荐',
     dashboardBack: '← 返回首页',
     dashboardNewDay: '每天早上为你更新新的穿搭',
+    dashboardProfileTitle: '完善个人资料',
+    dashboardProfileDesc: '完善资料后每天可收到AI穿搭图片',
+    dashboardProfileHeight: '身高 (cm)',
+    dashboardProfileWeight: '体重 (kg)',
+    dashboardProfileGender: '性别',
+    dashboardProfilePhoto: '上传全身照',
+    dashboardProfileSave: '保存资料',
+    dashboardProfileSaving: '保存中...',
+    dashboardProfileComplete: '资料已完善',
+    dashboardProfileIncomplete: '资料未完善',
+    dashboardGalleryTitle: '今日穿搭图',
+    dashboardGalleryEmpty: '明天早上6点将收到专属穿搭推荐',
+    dashboardGalleryTodaysPick: '今日推荐',
+    dashboardGalleryCasual: '休闲',
+    dashboardGalleryEvening: '晚间',
+    previewFreeLabel: '最佳搭配（免费预览）',
+    previewBlurredLabel: '解锁查看全部',
+    previewUnlockAll: '解锁全部风格',
+    favoriteSaved: '已保存到收藏',
+    favoriteRemoved: '已从收藏中移除',
+    favoritesTitle: '我的收藏',
+    favoritesEmpty: '暂无收藏',
+    favoritesGallery: '收藏',
+    saveImage: '保存图片',
   },
   es: {
     title: 'PERSONAL STYLIST',
@@ -1493,6 +1617,30 @@ const translations: Record<Language, {
     dashboardStyleTip: 'Estilo del Día',
     dashboardBack: '← Inicio',
     dashboardNewDay: 'Cada mañana un nuevo estilo para ti',
+    dashboardProfileTitle: 'Completa Tu Perfil',
+    dashboardProfileDesc: 'Completa tu perfil para recibir imágenes de outfits con IA',
+    dashboardProfileHeight: 'Altura (cm)',
+    dashboardProfileWeight: 'Peso (kg)',
+    dashboardProfileGender: 'Género',
+    dashboardProfilePhoto: 'Subir Foto de Cuerpo Completo',
+    dashboardProfileSave: 'Guardar Perfil',
+    dashboardProfileSaving: 'Guardando...',
+    dashboardProfileComplete: 'Perfil Completo',
+    dashboardProfileIncomplete: 'Perfil Incompleto',
+    dashboardGalleryTitle: 'Looks de Hoy',
+    dashboardGalleryEmpty: 'Tus estilos personalizados llegan mañana a las 6AM',
+    dashboardGalleryTodaysPick: 'Elección del Día',
+    dashboardGalleryCasual: 'Casual',
+    dashboardGalleryEvening: 'Noche',
+    previewFreeLabel: 'Mejor Combinación (Vista Previa Gratis)',
+    previewBlurredLabel: 'Desbloquear para ver todo',
+    previewUnlockAll: 'Desbloquear Todos los Estilos',
+    favoriteSaved: 'Guardado en favoritos',
+    favoriteRemoved: 'Eliminado de favoritos',
+    favoritesTitle: 'Mis Favoritos',
+    favoritesEmpty: 'Aún no hay favoritos',
+    favoritesGallery: 'Favoritos',
+    saveImage: 'Guardar Imagen',
   }
 }
 
@@ -1845,9 +1993,25 @@ function App() {
   const [showSubscriptionForm, setShowSubscriptionForm] = useState(false)
   const [subscriptionCity, setSubscriptionCity] = useState('')
   const [subscriptionCityError, setSubscriptionCityError] = useState('')
-  const [dailyStyle, setDailyStyle] = useState<{ recommendation: string; weather: { temp: number; feels_like: number; humidity: number; condition: string; description: string; icon: string; wind_speed: number }; city: string; date: string } | null>(null)
+  const [dailyStyle, setDailyStyle] = useState<{ recommendation: string; weather: { temp: number; feels_like: number; humidity: number; condition: string; description: string; icon: string; wind_speed: number }; city: string; date: string; outfit_images?: Array<{ id: string; label: string; url: string }> } | null>(null)
   const [isDailyStyleLoading, setIsDailyStyleLoading] = useState(false)
   const [dailyStyleError, setDailyStyleError] = useState('')
+
+  // Dashboard profile form state
+  const [dashProfileHeight, setDashProfileHeight] = useState('')
+  const [dashProfileWeight, setDashProfileWeight] = useState('')
+  const [dashProfileGender, setDashProfileGender] = useState<Gender>(null)
+  const [dashProfilePhoto, setDashProfilePhoto] = useState<string | null>(null)
+  const [isDashProfileSaving, setIsDashProfileSaving] = useState(false)
+  const [dashProfileComplete, setDashProfileComplete] = useState(false)
+
+  // Favorites state
+  const [favorites, setFavorites] = useState<Array<{ id: string; image_url: string; image_type: string; label: string | null }>>([])
+  const [favoriteToast, setFavoriteToast] = useState('')
+  const [favoriteUrls, setFavoriteUrls] = useState<Set<string>>(new Set())
+
+  // Fullscreen image viewer
+  const [fullscreenImage, setFullscreenImage] = useState<string | null>(null)
 
   const feetInchesToCm = (feet: string, inches: string): string => {
     const ft = parseFloat(feet) || 0
@@ -2587,6 +2751,133 @@ function App() {
     }
   }
 
+  // Dashboard profile save
+  const dashProfilePhotoRef = useRef<HTMLInputElement>(null)
+
+  const handleDashProfilePhotoUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
+    if (!file) return
+    const reader = new FileReader()
+    reader.onload = (ev) => {
+      setDashProfilePhoto(ev.target?.result as string)
+    }
+    reader.readAsDataURL(file)
+  }
+
+  const handleDashProfileSave = async () => {
+    const email = user?.email
+    if (!email) return
+    setIsDashProfileSaving(true)
+    try {
+      const res = await fetch('/api/update-subscriber-profile', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          email,
+          height_cm: dashProfileHeight ? parseInt(dashProfileHeight, 10) : undefined,
+          weight_kg: dashProfileWeight ? parseInt(dashProfileWeight, 10) : undefined,
+          gender: dashProfileGender || undefined,
+          photo: dashProfilePhoto || undefined,
+        }),
+      })
+      if (res.ok) {
+        const data = await res.json()
+        setDashProfileComplete(data.profile_complete)
+      }
+    } catch (e) {
+      console.error('Profile save error:', e)
+    } finally {
+      setIsDashProfileSaving(false)
+    }
+  }
+
+  // Favorites
+  const loadFavorites = useCallback(async () => {
+    if (!user?.id) return
+    try {
+      const res = await fetch(`/api/favorite-image?user_id=${user.id}`)
+      if (res.ok) {
+        const data = await res.json()
+        setFavorites(data.favorites || [])
+        setFavoriteUrls(new Set((data.favorites || []).map((f: { image_url: string }) => f.image_url)))
+      }
+    } catch (e) {
+      console.error('Load favorites error:', e)
+    }
+  }, [user?.id])
+
+  const toggleFavorite = async (imageUrl: string, imageType: 'style' | 'hair' | 'daily', label?: string) => {
+    if (!user?.id) return
+    try {
+      const res = await fetch('/api/favorite-image', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          user_id: user.id,
+          image_url: imageUrl,
+          image_type: imageType,
+          label: label || null,
+        }),
+      })
+      if (res.ok) {
+        const data = await res.json()
+        if (data.action === 'added') {
+          setFavoriteUrls(prev => new Set([...prev, imageUrl]))
+          setFavoriteToast(t.favoriteSaved)
+        } else {
+          setFavoriteUrls(prev => {
+            const next = new Set(prev)
+            next.delete(imageUrl)
+            return next
+          })
+          setFavoriteToast(t.favoriteRemoved)
+        }
+        setTimeout(() => setFavoriteToast(''), 2000)
+        loadFavorites()
+      }
+    } catch (e) {
+      console.error('Toggle favorite error:', e)
+    }
+  }
+
+  // Download/save image (works on mobile as wallpaper save)
+  const downloadImage = async (imageUrl: string, filename?: string) => {
+    try {
+      // For data URIs, create blob directly
+      if (imageUrl.startsWith('data:')) {
+        const res = await fetch(imageUrl)
+        const blob = await res.blob()
+        const url = URL.createObjectURL(blob)
+        const a = document.createElement('a')
+        a.href = url
+        a.download = filename || 'stylist-image.jpg'
+        document.body.appendChild(a)
+        a.click()
+        document.body.removeChild(a)
+        URL.revokeObjectURL(url)
+      } else {
+        // For remote URLs, open in new tab (browser handles download)
+        const a = document.createElement('a')
+        a.href = imageUrl
+        a.download = filename || 'stylist-image.jpg'
+        a.target = '_blank'
+        a.rel = 'noopener noreferrer'
+        document.body.appendChild(a)
+        a.click()
+        document.body.removeChild(a)
+      }
+    } catch (e) {
+      console.error('Download error:', e)
+      // Fallback: open in new tab
+      window.open(imageUrl, '_blank')
+    }
+  }
+
+  // Load favorites when user logs in
+  useEffect(() => {
+    if (user?.id) loadFavorites()
+  }, [user?.id, loadFavorites])
+
   // 구독 폼 제출 → 데이터 저장 후 Polar 결제
   const handleSubscriptionSubmit = async () => {
     if (!subscriptionCity.trim()) {
@@ -2643,8 +2934,8 @@ function App() {
     }
   }
 
-  // 실제 분석 수행 함수
-  const performAnalysis = async () => {
+  // 실제 분석 수행 함수 (결제 완료 후 or 결제 전 미리보기용)
+  const performAnalysis = async (destinationPage: 'result' | 'preview' = 'result') => {
     setPage('loading')
     setError('')
     setStyleImages([])
@@ -2652,8 +2943,8 @@ function App() {
     setLoadingStep('')
 
     try {
-      // Step 1: Text analysis first
-      const analyzeResponse = await fetch('/api/analyze', {
+      // Step 1: Text analysis + image generation in parallel
+      const analyzePromise = fetch('/api/analyze', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -2665,6 +2956,32 @@ function App() {
         })
       })
 
+      const stylesPromise = fetch('/api/generate-styles', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          height: profile.height,
+          weight: profile.weight,
+          gender: profile.gender,
+          photo: profile.photo,
+          language: lang
+        })
+      })
+
+      const hairPromise = fetch('/api/transform-batch', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          photo: profile.photo,
+          type: 'hairstyle',
+          gender: profile.gender,
+          language: lang
+        })
+      })
+
+      // Wait for text analysis first
+      const analyzeResponse = await analyzePromise
+
       if (!analyzeResponse.ok) {
         throw new Error('Analysis failed')
       }
@@ -2672,7 +2989,7 @@ function App() {
       const analyzeData = await analyzeResponse.json()
       setReport(analyzeData.report)
 
-      // Save to history if user is logged in (do not await - don't block UI)
+      // Save to history if user is logged in
       saveAnalysisToHistory('full', analyzeData.report, null, null, {
         height: profile.height,
         weight: profile.weight,
@@ -2680,39 +2997,11 @@ function App() {
         language: lang
       })
 
-      setLoadingProgress(100)
-      setLoadingStep(lang === 'ko' ? '완료!' : 'Complete!')
-      await new Promise(resolve => setTimeout(resolve, 400))
-      setPage('result')
-
-      // Step 2: Generate style images AND hairstyles AFTER showing result page
+      // Wait for images to finish
       setIsGeneratingStyles(true)
       setIsTransformingHair(true)
 
-      // Generate fashion styles and hairstyles in parallel
-      const [stylesResult, hairResult] = await Promise.allSettled([
-        fetch('/api/generate-styles', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            height: profile.height,
-            weight: profile.weight,
-            gender: profile.gender,
-            photo: profile.photo,
-            language: lang
-          })
-        }),
-        fetch('/api/transform-batch', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            photo: profile.photo,
-            type: 'hairstyle',
-            gender: profile.gender,
-            language: lang
-          })
-        })
-      ])
+      const [stylesResult, hairResult] = await Promise.allSettled([stylesPromise, hairPromise])
 
       // Handle fashion styles
       if (stylesResult.status === 'fulfilled') {
@@ -2741,6 +3030,13 @@ function App() {
         console.error('[Hair] Fetch failed:', hairResult.reason)
       }
       setIsTransformingHair(false)
+
+      setLoadingProgress(100)
+      setLoadingStep(lang === 'ko' ? '완료!' : 'Complete!')
+      await new Promise(resolve => setTimeout(resolve, 400))
+
+      // Go to destination: preview (unpaid) or result (paid)
+      setPage(destinationPage)
     } catch (err) {
       console.error('Error:', err)
       setError(t.error)
@@ -2751,12 +3047,12 @@ function App() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
 
-    // 결제가 완료된 경우 바로 분석 시작
     if (isFullPaid) {
-      performAnalysis()
+      // 결제 완료 → 결과 페이지로
+      performAnalysis('result')
     } else {
-      // 결제가 안된 경우 프리뷰 페이지로 이동 (Value Gate)
-      setPage('preview')
+      // 미결제 → 분석 실행 후 미리보기 페이지로 (1장 무료 공개)
+      performAnalysis('preview')
     }
   }
 
@@ -3843,6 +4139,8 @@ function App() {
       'Thunderstorm': '⛈️', 'Snow': '❄️', 'Mist': '🌫️', 'Fog': '🌫️',
     }
 
+    const outfitImages = dailyStyle?.outfit_images || []
+
     return (
       <div className="app-container" style={{ background: 'var(--bg-light)', minHeight: '100vh' }}>
         <div className="dashboard-page">
@@ -3886,6 +4184,37 @@ function App() {
                 </div>
               </div>
 
+              {/* Outfit Image Gallery */}
+              {outfitImages.length > 0 ? (
+                <div className="dashboard-gallery">
+                  <h3 className="dashboard-gallery-title">{t.dashboardGalleryTitle}</h3>
+                  <div className="dashboard-gallery-scroll">
+                    {outfitImages.map((img) => (
+                      <div key={img.id} className="dashboard-gallery-card">
+                        <div className="dashboard-gallery-img-wrap" onClick={() => setFullscreenImage(img.url)}>
+                          <img src={img.url} alt={img.label} />
+                        </div>
+                        <div className="dashboard-gallery-card-footer">
+                          <span className="dashboard-gallery-label">{img.label}</span>
+                          {user && (
+                            <button
+                              className={`favorite-btn ${favoriteUrls.has(img.url) ? 'active' : ''}`}
+                              onClick={() => toggleFavorite(img.url, 'daily', img.label)}
+                            >
+                              {favoriteUrls.has(img.url) ? '♥' : '♡'}
+                            </button>
+                          )}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              ) : (
+                <div className="dashboard-gallery-empty">
+                  <p>{t.dashboardGalleryEmpty}</p>
+                </div>
+              )}
+
               <div className="dashboard-recommendation">
                 <h3>{t.dashboardStyleTip}</h3>
                 <div className="dashboard-recommendation-text">
@@ -3898,7 +4227,123 @@ function App() {
               <p className="dashboard-footer-note">{t.dashboardNewDay}</p>
             </>
           )}
+
+          {/* Profile Completion Form */}
+          {!dashProfileComplete && !isDailyStyleLoading && (
+            <div className="dashboard-profile-form">
+              <div className="dashboard-profile-badge">
+                <span>{t.dashboardProfileIncomplete}</span>
+              </div>
+              <h3>{t.dashboardProfileTitle}</h3>
+              <p className="dashboard-profile-desc">{t.dashboardProfileDesc}</p>
+
+              <div className="dashboard-profile-fields">
+                <div className="dashboard-profile-row">
+                  <label>{t.dashboardProfileHeight}</label>
+                  <input
+                    type="number"
+                    value={dashProfileHeight}
+                    onChange={(e) => setDashProfileHeight(e.target.value)}
+                    placeholder="170"
+                  />
+                </div>
+                <div className="dashboard-profile-row">
+                  <label>{t.dashboardProfileWeight}</label>
+                  <input
+                    type="number"
+                    value={dashProfileWeight}
+                    onChange={(e) => setDashProfileWeight(e.target.value)}
+                    placeholder="65"
+                  />
+                </div>
+                <div className="dashboard-profile-row">
+                  <label>{t.dashboardProfileGender}</label>
+                  <div className="dashboard-profile-gender-btns">
+                    {(['male', 'female', 'other'] as const).map(g => (
+                      <button
+                        key={g}
+                        className={`dashboard-gender-btn ${dashProfileGender === g ? 'active' : ''}`}
+                        onClick={() => setDashProfileGender(g)}
+                      >
+                        {g === 'male' ? t.male : g === 'female' ? t.female : t.other}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+                <div className="dashboard-profile-row">
+                  <label>{t.dashboardProfilePhoto}</label>
+                  <input
+                    ref={dashProfilePhotoRef}
+                    type="file"
+                    accept="image/*"
+                    onChange={handleDashProfilePhotoUpload}
+                    style={{ display: 'none' }}
+                  />
+                  <button
+                    className="dashboard-photo-upload-btn"
+                    onClick={() => dashProfilePhotoRef.current?.click()}
+                  >
+                    {dashProfilePhoto ? '✓ ' + t.dashboardProfilePhoto : t.dashboardProfilePhoto}
+                  </button>
+                  {dashProfilePhoto && (
+                    <img src={dashProfilePhoto} alt="Preview" className="dashboard-profile-photo-preview" />
+                  )}
+                </div>
+              </div>
+
+              <button
+                className="dashboard-profile-save-btn"
+                onClick={handleDashProfileSave}
+                disabled={isDashProfileSaving}
+              >
+                {isDashProfileSaving ? t.dashboardProfileSaving : t.dashboardProfileSave}
+              </button>
+            </div>
+          )}
+
+          {/* Favorites Section */}
+          {favorites.length > 0 && (
+            <div className="dashboard-favorites">
+              <h3 className="dashboard-gallery-title">{t.favoritesGallery}</h3>
+              <div className="dashboard-gallery-scroll">
+                {favorites.map((fav) => (
+                  <div key={fav.id} className="dashboard-gallery-card">
+                    <div className="dashboard-gallery-img-wrap" onClick={() => setFullscreenImage(fav.image_url)}>
+                      <img src={fav.image_url} alt={fav.label || ''} />
+                    </div>
+                    <div className="dashboard-gallery-card-footer">
+                      <span className="dashboard-gallery-label">{fav.label || fav.image_type}</span>
+                      <button
+                        className="favorite-btn active"
+                        onClick={() => toggleFavorite(fav.image_url, fav.image_type as 'style' | 'hair' | 'daily', fav.label || undefined)}
+                      >
+                        ♥
+                      </button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
         </div>
+
+        {/* Fullscreen Image Viewer */}
+        {fullscreenImage && (
+          <div className="fullscreen-overlay" onClick={() => setFullscreenImage(null)}>
+            <div className="fullscreen-actions">
+              <button className="fullscreen-action-btn" onClick={(e) => { e.stopPropagation(); downloadImage(fullscreenImage, 'stylist-style.jpg') }}>
+                {t.saveImage}
+              </button>
+              <button className="fullscreen-close" onClick={() => setFullscreenImage(null)}>×</button>
+            </div>
+            <img src={fullscreenImage} alt="Fullscreen" className="fullscreen-image" onClick={(e) => e.stopPropagation()} />
+          </div>
+        )}
+
+        {/* Favorite Toast */}
+        {favoriteToast && (
+          <div className="favorite-toast">{favoriteToast}</div>
+        )}
       </div>
     )
   }
@@ -4487,7 +4932,17 @@ function App() {
                   <div key={style.id} className="style-card">
                     <div className="style-image-container">
                       {style.imageUrl ? (
-                        <img src={style.imageUrl} alt={t.styleLabels[style.id] || style.label} className="style-image" />
+                        <>
+                          <img src={style.imageUrl} alt={t.styleLabels[style.id] || style.label} className="style-image" onClick={() => setFullscreenImage(style.imageUrl)} />
+                          {user && (
+                            <button
+                              className={`favorite-btn-overlay ${favoriteUrls.has(style.imageUrl) ? 'active' : ''}`}
+                              onClick={() => toggleFavorite(style.imageUrl!, 'style', t.styleLabels[style.id] || style.label)}
+                            >
+                              {favoriteUrls.has(style.imageUrl) ? '♥' : '♡'}
+                            </button>
+                          )}
+                        </>
                       ) : (
                         <div className="style-placeholder">
                           <span className="style-icon">👔</span>
@@ -4882,6 +5337,24 @@ function App() {
             </div>
           </div>
         )}
+
+        {/* Fullscreen Image Viewer */}
+        {fullscreenImage && (
+          <div className="fullscreen-overlay" onClick={() => setFullscreenImage(null)}>
+            <div className="fullscreen-actions">
+              <button className="fullscreen-action-btn" onClick={(e) => { e.stopPropagation(); downloadImage(fullscreenImage, 'stylist-style.jpg') }}>
+                {t.saveImage}
+              </button>
+              <button className="fullscreen-close" onClick={() => setFullscreenImage(null)}>×</button>
+            </div>
+            <img src={fullscreenImage} alt="Fullscreen" className="fullscreen-image" onClick={(e) => e.stopPropagation()} />
+          </div>
+        )}
+
+        {/* Favorite Toast */}
+        {favoriteToast && (
+          <div className="favorite-toast">{favoriteToast}</div>
+        )}
       </div>
     )
   }
@@ -5273,7 +5746,17 @@ function App() {
                   {generatedHairImages.map((item, index) => (
                     <div key={index} className="generated-image-card">
                       {item.imageUrl ? (
-                        <img src={item.imageUrl} alt={item.style} className="generated-image" />
+                        <div className="style-image-container">
+                          <img src={item.imageUrl} alt={item.style} className="generated-image" onClick={() => setFullscreenImage(item.imageUrl)} />
+                          {user && (
+                            <button
+                              className={`favorite-btn-overlay ${favoriteUrls.has(item.imageUrl) ? 'active' : ''}`}
+                              onClick={() => toggleFavorite(item.imageUrl!, 'hair', item.style)}
+                            >
+                              {favoriteUrls.has(item.imageUrl) ? '♥' : '♡'}
+                            </button>
+                          )}
+                        </div>
                       ) : (
                         <div className="generated-placeholder">
                           <span>🎨</span>
@@ -5438,6 +5921,24 @@ function App() {
               </div>
             </div>
           )}
+
+        {/* Fullscreen Image Viewer */}
+        {fullscreenImage && (
+          <div className="fullscreen-overlay" onClick={() => setFullscreenImage(null)}>
+            <div className="fullscreen-actions">
+              <button className="fullscreen-action-btn" onClick={(e) => { e.stopPropagation(); downloadImage(fullscreenImage, 'stylist-style.jpg') }}>
+                {t.saveImage}
+              </button>
+              <button className="fullscreen-close" onClick={() => setFullscreenImage(null)}>×</button>
+            </div>
+            <img src={fullscreenImage} alt="Fullscreen" className="fullscreen-image" onClick={(e) => e.stopPropagation()} />
+          </div>
+        )}
+
+        {/* Favorite Toast */}
+        {favoriteToast && (
+          <div className="favorite-toast">{favoriteToast}</div>
+        )}
         </div>
       </div>
     )
@@ -5534,7 +6035,7 @@ function App() {
               </span>
             </div>
 
-            {/* Blurred Preview */}
+            {/* Free Preview Image + Blurred Rest */}
             <div style={{
               background: 'rgba(212, 175, 55, 0.05)',
               borderRadius: '16px',
@@ -5551,23 +6052,82 @@ function App() {
                 {t.previewCuriosity1}
               </p>
 
-              <div style={{
-                display: 'grid',
-                gridTemplateColumns: 'repeat(5, 1fr)',
-                gap: '0.5rem',
-                marginBottom: '1rem'
-              }}>
-                {[1,2,3,4,5].map((i) => (
-                  <div key={i} style={{
-                    aspectRatio: '1',
-                    background: 'linear-gradient(135deg, rgba(212, 175, 55, 0.3), rgba(212, 114, 140, 0.3))',
-                    borderRadius: '12px',
-                    filter: 'blur(6px)',
-                    position: 'relative'
-                  }}>
+              {/* Show first (Best Match) image for free if available */}
+              {styleImages.length > 0 && styleImages[0].imageUrl ? (
+                <div style={{ marginBottom: '1rem' }}>
+                  <div className="preview-free-image">
+                    <span className="preview-free-badge">{t.previewFreeLabel}</span>
+                    <img
+                      src={styleImages[0].imageUrl}
+                      alt={styleImages[0].label}
+                      style={{ width: '100%', maxWidth: '280px', borderRadius: '12px', border: '2px solid rgba(212, 175, 55, 0.4)' }}
+                    />
+                    <p style={{ color: '#d4af37', fontWeight: '600', marginTop: '0.5rem' }}>{t.styleLabels[styleImages[0].id] || styleImages[0].label}</p>
                   </div>
-                ))}
-              </div>
+
+                  {/* Blurred remaining images */}
+                  <p style={{ color: 'rgba(26, 26, 26, 0.5)', fontSize: '0.85rem', margin: '1rem 0 0.75rem' }}>
+                    {t.previewBlurredLabel}
+                  </p>
+                  <div style={{
+                    display: 'grid',
+                    gridTemplateColumns: 'repeat(5, 1fr)',
+                    gap: '0.5rem',
+                  }}>
+                    {styleImages.slice(1).map((style) => (
+                      <div key={style.id} style={{ position: 'relative' }}>
+                        {style.imageUrl ? (
+                          <img
+                            src={style.imageUrl}
+                            alt={style.label}
+                            style={{
+                              width: '100%',
+                              aspectRatio: '1',
+                              objectFit: 'cover',
+                              borderRadius: '12px',
+                              filter: 'blur(12px) brightness(0.7)',
+                            }}
+                          />
+                        ) : (
+                          <div style={{
+                            aspectRatio: '1',
+                            background: 'linear-gradient(135deg, rgba(212, 175, 55, 0.3), rgba(212, 114, 140, 0.3))',
+                            borderRadius: '12px',
+                            filter: 'blur(6px)',
+                          }} />
+                        )}
+                        <div style={{
+                          position: 'absolute',
+                          inset: 0,
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          fontSize: '1.2rem',
+                        }}>
+                          🔒
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              ) : (
+                <div style={{
+                  display: 'grid',
+                  gridTemplateColumns: 'repeat(5, 1fr)',
+                  gap: '0.5rem',
+                  marginBottom: '1rem'
+                }}>
+                  {[1,2,3,4,5].map((i) => (
+                    <div key={i} style={{
+                      aspectRatio: '1',
+                      background: 'linear-gradient(135deg, rgba(212, 175, 55, 0.3), rgba(212, 114, 140, 0.3))',
+                      borderRadius: '12px',
+                      filter: 'blur(6px)',
+                      position: 'relative'
+                    }} />
+                  ))}
+                </div>
+              )}
 
               <p style={{
                 color: 'rgba(26, 26, 26, 0.6)',

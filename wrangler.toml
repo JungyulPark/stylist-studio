@@ -8,6 +8,11 @@ pages_build_output_dir = "./dist"
 binding = "PHOTOS_BUCKET"
 bucket_name = "stylist-photos"
 
+# R2 bucket for daily style images (public access)
+[[r2_buckets]]
+binding = "DAILY_IMAGES_BUCKET"
+bucket_name = "stylist-daily-images"
+
 [vars]
 # Add your API keys in Cloudflare Dashboard > Pages > Settings > Environment variables
 # OPENAI_API_KEY = "your-openai-api-key-here"
