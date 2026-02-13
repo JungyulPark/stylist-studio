@@ -1,0 +1,432 @@
+import { getCorsHeaders, createCorsPreflightResponse } from '../lib/cors'
+import { errors } from '../lib/errors'
+import { Resend } from 'resend'
+
+interface Env {
+  SUPABASE_URL: string
+  SUPABASE_SERVICE_KEY: string
+  OPENWEATHER_API_KEY: string
+  OPENAI_API_KEY: string
+  RESEND_API_KEY: string
+  CRON_SECRET: string
+  PHOTOS_BUCKET: R2Bucket
+}
+
+interface Subscriber {
+  id: string
+  email: string
+  height_cm: number | null
+  weight_kg: number | null
+  gender: string | null
+  photo_r2_key: string | null
+  city: string
+  timezone: string
+  latitude: number | null
+  longitude: number | null
+  preferred_language: string
+  style_preferences: Record<string, unknown>
+}
+
+interface WeatherData {
+  temp: number
+  feels_like: number
+  humidity: number
+  condition: string
+  description: string
+  icon: string
+  wind_speed: number
+}
+
+// 시간대별 현재 시각 계산
+function getLocalHour(timezone: string): number {
+  try {
+    const now = new Date()
+    const formatter = new Intl.DateTimeFormat('en-US', {
+      timeZone: timezone,
+      hour: 'numeric',
+      hour12: false,
+    })
+    return parseInt(formatter.format(now), 10)
+  } catch {
+    return -1
+  }
+}
+
+// OpenWeatherMap 날씨 조회
+async function getWeather(lat: number, lon: number, apiKey: string): Promise<WeatherData | null> {
+  try {
+    const res = await fetch(
+      `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&units=metric&appid=${apiKey}`
+    )
+    if (!res.ok) return null
+    const data = await res.json() as {
+      main: { temp: number; feels_like: number; humidity: number }
+      weather: Array<{ main: string; description: string; icon: string }>
+      wind: { speed: number }
+    }
+    return {
+      temp: Math.round(data.main.temp),
+      feels_like: Math.round(data.main.feels_like),
+      humidity: data.main.humidity,
+      condition: data.weather[0]?.main || 'Clear',
+      description: data.weather[0]?.description || '',
+      icon: data.weather[0]?.icon || '01d',
+      wind_speed: data.wind.speed,
+    }
+  } catch {
+    return null
+  }
+}
+
+// AI로 스타일 추천 생성
+async function generateStyleRecommendation(
+  subscriber: Subscriber,
+  weather: WeatherData,
+  apiKey: string
+): Promise<string> {
+  const lang = subscriber.preferred_language || 'en'
+  const langName: Record<string, string> = {
+    ko: 'Korean', en: 'English', ja: 'Japanese', zh: 'Chinese', es: 'Spanish'
+  }
+
+  const profileDesc = [
+    subscriber.gender ? `Gender: ${subscriber.gender}` : '',
+    subscriber.height_cm ? `Height: ${subscriber.height_cm}cm` : '',
+    subscriber.weight_kg ? `Weight: ${subscriber.weight_kg}kg` : '',
+  ].filter(Boolean).join(', ')
+
+  const prompt = `You are an expert personal stylist. Generate a daily outfit recommendation email.
+
+CONTEXT:
+- City: ${subscriber.city}
+- Weather: ${weather.temp}°C (feels like ${weather.feels_like}°C), ${weather.description}, humidity ${weather.humidity}%, wind ${weather.wind_speed}m/s
+- Profile: ${profileDesc || 'Not specified'}
+- Date: ${new Date().toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' })}
+
+RULES:
+1. Write in ${langName[lang] || 'English'}
+2. Keep it concise — max 200 words
+3. Suggest a complete outfit: top, bottom, shoes, outerwear (if needed), accessories
+4. Consider the weather practically (temperature, rain, wind)
+5. Include a style tip of the day
+6. Be warm, friendly, and encouraging
+7. Format with clear sections using line breaks
+8. Do NOT use markdown headers — use plain text with emoji sparingly
+
+OUTPUT FORMAT:
+- Greeting with today's weather summary
+- Outfit recommendation (each item on its own line)
+- Style tip of the day
+- Closing line`
+
+  try {
+    const res = await fetch('https://api.openai.com/v1/chat/completions', {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${apiKey}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        model: 'gpt-4o-mini',
+        messages: [{ role: 'user', content: prompt }],
+        max_tokens: 500,
+        temperature: 0.8,
+      }),
+    })
+
+    if (!res.ok) {
+      console.error('[cron] OpenAI error:', await res.text())
+      return getFallbackRecommendation(weather, lang)
+    }
+
+    const data = await res.json() as {
+      choices: Array<{ message: { content: string } }>
+    }
+    return data.choices[0]?.message?.content || getFallbackRecommendation(weather, lang)
+  } catch (e) {
+    console.error('[cron] AI generation error:', e)
+    return getFallbackRecommendation(weather, lang)
+  }
+}
+
+// AI 실패 시 폴백 추천
+function getFallbackRecommendation(weather: WeatherData, lang: string): string {
+  const isKo = lang === 'ko'
+  const isCold = weather.temp < 10
+  const isHot = weather.temp > 25
+  const isRainy = ['Rain', 'Drizzle', 'Thunderstorm'].includes(weather.condition)
+
+  if (isKo) {
+    let msg = `오늘 ${weather.city || ''}의 날씨는 ${weather.temp}°C, ${weather.description}입니다.\n\n`
+    if (isCold) msg += '따뜻한 코트와 니트를 추천합니다. 목도리도 잊지 마세요!'
+    else if (isHot) msg += '시원한 린넨 셔츠와 면바지를 추천합니다. 선글라스 필수!'
+    else if (isRainy) msg += '방수 재킷과 부츠를 추천합니다. 우산 챙기세요!'
+    else msg += '가벼운 레이어드 스타일을 추천합니다. 가디건이나 얇은 재킷이 딱이에요!'
+    return msg
+  }
+
+  let msg = `Today's weather: ${weather.temp}°C, ${weather.description}.\n\n`
+  if (isCold) msg += 'Stay warm with a cozy coat and knitwear. Don\'t forget your scarf!'
+  else if (isHot) msg += 'Keep cool with a linen shirt and light pants. Sunglasses are a must!'
+  else if (isRainy) msg += 'Grab a waterproof jacket and boots. Don\'t forget your umbrella!'
+  else msg += 'Perfect layering weather! A cardigan or light jacket works great.'
+  return msg
+}
+
+// 이메일 HTML 생성
+function buildEmailHtml(recommendation: string, weather: WeatherData, subscriber: Subscriber): string {
+  const weatherEmoji: Record<string, string> = {
+    'Clear': '☀️', 'Clouds': '☁️', 'Rain': '🌧️', 'Drizzle': '🌦️',
+    'Thunderstorm': '⛈️', 'Snow': '❄️', 'Mist': '🌫️', 'Fog': '🌫️',
+  }
+  const emoji = weatherEmoji[weather.condition] || '🌤️'
+
+  const unsubscribeNote: Record<string, string> = {
+    ko: '구독을 관리하려면 아래 링크를 이용하세요.',
+    en: 'To manage your subscription, use the link below.',
+    ja: 'サブスクリプションの管理は以下のリンクから。',
+    zh: '管理您的订阅，请使用以下链接。',
+    es: 'Para gestionar tu suscripción, usa el enlace a continuación.',
+  }
+
+  return `<!DOCTYPE html>
+<html>
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"></head>
+<body style="margin:0;padding:0;background:#0a0a0a;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;">
+  <div style="max-width:560px;margin:0 auto;padding:32px 24px;">
+    <!-- Header -->
+    <div style="text-align:center;margin-bottom:32px;">
+      <h1 style="color:#c9a962;font-size:14px;letter-spacing:3px;margin:0;">PERSONAL STYLIST</h1>
+      <p style="color:rgba(255,255,255,0.4);font-size:12px;margin:4px 0 0;">What to Wear Today</p>
+    </div>
+
+    <!-- Weather Badge -->
+    <div style="text-align:center;margin-bottom:24px;">
+      <div style="display:inline-block;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);border-radius:16px;padding:12px 24px;">
+        <span style="font-size:28px;">${emoji}</span>
+        <span style="color:#fff;font-size:24px;font-weight:700;margin:0 8px;">${weather.temp}°C</span>
+        <span style="color:rgba(255,255,255,0.5);font-size:14px;">${subscriber.city}</span>
+      </div>
+    </div>
+
+    <!-- Recommendation -->
+    <div style="background:rgba(255,255,255,0.04);border:1px solid rgba(201,169,98,0.2);border-radius:16px;padding:24px;margin-bottom:24px;">
+      <p style="color:#e8e8e8;font-size:15px;line-height:1.7;white-space:pre-line;margin:0;">
+${recommendation}
+      </p>
+    </div>
+
+    <!-- CTA -->
+    <div style="text-align:center;margin-bottom:32px;">
+      <a href="https://kstylist.cc" style="display:inline-block;background:linear-gradient(135deg,#c9a962,#d4af37);color:#1a1a2e;text-decoration:none;font-weight:700;font-size:14px;padding:12px 32px;border-radius:12px;">
+        kstylist.cc
+      </a>
+    </div>
+
+    <!-- Footer -->
+    <div style="text-align:center;border-top:1px solid rgba(255,255,255,0.06);padding-top:20px;">
+      <p style="color:rgba(255,255,255,0.3);font-size:11px;margin:0;">
+        ${unsubscribeNote[subscriber.preferred_language] || unsubscribeNote.en}
+      </p>
+    </div>
+  </div>
+</body>
+</html>`
+}
+
+// 이메일 제목
+const emailSubjects: Record<string, string> = {
+  ko: '오늘의 스타일 추천',
+  en: 'Your Daily Style Pick',
+  ja: '今日のスタイル提案',
+  zh: '今日穿搭推荐',
+  es: 'Tu Estilo del Día',
+}
+
+// =============================================================
+// Main Cron Handler
+// =============================================================
+
+export const onRequestGet: PagesFunction<Env> = async (context) => {
+  const corsHeaders = getCorsHeaders(context.request)
+
+  // 인증: CRON_SECRET 확인
+  const url = new URL(context.request.url)
+  const secret = url.searchParams.get('secret') || context.request.headers.get('x-cron-secret')
+  if (!context.env.CRON_SECRET || secret !== context.env.CRON_SECRET) {
+    return errors.unauthorized(corsHeaders)
+  }
+
+  if (!context.env.SUPABASE_URL || !context.env.SUPABASE_SERVICE_KEY) {
+    return errors.configError(corsHeaders)
+  }
+
+  const results: Array<{ email: string; status: string; error?: string }> = []
+
+  try {
+    // 1. 모든 활성 구독자 조회
+    const subRes = await fetch(
+      `${context.env.SUPABASE_URL}/rest/v1/subscribers?status=in.(trialing,active)&select=*`,
+      {
+        headers: {
+          'apikey': context.env.SUPABASE_SERVICE_KEY,
+          'Authorization': `Bearer ${context.env.SUPABASE_SERVICE_KEY}`,
+        },
+      }
+    )
+
+    if (!subRes.ok) {
+      console.error('[cron] Failed to fetch subscribers:', await subRes.text())
+      return errors.externalApi('Supabase', corsHeaders)
+    }
+
+    const subscribers = await subRes.json() as Subscriber[]
+
+    if (!subscribers || subscribers.length === 0) {
+      return new Response(
+        JSON.stringify({ message: 'No active subscribers', sent: 0 }),
+        { status: 200, headers: { 'Content-Type': 'application/json', ...corsHeaders } }
+      )
+    }
+
+    // 2. 각 구독자의 로컬 시간이 6시(6AM)인지 확인
+    const targetHour = 6
+    const eligibleSubscribers = subscribers.filter(sub => {
+      const localHour = getLocalHour(sub.timezone)
+      return localHour === targetHour
+    })
+
+    if (eligibleSubscribers.length === 0) {
+      return new Response(
+        JSON.stringify({
+          message: 'No subscribers at 6AM right now',
+          total_active: subscribers.length,
+          sent: 0,
+        }),
+        { status: 200, headers: { 'Content-Type': 'application/json', ...corsHeaders } }
+      )
+    }
+
+    // 3. Resend 클라이언트 초기화
+    const resend = context.env.RESEND_API_KEY ? new Resend(context.env.RESEND_API_KEY) : null
+
+    // 4. 각 구독자에게 추천 생성 + 이메일 발송
+    for (const sub of eligibleSubscribers) {
+      try {
+        // 오늘 이미 발송했는지 확인
+        const today = new Date().toISOString().split('T')[0]
+        const checkRes = await fetch(
+          `${context.env.SUPABASE_URL}/rest/v1/daily_recommendations?subscriber_id=eq.${sub.id}&sent_date=eq.${today}&limit=1`,
+          {
+            headers: {
+              'apikey': context.env.SUPABASE_SERVICE_KEY,
+              'Authorization': `Bearer ${context.env.SUPABASE_SERVICE_KEY}`,
+            },
+          }
+        )
+        const existing = await checkRes.json() as Array<unknown>
+        if (existing && existing.length > 0) {
+          results.push({ email: sub.email, status: 'skipped_already_sent' })
+          continue
+        }
+
+        // 날씨 조회
+        let weather: WeatherData | null = null
+        if (sub.latitude && sub.longitude && context.env.OPENWEATHER_API_KEY) {
+          weather = await getWeather(sub.latitude, sub.longitude, context.env.OPENWEATHER_API_KEY)
+        }
+
+        if (!weather) {
+          weather = {
+            temp: 20, feels_like: 20, humidity: 50,
+            condition: 'Clear', description: 'clear sky',
+            icon: '01d', wind_speed: 3,
+          }
+        }
+
+        // AI 추천 생성
+        const recommendation = await generateStyleRecommendation(sub, weather, context.env.OPENAI_API_KEY)
+
+        // 이메일 발송
+        let emailSent = false
+        let emailError: string | null = null
+
+        if (resend) {
+          try {
+            const html = buildEmailHtml(recommendation, weather, sub)
+            const subject = emailSubjects[sub.preferred_language] || emailSubjects.en
+
+            await resend.emails.send({
+              from: 'PERSONAL STYLIST <noreply@kstylist.cc>',
+              to: sub.email,
+              subject: `${subject} — ${sub.city} ${weather.temp}°C`,
+              html,
+            })
+            emailSent = true
+          } catch (e) {
+            emailError = e instanceof Error ? e.message : 'Email send failed'
+            console.error(`[cron] Email failed for ${sub.email}:`, e)
+          }
+        }
+
+        // 발송 기록 저장
+        await fetch(
+          `${context.env.SUPABASE_URL}/rest/v1/daily_recommendations`,
+          {
+            method: 'POST',
+            headers: {
+              'apikey': context.env.SUPABASE_SERVICE_KEY,
+              'Authorization': `Bearer ${context.env.SUPABASE_SERVICE_KEY}`,
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              subscriber_id: sub.id,
+              sent_date: today,
+              weather_data: weather,
+              temperature_c: weather.temp,
+              weather_condition: weather.condition,
+              humidity: weather.humidity,
+              recommendation_html: recommendation,
+              outfit_description: recommendation.substring(0, 500),
+              email_sent: emailSent,
+              email_sent_at: emailSent ? new Date().toISOString() : null,
+              email_error: emailError,
+            }),
+          }
+        )
+
+        results.push({
+          email: sub.email,
+          status: emailSent ? 'sent' : 'generated_not_sent',
+          error: emailError || undefined,
+        })
+
+      } catch (e) {
+        console.error(`[cron] Error processing ${sub.email}:`, e)
+        results.push({
+          email: sub.email,
+          status: 'error',
+          error: e instanceof Error ? e.message : 'Unknown error',
+        })
+      }
+    }
+
+    return new Response(
+      JSON.stringify({
+        total_active: subscribers.length,
+        eligible_6am: eligibleSubscribers.length,
+        sent: results.filter(r => r.status === 'sent').length,
+        results,
+      }),
+      { status: 200, headers: { 'Content-Type': 'application/json', ...corsHeaders } }
+    )
+
+  } catch (error) {
+    console.error('[cron] Fatal error:', error)
+    return errors.internal(corsHeaders)
+  }
+}
+
+export const onRequestOptions: PagesFunction = async (context) => {
+  return createCorsPreflightResponse(context.request)
+}

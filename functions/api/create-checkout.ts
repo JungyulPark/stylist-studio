@@ -6,21 +6,24 @@ interface Env {
   // Product IDs (Polar에서 생성 후 설정)
   POLAR_PRODUCT_HAIR?: string
   POLAR_PRODUCT_FULL?: string
+  POLAR_PRODUCT_DAILY_STYLE?: string
 }
 
 // Product 타입 정의
-type ProductType = 'hair' | 'full'
+type ProductType = 'hair' | 'full' | 'daily_style'
 
 // Production Product IDs
 const DEFAULT_PRODUCTS: Record<ProductType, string> = {
   hair: '3df2c89e-ce52-4792-b735-3eaa164c3927',
   full: '533aed39-303f-4746-afb0-d150aa294f64',
+  daily_style: '2c761310-373e-4017-8141-8532748713c0',
 }
 
 // 가격 정보 (표시용)
-const PRICES: Record<ProductType, { amount: number; currency: string; display: string }> = {
+const PRICES: Record<ProductType, { amount: number; currency: string; display: string; recurring?: boolean }> = {
   hair: { amount: 499, currency: 'USD', display: '$4.99' },  // Hair만
   full: { amount: 999, currency: 'USD', display: '$9.99' },  // Full 패키지
+  daily_style: { amount: 699, currency: 'USD', display: '$6.99/mo', recurring: true },  // 월 구독
 }
 
 // 재구매 할인 코드
@@ -40,18 +43,22 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
 
     // Product 타입 검증
     const productType = body.productType || 'full'
-    if (!['hair', 'full'].includes(productType)) {
-      return errors.validation('Invalid product type. Use "hair" or "full"', corsHeaders)
+    if (!['hair', 'full', 'daily_style'].includes(productType)) {
+      return errors.validation('Invalid product type. Use "hair", "full", or "daily_style"', corsHeaders)
     }
 
     // Product ID 결정 (환경변수 > 요청 파라미터 > 기본값)
     const envProductIds: Record<ProductType, string | undefined> = {
       hair: context.env.POLAR_PRODUCT_HAIR,
       full: context.env.POLAR_PRODUCT_FULL,
+      daily_style: context.env.POLAR_PRODUCT_DAILY_STYLE,
     }
 
     const productId = envProductIds[productType] || body.productId || DEFAULT_PRODUCTS[productType]
-    const successUrl = body.successUrl || `${new URL(context.request.url).origin}/?payment=success&type=${productType}`
+    const baseSuccessUrl = `${new URL(context.request.url).origin}/?payment=success&type=${productType}`
+    const successUrl = body.successUrl || (productType === 'daily_style'
+      ? `${baseSuccessUrl}&subscription=active`
+      : baseSuccessUrl)
 
     // Polar API 키 확인
     const polarToken = context.env.POLAR_API_KEY
@@ -134,6 +141,17 @@ export const onRequestGet: PagesFunction<Env> = async (context) => {
             '5 hairstyle previews',
             '6 fashion outfit previews',
             'Personalized recommendations'
+          ]
+        },
+        daily_style: {
+          name: 'What to Wear Today',
+          description: 'Daily AI outfit recommendations based on weather & your profile',
+          price: PRICES.daily_style,
+          features: [
+            '7-day free trial',
+            'Daily outfit recommendations',
+            'Weather-based styling',
+            'Cancel anytime'
           ]
         },
       }

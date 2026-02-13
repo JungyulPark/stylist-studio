@@ -295,6 +295,20 @@ const translations: Record<Language, {
   upsellDismiss: string
   shareMyResult: string
   freeUploadText: string
+  // Subscription
+  subscriptionTitle: string
+  subscriptionDesc: string
+  subscriptionPrice: string
+  subscriptionTrialDays: string
+  subscriptionCta: string
+  subscriptionActive: string
+  subscriptionManage: string
+  subscriptionCityLabel: string
+  subscriptionCityPlaceholder: string
+  subscriptionCityRequired: string
+  subscriptionFormTitle: string
+  subscriptionFormDesc: string
+  subscriptionFormStart: string
 }> = {
   ko: {
     title: 'PERSONAL STYLIST',
@@ -503,6 +517,19 @@ const translations: Record<Language, {
     upsellDismiss: '나중에 할게요',
     shareMyResult: '내 결과 공유하기',
     freeUploadText: '내 사진 업로드 (무료!)',
+    subscriptionTitle: '매일 스타일 추천',
+    subscriptionDesc: '날씨와 프로필 기반 매일 아침 AI 스타일 추천',
+    subscriptionPrice: '$6.99/월',
+    subscriptionTrialDays: '7일 무료 체험',
+    subscriptionCta: '무료 체험 시작',
+    subscriptionActive: '구독 활성화됨',
+    subscriptionManage: '구독 관리',
+    subscriptionCityLabel: '도시',
+    subscriptionCityPlaceholder: '서울, 부산, 뉴욕...',
+    subscriptionCityRequired: '도시를 입력해주세요',
+    subscriptionFormTitle: '구독 정보 입력',
+    subscriptionFormDesc: '매일 아침 6시, 날씨에 맞는 스타일을 추천해드립니다',
+    subscriptionFormStart: '무료 체험 시작하기',
   },
   en: {
     title: 'PERSONAL STYLIST',
@@ -711,6 +738,19 @@ const translations: Record<Language, {
     upsellDismiss: 'Maybe Later',
     shareMyResult: 'Share My Result',
     freeUploadText: 'Upload My Photo (Free!)',
+    subscriptionTitle: 'Daily Style',
+    subscriptionDesc: 'AI outfit picks every morning based on weather & your profile',
+    subscriptionPrice: '$6.99/mo',
+    subscriptionTrialDays: '7-day free trial',
+    subscriptionCta: 'Start Free Trial',
+    subscriptionActive: 'Subscription Active',
+    subscriptionManage: 'Manage Subscription',
+    subscriptionCityLabel: 'City',
+    subscriptionCityPlaceholder: 'New York, London, Seoul...',
+    subscriptionCityRequired: 'Please enter your city',
+    subscriptionFormTitle: 'Set Up Your Daily Style',
+    subscriptionFormDesc: 'Every morning at 6AM, get weather-based outfit picks',
+    subscriptionFormStart: 'Start Free Trial',
   },
   ja: {
     title: 'PERSONAL STYLIST',
@@ -919,6 +959,19 @@ const translations: Record<Language, {
     upsellDismiss: 'また今度',
     shareMyResult: '結果をシェア',
     freeUploadText: '写真をアップロード（無料！）',
+    subscriptionTitle: '毎日のスタイル提案',
+    subscriptionDesc: '天気とプロフィールに基づくAIスタイル提案',
+    subscriptionPrice: '$6.99/月',
+    subscriptionTrialDays: '7日間無料体験',
+    subscriptionCta: '無料体験を始める',
+    subscriptionActive: 'サブスク有効',
+    subscriptionManage: 'サブスク管理',
+    subscriptionCityLabel: '都市',
+    subscriptionCityPlaceholder: '東京、大阪、ソウル...',
+    subscriptionCityRequired: '都市を入力してください',
+    subscriptionFormTitle: '毎日スタイル設定',
+    subscriptionFormDesc: '毎朝6時に天気に合わせたスタイルをお届け',
+    subscriptionFormStart: '無料体験を始める',
   },
   zh: {
     title: 'PERSONAL STYLIST',
@@ -1127,6 +1180,19 @@ const translations: Record<Language, {
     upsellDismiss: '以后再说',
     shareMyResult: '分享我的结果',
     freeUploadText: '上传我的照片（免费！）',
+    subscriptionTitle: '每日穿搭推荐',
+    subscriptionDesc: '基于天气和个人资料的AI每日穿搭推荐',
+    subscriptionPrice: '$6.99/月',
+    subscriptionTrialDays: '7天免费试用',
+    subscriptionCta: '开始免费试用',
+    subscriptionActive: '订阅已激活',
+    subscriptionManage: '管理订阅',
+    subscriptionCityLabel: '城市',
+    subscriptionCityPlaceholder: '北京、上海、首尔...',
+    subscriptionCityRequired: '请输入您的城市',
+    subscriptionFormTitle: '设置每日穿搭',
+    subscriptionFormDesc: '每天早上6点，根据天气推荐穿搭',
+    subscriptionFormStart: '开始免费试用',
   },
   es: {
     title: 'PERSONAL STYLIST',
@@ -1335,6 +1401,19 @@ const translations: Record<Language, {
     upsellDismiss: 'Quizás Después',
     shareMyResult: 'Compartir Mi Resultado',
     freeUploadText: 'Subir Mi Foto (¡Gratis!)',
+    subscriptionTitle: 'Estilo Diario',
+    subscriptionDesc: 'Recomendaciones de outfits con IA según el clima y tu perfil',
+    subscriptionPrice: '$6.99/mes',
+    subscriptionTrialDays: '7 días de prueba gratis',
+    subscriptionCta: 'Iniciar Prueba Gratis',
+    subscriptionActive: 'Suscripción Activa',
+    subscriptionManage: 'Gestionar Suscripción',
+    subscriptionCityLabel: 'Ciudad',
+    subscriptionCityPlaceholder: 'Madrid, Barcelona, México...',
+    subscriptionCityRequired: 'Por favor ingresa tu ciudad',
+    subscriptionFormTitle: 'Configura Tu Estilo Diario',
+    subscriptionFormDesc: 'Cada mañana a las 6AM, outfits según el clima',
+    subscriptionFormStart: 'Iniciar Prueba Gratis',
   }
 }
 
@@ -1682,6 +1761,12 @@ function App() {
   const [hasUsedFreeTrial, setHasUsedFreeTrial] = useState(() => localStorage.getItem('stylist_free_trial_used') === 'true')
   const [isFreeTrial, setIsFreeTrial] = useState(false)
 
+  // Subscription state
+  const [isSubscribed, setIsSubscribed] = useState(() => localStorage.getItem('stylist_subscription_active') === 'true')
+  const [showSubscriptionForm, setShowSubscriptionForm] = useState(false)
+  const [subscriptionCity, setSubscriptionCity] = useState('')
+  const [subscriptionCityError, setSubscriptionCityError] = useState('')
+
   const feetInchesToCm = (feet: string, inches: string): string => {
     const ft = parseFloat(feet) || 0
     const inch = parseFloat(inches) || 0
@@ -1752,6 +1837,52 @@ function App() {
       if (polarCheckoutId) {
         setCheckoutId(polarCheckoutId)
         localStorage.setItem('lastCheckoutId', polarCheckoutId)
+      }
+
+      // 구독 결제 성공 처리
+      const subscriptionParam = urlParams.get('subscription')
+      if (subscriptionParam === 'active' || purchasedProductType === 'daily_style') {
+        localStorage.setItem('stylist_subscription_active', 'true')
+        if (polarCheckoutId) {
+          localStorage.setItem('stylist_subscription_checkout_id', polarCheckoutId)
+        }
+        setIsSubscribed(true)
+
+        // 구독 데이터를 백엔드에 저장 (비동기)
+        const pendingSubData = localStorage.getItem('pending_subscription_data')
+        if (pendingSubData) {
+          (async () => {
+            try {
+              const subData = JSON.parse(pendingSubData)
+              subData.polar_checkout_id = polarCheckoutId
+              // 이메일이 없으면 Polar checkout에서 가져오기
+              if (!subData.email && polarCheckoutId) {
+                try {
+                  const infoRes = await fetch(`/api/checkout-info?id=${polarCheckoutId}`)
+                  if (infoRes.ok) {
+                    const info = await infoRes.json()
+                    if (info.email) subData.email = info.email
+                  }
+                } catch { /* ignore */ }
+              }
+              if (subData.email) {
+                await fetch('/api/subscribe', {
+                  method: 'POST',
+                  headers: { 'Content-Type': 'application/json' },
+                  body: JSON.stringify(subData),
+                })
+              }
+              localStorage.removeItem('pending_subscription_data')
+            } catch (e) {
+              console.error('Failed to save subscription data:', e)
+            }
+          })()
+        }
+
+        // URL 정리 후 랜딩 페이지로
+        window.history.replaceState({ page: 'landing' }, '', '#landing')
+        setPageState('landing')
+        return
       }
 
       // 결제 확인 이메일 전송 (비동기, 실패해도 진행)
@@ -2337,6 +2468,69 @@ function App() {
     setPage('hair-result')
   }
 
+  // 구독 폼 열기
+  const handleSubscription = () => {
+    setSubscriptionCity('')
+    setSubscriptionCityError('')
+    setShowSubscriptionForm(true)
+  }
+
+  // 구독 폼 제출 → 데이터 저장 후 Polar 결제
+  const handleSubscriptionSubmit = async () => {
+    if (!subscriptionCity.trim()) {
+      setSubscriptionCityError(t.subscriptionCityRequired)
+      return
+    }
+    setSubscriptionCityError('')
+    setIsProcessingPayment(true)
+
+    try {
+      // 구독 데이터를 localStorage에 임시 저장 (결제 후 복원)
+      const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone
+      const subscriptionData = {
+        email: user?.email || '',
+        height_cm: profile.height ? parseInt(profile.height, 10) : null,
+        weight_kg: profile.weight ? parseInt(profile.weight, 10) : null,
+        gender: profile.gender,
+        city: subscriptionCity.trim(),
+        timezone,
+        preferred_language: lang,
+        photo: hairPhoto || profile.photo || null,
+        user_id: user?.id || null,
+      }
+      localStorage.setItem('pending_subscription_data', JSON.stringify(subscriptionData))
+
+      // Polar 결제 생성
+      const response = await fetch('/api/create-checkout', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          productType: 'daily_style',
+          successUrl: `${window.location.origin}/?payment=success&type=daily_style&subscription=active`,
+        })
+      })
+
+      if (response.ok) {
+        const data = await response.json()
+        if (data.url) {
+          setShowSubscriptionForm(false)
+          window.location.href = data.url
+          return
+        }
+      }
+      setError(lang === 'ko'
+        ? '결제 페이지 생성에 실패했습니다. 다시 시도해주세요.'
+        : 'Failed to create checkout. Please try again.')
+    } catch (e) {
+      console.error('Subscription checkout error:', e)
+      setError(lang === 'ko'
+        ? '결제 처리 중 오류가 발생했습니다.'
+        : 'Payment processing error.')
+    } finally {
+      setIsProcessingPayment(false)
+    }
+  }
+
   // 실제 분석 수행 함수
   const performAnalysis = async () => {
     setPage('loading')
@@ -2714,6 +2908,18 @@ function App() {
 
   const handleHairRecommendation = async () => {
     if (!selectedOccasion || !selectedVibe) return
+
+    // 구독자는 결제 없이 바로 결과 생성
+    if (hairPhoto && isSubscribed) {
+      setPage('loading')
+      startHairGenerationAfterPayment({
+        hairPhoto,
+        selectedOccasion,
+        selectedVibe,
+        gender: profile.gender
+      })
+      return
+    }
 
     // 사진이 있고 헤어 결제 완료된 경우 바로 결과 생성
     if (hairPhoto && isHairPaid) {
@@ -3905,6 +4111,24 @@ function App() {
               </div>
             </div>
           </div>
+          {/* Subscription Card */}
+          {!isSubscribed ? (
+            <div className="subscription-card landing-subscription" onClick={handleSubscription}>
+              <span className="subscription-badge">{t.subscriptionTrialDays}</span>
+              <h4>{t.subscriptionTitle}</h4>
+              <p className="subscription-desc">{t.subscriptionDesc}</p>
+              <div className="subscription-pricing">
+                <span className="subscription-price">{t.subscriptionPrice}</span>
+              </div>
+              <div className="subscription-cta">{t.subscriptionCta}</div>
+            </div>
+          ) : (
+            <div className="subscription-card landing-subscription active">
+              <span className="subscription-badge active">{t.subscriptionActive}</span>
+              <h4>{t.subscriptionTitle}</h4>
+              <p className="subscription-desc">{t.subscriptionDesc}</p>
+            </div>
+          )}
         </section>
 
         {/* Footer */}
@@ -3927,6 +4151,52 @@ function App() {
             <span>© 2026 PERSONAL STYLIST. ALL RIGHTS RESERVED.</span>
           </div>
         </footer>
+
+        {/* Subscription Form Modal */}
+        {showSubscriptionForm && (
+          <div className="policy-modal-overlay" onClick={() => setShowSubscriptionForm(false)}>
+            <div className="subscription-form-modal" onClick={(e) => e.stopPropagation()}>
+              <button className="policy-modal-close" onClick={() => setShowSubscriptionForm(false)}>×</button>
+              <div className="subscription-form-header">
+                <span className="subscription-badge">{t.subscriptionTrialDays}</span>
+                <h2>{t.subscriptionFormTitle}</h2>
+                <p>{t.subscriptionFormDesc}</p>
+              </div>
+              <div className="subscription-form-body">
+                <label className="subscription-form-label">
+                  {t.subscriptionCityLabel}
+                  <input
+                    type="text"
+                    className="subscription-form-input"
+                    placeholder={t.subscriptionCityPlaceholder}
+                    value={subscriptionCity}
+                    onChange={(e) => {
+                      setSubscriptionCity(e.target.value)
+                      setSubscriptionCityError('')
+                    }}
+                    autoFocus
+                  />
+                  {subscriptionCityError && (
+                    <span className="subscription-form-error">{subscriptionCityError}</span>
+                  )}
+                </label>
+                <div className="subscription-form-info">
+                  <div className="subscription-form-price">
+                    <span className="subscription-price">{t.subscriptionPrice}</span>
+                    <span className="subscription-form-trial">{t.subscriptionTrialDays}</span>
+                  </div>
+                </div>
+                <button
+                  className="subscription-form-submit"
+                  onClick={handleSubscriptionSubmit}
+                  disabled={isProcessingPayment}
+                >
+                  {isProcessingPayment ? '...' : t.subscriptionFormStart}
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
 
         {/* Policy Modal */}
         {policyModal && (
@@ -4882,6 +5152,18 @@ function App() {
                   <p className="upsell-price">$4.99</p>
                 </div>
               </div>
+              {/* Subscription Card */}
+              {!isSubscribed && (
+                <div className="subscription-card" onClick={handleSubscription}>
+                  <span className="subscription-badge">{t.subscriptionTrialDays}</span>
+                  <h4>{t.subscriptionTitle}</h4>
+                  <p className="subscription-desc">{t.subscriptionDesc}</p>
+                  <div className="subscription-pricing">
+                    <span className="subscription-price">{t.subscriptionPrice}</span>
+                  </div>
+                  <div className="subscription-cta">{t.subscriptionCta}</div>
+                </div>
+              )}
               <button className="upsell-dismiss" onClick={() => setIsFreeTrial(false)}>
                 {t.upsellDismiss}
               </button>
