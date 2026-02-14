@@ -56,8 +56,8 @@ export async function editPhotoWithGemini(
 
 EDIT this photo - ONLY change the OUTFIT of the MAIN PERSON to: ${scenario.prompt}
 
-CRITICAL: This is a ${genderWord}. The outfit MUST be appropriate for a ${genderWord}.
-${gender === 'female' ? 'For women: Use soft, feminine clothing - NO masculine suits or blazers. Prefer dresses, blouses, cardigans, skirts in soft colors.' : ''}
+CRITICAL: This is a ${genderWord}. The outfit MUST be appropriate for a ${genderWord}. Choose clothing that flatters THIS specific person's body proportions and complexion.
+${gender === 'female' ? 'For women: Use soft, feminine clothing - NO masculine suits or blazers. Prefer dresses, blouses, cardigans, skirts in soft colors.' : 'For men: Ensure natural relaxed fit - NOT skin-tight. Trousers should have comfortable drape, jackets should sit naturally on shoulders. NEVER make pants or shirts look spray-painted on the body.'}
 
 ${beautyRetouch}
 

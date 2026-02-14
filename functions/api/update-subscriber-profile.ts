@@ -9,6 +9,7 @@ interface Env {
 
 interface ProfileUpdateRequest {
   email: string
+  user_id?: string
   height_cm?: number
   weight_kg?: number
   gender?: string
@@ -91,8 +92,37 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
     if (photoR2Key) updateData.photo_r2_key = photoR2Key
 
     // Update ALL records for this email (handles duplicates)
-    const updateRes = await fetch(
+    await fetch(
       `${context.env.SUPABASE_URL}/rest/v1/subscribers?email=eq.${encodeURIComponent(body.email)}`,
+      {
+        method: 'PATCH',
+        headers: {
+          'apikey': context.env.SUPABASE_SERVICE_KEY,
+          'Authorization': `Bearer ${context.env.SUPABASE_SERVICE_KEY}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(updateData),
+      }
+    )
+
+    // Also update any other records with same user_id (cross-email sync)
+    if (body.user_id) {
+      await fetch(
+        `${context.env.SUPABASE_URL}/rest/v1/subscribers?user_id=eq.${body.user_id}&email=neq.${encodeURIComponent(body.email)}`,
+        {
+          method: 'PATCH',
+          headers: {
+            'apikey': context.env.SUPABASE_SERVICE_KEY,
+            'Authorization': `Bearer ${context.env.SUPABASE_SERVICE_KEY}`,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(updateData),
+        }
+      )
+    }
+
+    const updateRes = await fetch(
+      `${context.env.SUPABASE_URL}/rest/v1/subscribers?email=eq.${encodeURIComponent(body.email)}&limit=1`,
       {
         method: 'PATCH',
         headers: {

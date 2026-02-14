@@ -2894,6 +2894,7 @@ function App() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           email,
+          user_id: user?.id || undefined,
           height_cm: dashProfileHeight ? parseInt(dashProfileHeight, 10) : undefined,
           weight_kg: dashProfileWeight ? parseInt(dashProfileWeight, 10) : undefined,
           gender: dashProfileGender || undefined,
