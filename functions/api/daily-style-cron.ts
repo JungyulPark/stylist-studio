@@ -156,7 +156,7 @@ IMPORTANT: Your response must be at LEAST 120 words. Never give a one-line answe
           { role: 'system', content: 'You are an expert personal stylist writing a daily outfit recommendation email. Always write detailed, warm, helpful responses with at least 150 words. Never give short or one-line answers.' },
           { role: 'user', content: prompt },
         ],
-        max_tokens: 800,
+        max_completion_tokens: 800,
         temperature: 0.8,
       }),
     })
