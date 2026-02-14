@@ -117,6 +117,10 @@ const maleMoods = [
   { name: 'Loro Piana quiet', guide: 'Pared-down razor-clean silhouette where extraordinary fabric speaks. Tonal dressing, single color family across textures. Storm System cashmere overcoat or zip jacket. Slim straight trousers, clean leather shoes.' },
   // LV heritage-modern: textural pattern play
   { name: 'LV heritage', guide: 'Heritage patterns reimagined — Prince of Wales check, herringbone, houndstooth in updated proportions. Tweed with modern cut. Structured coat over relaxed knitwear. Polished boots, bold watch or ring.' },
+  // Bottega Veneta: contemporary edge
+  { name: 'Bottega urban', guide: 'Bold contemporary edge — forest green or deep burgundy double-breasted coat, architectural shoulders. Textured leather pieces, woven intrecciato motif. Dark palette with one pop accent. Lug-sole boots, matte black accessories.' },
+  // Lemaire: architectural ease
+  { name: 'Lemaire ease', guide: 'Sculpted drape with relaxed silhouette — oversized shirt jacket in washed cotton, wide band-collar shirt, tapered wool trousers with volume at hip. Earthy palette: clay, sand, charcoal. Simple leather derbies, canvas tote.' },
 ]
 
 const femaleMoods = [
@@ -130,6 +134,10 @@ const femaleMoods = [
   { name: 'Hermès sport', guide: 'Sporty-chic with flirty edge — curve-aware proportions, structured harness or buckle details. Hand-polished cognac leather. Short boots or strappy sandals. Confidence-forward styling.' },
   // Minimalist The Row / Jil Sander
   { name: 'minimal Row', guide: 'Pared-back perfection — every seam intentional. Oversized coat or blazer over slip dress or wide trousers. Tonal monochrome dressing. Pointed flats or block-heel boots. One statement piece of jewelry.' },
+  // Bottega Veneta: sculptural femininity
+  { name: 'Bottega sculptural', guide: 'Sculptural forms with rich material — structured leather or padded knit pieces. Deep jewel tones: emerald, burgundy, midnight. Architectural handbag as focal point. Knee-high boots or platform sandals. Bold gold jewelry.' },
+  // Max Mara: timeless Italian craft
+  { name: 'Max Mara timeless', guide: 'Enduring Italian elegance — double-breasted camel coat or structured blazer in cream. Silk blouses with soft bow neck. Pressed wool wide-leg trousers. Pointed-toe pumps, tortoiseshell sunglasses. Structured leather bag. Warm earth tones.' },
 ]
 
 // ─── Index Helpers ────────────────────────────────────────────────
@@ -187,7 +195,7 @@ function getTodaysPickPrompt(weather: WeatherInfo, gender: string): string {
 // ─── Casual Prompt ────────────────────────────────────────────────
 function getCasualPrompt(gender: string, temp: number): string {
   const pIdx = (getPaletteIndex() + 7) % 21
-  const mIdx = (getMoodIndex() + 2) % 5
+  const mIdx = (getMoodIndex() + 2) % 7
   const isCold = temp < 10
   const isWarm = temp >= 22
 
