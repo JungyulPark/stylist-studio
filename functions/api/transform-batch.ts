@@ -110,10 +110,12 @@ Also apply subtle beauty retouching: smooth clear skin, even skin tone, soft pro
 Generate the edited photo.`
       : `EDIT this photo - ONLY change the OUTFIT of the MAIN PERSON to: ${style.prompt}
 
-COLOR & TONE DIRECTION:
-- Use MUTED, UNDERSTATED tones — real everyday wearable clothes, not runway costumes
-- Prefer neutrals (navy, charcoal, beige, cream, olive) with at most ONE subtle accent color
-- AVOID overly saturated, bright, or neon colors — keep it natural and realistic
+STYLING DIRECTION:
+- Warm, refined, and approachable — clothes you'd actually wear in daily life
+- Quality fabrics with natural texture and drape, not stiff or costume-like
+- Muted, warm tones: navy, charcoal, beige, cream, olive, burgundy, soft blue
+- At most ONE subtle accent color — avoid overly saturated or neon colors
+- The overall look should feel premium but comfortable and wearable
 
 CRITICAL: ${genderGuideFashion}
 

@@ -56,13 +56,13 @@ export async function editPhotoWithGemini(
 
 CRITICAL: This is a ${genderWord}. The outfit MUST be appropriate for a ${genderWord}. Choose clothing that flatters THIS specific person's body proportions and complexion.
 
-COLOR & TONE DIRECTION:
-- Use MUTED, UNDERSTATED tones — think real everyday wearable clothes, not runway costumes
-- Prefer neutrals (navy, charcoal, beige, cream, olive) with at most ONE subtle accent color
-- AVOID overly saturated, bright, or neon colors — keep it natural and realistic
-- The clothes should look like something you'd actually buy and wear daily
-
-${gender === 'female' ? 'STYLING DIRECTION (Max Mara, The Row aesthetic): Naturally draped tailored silhouette with elegant proportions. Use soft, feminine clothing — dresses, blouses, cardigans, skirts in refined muted colors. Fabrics should have visible weight and texture, draping naturally on the body.' : 'STYLING DIRECTION (Loro Piana, Brunello Cucinelli aesthetic): Naturally draped tailored silhouette with relaxed elegance. Trousers should have comfortable drape with a straight or tapered leg. Jackets sit naturally on shoulders with soft structure. Fabrics have visible weight and texture, falling naturally on the body.'}
+STYLING DIRECTION:
+- Warm, refined, and approachable — clothes you'd actually wear in daily life
+- Quality fabrics with natural texture and drape, not stiff or costume-like
+- Muted, warm tones: navy, charcoal, beige, cream, olive, burgundy, soft blue
+- At most ONE subtle accent color — avoid overly saturated or neon colors
+- The overall look should feel premium but comfortable and wearable
+${gender === 'female' ? '- Use soft, feminine clothing — dresses, blouses, cardigans, skirts in refined muted colors' : '- Trousers with comfortable drape, jackets with soft natural shoulders, relaxed tailored fit'}
 
 ${beautyRetouch}
 
