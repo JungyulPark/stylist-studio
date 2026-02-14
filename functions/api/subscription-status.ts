@@ -24,7 +24,7 @@ export const onRequestGet: PagesFunction<Env> = async (context) => {
       }
 
       const res = await fetch(
-        `${supabaseUrl}/rest/v1/subscribers?email=eq.${encodeURIComponent(email)}&select=id,status,trial_ends_at,current_period_end,profile_complete,height_cm,weight_kg,gender,photo_r2_key,canceled_at&order=profile_complete.desc&limit=1`,
+        `${supabaseUrl}/rest/v1/subscribers?email=eq.${encodeURIComponent(email)}&select=id,status,trial_ends_at,current_period_end,profile_complete,height_cm,weight_kg,gender,photo_r2_key,canceled_at,preferred_language&order=profile_complete.desc&limit=1`,
         {
           headers: {
             'apikey': supabaseKey,
@@ -37,7 +37,7 @@ export const onRequestGet: PagesFunction<Env> = async (context) => {
         const rows = await res.json() as Array<{
           id: string; status: string; trial_ends_at: string | null; current_period_end: string | null;
           profile_complete: boolean; height_cm: number | null; weight_kg: number | null; gender: string | null;
-          photo_r2_key: string | null; canceled_at: string | null
+          photo_r2_key: string | null; canceled_at: string | null; preferred_language: string | null
         }>
         if (rows.length > 0) {
           const sub = rows[0]
@@ -52,6 +52,7 @@ export const onRequestGet: PagesFunction<Env> = async (context) => {
               gender: sub.gender,
               has_photo: !!sub.photo_r2_key,
               canceled_at: sub.canceled_at,
+              preferred_language: sub.preferred_language,
             }),
             { status: 200, headers: { 'Content-Type': 'application/json', ...corsHeaders } }
           )

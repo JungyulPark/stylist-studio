@@ -99,30 +99,27 @@ function getEveningPrompt(gender: string, temp: number): string {
 }
 
 export function getDailyScenarios(weather: WeatherInfo, gender: string): ImageScenario[] {
+  // 2 scenarios: Dressy (formal/smart) and Casual
   return [
     {
-      id: 'todays-pick',
+      id: 'dressy',
       prompt: getTodaysPickPrompt(weather, gender),
     },
     {
       id: 'casual',
       prompt: getCasualPrompt(gender, weather.temp),
     },
-    {
-      id: 'evening',
-      prompt: getEveningPrompt(gender, weather.temp),
-    },
   ]
 }
 
 /** Label translations for daily scenarios */
 export const dailyScenarioLabels: Record<string, Record<string, string>> = {
-  'todays-pick': {
-    ko: '오늘의 추천',
-    en: "Today's Pick",
-    ja: '今日のおすすめ',
-    zh: '今日推荐',
-    es: 'Elección del Día',
+  'dressy': {
+    ko: '격식 스타일',
+    en: 'Dressy',
+    ja: 'ドレッシー',
+    zh: '正式穿搭',
+    es: 'Elegante',
   },
   'casual': {
     ko: '캐주얼',
@@ -130,12 +127,5 @@ export const dailyScenarioLabels: Record<string, Record<string, string>> = {
     ja: 'カジュアル',
     zh: '休闲',
     es: 'Casual',
-  },
-  'evening': {
-    ko: '이브닝',
-    en: 'Evening',
-    ja: 'イブニング',
-    zh: '晚间',
-    es: 'Noche',
   },
 }

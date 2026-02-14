@@ -90,11 +90,17 @@ async function getWeather(lat: number, lon: number, apiKey: string): Promise<Wea
   }
 }
 
+interface RecommendationResult {
+  text: string
+  source: 'gpt' | 'fallback'
+  error?: string
+}
+
 async function generateStyleRecommendation(
   subscriber: Subscriber,
   weather: WeatherData,
   apiKey: string
-): Promise<string> {
+): Promise<RecommendationResult> {
   const lang = subscriber.preferred_language || 'en'
   const langName: Record<string, string> = {
     ko: 'Korean', en: 'English', ja: 'Japanese', zh: 'Chinese', es: 'Spanish'
@@ -156,17 +162,23 @@ IMPORTANT: Your response must be at LEAST 120 words. Never give a one-line answe
     })
 
     if (!res.ok) {
-      console.error('[cron] OpenAI error:', await res.text())
-      return getFallbackRecommendation(weather, lang)
+      const errText = await res.text()
+      console.error('[cron] OpenAI error:', errText)
+      return { text: getFallbackRecommendation(weather, lang), source: 'fallback', error: `OpenAI ${res.status}: ${errText.substring(0, 200)}` }
     }
 
     const data = await res.json() as {
       choices: Array<{ message: { content: string } }>
     }
-    return data.choices[0]?.message?.content || getFallbackRecommendation(weather, lang)
+    const content = data.choices[0]?.message?.content
+    if (!content) {
+      return { text: getFallbackRecommendation(weather, lang), source: 'fallback', error: 'Empty GPT response' }
+    }
+    return { text: content, source: 'gpt' }
   } catch (e) {
+    const errMsg = e instanceof Error ? e.message : String(e)
     console.error('[cron] AI generation error:', e)
-    return getFallbackRecommendation(weather, lang)
+    return { text: getFallbackRecommendation(weather, lang), source: 'fallback', error: errMsg }
   }
 }
 
@@ -429,7 +441,13 @@ export const onRequestGet: PagesFunction<Env> = async (context) => {
     return errors.configError(corsHeaders)
   }
 
-  const results: Array<{ email: string; status: string; images?: number; image_status?: string; image_conditions?: Record<string, boolean>; image_error?: string; error?: string }> = []
+  const results: Array<{
+    email: string; status: string; images?: number;
+    image_status?: string; image_conditions?: Record<string, boolean>; image_error?: string;
+    text_source?: string; text_error?: string;
+    preferred_language?: string; photo_r2_key?: string | null;
+    error?: string
+  }> = []
 
   // force=true: bypass 6AM check & already-sent check (for testing)
   const forceTest = url.searchParams.get('force') === 'true'
@@ -547,7 +565,8 @@ export const onRequestGet: PagesFunction<Env> = async (context) => {
         }
 
         // Generate text recommendation
-        const recommendation = await generateStyleRecommendation(sub, weather, context.env.OPENAI_API_KEY)
+        const recResult = await generateStyleRecommendation(sub, weather, context.env.OPENAI_API_KEY)
+        const recommendation = recResult.text
 
         // Generate outfit images for profile-complete subscribers
         let outfitImages: OutfitImage[] = []
@@ -641,6 +660,10 @@ export const onRequestGet: PagesFunction<Env> = async (context) => {
           image_status: imageStatus,
           image_conditions: imgConditions,
           image_error: imageError,
+          text_source: recResult.source,
+          text_error: recResult.error,
+          preferred_language: sub.preferred_language,
+          photo_r2_key: sub.photo_r2_key,
           error: emailError || undefined,
         })
 
