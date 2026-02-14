@@ -24,7 +24,7 @@ export const onRequestGet: PagesFunction<Env> = async (context) => {
       }
 
       const res = await fetch(
-        `${supabaseUrl}/rest/v1/subscribers?email=eq.${encodeURIComponent(email)}&select=id,status,trial_ends_at,current_period_end&limit=1`,
+        `${supabaseUrl}/rest/v1/subscribers?email=eq.${encodeURIComponent(email)}&select=id,status,trial_ends_at,current_period_end,profile_complete,height_cm,weight_kg,gender,photo_r2_key&limit=1`,
         {
           headers: {
             'apikey': supabaseKey,
@@ -34,7 +34,10 @@ export const onRequestGet: PagesFunction<Env> = async (context) => {
       )
 
       if (res.ok) {
-        const rows = await res.json() as Array<{ id: string; status: string; trial_ends_at: string | null; current_period_end: string | null }>
+        const rows = await res.json() as Array<{
+          id: string; status: string; trial_ends_at: string | null; current_period_end: string | null;
+          profile_complete: boolean; height_cm: number | null; weight_kg: number | null; gender: string | null; photo_r2_key: string | null
+        }>
         if (rows.length > 0) {
           const sub = rows[0]
           return new Response(
@@ -42,6 +45,11 @@ export const onRequestGet: PagesFunction<Env> = async (context) => {
               active: sub.status === 'active' || sub.status === 'trialing',
               status: sub.status,
               current_period_end: sub.current_period_end || sub.trial_ends_at,
+              profile_complete: sub.profile_complete || false,
+              height_cm: sub.height_cm,
+              weight_kg: sub.weight_kg,
+              gender: sub.gender,
+              has_photo: !!sub.photo_r2_key,
             }),
             { status: 200, headers: { 'Content-Type': 'application/json', ...corsHeaders } }
           )
@@ -49,7 +57,7 @@ export const onRequestGet: PagesFunction<Env> = async (context) => {
       }
 
       return new Response(
-        JSON.stringify({ active: false, status: 'none', current_period_end: null }),
+        JSON.stringify({ active: false, status: 'none', current_period_end: null, profile_complete: false }),
         { status: 200, headers: { 'Content-Type': 'application/json', ...corsHeaders } }
       )
     }

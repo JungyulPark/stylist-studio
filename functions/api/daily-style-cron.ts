@@ -135,7 +135,7 @@ OUTPUT FORMAT:
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        model: 'gpt-5-mini',
+        model: 'gpt-4o-mini',
         messages: [{ role: 'user', content: prompt }],
         max_tokens: 500,
         temperature: 0.8,
@@ -312,49 +312,74 @@ function buildEmailHtml(
     `
   }
 
+  // Table-based email HTML for maximum email client compatibility (Naver, Gmail, Outlook)
   return `<!DOCTYPE html>
 <html>
 <head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"></head>
-<body style="margin:0;padding:0;background:#0a0a0a;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;">
-  <div style="max-width:560px;margin:0 auto;padding:32px 24px;">
-    <!-- Header -->
-    <div style="text-align:center;margin-bottom:32px;">
-      <h1 style="color:#c9a962;font-size:14px;letter-spacing:3px;margin:0;">PERSONAL STYLIST</h1>
-      <p style="color:rgba(255,255,255,0.4);font-size:12px;margin:4px 0 0;">What to Wear Today</p>
-    </div>
-
-    <!-- Weather Badge -->
-    <div style="text-align:center;margin-bottom:24px;">
-      <div style="display:inline-block;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);border-radius:16px;padding:12px 24px;">
-        <span style="font-size:28px;">${emoji}</span>
-        <span style="color:#fff;font-size:24px;font-weight:700;margin:0 8px;">${weather.temp}°C</span>
-        <span style="color:rgba(255,255,255,0.5);font-size:14px;">${subscriber.city}</span>
-      </div>
-    </div>
-
-    ${imagesHtml}
-
-    <!-- Recommendation -->
-    <div style="background:rgba(255,255,255,0.04);border:1px solid rgba(201,169,98,0.2);border-radius:16px;padding:24px;margin-bottom:24px;">
-      <p style="color:#e8e8e8;font-size:15px;line-height:1.7;white-space:pre-line;margin:0;">
-${recommendation}
-      </p>
-    </div>
-
-    <!-- CTA -->
-    <div style="text-align:center;margin-bottom:32px;">
-      <a href="https://kstylist.cc" style="display:inline-block;background:linear-gradient(135deg,#c9a962,#d4af37);color:#1a1a2e;text-decoration:none;font-weight:700;font-size:14px;padding:12px 32px;border-radius:12px;">
-        kstylist.cc
-      </a>
-    </div>
-
-    <!-- Footer -->
-    <div style="text-align:center;border-top:1px solid rgba(255,255,255,0.06);padding-top:20px;">
-      <p style="color:rgba(255,255,255,0.3);font-size:11px;margin:0;">
-        ${unsubscribeNote[subscriber.preferred_language] || unsubscribeNote.en}
-      </p>
-    </div>
-  </div>
+<body style="margin:0;padding:0;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background-color:#1a1a2e;">
+  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background-color:#1a1a2e;">
+    <tr>
+      <td align="center" style="padding:32px 16px;">
+        <table role="presentation" width="560" cellpadding="0" cellspacing="0" style="max-width:560px;width:100%;background-color:#1a1a2e;">
+          <!-- Header -->
+          <tr>
+            <td align="center" style="padding:0 0 28px;">
+              <h1 style="color:#c9a962;font-size:14px;letter-spacing:3px;margin:0;font-family:Georgia,serif;">PERSONAL STYLIST</h1>
+              <p style="color:#888888;font-size:12px;margin:4px 0 0;">What to Wear Today</p>
+            </td>
+          </tr>
+          <!-- Weather -->
+          <tr>
+            <td align="center" style="padding:0 0 24px;">
+              <table role="presentation" cellpadding="0" cellspacing="0" style="background-color:#252540;border:1px solid #3a3a5c;border-radius:16px;">
+                <tr>
+                  <td style="padding:14px 28px;text-align:center;">
+                    <span style="font-size:28px;">${emoji}</span>
+                    <span style="color:#ffffff;font-size:24px;font-weight:700;margin:0 8px;">${weather.temp}&deg;C</span>
+                    <span style="color:#aaaaaa;font-size:14px;">${subscriber.city}</span>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+          ${imagesHtml ? `<!-- Outfit Images -->
+          <tr>
+            <td style="padding:0 0 24px;">
+              ${imagesHtml}
+            </td>
+          </tr>` : ''}
+          <!-- Recommendation -->
+          <tr>
+            <td style="padding:0 0 24px;">
+              <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background-color:#252540;border:1px solid #3a3a5c;border-radius:16px;">
+                <tr>
+                  <td style="padding:24px;color:#e0e0e0;font-size:15px;line-height:1.7;">
+${recommendation.replace(/\n/g, '<br/>')}
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+          <!-- CTA -->
+          <tr>
+            <td align="center" style="padding:0 0 28px;">
+              <a href="https://kstylist.cc" style="display:inline-block;background-color:#c9a962;color:#1a1a2e;text-decoration:none;font-weight:700;font-size:14px;padding:12px 32px;border-radius:12px;">
+                kstylist.cc
+              </a>
+            </td>
+          </tr>
+          <!-- Footer -->
+          <tr>
+            <td align="center" style="border-top:1px solid #3a3a5c;padding-top:20px;">
+              <p style="color:#888888;font-size:11px;margin:0;">
+                ${unsubscribeNote[subscriber.preferred_language] || unsubscribeNote.en}
+              </p>
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+  </table>
 </body>
 </html>`
 }

@@ -2820,10 +2820,28 @@ function App() {
     }
   }
 
-  // Auto-load daily style when dashboard page is shown (e.g. after payment redirect)
+  // Auto-load daily style + check profile when dashboard page is shown
   useEffect(() => {
-    if (page === 'subscription-dashboard' && isSubscribed && !dailyStyle && !isDailyStyleLoading) {
-      loadDailyStyle()
+    if (page === 'subscription-dashboard' && isSubscribed) {
+      // Load daily style if not loaded
+      if (!dailyStyle && !isDailyStyleLoading) {
+        loadDailyStyle()
+      }
+      // Fetch profile completion status from server
+      if (user?.email) {
+        (async () => {
+          try {
+            const res = await fetch(`/api/subscription-status?email=${encodeURIComponent(user.email!)}`)
+            if (res.ok) {
+              const data = await res.json()
+              setDashProfileComplete(data.profile_complete || false)
+              if (data.height_cm) setDashProfileHeight(String(data.height_cm))
+              if (data.weight_kg) setDashProfileWeight(String(data.weight_kg))
+              if (data.gender) setDashProfileGender(data.gender)
+            }
+          } catch { /* ignore */ }
+        })()
+      }
     }
   }, [page, isSubscribed])
 
@@ -3994,24 +4012,34 @@ function App() {
   const fetchAnalysisHistory = useCallback(async () => {
     if (!user || !supabase) {
       setIsLoadingHistory(false)
+      setAnalysisHistory([])
       return
     }
 
     setIsLoadingHistory(true)
+    // Safety timeout: stop loading after 8 seconds no matter what
+    const timeout = setTimeout(() => {
+      setIsLoadingHistory(false)
+    }, 8000)
+
     try {
       const { data, error } = await supabase
         .from('analysis_history')
         .select('*')
         .eq('user_id', user.id)
         .order('created_at', { ascending: false })
+        .limit(20)
+
+      clearTimeout(timeout)
 
       if (error) {
-        console.error('Failed to fetch analysis history:', error)
+        console.error('Failed to fetch analysis history:', error.message, error.code, error.details)
         setAnalysisHistory([])
       } else {
         setAnalysisHistory(data || [])
       }
     } catch (e) {
+      clearTimeout(timeout)
       console.error('Error fetching analysis history:', e)
       setAnalysisHistory([])
     } finally {
@@ -4599,7 +4627,7 @@ function App() {
             <div className="profile-section">
               <h3>{t.analysisHistory}</h3>
               {isLoadingHistory ? (
-                <p className="no-history">Loading...</p>
+                <div className="no-history"><div className="dashboard-loading-spinner" style={{ width: 20, height: 20, margin: '0 auto 8px' }} /><p>Loading...</p></div>
               ) : analysisHistory.length === 0 ? (
                 <p className="no-history">{t.noHistory}</p>
               ) : (
