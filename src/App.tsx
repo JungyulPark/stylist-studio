@@ -3521,18 +3521,6 @@ function App() {
   const handleHairRecommendation = async () => {
     if (!selectedOccasion || !selectedVibe) return
 
-    // 구독자는 결제 없이 바로 결과 생성
-    if (hairPhoto && isSubscribed) {
-      setPage('loading')
-      startHairGenerationAfterPayment({
-        hairPhoto,
-        selectedOccasion,
-        selectedVibe,
-        gender: profile.gender
-      })
-      return
-    }
-
     // 사진이 있고 헤어 결제 완료된 경우 바로 결과 생성
     if (hairPhoto && isHairPaid) {
       setPage('loading')
