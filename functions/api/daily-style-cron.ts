@@ -386,6 +386,9 @@ export const onRequestGet: PagesFunction<Env> = async (context) => {
 
   const results: Array<{ email: string; status: string; images?: number; error?: string }> = []
 
+  // force=true: bypass 6AM check & already-sent check (for testing)
+  const forceTest = url.searchParams.get('force') === 'true'
+
   try {
     // 1. Fetch all active subscribers
     const subRes = await fetch(
@@ -412,12 +415,18 @@ export const onRequestGet: PagesFunction<Env> = async (context) => {
       )
     }
 
-    // 2. Filter subscribers at 6AM local time
-    const targetHour = 6
-    const eligibleSubscribers = subscribers.filter(sub => {
-      const localHour = getLocalHour(sub.timezone)
-      return localHour === targetHour
-    })
+    // 2. Filter subscribers at 6AM local time (skip if force=true)
+    let eligibleSubscribers: Subscriber[]
+    if (forceTest) {
+      eligibleSubscribers = subscribers
+      console.log(`[cron] FORCE TEST: processing all ${subscribers.length} subscribers`)
+    } else {
+      const targetHour = 6
+      eligibleSubscribers = subscribers.filter(sub => {
+        const localHour = getLocalHour(sub.timezone)
+        return localHour === targetHour
+      })
+    }
 
     if (eligibleSubscribers.length === 0) {
       return new Response(
@@ -437,20 +446,22 @@ export const onRequestGet: PagesFunction<Env> = async (context) => {
       try {
         const today = new Date().toISOString().split('T')[0]
 
-        // Check if already sent today
-        const checkRes = await fetch(
-          `${context.env.SUPABASE_URL}/rest/v1/daily_recommendations?subscriber_id=eq.${sub.id}&sent_date=eq.${today}&limit=1`,
-          {
-            headers: {
-              'apikey': context.env.SUPABASE_SERVICE_KEY,
-              'Authorization': `Bearer ${context.env.SUPABASE_SERVICE_KEY}`,
-            },
+        // Check if already sent today (skip if force=true)
+        if (!forceTest) {
+          const checkRes = await fetch(
+            `${context.env.SUPABASE_URL}/rest/v1/daily_recommendations?subscriber_id=eq.${sub.id}&sent_date=eq.${today}&limit=1`,
+            {
+              headers: {
+                'apikey': context.env.SUPABASE_SERVICE_KEY,
+                'Authorization': `Bearer ${context.env.SUPABASE_SERVICE_KEY}`,
+              },
+            }
+          )
+          const existing = await checkRes.json() as Array<unknown>
+          if (existing && existing.length > 0) {
+            results.push({ email: sub.email, status: 'skipped_already_sent' })
+            continue
           }
-        )
-        const existing = await checkRes.json() as Array<unknown>
-        if (existing && existing.length > 0) {
-          results.push({ email: sub.email, status: 'skipped_already_sent' })
-          continue
         }
 
         // Fetch weather
