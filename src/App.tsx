@@ -469,7 +469,7 @@ const translations: Record<Language, {
     fashionReferenceTitle: '👗 패션 레퍼런스',
     fashionReferenceDesc: '럭셔리 디자이너 브랜드 스타일 참고',
     fashionBrands: ['Loro Piana', 'The Row', 'Chanel', 'Dior', 'Celine', 'Brunello Cucinelli', 'Tom Ford', 'Valentino', 'Auralee'],
-    hairReferenceTitle: '💇 헤어 스타일 AI 분석',
+    hairReferenceTitle: '💇 헤어 스타일 분석',
     hairReferenceDesc: '얼굴형·이목구비 기반 맞춤 추천',
     hairReferenceFemale: ['Zendaya', 'BLACKPINK Lisa', 'Jennifer Aniston', 'Halle Berry', 'Anne Hathaway'],
     hairReferenceMale: ['BTS V', 'Brad Pitt', 'Chris Hemsworth', 'Timothée Chalamet', 'Hyun Bin'],
@@ -494,7 +494,7 @@ const translations: Record<Language, {
     // Preview page translations
     previewTitle: '분석 완료!',
     previewSubtitle: '당신만을 위한 스타일을 찾았어요',
-    previewAnalysisComplete: 'AI 분석이 완료되었습니다',
+    previewAnalysisComplete: '스타일 분석이 완료되었습니다',
     previewFaceShape: '얼굴형 분석 결과',
     previewHairStylesFound: '어울리는 헤어스타일 5개 발견!',
     previewFashionFound: '맞춤 패션 코디 6개 준비 완료!',
@@ -572,7 +572,7 @@ const translations: Record<Language, {
     shareMyResult: '내 결과 공유하기',
     freeUploadText: '내 사진 업로드 (무료!)',
     subscriptionTitle: '매일 스타일 추천',
-    subscriptionDesc: '날씨와 프로필 기반 매일 아침 AI 스타일 추천',
+    subscriptionDesc: '날씨 · 체형 · 런웨이 트렌드 기반 매일 아침 스타일 추천',
     dailyTagline: '매일 아침, 오늘의 추천 스타일을 받아보세요',
     subscriptionPrice: '$6.99/월',
     subscriptionTrialDays: '7일 무료 체험',
@@ -591,7 +591,7 @@ const translations: Record<Language, {
     subscriptionFormStart: '무료 체험 시작하기',
     subscriptionLoginRequired: '구독하려면 먼저 로그인해주세요',
     dashboardTitle: '오늘의 스타일',
-    dashboardSubtitle: '날씨 기반 AI 맞춤 스타일링',
+    dashboardSubtitle: '날씨 기반 맞춤 스타일링',
     dashboardLoading: '오늘의 스타일을 준비하고 있어요...',
     dashboardError: '추천을 불러오지 못했습니다',
     dashboardRetry: '다시 시도',
@@ -603,7 +603,7 @@ const translations: Record<Language, {
     dashboardBack: '← 홈으로',
     dashboardNewDay: '매일 아침 새로운 스타일이 업데이트됩니다',
     dashboardProfileTitle: '프로필 완성하기',
-    dashboardProfileDesc: '프로필을 완성하면 매일 AI 의상 이미지를 받을 수 있어요',
+    dashboardProfileDesc: '프로필을 완성하면 매일 맞춤 의상 이미지를 받을 수 있어요',
     dashboardProfileHeight: '키 (cm)',
     dashboardProfileWeight: '몸무게 (kg)',
     dashboardProfileGender: '성별',
@@ -737,7 +737,7 @@ const translations: Record<Language, {
     fashionReferenceTitle: '👗 Fashion References',
     fashionReferenceDesc: 'Inspired by luxury designer brands',
     fashionBrands: ['Loro Piana', 'The Row', 'Chanel', 'Dior', 'Celine', 'Brunello Cucinelli', 'Tom Ford', 'Valentino', 'Auralee'],
-    hairReferenceTitle: '💇 AI Hair Analysis',
+    hairReferenceTitle: '💇 Hair Style Analysis',
     hairReferenceDesc: 'Personalized by face shape & features',
     hairReferenceFemale: ['Zendaya', 'BLACKPINK Lisa', 'Jennifer Aniston', 'Halle Berry', 'Anne Hathaway'],
     hairReferenceMale: ['BTS V', 'Brad Pitt', 'Chris Hemsworth', 'Timothée Chalamet', 'Hyun Bin'],
@@ -762,7 +762,7 @@ const translations: Record<Language, {
     // Preview page translations
     previewTitle: 'Analysis Complete!',
     previewSubtitle: 'We found styles just for you',
-    previewAnalysisComplete: 'AI analysis is complete',
+    previewAnalysisComplete: 'Style analysis is complete',
     previewFaceShape: 'Face Shape Analysis',
     previewHairStylesFound: '5 matching hairstyles found!',
     previewFashionFound: '6 custom fashion looks ready!',
@@ -840,7 +840,7 @@ const translations: Record<Language, {
     shareMyResult: 'Share My Result',
     freeUploadText: 'Upload My Photo (Free!)',
     subscriptionTitle: 'Daily Style',
-    subscriptionDesc: 'AI outfit picks every morning based on weather & your profile',
+    subscriptionDesc: 'Runway-inspired outfit picks every morning based on weather & your profile',
     dailyTagline: 'Get your daily style recommendation every morning',
     subscriptionPrice: '$6.99/mo',
     subscriptionTrialDays: '7-day free trial',
@@ -859,7 +859,7 @@ const translations: Record<Language, {
     subscriptionFormStart: 'Start Free Trial',
     subscriptionLoginRequired: 'Please log in to subscribe',
     dashboardTitle: "Today's Style",
-    dashboardSubtitle: 'AI-powered outfit based on weather',
+    dashboardSubtitle: "Runway-inspired outfit for today's weather",
     dashboardLoading: 'Preparing your style...',
     dashboardError: 'Failed to load recommendation',
     dashboardRetry: 'Try Again',
@@ -871,7 +871,7 @@ const translations: Record<Language, {
     dashboardBack: '← Home',
     dashboardNewDay: 'A new style is curated for you every morning',
     dashboardProfileTitle: 'Complete Your Profile',
-    dashboardProfileDesc: 'Complete your profile to receive daily AI outfit images',
+    dashboardProfileDesc: 'Complete your profile to receive daily outfit images',
     dashboardProfileHeight: 'Height (cm)',
     dashboardProfileWeight: 'Weight (kg)',
     dashboardProfileGender: 'Gender',
@@ -1005,7 +1005,7 @@ const translations: Record<Language, {
     fashionReferenceTitle: '👗 ファッションリファレンス',
     fashionReferenceDesc: 'ラグジュアリーデザイナーブランドを参考',
     fashionBrands: ['Loro Piana', 'The Row', 'Chanel', 'Dior', 'Celine', 'Brunello Cucinelli', 'Tom Ford', 'Valentino', 'Auralee'],
-    hairReferenceTitle: '💇 AIヘア分析',
+    hairReferenceTitle: '💇 ヘアスタイル分析',
     hairReferenceDesc: '顔の形と特徴に基づくパーソナル提案',
     hairReferenceFemale: ['Zendaya', 'BLACKPINK Lisa', 'Jennifer Aniston', 'Halle Berry', 'Anne Hathaway'],
     hairReferenceMale: ['BTS V', 'Brad Pitt', 'Chris Hemsworth', 'Timothée Chalamet', 'Hyun Bin'],
@@ -1030,7 +1030,7 @@ const translations: Record<Language, {
     // Preview page translations
     previewTitle: '分析完了！',
     previewSubtitle: 'あなただけのスタイルを見つけました',
-    previewAnalysisComplete: 'AI分析が完了しました',
+    previewAnalysisComplete: 'スタイル分析が完了しました',
     previewFaceShape: '顔型分析結果',
     previewHairStylesFound: 'お似合いのヘアスタイル5つ発見！',
     previewFashionFound: 'カスタムファッション6点準備完了！',
@@ -1108,7 +1108,7 @@ const translations: Record<Language, {
     shareMyResult: '結果をシェア',
     freeUploadText: '写真をアップロード（無料！）',
     subscriptionTitle: '毎日のスタイル提案',
-    subscriptionDesc: '天気とプロフィールに基づくAIスタイル提案',
+    subscriptionDesc: '天気・体型・ランウェイトレンドに基づくスタイル提案',
     dailyTagline: '毎朝、今日のおすすめスタイルをお届けします',
     subscriptionPrice: '$6.99/月',
     subscriptionTrialDays: '7日間無料体験',
@@ -1127,7 +1127,7 @@ const translations: Record<Language, {
     subscriptionFormStart: '無料体験を始める',
     subscriptionLoginRequired: '購読するにはログインしてください',
     dashboardTitle: '今日のスタイル',
-    dashboardSubtitle: '天気に基づくAIスタイリング',
+    dashboardSubtitle: '天気に基づくスタイリング',
     dashboardLoading: '今日のスタイルを準備中...',
     dashboardError: 'おすすめの読み込みに失敗しました',
     dashboardRetry: 'もう一度',
@@ -1139,7 +1139,7 @@ const translations: Record<Language, {
     dashboardBack: '← ホームへ',
     dashboardNewDay: '毎朝新しいスタイルが届きます',
     dashboardProfileTitle: 'プロフィールを完成',
-    dashboardProfileDesc: 'プロフィールを完成させると毎日AIコーデ画像が届きます',
+    dashboardProfileDesc: 'プロフィールを完成させると毎日コーデ画像が届きます',
     dashboardProfileHeight: '身長 (cm)',
     dashboardProfileWeight: '体重 (kg)',
     dashboardProfileGender: '性別',
@@ -1273,7 +1273,7 @@ const translations: Record<Language, {
     fashionReferenceTitle: '👗 时尚参考',
     fashionReferenceDesc: '参考奢侈品牌设计风格',
     fashionBrands: ['Loro Piana', 'The Row', 'Chanel', 'Dior', 'Celine', 'Brunello Cucinelli', 'Tom Ford', 'Valentino', 'Auralee'],
-    hairReferenceTitle: '💇 AI发型分析',
+    hairReferenceTitle: '💇 发型风格分析',
     hairReferenceDesc: '基于脸型和五官的个性化推荐',
     hairReferenceFemale: ['Zendaya', 'BLACKPINK Lisa', 'Jennifer Aniston', 'Halle Berry', 'Anne Hathaway'],
     hairReferenceMale: ['BTS V', 'Brad Pitt', 'Chris Hemsworth', 'Timothée Chalamet', 'Hyun Bin'],
@@ -1298,7 +1298,7 @@ const translations: Record<Language, {
     // Preview page translations
     previewTitle: '分析完成！',
     previewSubtitle: '我们为您找到了专属风格',
-    previewAnalysisComplete: 'AI分析已完成',
+    previewAnalysisComplete: '风格分析已完成',
     previewFaceShape: '脸型分析结果',
     previewHairStylesFound: '发现5款适合您的发型！',
     previewFashionFound: '6套定制时尚搭配已就绪！',
@@ -1376,7 +1376,7 @@ const translations: Record<Language, {
     shareMyResult: '分享我的结果',
     freeUploadText: '上传我的照片（免费！）',
     subscriptionTitle: '每日穿搭推荐',
-    subscriptionDesc: '基于天气和个人资料的AI每日穿搭推荐',
+    subscriptionDesc: '基于天气·体型·秀场趋势的每日穿搭推荐',
     dailyTagline: '每天早晨，接收今日推荐穿搭',
     subscriptionPrice: '$6.99/月',
     subscriptionTrialDays: '7天免费试用',
@@ -1395,7 +1395,7 @@ const translations: Record<Language, {
     subscriptionFormStart: '开始免费试用',
     subscriptionLoginRequired: '请先登录以订阅',
     dashboardTitle: '今日穿搭',
-    dashboardSubtitle: '基于天气的AI穿搭推荐',
+    dashboardSubtitle: '基于天气的穿搭推荐',
     dashboardLoading: '正在准备今日穿搭...',
     dashboardError: '加载推荐失败',
     dashboardRetry: '重试',
@@ -1407,7 +1407,7 @@ const translations: Record<Language, {
     dashboardBack: '← 返回首页',
     dashboardNewDay: '每天早上为你更新新的穿搭',
     dashboardProfileTitle: '完善个人资料',
-    dashboardProfileDesc: '完善资料后每天可收到AI穿搭图片',
+    dashboardProfileDesc: '完善资料后每天可收到穿搭图片',
     dashboardProfileHeight: '身高 (cm)',
     dashboardProfileWeight: '体重 (kg)',
     dashboardProfileGender: '性别',
@@ -1541,7 +1541,7 @@ const translations: Record<Language, {
     fashionReferenceTitle: '👗 Referencias de Moda',
     fashionReferenceDesc: 'Inspirado en marcas de diseñadores de lujo',
     fashionBrands: ['Loro Piana', 'The Row', 'Chanel', 'Dior', 'Celine', 'Brunello Cucinelli', 'Tom Ford', 'Valentino', 'Auralee'],
-    hairReferenceTitle: '💇 Análisis Capilar AI',
+    hairReferenceTitle: '💇 Análisis de Estilo Capilar',
     hairReferenceDesc: 'Personalizado por forma facial y rasgos',
     hairReferenceFemale: ['Zendaya', 'BLACKPINK Lisa', 'Jennifer Aniston', 'Halle Berry', 'Anne Hathaway'],
     hairReferenceMale: ['BTS V', 'Brad Pitt', 'Chris Hemsworth', 'Timothée Chalamet', 'Hyun Bin'],
@@ -1644,7 +1644,7 @@ const translations: Record<Language, {
     shareMyResult: 'Compartir Mi Resultado',
     freeUploadText: 'Subir Mi Foto (¡Gratis!)',
     subscriptionTitle: 'Estilo Diario',
-    subscriptionDesc: 'Recomendaciones de outfits con IA según el clima y tu perfil',
+    subscriptionDesc: 'Outfits inspirados en runway según el clima y tu perfil',
     dailyTagline: 'Recibe tu estilo recomendado cada mañana',
     subscriptionPrice: '$6.99/mes',
     subscriptionTrialDays: '7 días de prueba gratis',
@@ -1663,7 +1663,7 @@ const translations: Record<Language, {
     subscriptionFormStart: 'Iniciar Prueba Gratis',
     subscriptionLoginRequired: 'Inicia sesión para suscribirte',
     dashboardTitle: 'Estilo de Hoy',
-    dashboardSubtitle: 'Outfit con IA según el clima',
+    dashboardSubtitle: 'Outfit según el clima de hoy',
     dashboardLoading: 'Preparando tu estilo...',
     dashboardError: 'No se pudo cargar la recomendación',
     dashboardRetry: 'Reintentar',
@@ -1675,7 +1675,7 @@ const translations: Record<Language, {
     dashboardBack: '← Inicio',
     dashboardNewDay: 'Cada mañana un nuevo estilo para ti',
     dashboardProfileTitle: 'Completa Tu Perfil',
-    dashboardProfileDesc: 'Completa tu perfil para recibir imágenes de outfits con IA',
+    dashboardProfileDesc: 'Completa tu perfil para recibir imágenes de outfits personalizados',
     dashboardProfileHeight: 'Altura (cm)',
     dashboardProfileWeight: 'Peso (kg)',
     dashboardProfileGender: 'Género',
@@ -3369,18 +3369,18 @@ function App() {
   // 소셜 미디어 공유 데이터
   const getShareData = () => {
     const titles: Record<Language, string> = {
-      ko: 'AI가 추천한 나만의 스타일! 🪄',
-      en: 'My AI-recommended style! 🪄',
-      ja: 'AIがおすすめする私だけのスタイル！🪄',
-      zh: 'AI推荐的我的专属风格！🪄',
-      es: '¡Mi estilo recomendado por IA! 🪄'
+      ko: '런웨이에서 영감받은 나만의 스타일! 🪄',
+      en: 'My runway-inspired personal style! 🪄',
+      ja: 'ランウェイからインスピレーションを受けた私だけのスタイル！🪄',
+      zh: '灵感源自秀场的我的专属风格！🪄',
+      es: '¡Mi estilo personal inspirado en la pasarela! 🪄'
     }
     const texts: Record<Language, string> = {
-      ko: 'AI가 내 얼굴에 맞는 헤어스타일과 패션을 추천해줬어요! 당신도 체험해보세요!',
-      en: 'AI recommended hairstyles and fashion that suit my face! Try it yourself!',
-      ja: 'AIが私の顔に合うヘアスタイルとファッションをおすすめしてくれました！あなたも試してみて！',
-      zh: 'AI为我推荐了适合我脸型的发型和时尚！你也来试试吧！',
-      es: '¡La IA me recomendó peinados y moda que se adaptan a mi rostro! ¡Pruébalo tú también!'
+      ko: '나에게 어울리는 헤어스타일과 패션을 찾았어요! 당신도 체험해보세요!',
+      en: 'I found hairstyles and fashion that suit me perfectly! Try it yourself!',
+      ja: '自分に似合うヘアスタイルとファッションを見つけました！あなたも試してみて！',
+      zh: '我找到了适合我的发型和时尚！你也来试试吧！',
+      es: '¡Encontré peinados y moda que me quedan perfectos! ¡Pruébalo tú también!'
     }
     return {
       title: titles[lang],
@@ -4823,7 +4823,7 @@ function App() {
               </button>
             </div>
             <div className="featured-in">
-              <span className="magazine">AI-POWERED</span>
+              <span className="magazine">RUNWAY-INSPIRED</span>
               <span className="magazine">PERSONALIZED</span>
               <span className="magazine">WEATHER-AWARE</span>
             </div>
@@ -5899,11 +5899,11 @@ function App() {
 
           {hairPhoto && (
             <div className="ai-generated-section">
-              <h3>{lang === 'ko' ? 'AI 스타일 합성' : 'AI Style Synthesis'}</h3>
+              <h3>{lang === 'ko' ? '스타일 합성' : 'Style Synthesis'}</h3>
               {isGeneratingHair ? (
                 <div className="generating-indicator">
                   <div className="loading-spinner"></div>
-                  <p>{lang === 'ko' ? 'AI가 스타일을 합성 중입니다...' : 'AI is synthesizing styles...'}</p>
+                  <p>{lang === 'ko' ? '스타일을 합성 중입니다...' : 'Synthesizing styles...'}</p>
                 </div>
               ) : generatedHairImages.length > 0 ? (
                 <div className="generated-images-grid">
@@ -5933,7 +5933,7 @@ function App() {
                 </div>
               ) : (
                 <div className="ai-coming-soon">
-                  <p>{lang === 'ko' ? '업로드한 사진에 AI 스타일 합성 기능이 곧 제공됩니다' : 'AI style synthesis for your uploaded photo coming soon'}</p>
+                  <p>{lang === 'ko' ? '업로드한 사진에 스타일 합성 기능이 곧 제공됩니다' : 'Style synthesis for your uploaded photo coming soon'}</p>
                   <div className="uploaded-photo-preview">
                     <img src={hairPhoto} alt="Uploaded" />
                   </div>
