@@ -110,6 +110,11 @@ Also apply subtle beauty retouching: smooth clear skin, even skin tone, soft pro
 Generate the edited photo.`
       : `EDIT this photo - ONLY change the OUTFIT of the MAIN PERSON to: ${style.prompt}
 
+COLOR & TONE DIRECTION:
+- Use MUTED, UNDERSTATED tones — real everyday wearable clothes, not runway costumes
+- Prefer neutrals (navy, charcoal, beige, cream, olive) with at most ONE subtle accent color
+- AVOID overly saturated, bright, or neon colors — keep it natural and realistic
+
 CRITICAL: ${genderGuideFashion}
 
 ${beautyRetouch}
@@ -128,6 +133,12 @@ INPAINTING RULES - THIS IS AN INPAINTING TASK:
 5. Clothing layers: body underneath, clothes on top - NEVER overlap incorrectly
 6. DO NOT extend the image or add new body parts that weren't visible
 
+BODY PROPORTION PRESERVATION (CRITICAL):
+- The person's BODY PROPORTIONS must stay EXACTLY the same as the original photo
+- LEG LENGTH must be IDENTICAL to the original — do NOT shorten or compress legs
+- TORSO-to-LEG ratio must match the original exactly
+- Waistline position must stay at the SAME height as in the original photo
+
 ABSOLUTE REQUIREMENTS - VIOLATION IS FAILURE:
 1. NEVER CROP OR ZOOM - output must have IDENTICAL framing as input
 2. NEVER change aspect ratio - if input is portrait, output is portrait
@@ -138,6 +149,7 @@ ABSOLUTE REQUIREMENTS - VIOLATION IS FAILURE:
 7. Output resolution MUST match input resolution exactly
 8. Legs must be BEHIND/INSIDE pants or skirt - NEVER on top of clothing
 9. Arms must be THROUGH sleeves - NEVER floating above clothes
+10. Body proportions (especially leg length) - ZERO distortion allowed
 
 This is a clothing REPLACEMENT task for the MAIN ${genderWord} only.
 Keep the person's HEAD and FACE at the EXACT same position.
