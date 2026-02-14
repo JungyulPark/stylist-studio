@@ -450,6 +450,7 @@ export const onRequestGet: PagesFunction<Env> = async (context) => {
     image_status?: string; image_conditions?: Record<string, boolean>; image_error?: string;
     text_source?: string; text_error?: string;
     preferred_language?: string; photo_r2_key?: string | null;
+    subscriber_id?: string; updated_at?: string | null;
     error?: string
   }> = []
 
@@ -509,7 +510,8 @@ export const onRequestGet: PagesFunction<Env> = async (context) => {
       }
     }
     const subscribers = Array.from(emailMap.values())
-    console.log(`[cron] ${rawSubscribers.length} raw subscribers → ${subscribers.length} after dedup`)
+    const rawCount = rawSubscribers.length
+    console.log(`[cron] ${rawCount} raw subscribers → ${subscribers.length} after dedup`)
 
     // 2. Filter subscribers at 6AM local time (skip if force=true)
     let eligibleSubscribers: Subscriber[]
@@ -673,6 +675,8 @@ export const onRequestGet: PagesFunction<Env> = async (context) => {
           text_error: recResult.error,
           preferred_language: sub.preferred_language,
           photo_r2_key: sub.photo_r2_key,
+          subscriber_id: sub.id,
+          updated_at: sub.updated_at,
           error: emailError || undefined,
         })
 
@@ -688,6 +692,7 @@ export const onRequestGet: PagesFunction<Env> = async (context) => {
 
     return new Response(
       JSON.stringify({
+        raw_subscribers: rawCount,
         total_active: subscribers.length,
         eligible_6am: eligibleSubscribers.length,
         sent: results.filter(r => r.status === 'sent').length,

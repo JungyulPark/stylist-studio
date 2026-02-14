@@ -2864,6 +2864,14 @@ function App() {
               if (data.has_photo) {
                 setDashProfilePhotoUrl(`/api/profile-photo?email=${encodeURIComponent(user.email!)}&t=${Date.now()}`)
               }
+              // Auto-sync language preference on dashboard load
+              if (data.preferred_language !== lang) {
+                fetch('/api/update-subscriber-profile', {
+                  method: 'POST',
+                  headers: { 'Content-Type': 'application/json' },
+                  body: JSON.stringify({ email: user.email, preferred_language: lang }),
+                }).catch(() => {})
+              }
             }
           } catch { /* ignore */ }
         })()

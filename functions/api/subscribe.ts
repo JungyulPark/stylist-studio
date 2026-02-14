@@ -98,17 +98,24 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
       }
     }
 
-    // Supabase에 구독자 저장 (upsert by email)
-    const subscriberData = {
+    // Check if subscriber already exists for this email
+    const existingRes = await fetch(
+      `${context.env.SUPABASE_URL}/rest/v1/subscribers?email=eq.${encodeURIComponent(body.email)}&select=id,photo_r2_key,profile_complete&order=profile_complete.desc&limit=1`,
+      {
+        headers: {
+          'apikey': context.env.SUPABASE_SERVICE_KEY,
+          'Authorization': `Bearer ${context.env.SUPABASE_SERVICE_KEY}`,
+        },
+      }
+    )
+    const existingRows = existingRes.ok ? await existingRes.json() as Array<{ id: string; photo_r2_key: string | null; profile_complete: boolean }> : []
+
+    const subscriberData: Record<string, unknown> = {
       email: body.email,
       user_id: body.user_id || null,
       polar_checkout_id: body.polar_checkout_id || null,
       status: 'trialing',
       plan_type: 'daily_style',
-      height_cm: body.height_cm || null,
-      weight_kg: body.weight_kg || null,
-      gender: body.gender || null,
-      photo_r2_key: photoR2Key,
       city: body.city,
       country,
       timezone: body.timezone,
@@ -119,7 +126,51 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
       updated_at: new Date().toISOString(),
     }
 
-    // Supabase REST API (service role)
+    if (existingRows.length > 0) {
+      // Existing subscriber: UPDATE, preserve profile photo if already set
+      const existing = existingRows[0]
+      if (!existing.photo_r2_key && photoR2Key) {
+        subscriberData.photo_r2_key = photoR2Key
+      }
+      // Only set height/weight/gender if not already profile complete
+      if (!existing.profile_complete) {
+        if (body.height_cm) subscriberData.height_cm = body.height_cm
+        if (body.weight_kg) subscriberData.weight_kg = body.weight_kg
+        if (body.gender) subscriberData.gender = body.gender
+      }
+
+      const updateRes = await fetch(
+        `${context.env.SUPABASE_URL}/rest/v1/subscribers?email=eq.${encodeURIComponent(body.email)}`,
+        {
+          method: 'PATCH',
+          headers: {
+            'apikey': context.env.SUPABASE_SERVICE_KEY,
+            'Authorization': `Bearer ${context.env.SUPABASE_SERVICE_KEY}`,
+            'Content-Type': 'application/json',
+            'Prefer': 'return=representation',
+          },
+          body: JSON.stringify(subscriberData),
+        }
+      )
+
+      if (!updateRes.ok) {
+        console.error('[subscribe] Supabase update error:', await updateRes.text())
+        return errors.externalApi('Supabase', corsHeaders)
+      }
+
+      const updated = await updateRes.json()
+      return new Response(
+        JSON.stringify({ success: true, subscriber: Array.isArray(updated) ? updated[0] : updated }),
+        { status: 200, headers: { 'Content-Type': 'application/json', ...corsHeaders } }
+      )
+    }
+
+    // New subscriber: INSERT
+    subscriberData.height_cm = body.height_cm || null
+    subscriberData.weight_kg = body.weight_kg || null
+    subscriberData.gender = body.gender || null
+    subscriberData.photo_r2_key = photoR2Key
+
     const supabaseRes = await fetch(
       `${context.env.SUPABASE_URL}/rest/v1/subscribers`,
       {
@@ -128,45 +179,14 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
           'apikey': context.env.SUPABASE_SERVICE_KEY,
           'Authorization': `Bearer ${context.env.SUPABASE_SERVICE_KEY}`,
           'Content-Type': 'application/json',
-          'Prefer': 'resolution=merge-duplicates,return=representation',
+          'Prefer': 'return=representation',
         },
         body: JSON.stringify(subscriberData),
       }
     )
 
     if (!supabaseRes.ok) {
-      const errText = await supabaseRes.text()
-      console.error('[subscribe] Supabase error:', errText)
-
-      // email 중복 시 update 시도
-      if (errText.includes('duplicate') || errText.includes('unique')) {
-        const updateRes = await fetch(
-          `${context.env.SUPABASE_URL}/rest/v1/subscribers?email=eq.${encodeURIComponent(body.email)}`,
-          {
-            method: 'PATCH',
-            headers: {
-              'apikey': context.env.SUPABASE_SERVICE_KEY,
-              'Authorization': `Bearer ${context.env.SUPABASE_SERVICE_KEY}`,
-              'Content-Type': 'application/json',
-              'Prefer': 'return=representation',
-            },
-            body: JSON.stringify({
-              ...subscriberData,
-              status: 'trialing',
-            }),
-          }
-        )
-
-        if (updateRes.ok) {
-          const updated = await updateRes.json()
-          return new Response(
-            JSON.stringify({ success: true, subscriber: Array.isArray(updated) ? updated[0] : updated }),
-            { status: 200, headers: { 'Content-Type': 'application/json', ...corsHeaders } }
-          )
-        }
-        console.error('[subscribe] Supabase update error:', await updateRes.text())
-      }
-
+      console.error('[subscribe] Supabase insert error:', await supabaseRes.text())
       return errors.externalApi('Supabase', corsHeaders)
     }
 
