@@ -2143,9 +2143,9 @@ function App() {
           })()
         }
 
-        // URL 정리 후 랜딩 페이지로
-        window.history.replaceState({ page: 'landing' }, '', '#landing')
-        setPageState('landing')
+        // URL 정리 후 구독 대시보드로 이동
+        window.history.replaceState({ page: 'subscription-dashboard' }, '', '#subscription-dashboard')
+        setPageState('subscription-dashboard')
         return
       }
 
@@ -2794,6 +2794,13 @@ function App() {
       setIsDailyStyleLoading(false)
     }
   }
+
+  // Auto-load daily style when dashboard page is shown (e.g. after payment redirect)
+  useEffect(() => {
+    if (page === 'subscription-dashboard' && isSubscribed && !dailyStyle && !isDailyStyleLoading) {
+      loadDailyStyle()
+    }
+  }, [page, isSubscribed])
 
   // Dashboard profile save
   const dashProfilePhotoRef = useRef<HTMLInputElement>(null)
@@ -3932,7 +3939,10 @@ function App() {
 
   // Fetch analysis history for logged-in users
   const fetchAnalysisHistory = useCallback(async () => {
-    if (!user || !supabase) return
+    if (!user || !supabase) {
+      setIsLoadingHistory(false)
+      return
+    }
 
     setIsLoadingHistory(true)
     try {
@@ -3944,11 +3954,13 @@ function App() {
 
       if (error) {
         console.error('Failed to fetch analysis history:', error)
+        setAnalysisHistory([])
       } else {
         setAnalysisHistory(data || [])
       }
     } catch (e) {
       console.error('Error fetching analysis history:', e)
+      setAnalysisHistory([])
     } finally {
       setIsLoadingHistory(false)
     }
