@@ -3661,6 +3661,35 @@
   margin-bottom: 1rem;
 }
 
+.email-confirm-notice {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  padding: 2rem 0;
+}
+
+.email-confirm-notice .confirm-icon {
+  font-size: 3rem;
+}
+
+.email-confirm-notice .auth-success {
+  font-size: 1rem;
+  line-height: 1.5;
+  margin-bottom: 0;
+}
+
+.email-confirm-notice .confirm-hint {
+  color: rgba(26, 26, 26, 0.5);
+  font-size: 0.8rem;
+  margin: 0;
+}
+
+.email-confirm-notice .submit-btn {
+  width: 100%;
+  margin-top: 0.5rem;
+}
+
 .auth-switch {
   margin-top: 1.5rem;
   text-align: center;
