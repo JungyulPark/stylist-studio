@@ -169,7 +169,7 @@
   position: absolute;
   inset: 0;
   background: linear-gradient(135deg, #2a2025 0%, #1a1518 100%);
-  background-image: url('/hero-image.jpeg');
+  background-image: url('/hero.png');
   background-size: contain;
   background-position: center center;
   background-repeat: no-repeat;
@@ -627,7 +627,7 @@
 }
 
 .path-image-3 {
-  background-image: url('https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=800&q=80');
+  background-image: url('/daily.png');
   background-position: center 15%;
 }
 
@@ -874,12 +874,12 @@
 }
 
 .path-image-1 {
-  background-image: url('https://images.unsplash.com/photo-1605497788044-5a32c7078486?w=800&q=80');
+  background-image: url('/hair.png');
   background-position: center 20%;
 }
 
 .path-image-2 {
-  background-image: url('https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=800&q=80');
+  background-image: url('/full.png');
   background-position: center 15%;
 }
 
