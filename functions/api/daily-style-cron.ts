@@ -409,7 +409,7 @@ export const onRequestGet: PagesFunction<Env> = async (context) => {
     return errors.configError(corsHeaders)
   }
 
-  const results: Array<{ email: string; status: string; images?: number; error?: string }> = []
+  const results: Array<{ email: string; status: string; images?: number; image_status?: string; image_conditions?: Record<string, boolean>; error?: string }> = []
 
   // force=true: bypass 6AM check & already-sent check (for testing)
   const forceTest = url.searchParams.get('force') === 'true'
