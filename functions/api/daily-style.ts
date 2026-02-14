@@ -125,7 +125,6 @@ OUTPUT FORMAT:
         model: 'gpt-5-mini',
         messages: [{ role: 'user', content: prompt }],
         max_completion_tokens: 500,
-        temperature: 0.8,
       }),
     })
 

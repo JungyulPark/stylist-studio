@@ -157,7 +157,6 @@ IMPORTANT: Your response must be at LEAST 120 words. Never give a one-line answe
           { role: 'user', content: prompt },
         ],
         max_completion_tokens: 800,
-        temperature: 0.8,
       }),
     })
 
@@ -453,9 +452,9 @@ export const onRequestGet: PagesFunction<Env> = async (context) => {
   const forceTest = url.searchParams.get('force') === 'true'
 
   try {
-    // 1. Fetch all active subscribers
+    // 1. Fetch all subscribers (including canceled — period check happens later)
     const subRes = await fetch(
-      `${context.env.SUPABASE_URL}/rest/v1/subscribers?status=in.(trialing,active)&select=*`,
+      `${context.env.SUPABASE_URL}/rest/v1/subscribers?status=in.(trialing,active,canceled)&select=*`,
       {
         headers: {
           'apikey': context.env.SUPABASE_SERVICE_KEY,
