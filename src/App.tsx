@@ -300,6 +300,7 @@ const translations: Record<Language, {
   // Subscription
   subscriptionTitle: string
   subscriptionDesc: string
+  dailyTagline: string
   subscriptionPrice: string
   subscriptionTrialDays: string
   subscriptionCta: string
@@ -565,6 +566,7 @@ const translations: Record<Language, {
     freeUploadText: '내 사진 업로드 (무료!)',
     subscriptionTitle: '매일 스타일 추천',
     subscriptionDesc: '날씨와 프로필 기반 매일 아침 AI 스타일 추천',
+    dailyTagline: '매일 아침, 오늘의 추천 스타일을 받아보세요',
     subscriptionPrice: '$6.99/월',
     subscriptionTrialDays: '7일 무료 체험',
     subscriptionCta: '무료 체험 시작',
@@ -825,6 +827,7 @@ const translations: Record<Language, {
     freeUploadText: 'Upload My Photo (Free!)',
     subscriptionTitle: 'Daily Style',
     subscriptionDesc: 'AI outfit picks every morning based on weather & your profile',
+    dailyTagline: 'Get your daily style recommendation every morning',
     subscriptionPrice: '$6.99/mo',
     subscriptionTrialDays: '7-day free trial',
     subscriptionCta: 'Start Free Trial',
@@ -1085,6 +1088,7 @@ const translations: Record<Language, {
     freeUploadText: '写真をアップロード（無料！）',
     subscriptionTitle: '毎日のスタイル提案',
     subscriptionDesc: '天気とプロフィールに基づくAIスタイル提案',
+    dailyTagline: '毎朝、今日のおすすめスタイルをお届けします',
     subscriptionPrice: '$6.99/月',
     subscriptionTrialDays: '7日間無料体験',
     subscriptionCta: '無料体験を始める',
@@ -1345,6 +1349,7 @@ const translations: Record<Language, {
     freeUploadText: '上传我的照片（免费！）',
     subscriptionTitle: '每日穿搭推荐',
     subscriptionDesc: '基于天气和个人资料的AI每日穿搭推荐',
+    dailyTagline: '每天早晨，接收今日推荐穿搭',
     subscriptionPrice: '$6.99/月',
     subscriptionTrialDays: '7天免费试用',
     subscriptionCta: '开始免费试用',
@@ -1605,6 +1610,7 @@ const translations: Record<Language, {
     freeUploadText: 'Subir Mi Foto (¡Gratis!)',
     subscriptionTitle: 'Estilo Diario',
     subscriptionDesc: 'Recomendaciones de outfits con IA según el clima y tu perfil',
+    dailyTagline: 'Recibe tu estilo recomendado cada mañana',
     subscriptionPrice: '$6.99/mes',
     subscriptionTrialDays: '7 días de prueba gratis',
     subscriptionCta: 'Iniciar Prueba Gratis',
@@ -4764,6 +4770,7 @@ function App() {
                 </div>
                 <h3 className="path-title-v2">{t.subscriptionTitle}</h3>
                 <p className="path-desc-v2">{isSubscribed ? t.dashboardSubtitle : t.subscriptionDesc}</p>
+                <p className="daily-tagline">{t.dailyTagline}</p>
                 <div className={`path-cta-v2 ${isSubscribed ? 'green' : ''}`}>
                   {isSubscribed ? `${t.dashboardTitle} →` : t.subscriptionCta}
                 </div>

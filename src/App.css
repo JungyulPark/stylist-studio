@@ -627,7 +627,7 @@
 }
 
 .path-image-3 {
-  background-image: url('/daily.png');
+  background-image: url('/dailynew.png');
   background-position: center 15%;
 }
 
@@ -779,6 +779,13 @@
   letter-spacing: 0.05em;
 }
 
+.daily-tagline {
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 0.8rem;
+  font-style: italic;
+  margin: 0.25rem 0 0.5rem;
+}
+
 .path-card-v2.featured {
   border: 2px solid var(--primary);
   box-shadow: 0 10px 40px rgba(212, 175, 55, 0.15);
@@ -874,7 +881,7 @@
 }
 
 .path-image-1 {
-  background-image: url('/hair.png');
+  background-image: url('/hairnew.png');
   background-position: center 20%;
 }
 
