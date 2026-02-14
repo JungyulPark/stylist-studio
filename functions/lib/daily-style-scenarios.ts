@@ -193,15 +193,28 @@ function getTodaysPickPrompt(weather: WeatherInfo, gender: string): string {
 }
 
 // ─── Casual Prompt ────────────────────────────────────────────────
+// Casual-only moods — relaxed, approachable, no bold/edgy archetypes
+const maleCasualMoods = [
+  { name: 'Auralee relaxed', guide: 'Soft garment-washed fabrics with natural texture. Dropped shoulders, relaxed body. Muted earth tones. Simple sneakers or canvas shoes. Effortless and understated.' },
+  { name: 'Cucinelli weekend', guide: 'Warm casual layers — fine knit over tee, collar peeking out optional. Relaxed straight-leg pants. Suede loafers or clean sneakers. Comfortable but polished.' },
+  { name: 'clean modern', guide: 'Minimal and clean — well-fitted basics in premium fabrics. Simple silhouette, no embellishments. White sneakers, simple watch. Easy and approachable.' },
+]
+
+const femaleCasualMoods = [
+  { name: 'Auralee soft weekend', guide: 'Fabric-first comfort — oversized cashmere or cotton knits, soft drape. One fitted piece for balance. Simple flats or clean sneakers. Understated and cozy.' },
+  { name: 'effortless French', guide: 'Parisian off-duty — well-fitted basics, simple cardigan or striped tee. Straight-leg jeans, ballet flats or clean sneakers. Minimal jewelry, crossbody bag.' },
+  { name: 'clean casual', guide: 'Polished basics — premium cotton tee or simple blouse, well-fitted denim. Clean sneakers or loafers. Minimal accessories, natural and relaxed.' },
+]
+
 function getCasualPrompt(gender: string, temp: number): string {
   const pIdx = (getPaletteIndex() + 7) % 21
-  const mIdx = (getMoodIndex() + 2) % 7
+  const mIdx = (getMoodIndex() + 2) % 3
   const isCold = temp < 10
   const isWarm = temp >= 22
 
   if (gender === 'female') {
     const p = femaleColorPalettes[pIdx % femaleColorPalettes.length]
-    const m = femaleMoods[mIdx % femaleMoods.length]
+    const m = femaleCasualMoods[mIdx % femaleCasualMoods.length]
     const arch = `STYLING: ${m.name} — ${m.guide}`
 
     if (isWarm) return `relaxed chic casual outfit (${p.tone}): premium oversized cotton tee in ${p.c4} with dropped shoulders, loosely half-tucked into high-waisted ${p.c3} straight-leg jeans, clean white leather sneakers, ${p.accent} minimalist leather crossbody bag, simple gold hoop earrings. ${arch}`
@@ -210,7 +223,7 @@ function getCasualPrompt(gender: string, temp: number): string {
   }
 
   const p = maleColorPalettes[pIdx % maleColorPalettes.length]
-  const m = maleMoods[mIdx % maleMoods.length]
+  const m = maleCasualMoods[mIdx % maleCasualMoods.length]
   const arch = `STYLING: ${m.name} — ${m.guide}`
 
   if (isWarm) return `relaxed modern casual outfit (${p.tone}): garment-dyed cotton crewneck tee in ${p.c3}, comfortable relaxed-fit cotton chino shorts in ${p.c4} with flat front, clean canvas sneakers or leather slides, minimal ${p.accent} watch with NATO strap. ${arch}`
