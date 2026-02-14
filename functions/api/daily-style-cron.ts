@@ -210,7 +210,7 @@ async function generateOutfitImages(
   photosBucket: R2Bucket,
   imagesBucket: R2Bucket,
   precomputedScenarios?: ImageScenario[]
-): Promise<OutfitImage[]> {
+): Promise<{ images: OutfitImage[]; photoSizeBytes: number }> {
   if (!subscriber.photo_r2_key || !subscriber.gender) {
     console.log(`[cron] Skipping image gen for ${subscriber.email}: no photo or gender`)
     return []
@@ -219,12 +219,14 @@ async function generateOutfitImages(
   // Fetch subscriber's photo from R2
   let photoDataUri: string
   try {
+    console.log(`[cron] Fetching photo from R2: ${subscriber.photo_r2_key}`)
     const photoObj = await photosBucket.get(subscriber.photo_r2_key)
     if (!photoObj) {
       console.error(`[cron] Photo not found in R2: ${subscriber.photo_r2_key}`)
       return []
     }
     const photoBuffer = await photoObj.arrayBuffer()
+    console.log(`[cron] Photo loaded: ${photoBuffer.byteLength} bytes for ${subscriber.email}`)
     // Convert to base64 in chunks to avoid stack overflow on large photos
     const bytes = new Uint8Array(photoBuffer)
     let binary = ''
@@ -239,6 +241,7 @@ async function generateOutfitImages(
     return []
   }
 
+  const photoSizeBytes = photoDataUri.length  // approximate size for debug
   const scenarios = precomputedScenarios || getDailyScenarios(weather, subscriber.gender)
   const today = new Date().toISOString().split('T')[0]
   const lang = subscriber.preferred_language || 'en'
@@ -290,7 +293,7 @@ async function generateOutfitImages(
     }
   }
 
-  return outfitImages
+  return { images: outfitImages, photoSizeBytes }
 }
 
 // Build email HTML with outfit images
@@ -450,6 +453,8 @@ export const onRequestGet: PagesFunction<Env> = async (context) => {
     text_source?: string; text_error?: string;
     preferred_language?: string; photo_r2_key?: string | null;
     subscriber_id?: string; updated_at?: string | null;
+    photo_size_bytes?: number;
+    image_urls?: string[];
     error?: string
   }> = []
 
@@ -599,10 +604,11 @@ export const onRequestGet: PagesFunction<Env> = async (context) => {
         console.log(`[cron] Image conditions for ${sub.email}:`, JSON.stringify(imgConditions))
 
         let imageError: string | undefined
+        let photoSizeBytes: number | undefined
         if (sub.profile_complete && sub.photo_r2_key && sub.gender && context.env.GEMINI_API_KEY && context.env.DAILY_IMAGES_BUCKET) {
           try {
             imageStatus = 'generating'
-            outfitImages = await generateOutfitImages(
+            const imgResult = await generateOutfitImages(
               sub,
               weather,
               context.env.GEMINI_API_KEY,
@@ -610,6 +616,8 @@ export const onRequestGet: PagesFunction<Env> = async (context) => {
               context.env.DAILY_IMAGES_BUCKET,
               scenarios
             )
+            outfitImages = imgResult.images
+            photoSizeBytes = imgResult.photoSizeBytes
             imageStatus = outfitImages.length > 0 ? 'generated' : 'no_images_returned'
           } catch (e) {
             const errMsg = e instanceof Error ? e.message : String(e)
@@ -682,6 +690,8 @@ export const onRequestGet: PagesFunction<Env> = async (context) => {
           photo_r2_key: sub.photo_r2_key,
           subscriber_id: sub.id,
           updated_at: sub.updated_at,
+          photo_size_bytes: photoSizeBytes,
+          image_urls: outfitImages.map(img => img.url),
           error: emailError || undefined,
         })
 

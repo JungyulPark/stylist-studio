@@ -5,7 +5,7 @@ interface Env {
   SUPABASE_URL: string
   SUPABASE_SERVICE_KEY: string
   OPENWEATHER_API_KEY: string
-  OPENAI_API_KEY: string
+  GEMINI_API_KEY: string
 }
 
 interface Subscriber {
@@ -115,22 +115,23 @@ OUTPUT FORMAT:
 - Closing line`
 
   try {
-    const res = await fetch('https://api.openai.com/v1/chat/completions', {
-      method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${apiKey}`,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        model: 'gpt-5-mini',
-        messages: [{ role: 'user', content: prompt }],
-        max_completion_tokens: 16000,
-      }),
-    })
+    const res = await fetch(
+      `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`,
+      {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          contents: [{ role: 'user', parts: [{ text: prompt }] }],
+          generationConfig: { maxOutputTokens: 1024 },
+        }),
+      }
+    )
 
     if (!res.ok) return getFallback(weather, lang)
-    const data = await res.json() as { choices: Array<{ message: { content: string } }> }
-    return data.choices[0]?.message?.content || getFallback(weather, lang)
+    const data = await res.json() as {
+      candidates?: Array<{ content?: { parts?: Array<{ text?: string }> } }>
+    }
+    return data.candidates?.[0]?.content?.parts?.[0]?.text || getFallback(weather, lang)
   } catch {
     return getFallback(weather, lang)
   }
@@ -204,7 +205,7 @@ export const onRequestGet: PagesFunction<Env> = async (context) => {
 
     // 2. 오늘 이미 생성된 추천이 있는지 확인
     const existRes = await fetch(
-      `${context.env.SUPABASE_URL}/rest/v1/daily_recommendations?subscriber_id=eq.${sub.id}&sent_date=eq.${today}&select=*&limit=1`,
+      `${context.env.SUPABASE_URL}/rest/v1/daily_recommendations?subscriber_id=eq.${sub.id}&sent_date=eq.${today}&select=*&order=created_at.desc&limit=1`,
       {
         headers: {
           'apikey': context.env.SUPABASE_SERVICE_KEY,
@@ -244,7 +245,7 @@ export const onRequestGet: PagesFunction<Env> = async (context) => {
     }
 
     // 4. AI 추천 생성
-    const recommendation = await generateStyleRecommendation(sub, weather, context.env.OPENAI_API_KEY)
+    const recommendation = await generateStyleRecommendation(sub, weather, context.env.GEMINI_API_KEY)
 
     // 5. DB에 저장
     await fetch(
