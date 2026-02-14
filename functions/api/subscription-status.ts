@@ -3,25 +3,67 @@ import { errors } from '../lib/errors'
 
 interface Env {
   POLAR_API_KEY: string
+  SUPABASE_URL: string
+  SUPABASE_SERVICE_KEY: string
 }
 
 export const onRequestGet: PagesFunction<Env> = async (context) => {
   const corsHeaders = getCorsHeaders(context.request)
 
   try {
+    const url = new URL(context.request.url)
+    const email = url.searchParams.get('email')
+    const checkoutId = url.searchParams.get('checkout_id')
+
+    // 이메일로 Supabase에서 구독 상태 확인
+    if (email) {
+      const supabaseUrl = context.env.SUPABASE_URL
+      const supabaseKey = context.env.SUPABASE_SERVICE_KEY
+      if (!supabaseUrl || !supabaseKey) {
+        return errors.configError(corsHeaders)
+      }
+
+      const res = await fetch(
+        `${supabaseUrl}/rest/v1/subscribers?email=eq.${encodeURIComponent(email)}&select=id,status,trial_ends_at,current_period_end&limit=1`,
+        {
+          headers: {
+            'apikey': supabaseKey,
+            'Authorization': `Bearer ${supabaseKey}`,
+          },
+        }
+      )
+
+      if (res.ok) {
+        const rows = await res.json() as Array<{ id: string; status: string; trial_ends_at: string | null; current_period_end: string | null }>
+        if (rows.length > 0) {
+          const sub = rows[0]
+          return new Response(
+            JSON.stringify({
+              active: sub.status === 'active' || sub.status === 'trialing',
+              status: sub.status,
+              current_period_end: sub.current_period_end || sub.trial_ends_at,
+            }),
+            { status: 200, headers: { 'Content-Type': 'application/json', ...corsHeaders } }
+          )
+        }
+      }
+
+      return new Response(
+        JSON.stringify({ active: false, status: 'none', current_period_end: null }),
+        { status: 200, headers: { 'Content-Type': 'application/json', ...corsHeaders } }
+      )
+    }
+
+    // checkout_id로 Polar에서 확인 (기존 로직)
+    if (!checkoutId) {
+      return errors.validation('email or checkout_id parameter is required', corsHeaders)
+    }
+
     const polarToken = context.env.POLAR_API_KEY
     if (!polarToken) {
       return errors.configError(corsHeaders)
     }
 
-    const url = new URL(context.request.url)
-    const checkoutId = url.searchParams.get('checkout_id')
-
-    if (!checkoutId) {
-      return errors.validation('checkout_id parameter is required', corsHeaders)
-    }
-
-    // Polar API로 checkout 정보 조회하여 subscription 상태 확인
     const checkoutRes = await fetch(`https://api.polar.sh/v1/checkouts/${checkoutId}`, {
       headers: {
         'Authorization': `Bearer ${polarToken}`,
@@ -38,7 +80,6 @@ export const onRequestGet: PagesFunction<Env> = async (context) => {
       status?: string
     }
 
-    // subscription_id가 있으면 구독 상세 정보 조회
     if (checkout.subscription_id) {
       const subRes = await fetch(`https://api.polar.sh/v1/subscriptions/${checkout.subscription_id}`, {
         headers: {
@@ -65,7 +106,6 @@ export const onRequestGet: PagesFunction<Env> = async (context) => {
       }
     }
 
-    // subscription_id가 없는 경우 (아직 구독 시작 안됨)
     return new Response(
       JSON.stringify({
         active: false,

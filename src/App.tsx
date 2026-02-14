@@ -2940,6 +2940,35 @@ function App() {
     if (user?.id) loadFavorites()
   }, [user?.id, loadFavorites])
 
+  // 유저 변경 시 실제 구독 상태를 서버에서 확인
+  useEffect(() => {
+    if (!user?.email) {
+      setIsSubscribed(false)
+      localStorage.removeItem('stylist_subscription_active')
+      return
+    }
+    (async () => {
+      try {
+        const res = await fetch(`/api/subscription-status?email=${encodeURIComponent(user.email!)}`)
+        if (res.ok) {
+          const data = await res.json()
+          const active = data.status === 'active' || data.status === 'trialing'
+          setIsSubscribed(active)
+          if (active) {
+            localStorage.setItem('stylist_subscription_active', 'true')
+          } else {
+            localStorage.removeItem('stylist_subscription_active')
+          }
+        } else {
+          setIsSubscribed(false)
+          localStorage.removeItem('stylist_subscription_active')
+        }
+      } catch {
+        // 네트워크 오류 시 localStorage 유지 (오프라인 대비)
+      }
+    })()
+  }, [user?.email])
+
   // 구독 폼 제출 → 데이터 저장 후 Polar 결제
   const handleSubscriptionSubmit = async () => {
     if (!subscriptionCity.trim()) {
