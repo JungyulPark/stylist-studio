@@ -38,7 +38,7 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
 
     // Look up subscriber — prefer profile_complete record if duplicates exist
     const subRes = await fetch(
-      `${context.env.SUPABASE_URL}/rest/v1/subscribers?email=eq.${encodeURIComponent(body.email)}&select=id,photo_r2_key,profile_complete&order=profile_complete.desc`,
+      `${context.env.SUPABASE_URL}/rest/v1/subscribers?email=eq.${encodeURIComponent(body.email)}&select=id,photo_r2_key,profile_complete,height_cm,weight_kg,gender&order=profile_complete.desc`,
       {
         headers: {
           'apikey': context.env.SUPABASE_SERVICE_KEY,
@@ -48,7 +48,7 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
     )
 
     if (!subRes.ok) return errors.externalApi('Supabase', corsHeaders)
-    const subscribers = await subRes.json() as Array<{ id: string; photo_r2_key: string | null; profile_complete: boolean }>
+    const subscribers = await subRes.json() as Array<{ id: string; photo_r2_key: string | null; profile_complete: boolean; height_cm: number | null; weight_kg: number | null; gender: string | null }>
 
     if (!subscribers || subscribers.length === 0) {
       return errors.notFound('Subscriber', corsHeaders)
@@ -56,6 +56,7 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
 
     // Use profile_complete record first (sorted desc), fallback to first
     const subscriber = subscribers[0]
+    const subscriber_full = subscriber
 
     // Upload photo to R2 if provided
     let photoR2Key = subscriber.photo_r2_key
@@ -77,17 +78,22 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
       }
     }
 
-    // Determine if profile is complete
-    const hasHeight = !!(body.height_cm || body.height_cm === 0)
-    const hasWeight = !!(body.weight_kg || body.weight_kg === 0)
-    const hasGender = !!body.gender
-    const hasPhoto = !!photoR2Key || !!subscriber.photo_r2_key
-    const profileComplete = hasHeight && hasWeight && hasGender && hasPhoto
+    // Only recalculate profile_complete when profile fields are provided
+    // (prevents language-only updates from resetting profile_complete to false)
+    const isProfileUpdate = body.height_cm !== undefined || body.weight_kg !== undefined || body.gender !== undefined || body.photo !== undefined
 
-    // Update subscriber in Supabase
     const updateData: Record<string, unknown> = {
       updated_at: new Date().toISOString(),
-      profile_complete: profileComplete,
+    }
+
+    if (isProfileUpdate) {
+      // Merge provided values with existing subscriber data
+      const height = body.height_cm ?? subscriber_full.height_cm
+      const weight = body.weight_kg ?? subscriber_full.weight_kg
+      const gender = body.gender ?? subscriber_full.gender
+      const hasPhoto = !!photoR2Key || !!subscriber.photo_r2_key
+      const profileComplete = !!height && !!weight && !!gender && hasPhoto
+      updateData.profile_complete = profileComplete
     }
 
     if (body.height_cm !== undefined) updateData.height_cm = body.height_cm
@@ -100,7 +106,7 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
     }
 
     // Update ALL records for this email (handles duplicates)
-    await fetch(
+    const patchRes = await fetch(
       `${context.env.SUPABASE_URL}/rest/v1/subscribers?email=eq.${encodeURIComponent(body.email)}`,
       {
         method: 'PATCH',
@@ -108,10 +114,15 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
           'apikey': context.env.SUPABASE_SERVICE_KEY,
           'Authorization': `Bearer ${context.env.SUPABASE_SERVICE_KEY}`,
           'Content-Type': 'application/json',
+          'Prefer': 'return=minimal',
         },
         body: JSON.stringify(updateData),
       }
     )
+    if (!patchRes.ok) {
+      console.error('[update-profile] PATCH failed:', await patchRes.text())
+      return errors.externalApi('Supabase', corsHeaders)
+    }
 
     // Also update any other records with same user_id (cross-email sync)
     if (body.user_id) {
@@ -147,7 +158,7 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
     const result = await updateRes.json()
 
     return new Response(
-      JSON.stringify({ success: true, profile_complete: profileComplete, subscriber: Array.isArray(result) ? result[0] : result }),
+      JSON.stringify({ success: true, profile_complete: updateData.profile_complete ?? subscriber.profile_complete, subscriber: Array.isArray(result) ? result[0] : result }),
       { status: 200, headers: { 'Content-Type': 'application/json', ...corsHeaders } }
     )
   } catch (error) {

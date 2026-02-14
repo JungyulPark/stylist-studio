@@ -41,12 +41,15 @@ export const onRequestGet: PagesFunction<Env> = async (context) => {
         }>
         if (rows.length > 0) {
           const sub = rows[0]
+          // Compute profile_complete from actual data as fallback
+          const computedComplete = !!sub.height_cm && !!sub.weight_kg && !!sub.gender && !!sub.photo_r2_key
+          const profileComplete = sub.profile_complete || computedComplete
           return new Response(
             JSON.stringify({
               active: sub.status === 'active' || sub.status === 'trialing',
               status: sub.status,
               current_period_end: sub.current_period_end || sub.trial_ends_at,
-              profile_complete: sub.profile_complete || false,
+              profile_complete: profileComplete,
               height_cm: sub.height_cm,
               weight_kg: sub.weight_kg,
               gender: sub.gender,
