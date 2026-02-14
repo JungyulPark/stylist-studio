@@ -247,15 +247,10 @@ async function generateOutfitImages(
   const lang = subscriber.preferred_language || 'en'
   const outfitImages: OutfitImage[] = []
 
-  // Generate images sequentially with stagger to avoid rate limits
-  for (let i = 0; i < scenarios.length; i++) {
-    const scenario = scenarios[i]
-
-    if (i > 0) {
-      await new Promise(resolve => setTimeout(resolve, 1000))
-    }
-
-    try {
+  // Generate images in parallel for speed
+  const runTs = Date.now()
+  const results = await Promise.allSettled(
+    scenarios.map(async (scenario) => {
       console.log(`[cron] Generating image ${scenario.id} for ${subscriber.email}`)
       const resultDataUri = await editPhotoWithGemini(
         photoDataUri,
@@ -264,35 +259,37 @@ async function generateOutfitImages(
         geminiApiKey
       )
 
-      if (resultDataUri) {
-        // Upload to public R2 bucket
-        const base64Match = resultDataUri.match(/^data:image\/\w+;base64,(.+)/)
-        if (base64Match) {
-          const binaryData = Uint8Array.from(atob(base64Match[1]), c => c.charCodeAt(0))
-          // Include timestamp in R2 key to bypass CDN cache on re-runs
-          const runTs = Date.now()
-          const r2Key = `daily/${subscriber.id}/${today}/${scenario.id}-${runTs}.jpg`
-
-          await imagesBucket.put(r2Key, binaryData, {
-            httpMetadata: {
-              contentType: 'image/jpeg',
-              cacheControl: 'public, max-age=604800, immutable',
-            },
-            customMetadata: { generated: new Date().toISOString() },
-          })
-
-          // Public URL from R2
-          const publicUrl = `https://pub-80118c62e29d4373b70d5e0fe9503ff0.r2.dev/${r2Key}`
-          const label = dailyScenarioLabels[scenario.id]?.[lang] || scenario.id
-
-          outfitImages.push({ id: scenario.id, label, url: publicUrl })
-          console.log(`[cron] Image ${scenario.id} uploaded for ${subscriber.email}`)
-        }
-      } else {
+      if (!resultDataUri) {
         console.warn(`[cron] Image generation returned null for ${scenario.id}`)
+        return null
       }
-    } catch (e) {
-      console.error(`[cron] Image gen error for ${scenario.id}:`, e)
+
+      const base64Match = resultDataUri.match(/^data:image\/\w+;base64,(.+)/)
+      if (!base64Match) return null
+
+      const binaryData = Uint8Array.from(atob(base64Match[1]), c => c.charCodeAt(0))
+      const r2Key = `daily/${subscriber.id}/${today}/${scenario.id}-${runTs}.jpg`
+
+      await imagesBucket.put(r2Key, binaryData, {
+        httpMetadata: {
+          contentType: 'image/jpeg',
+          cacheControl: 'public, max-age=604800, immutable',
+        },
+        customMetadata: { generated: new Date().toISOString() },
+      })
+
+      const publicUrl = `https://pub-80118c62e29d4373b70d5e0fe9503ff0.r2.dev/${r2Key}`
+      const label = dailyScenarioLabels[scenario.id]?.[lang] || scenario.id
+      console.log(`[cron] Image ${scenario.id} uploaded for ${subscriber.email}`)
+      return { id: scenario.id, label, url: publicUrl } as OutfitImage
+    })
+  )
+
+  for (const result of results) {
+    if (result.status === 'fulfilled' && result.value) {
+      outfitImages.push(result.value)
+    } else if (result.status === 'rejected') {
+      console.error(`[cron] Image gen error:`, result.reason)
     }
   }
 
