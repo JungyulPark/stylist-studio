@@ -1,81 +1,135 @@
 /**
- * Weather-based daily style scenarios for image generation
- * Uses color palettes (21) × style moods (5) for 105 unique combinations per weather type.
- * Palettes rotate on a 21-day cycle, moods on a 13-day cycle (coprime → 273 days before exact repeat).
+ * Weather-based daily style scenarios for image generation.
+ * Informed by Auralee, Hermès, Louis Vuitton 2025-2026 collections.
+ *
+ * 21 palettes × 5 styling archetypes, rotating on coprime cycles (21 & 13).
+ * 273 days before an exact palette+archetype repeat; weather adds more variety.
  */
 
 import type { ImageScenario } from './gemini-image'
 
 interface WeatherInfo {
   temp: number
-  condition: string // 'Clear', 'Rain', 'Snow', 'Clouds', etc.
+  condition: string
   wind_speed: number
 }
 
-// ─── 21 Color Palettes ───────────────────────────────────────────
+// ─── 21 Color Palettes (curated from real runway palettes) ───────
 const maleColorPalettes = [
-  { tone: 'classic', c1: 'navy', c2: 'charcoal', c3: 'white', c4: 'cream', accent: 'burgundy' },
-  { tone: 'warm', c1: 'olive', c2: 'rust', c3: 'camel', c4: 'warm brown', accent: 'burnt orange' },
-  { tone: 'cool', c1: 'slate blue', c2: 'sage green', c3: 'stone grey', c4: 'off-white', accent: 'teal' },
-  { tone: 'earth', c1: 'terracotta', c2: 'forest green', c3: 'tan', c4: 'chocolate brown', accent: 'mustard' },
-  { tone: 'modern', c1: 'black', c2: 'ivory', c3: 'silver grey', c4: 'deep burgundy', accent: 'emerald' },
-  { tone: 'coastal', c1: 'sand beige', c2: 'ocean blue', c3: 'white linen', c4: 'light khaki', accent: 'coral' },
-  { tone: 'urban', c1: 'graphite', c2: 'steel blue', c3: 'bone white', c4: 'deep indigo', accent: 'amber' },
-  { tone: 'nordic', c1: 'pine green', c2: 'cloud grey', c3: 'oatmeal', c4: 'birch white', accent: 'copper' },
-  { tone: 'heritage', c1: 'deep brown', c2: 'moss green', c3: 'ecru', c4: 'tobacco', accent: 'brass' },
-  { tone: 'minimal', c1: 'pure white', c2: 'light grey', c3: 'pale beige', c4: 'soft black', accent: 'matte silver' },
-  { tone: 'autumn', c1: 'burnt sienna', c2: 'dark olive', c3: 'wheat', c4: 'mahogany', accent: 'gold' },
-  { tone: 'maritime', c1: 'dark navy', c2: 'sky blue', c3: 'crisp white', c4: 'rope beige', accent: 'red' },
-  { tone: 'desert', c1: 'coyote tan', c2: 'dusty clay', c3: 'warm sand', c4: 'sage', accent: 'turquoise' },
-  { tone: 'metro', c1: 'midnight blue', c2: 'cement grey', c3: 'chalk white', c4: 'espresso', accent: 'electric blue' },
-  { tone: 'vintage', c1: 'faded denim', c2: 'dark khaki', c3: 'ivory', c4: 'worn leather brown', accent: 'antique gold' },
-  { tone: 'alpine', c1: 'deep green', c2: 'stone', c3: 'cream wool', c4: 'bark brown', accent: 'burnt red' },
-  { tone: 'studio', c1: 'ink black', c2: 'dove grey', c3: 'warm white', c4: 'ash', accent: 'bronze' },
-  { tone: 'pacific', c1: 'deep teal', c2: 'sandstone', c3: 'seafoam', c4: 'driftwood', accent: 'sunset orange' },
-  { tone: 'ivy', c1: 'hunter green', c2: 'burgundy', c3: 'cream', c4: 'camel', accent: 'gold' },
-  { tone: 'monochrome', c1: 'charcoal', c2: 'medium grey', c3: 'light grey', c4: 'off-white', accent: 'black' },
-  { tone: 'tuscany', c1: 'terracotta', c2: 'olive', c3: 'warm cream', c4: 'faded blue', accent: 'dried rose' },
+  // Hermès FW25 inspired
+  { tone: 'espresso earth', c1: 'deep espresso brown', c2: 'charcoal grey', c3: 'porcelain cream', c4: 'burnished taupe', accent: 'blood orange' },
+  // Auralee FW26 inspired
+  { tone: 'royal matte', c1: 'royal blue', c2: 'ink black', c3: 'oatmeal', c4: 'slate', accent: 'mint green' },
+  // LV Pre-Spring 2026 heritage
+  { tone: 'anglomania', c1: 'tweedy brown', c2: 'herringbone grey', c3: 'cream', c4: 'dark olive', accent: 'burgundy' },
+  // Hermès SS26 linen mood
+  { tone: 'porcelain sand', c1: 'charcoal olive', c2: 'warm sand', c3: 'porcelain white', c4: 'stone mist', accent: 'copper' },
+  // Brunello Cucinelli tonal
+  { tone: 'warm cashmere', c1: 'camel', c2: 'oatmeal', c3: 'vanilla cream', c4: 'soft taupe', accent: 'burnt sienna' },
+  // Loro Piana quiet luxury
+  { tone: 'alpine grey', c1: 'pewter grey', c2: 'cloud white', c3: 'pale stone', c4: 'soft charcoal', accent: 'forest green' },
+  // Classic navy
+  { tone: 'midnight nav', c1: 'midnight navy', c2: 'chalk white', c3: 'dove grey', c4: 'warm sand', accent: 'old gold' },
+  // Auralee boiled wool
+  { tone: 'matte wool', c1: 'dark olive', c2: 'tobacco brown', c3: 'ecru', c4: 'moss green', accent: 'brick red' },
+  // Earth tones 2026
+  { tone: 'clay earth', c1: 'terracotta clay', c2: 'dark sage', c3: 'raw linen', c4: 'walnut brown', accent: 'amber' },
+  // Hermès chrome green
+  { tone: 'chrome green', c1: 'chrome green', c2: 'pebble grey', c3: 'bone white', c4: 'dark bronze', accent: 'vanilla' },
+  // LV Pharrell futurism
+  { tone: 'graphite modern', c1: 'graphite black', c2: 'silver grey', c3: 'ivory', c4: 'deep indigo', accent: 'electric blue' },
+  // Auralee SS26 fresh
+  { tone: 'ocean air', c1: 'faded ocean blue', c2: 'driftwood', c3: 'off-white linen', c4: 'washed sage', accent: 'sunset coral' },
+  // Nordic minimalism
+  { tone: 'birch white', c1: 'birch white', c2: 'pale grey', c3: 'cream wool', c4: 'pine green', accent: 'copper' },
+  // Tuscan warmth
+  { tone: 'tuscan sun', c1: 'sun-bleached terracotta', c2: 'olive', c3: 'warm cream', c4: 'dried lavender', accent: 'aged gold' },
+  // Urban monochrome
+  { tone: 'ink mono', c1: 'jet black', c2: 'medium charcoal', c3: 'heather grey', c4: 'off-white', accent: 'matte silver' },
+  // Desert palette
+  { tone: 'sand dune', c1: 'coyote tan', c2: 'dusty clay', c3: 'warm sand', c4: 'sage green', accent: 'turquoise' },
+  // Maritime heritage
+  { tone: 'maritime', c1: 'dark navy', c2: 'rope beige', c3: 'crisp white', c4: 'faded indigo', accent: 'red' },
+  // Autumnal richness
+  { tone: 'burnt amber', c1: 'burnt amber', c2: 'dark mahogany', c3: 'wheat', c4: 'deep forest', accent: 'old gold' },
+  // Soft studio
+  { tone: 'studio warm', c1: 'warm grey', c2: 'sandstone', c3: 'parchment', c4: 'espresso', accent: 'bronze' },
+  // Vintage workwear
+  { tone: 'worn canvas', c1: 'faded indigo', c2: 'worn khaki', c3: 'raw ecru', c4: 'rust brown', accent: 'antique brass' },
+  // Slate cool
+  { tone: 'steel blue', c1: 'steel blue', c2: 'slate', c3: 'ice white', c4: 'deep navy', accent: 'teal' },
 ]
 
 const femaleColorPalettes = [
-  { tone: 'soft', c1: 'cream', c2: 'dusty rose', c3: 'beige', c4: 'champagne', accent: 'gold' },
-  { tone: 'warm', c1: 'terracotta', c2: 'amber', c3: 'warm ivory', c4: 'cinnamon', accent: 'copper' },
-  { tone: 'cool', c1: 'lavender', c2: 'ice blue', c3: 'soft grey', c4: 'pearl white', accent: 'silver' },
-  { tone: 'rich', c1: 'emerald', c2: 'burgundy', c3: 'deep plum', c4: 'midnight blue', accent: 'bronze' },
-  { tone: 'fresh', c1: 'sage green', c2: 'blush pink', c3: 'sky blue', c4: 'lemon cream', accent: 'rose gold' },
-  { tone: 'romantic', c1: 'mauve', c2: 'ivory', c3: 'soft peach', c4: 'blush', accent: 'pearl' },
-  { tone: 'natural', c1: 'oatmeal', c2: 'olive green', c3: 'sand', c4: 'warm taupe', accent: 'amber' },
-  { tone: 'nordic', c1: 'ice white', c2: 'pale blue', c3: 'silver birch', c4: 'frost grey', accent: 'rose gold' },
-  { tone: 'berry', c1: 'raspberry', c2: 'plum', c3: 'cream', c4: 'deep wine', accent: 'gold' },
-  { tone: 'garden', c1: 'moss green', c2: 'petal pink', c3: 'cream', c4: 'fern', accent: 'coral' },
-  { tone: 'coastal', c1: 'sand', c2: 'ocean blue', c3: 'white', c4: 'driftwood', accent: 'turquoise' },
-  { tone: 'vintage', c1: 'dusty blue', c2: 'antique rose', c3: 'ivory', c4: 'faded gold', accent: 'copper' },
-  { tone: 'modern', c1: 'black', c2: 'white', c3: 'camel', c4: 'red', accent: 'gold' },
-  { tone: 'sunset', c1: 'burnt orange', c2: 'dusty pink', c3: 'warm cream', c4: 'peach', accent: 'bronze' },
+  // Hermès FW25 "Leather Dandy"
+  { tone: 'noir leather', c1: 'ink black', c2: 'deep charcoal', c3: 'warm ivory', c4: 'cognac brown', accent: 'gold' },
+  // Hermès SS26 sporty-chic
+  { tone: 'cognac polish', c1: 'polished cognac', c2: 'cream', c3: 'sand', c4: 'dark chocolate', accent: 'gold buckle' },
+  // Auralee fabric-first soft
+  { tone: 'cashmere blush', c1: 'dusty rose', c2: 'baby cashmere beige', c3: 'pearl white', c4: 'muted lavender', accent: 'rose gold' },
+  // LV SS26 domestic comfort
+  { tone: 'silk plush', c1: 'champagne silk', c2: 'soft camel', c3: 'powder pink', c4: 'warm grey', accent: 'antique gold' },
+  // Deep jewel
+  { tone: 'jewel depth', c1: 'emerald', c2: 'deep burgundy', c3: 'ivory', c4: 'midnight blue', accent: 'bronze' },
+  // Fresh sage
+  { tone: 'garden fresh', c1: 'sage green', c2: 'petal pink', c3: 'cream', c4: 'soft fern', accent: 'coral' },
+  // Parisian classic
   { tone: 'parisian', c1: 'navy', c2: 'red', c3: 'cream', c4: 'black', accent: 'gold' },
-  { tone: 'botanical', c1: 'forest green', c2: 'cream', c3: 'terracotta', c4: 'sage', accent: 'dried rose' },
+  // Auralee mint-pop FW26
+  { tone: 'mint pop', c1: 'mint green', c2: 'ecru', c3: 'light grey', c4: 'royal blue accent', accent: 'silver' },
+  // Romantic evening
+  { tone: 'mauve romantic', c1: 'mauve', c2: 'soft peach', c3: 'ivory', c4: 'blush', accent: 'pearl' },
+  // Nordic ice
+  { tone: 'frost nordic', c1: 'ice white', c2: 'pale blue', c3: 'silver birch', c4: 'frost grey', accent: 'rose gold' },
+  // Tuscan earth
+  { tone: 'tuscan earth', c1: 'warm clay', c2: 'olive', c3: 'linen white', c4: 'sun gold', accent: 'copper' },
+  // Berry winter
+  { tone: 'berry rich', c1: 'raspberry', c2: 'plum', c3: 'cream', c4: 'deep wine', accent: 'gold' },
+  // Coastal light
+  { tone: 'coastal', c1: 'sand', c2: 'ocean blue', c3: 'white', c4: 'driftwood grey', accent: 'turquoise' },
+  // Sunset warmth
+  { tone: 'sunset glow', c1: 'burnt orange', c2: 'dusty pink', c3: 'warm cream', c4: 'peach', accent: 'bronze' },
+  // Ethereal pastel
   { tone: 'ethereal', c1: 'lilac', c2: 'powder blue', c3: 'cloud white', c4: 'pale mint', accent: 'silver' },
-  { tone: 'autumn', c1: 'deep rust', c2: 'mustard', c3: 'cream', c4: 'burgundy', accent: 'antique gold' },
-  { tone: 'minimalist', c1: 'greige', c2: 'soft white', c3: 'pale camel', c4: 'dove grey', accent: 'matte gold' },
-  { tone: 'jewel', c1: 'sapphire blue', c2: 'ruby red', c3: 'ivory', c4: 'amethyst', accent: 'gold' },
-  { tone: 'tuscan', c1: 'warm clay', c2: 'olive', c3: 'linen white', c4: 'sun gold', accent: 'copper' },
+  // Rich autumn
+  { tone: 'autumn leaf', c1: 'deep rust', c2: 'mustard', c3: 'cream', c4: 'burgundy', accent: 'antique gold' },
+  // Minimalist greige
+  { tone: 'quiet greige', c1: 'greige', c2: 'soft white', c3: 'pale camel', c4: 'dove grey', accent: 'matte gold' },
+  // Natural oatmeal
+  { tone: 'natural linen', c1: 'oatmeal', c2: 'olive green', c3: 'sand', c4: 'warm taupe', accent: 'amber' },
+  // Botanical
+  { tone: 'botanical', c1: 'forest green', c2: 'cream', c3: 'terracotta', c4: 'sage', accent: 'dried rose' },
+  // Vintage blue
+  { tone: 'vintage blue', c1: 'dusty blue', c2: 'antique rose', c3: 'ivory', c4: 'faded gold', accent: 'copper' },
+  // Modern contrast
+  { tone: 'modern mono', c1: 'black', c2: 'white', c3: 'camel', c4: 'red', accent: 'gold' },
 ]
 
-// ─── 5 Style Moods (rotate on 13-day cycle, coprime with 21) ────
+// ─── 5 Styling Archetypes (brand-informed, 13-day cycle) ─────────
 const maleMoods = [
-  { name: 'structured', desc: 'clean sharp lines and tailored precision', fabric: 'crisp wool and pressed cotton', silhouette: 'defined shoulders and slim-straight fit' },
-  { name: 'relaxed', desc: 'effortless ease and soft drape', fabric: 'washed cotton and brushed cashmere', silhouette: 'relaxed natural shoulders and easy straight-leg' },
-  { name: 'layered', desc: 'dimensional layering and texture contrast', fabric: 'mixed knits, cotton, and lightweight wool', silhouette: 'layered proportions with visible depth' },
-  { name: 'textured', desc: 'rich tactile fabrics and surface interest', fabric: 'bouclé, corduroy, tweed, or ribbed knit', silhouette: 'naturally draped with fabric weight visible' },
-  { name: 'monochrome', desc: 'tonal dressing in a single color family', fabric: 'varied textures in matching tones', silhouette: 'streamlined elongated proportions' },
+  // Hermès: precision with equestrian ease
+  { name: 'Hermès precision', guide: 'Soft unstructured shoulders, sharp vigorous trouser lines. Horn buttons, glove-stitched edges. Cashmere flannel and wool gabardine with visible weight and drape. Polished leather derbies or chelsea boots.' },
+  // Auralee: fabric-first Japanese minimalism
+  { name: 'Auralee minimal', guide: 'Fabric takes the lead — boiled wool, garment-washed cotton poplin, baby cashmere. Dropped-shoulder seams, relaxed body with clean hems. Matte textures. Proprietary suede shoes or simple leather sneakers.' },
+  // Brunello Cucinelli: warm relaxed elegance
+  { name: 'Cucinelli ease', guide: 'Warm layered look — fine-gauge knit over spread-collar shirt, collar and cuffs visible. Cashmere-blend sweater or gilet. Straight-leg trousers with single pleat. Suede loafers, no socks. Minimal leather watch.' },
+  // Loro Piana: razor-sharp quiet luxury
+  { name: 'Loro Piana quiet', guide: 'Pared-down razor-clean silhouette where extraordinary fabric speaks. Tonal dressing, single color family across textures. Storm System cashmere overcoat or zip jacket. Slim straight trousers, clean leather shoes.' },
+  // LV heritage-modern: textural pattern play
+  { name: 'LV heritage', guide: 'Heritage patterns reimagined — Prince of Wales check, herringbone, houndstooth in updated proportions. Tweed with modern cut. Structured coat over relaxed knitwear. Polished boots, bold watch or ring.' },
 ]
 
 const femaleMoods = [
-  { name: 'structured', desc: 'architectural elegance with clean lines', fabric: 'tailored wool and structured silk', silhouette: 'defined waist with sharp proportions' },
-  { name: 'flowing', desc: 'graceful movement and soft romanticism', fabric: 'silk chiffon, soft modal, and draped jersey', silhouette: 'fluid lines that move with the body' },
-  { name: 'layered', desc: 'chic dimensional layering', fabric: 'mixed knits, silk, and lightweight outerwear', silhouette: 'proportion play with visible layers' },
-  { name: 'textured', desc: 'luxurious tactile surfaces', fabric: 'bouclé, cashmere, velvet, or ribbed knit', silhouette: 'cocooning shapes with fabric richness' },
-  { name: 'minimalist', desc: 'pared-back modern simplicity', fabric: 'premium basics in clean fabrics', silhouette: 'clean lines and effortless proportions' },
+  // Hermès FW25 "Leather Dandy": fitted precision
+  { name: 'Hermès dandy', guide: 'Incredibly fitted but not constrictive — accentuated waist, defined lines. Contrasting textures: ribbed knits with quilted leather, wool with shearling. Polished equestrian boots. Minimal gold hardware.' },
+  // Auralee: quiet fabric luxury
+  { name: 'Auralee soft', guide: 'Fabric-first — garment-dyed cashmere poplin, high-twist wool, supple leather in soft forms. Loose silhouette balanced with one fitted piece. Matte surfaces. Simple elegant flats or loafers.' },
+  // LV SS26 domestic comfort: plush approachable
+  { name: 'LV comfort', guide: 'Plush and approachable — billowing silhouettes, elegant fluidity, flowing draperies evoking comfort and femininity. Silky trousers, knit pieces, loose coats. Flat shoes. Soft and serene.' },
+  // Hermès SS26: sporty-chic with polish
+  { name: 'Hermès sport', guide: 'Sporty-chic with flirty edge — curve-aware proportions, structured harness or buckle details. Hand-polished cognac leather. Short boots or strappy sandals. Confidence-forward styling.' },
+  // Minimalist The Row / Jil Sander
+  { name: 'minimal Row', guide: 'Pared-back perfection — every seam intentional. Oversized coat or blazer over slip dress or wide trousers. Tonal monochrome dressing. Pointed flats or block-heel boots. One statement piece of jewelry.' },
 ]
 
 // ─── Index Helpers ────────────────────────────────────────────────
@@ -88,7 +142,7 @@ function getPaletteIndex(): number {
 }
 
 function getMoodIndex(): number {
-  return getDayIndex() % 13 // 13 is coprime with 21 → 273-day full cycle
+  return getDayIndex() % 13
 }
 
 // ─── Dressy Prompt ────────────────────────────────────────────────
@@ -105,105 +159,66 @@ function getTodaysPickPrompt(weather: WeatherInfo, gender: string): string {
   if (gender === 'female') {
     const p = femaleColorPalettes[pIdx % femaleColorPalettes.length]
     const m = femaleMoods[mIdx % femaleMoods.length]
+    const arch = `STYLING: ${m.name} — ${m.guide}`
 
-    const moodSuffix = `Style mood: ${m.name} — ${m.desc}. Fabrics: ${m.fabric}. Silhouette: ${m.silhouette}. Luxury editorial quality.`
-
-    if (isSnowy) return `luxurious winter outfit in ${p.tone} palette: stunning long wool coat in ${p.c1} with elegant draping, cozy cashmere turtleneck in ${p.c4}, tailored high-waisted wool trousers in ${p.c3}, premium insulated leather ankle boots, ${p.accent} cashmere scarf and leather gloves, delicate ${p.accent} jewelry. ${moodSuffix}`
-    if (isRainy) return `chic rainy day outfit in ${p.tone} palette: structured waterproof trench coat in ${p.c3} with sleek silhouette, fine-knit sweater in ${p.c2}, tailored dark pants with slight crop, polished waterproof chelsea boots, compact ${p.accent} crossbody bag, minimalist earrings. ${moodSuffix}`
-    if (isCold) return `elegant cold weather outfit in ${p.tone} palette: beautifully tailored wool coat in ${p.c2} with clean lines, soft cashmere V-neck in ${p.c1}, high-waisted wide-leg trousers in ${p.c3}, premium leather ankle boots, delicate ${p.accent} layered necklace. ${moodSuffix}`
-    if (isCool) return `polished layered outfit in ${p.tone} palette: soft cashmere cardigan in ${p.c1} draped over silk camisole in ${p.c4}, high-waisted tailored trousers in ${p.c3}, clean pointed-toe flats or loafers, minimalist ${p.accent} jewelry, structured tote bag. ${moodSuffix}`
-    if (isWarm) return `breezy elegant outfit in ${p.tone} palette: flowing linen blouse in ${p.c4} with feminine details, wide-leg linen pants or midi skirt in ${p.c3}, leather espadrilles or elegant sandals, ${p.accent} delicate bracelet, woven tote. ${moodSuffix}`
-    if (isHot) return `cool summer outfit in ${p.tone} palette: lightweight silk or cotton dress in ${p.c2} with flattering cut, elegant flat sandals in natural leather, ${p.accent} minimalist jewelry, premium straw bag, chic sunglasses. ${moodSuffix}`
-    return `versatile chic outfit in ${p.tone} palette: premium cashmere sweater in ${p.c1}, high-waisted ${p.c3} wide-leg trousers, elegant pointed flats, delicate ${p.accent} jewelry. ${moodSuffix}`
+    if (isSnowy) return `luxurious winter outfit (${p.tone}): ankle-length double-face wool coat in ${p.c1}, cashmere ribbed turtleneck in ${p.c4}, high-waisted wool flannel wide-leg trousers in ${p.c3}, insulated leather ankle boots with lug sole, ${p.accent} cashmere scarf tucked into coat, leather gloves. ${arch}`
+    if (isRainy) return `polished rainy day outfit (${p.tone}): water-resistant gabardine trench coat in ${p.c3} with belt cinched, fine-gauge merino crewneck in ${p.c2}, cropped tailored trousers in dark ${p.c1}, polished waterproof chelsea boots, compact leather crossbody in ${p.accent}, minimal stud earrings. ${arch}`
+    if (isCold) return `refined cold weather outfit (${p.tone}): tailored cashmere-blend coat in ${p.c2} with notch lapel, silk-cashmere V-neck in ${p.c1}, high-waisted pressed wool trousers in ${p.c3} with single pleat, pointed-toe leather ankle boots, delicate ${p.accent} layered necklace. ${arch}`
+    if (isCool) return `polished layered outfit (${p.tone}): unstructured soft blazer in ${p.c1} over fine-knit silk camisole in ${p.c4}, high-waisted tailored trousers in ${p.c3} with gentle drape, pointed ballet flats or suede loafers, ${p.accent} minimal bracelet, structured leather tote. ${arch}`
+    if (isWarm) return `breezy elegant outfit (${p.tone}): fluid cotton-silk blouse in ${p.c4} with hidden placket, wide-leg linen trousers in ${p.c3} or draped midi skirt, leather espadrille wedges or elegant sandals, ${p.accent} delicate cuff bracelet, woven straw tote. ${arch}`
+    if (isHot) return `cool summer outfit (${p.tone}): lightweight silk shirt dress in ${p.c2} with rolled sleeves and waist tie, flat leather sandals in natural tan, ${p.accent} minimalist pendant necklace, premium straw clutch, tortoiseshell sunglasses. ${arch}`
+    return `versatile chic outfit (${p.tone}): fine-gauge cashmere crewneck in ${p.c1}, high-waisted ${p.c3} wide-leg trousers with knife pleat, pointed-toe flats in ${p.c4}, delicate ${p.accent} earrings, structured leather bag. ${arch}`
   }
 
   // Male
   const p = maleColorPalettes[pIdx % maleColorPalettes.length]
   const m = maleMoods[mIdx % maleMoods.length]
+  const arch = `STYLING: ${m.name} — ${m.guide}`
 
-  const moodSuffix = `Style mood: ${m.name} — ${m.desc}. Fabrics: ${m.fabric}. Silhouette: ${m.silhouette}. Luxury editorial quality, naturally draped tailored silhouette.`
-
-  if (isSnowy) return `sharp winter outfit in ${p.tone} palette: premium insulated wool overcoat in ${p.c2} with structured shoulders, chunky cable-knit sweater in ${p.c3}, relaxed-fit dark wool trousers with natural drape, waterproof leather boots in rich brown, ${p.accent} wool scarf, leather gloves. ${moodSuffix}`
-  if (isRainy) return `sleek rainy day outfit in ${p.tone} palette: modern waterproof mac coat in ${p.c1}, fine merino crew-neck in ${p.c3}, relaxed-fit dark chinos with comfortable drape, polished waterproof chelsea boots, minimal ${p.accent} accent watch. ${moodSuffix}`
-  if (isCold) return `distinguished cold weather outfit in ${p.tone} palette: tailored wool peacoat in ${p.c2}, fine merino turtleneck in ${p.c3}, straight-leg dark trousers with natural drape, premium brown leather boots, minimal ${p.accent} accent watch. ${moodSuffix}`
-  if (isCool) return `smart modern outfit in ${p.tone} palette: premium cotton crew-neck sweater in ${p.c3} layered over crisp oxford shirt collar showing, relaxed straight-leg chinos in ${p.c1} with comfortable fit, clean leather sneakers or suede loafers, ${p.accent} accent leather belt. ${moodSuffix}`
-  if (isWarm) return `refined warm weather outfit in ${p.tone} palette: breathable premium linen shirt in ${p.c3} with perfect drape, relaxed-fit cotton trousers in ${p.c4} with natural comfortable drape, leather sandals or canvas sneakers, minimal ${p.accent} watch. ${moodSuffix}`
-  if (isHot) return `sharp summer outfit in ${p.tone} palette: lightweight camp-collar linen shirt in ${p.c3}, relaxed-fit cotton shorts or comfortable light chinos in ${p.c4}, premium leather sandals, ${p.accent} accent sunglasses. ${moodSuffix}`
-  return `clean modern outfit in ${p.tone} palette: fine-knit cashmere sweater in ${p.c3}, relaxed straight-leg chinos in ${p.c1} with natural drape, premium leather belt, clean sneakers or suede loafers, ${p.accent} accent details. ${moodSuffix}`
+  if (isSnowy) return `sharp winter outfit (${p.tone}): double-breasted wool overcoat in ${p.c2} with peak lapel, chunky Shetland cable-knit sweater in ${p.c3}, straight-leg flannel trousers in dark ${p.c1} with half-break hem, waterproof leather derby boots in rich brown, ${p.accent} brushed-wool scarf, leather cashmere-lined gloves. ${arch}`
+  if (isRainy) return `sleek rainy day outfit (${p.tone}): water-resistant cotton gabardine mac coat in ${p.c1} with concealed placket, fine merino crewneck in ${p.c3}, straight-leg dark cotton drill chinos with clean hem, polished waterproof chelsea boots, minimal ${p.accent}-dial watch. ${arch}`
+  if (isCold) return `refined cold weather outfit (${p.tone}): single-breasted wool peacoat in ${p.c2} with notch lapel, fine-gauge merino turtleneck in ${p.c3}, straight-leg pressed wool trousers in ${p.c1} with natural drape, premium brown suede chelsea boots, minimal ${p.accent} accent watch, leather gloves. ${arch}`
+  if (isCool) return `smart modern outfit (${p.tone}): cashmere-cotton crewneck sweater in ${p.c3} layered over oxford shirt with collar visible, straight-leg cotton chinos in ${p.c1} with single pleat, clean suede loafers or polished leather sneakers, ${p.accent} woven leather belt, brushed metal watch. ${arch}`
+  if (isWarm) return `refined warm weather outfit (${p.tone}): garment-washed linen spread-collar shirt in ${p.c3} with sleeves rolled to forearm, relaxed cotton-linen trousers in ${p.c4} with drawstring waist, woven leather espadrilles or canvas slip-ons, minimal ${p.accent} watch, tortoiseshell sunglasses. ${arch}`
+  if (isHot) return `sharp summer outfit (${p.tone}): lightweight camp-collar linen shirt in ${p.c3} with textured weave, relaxed-fit Bermuda shorts in ${p.c4} or light cotton chinos, premium leather sandals or clean canvas sneakers, ${p.accent} acetate sunglasses. ${arch}`
+  return `clean modern outfit (${p.tone}): fine-gauge cashmere crewneck in ${p.c3}, straight-leg cotton chinos in ${p.c1} with natural drape, premium leather belt with brushed buckle, clean white leather sneakers or tan suede derbies, ${p.accent} accent details. ${arch}`
 }
 
 // ─── Casual Prompt ────────────────────────────────────────────────
 function getCasualPrompt(gender: string, temp: number): string {
-  const pIdx = (getPaletteIndex() + 7) % 21 // offset from dressy palette
-  const mIdx = (getMoodIndex() + 2) % 5     // offset from dressy mood
+  const pIdx = (getPaletteIndex() + 7) % 21
+  const mIdx = (getMoodIndex() + 2) % 5
+  const isCold = temp < 10
   const isWarm = temp >= 22
 
   if (gender === 'female') {
     const p = femaleColorPalettes[pIdx % femaleColorPalettes.length]
     const m = femaleMoods[mIdx % femaleMoods.length]
-    const moodSuffix = `Style mood: ${m.name} — ${m.desc}. Fabrics: ${m.fabric}. Luxury editorial quality, naturally draped elegant silhouette.`
+    const arch = `STYLING: ${m.name} — ${m.guide}`
 
-    if (isWarm) return `relaxed yet chic casual outfit in ${p.tone} palette: premium oversized cotton tee in ${p.c4} loosely tucked into high-waisted ${p.c3} straight-leg jeans, clean white leather sneakers, ${p.accent} minimalist crossbody bag, simple hoop earrings. ${moodSuffix}`
-    return `cozy chic casual outfit in ${p.tone} palette: luxurious oversized ${p.c1} cashmere cardigan over fitted white tee, high-waisted light wash straight-leg jeans, clean ${p.c3} sneakers or tan suede loafers, delicate ${p.accent} necklace. ${moodSuffix}`
+    if (isWarm) return `relaxed chic casual outfit (${p.tone}): premium oversized cotton tee in ${p.c4} with dropped shoulders, loosely half-tucked into high-waisted ${p.c3} straight-leg jeans, clean white leather sneakers, ${p.accent} minimalist leather crossbody bag, simple gold hoop earrings. ${arch}`
+    if (isCold) return `cozy weekend outfit (${p.tone}): chunky ribbed-knit cardigan in ${p.c1} over fitted white cotton tee, high-waisted dark straight-leg jeans, ${p.c3} suede ankle boots or clean sneakers, ${p.accent} knit beanie, leather tote bag. ${arch}`
+    return `cozy chic casual outfit (${p.tone}): oversized baby-cashmere cardigan in ${p.c1} draped open over fitted white tee, high-waisted light-wash straight-leg jeans, clean ${p.c3} canvas sneakers or tan suede loafers, delicate ${p.accent} pendant necklace. ${arch}`
   }
 
   const p = maleColorPalettes[pIdx % maleColorPalettes.length]
   const m = maleMoods[mIdx % maleMoods.length]
-  const moodSuffix = `Style mood: ${m.name} — ${m.desc}. Fabrics: ${m.fabric}. Luxury editorial quality, naturally draped silhouette.`
+  const arch = `STYLING: ${m.name} — ${m.guide}`
 
-  if (isWarm) return `relaxed modern casual outfit in ${p.tone} palette: premium soft cotton crew-neck tee in ${p.c3}, comfortable relaxed-fit chino shorts in ${p.c4} with natural drape, clean canvas sneakers or leather slides, minimal ${p.accent} watch. ${moodSuffix}`
-  return `elevated casual outfit in ${p.tone} palette: premium cotton ${p.c3} sweatshirt or half-zip pullover, straight-leg dark indigo jeans with comfortable relaxed fit, clean white leather sneakers, minimal ${p.accent} watch. ${moodSuffix}`
-}
-
-// ─── Unused but kept for future use ──────────────────────────────
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-function _getEveningPrompt(gender: string, temp: number): string {
-  const pIdx = (getPaletteIndex() + 14) % 21
-  const mIdx = (getMoodIndex() + 4) % 5
-  const needsOuterwear = temp < 18
-
-  if (gender === 'female') {
-    const p = femaleColorPalettes[pIdx % femaleColorPalettes.length]
-    const m = femaleMoods[mIdx % femaleMoods.length]
-    const moodSuffix = `Style mood: ${m.name} — ${m.desc}. Luxury editorial quality, naturally draped elegant silhouette.`
-    if (needsOuterwear) return `glamorous evening outfit in ${p.tone} palette: stunning midi dress in ${p.c2} with elegant draping, structured ${p.c1} blazer draped over shoulders, strappy heeled sandals, ${p.accent} statement earrings, premium clutch bag. ${moodSuffix}`
-    return `captivating evening outfit in ${p.tone} palette: sleek silk slip dress in ${p.c2} or form-fitting knit dress in ${p.c4}, strappy heeled sandals, ${p.accent} layered necklaces, elegant clutch. ${moodSuffix}`
-  }
-
-  const p = maleColorPalettes[pIdx % maleColorPalettes.length]
-  const m = maleMoods[mIdx % maleMoods.length]
-  const moodSuffix = `Style mood: ${m.name} — ${m.desc}. Luxury editorial quality, naturally draped tailored silhouette.`
-  if (needsOuterwear) return `sharp evening outfit in ${p.tone} palette: unstructured soft blazer in ${p.c1} over ${p.c2} turtleneck, straight-leg dark trousers with comfortable drape, sleek leather dress shoes, minimal ${p.accent} watch. ${moodSuffix}`
-  return `refined evening outfit in ${p.tone} palette: premium ${p.c1} button-up shirt with sleeves slightly rolled revealing ${p.accent} watch, relaxed-fit dark trousers with natural drape, polished leather loafers. ${moodSuffix}`
+  if (isWarm) return `relaxed modern casual outfit (${p.tone}): garment-dyed cotton crewneck tee in ${p.c3}, comfortable relaxed-fit cotton chino shorts in ${p.c4} with flat front, clean canvas sneakers or leather slides, minimal ${p.accent} watch with NATO strap. ${arch}`
+  if (isCold) return `elevated weekend outfit (${p.tone}): brushed-fleece ${p.c3} zip hoodie or quarter-zip pullover layered under ${p.c1} wool overshirt jacket, straight-leg dark indigo selvedge jeans, ${p.c4} suede desert boots or clean leather sneakers, ${p.accent} knit scarf. ${arch}`
+  return `elevated casual outfit (${p.tone}): premium cotton ${p.c3} French-terry sweatshirt or half-zip pullover, straight-leg dark indigo jeans with comfortable relaxed fit, clean white leather sneakers, minimal ${p.accent} watch. ${arch}`
 }
 
 export function getDailyScenarios(weather: WeatherInfo, gender: string): ImageScenario[] {
   return [
-    {
-      id: 'dressy',
-      prompt: getTodaysPickPrompt(weather, gender),
-    },
-    {
-      id: 'casual',
-      prompt: getCasualPrompt(gender, weather.temp),
-    },
+    { id: 'dressy', prompt: getTodaysPickPrompt(weather, gender) },
+    { id: 'casual', prompt: getCasualPrompt(gender, weather.temp) },
   ]
 }
 
 /** Label translations for daily scenarios */
 export const dailyScenarioLabels: Record<string, Record<string, string>> = {
-  'dressy': {
-    ko: '격식 스타일',
-    en: 'Dressy',
-    ja: 'ドレッシー',
-    zh: '正式穿搭',
-    es: 'Elegante',
-  },
-  'casual': {
-    ko: '캐주얼',
-    en: 'Casual',
-    ja: 'カジュアル',
-    zh: '休闲',
-    es: 'Casual',
-  },
+  'dressy': { ko: '격식 스타일', en: 'Dressy', ja: 'ドレッシー', zh: '正式穿搭', es: 'Elegante' },
+  'casual': { ko: '캐주얼', en: 'Casual', ja: 'カジュアル', zh: '休闲', es: 'Casual' },
 }
