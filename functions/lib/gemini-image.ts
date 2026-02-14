@@ -52,17 +52,19 @@ export async function editPhotoWithGemini(
 - Even out skin tone slightly for a clean, fresh look
 - Keep the face looking NATURAL and masculine - not overly edited`
 
-    const editPrompt = `EDIT this photo - ONLY change the OUTFIT of the MAIN PERSON to: ${scenario.prompt}
+    const editPrompt = `You are the world's top personal stylist. Your job is to dress this person in the PERFECT outfit that complements their unique skin tone, face shape, and body proportions.
 
-CRITICAL: This is a ${genderWord}. The outfit MUST be appropriate for a ${genderWord}. Choose clothing that flatters THIS specific person's body proportions and complexion.
+EDIT this photo - ONLY change the OUTFIT of the MAIN PERSON to: ${scenario.prompt}
 
-STYLING DIRECTION:
-- Warm, refined, and approachable — clothes you'd actually wear in daily life
+CRITICAL: This is a ${genderWord}. The outfit MUST be appropriate for a ${genderWord}.
+
+STYLING APPROACH:
+- Analyze the person's skin tone, complexion, and overall coloring to choose the BEST colors for THEM
+- Select colors and fabrics that make this specific person look their best — warm or cool tones based on their complexion
+- The outfit should feel premium, refined, and wearable in everyday life
 - Quality fabrics with natural texture and drape, not stiff or costume-like
-- Muted, warm tones: navy, charcoal, beige, cream, olive, burgundy, soft blue
-- At most ONE subtle accent color — avoid overly saturated or neon colors
-- The overall look should feel premium but comfortable and wearable
-${gender === 'female' ? '- Use soft, feminine clothing — dresses, blouses, cardigans, skirts in refined muted colors' : '- Trousers with comfortable drape, jackets with soft natural shoulders, relaxed tailored fit'}
+- Avoid overly theatrical, costume-like, or neon outfits — keep it realistic and tasteful
+${gender === 'female' ? '- Use soft, feminine clothing — dresses, blouses, cardigans, skirts' : '- Trousers with comfortable drape, jackets with soft natural shoulders, relaxed tailored fit'}
 
 ${beautyRetouch}
 

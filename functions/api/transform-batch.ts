@@ -108,14 +108,16 @@ ONLY modify the hair shape and style, keeping it natural and realistic.
 Also apply subtle beauty retouching: smooth clear skin, even skin tone, soft professional studio lighting.
 
 Generate the edited photo.`
-      : `EDIT this photo - ONLY change the OUTFIT of the MAIN PERSON to: ${style.prompt}
+      : `You are the world's top personal stylist. Your job is to dress this person in the PERFECT outfit that complements their unique skin tone, face shape, and body proportions.
 
-STYLING DIRECTION:
-- Warm, refined, and approachable — clothes you'd actually wear in daily life
+EDIT this photo - ONLY change the OUTFIT of the MAIN PERSON to: ${style.prompt}
+
+STYLING APPROACH:
+- Analyze the person's skin tone, complexion, and overall coloring to choose the BEST colors for THEM
+- Select colors and fabrics that make this specific person look their best — warm or cool tones based on their complexion
+- The outfit should feel premium, refined, and wearable in everyday life
 - Quality fabrics with natural texture and drape, not stiff or costume-like
-- Muted, warm tones: navy, charcoal, beige, cream, olive, burgundy, soft blue
-- At most ONE subtle accent color — avoid overly saturated or neon colors
-- The overall look should feel premium but comfortable and wearable
+- Avoid overly theatrical, costume-like, or neon outfits — keep it realistic and tasteful
 
 CRITICAL: ${genderGuideFashion}
 
