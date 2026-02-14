@@ -103,7 +103,7 @@ async function generateStyleRecommendation(
     subscriber.weight_kg ? `Weight: ${subscriber.weight_kg}kg` : '',
   ].filter(Boolean).join(', ')
 
-  const prompt = `You are an expert personal stylist. Generate a daily outfit recommendation email.
+  const prompt = `You are an expert personal stylist trusted by celebrities. Generate a warm, detailed daily outfit recommendation email.
 
 CONTEXT:
 - City: ${subscriber.city}
@@ -112,20 +112,27 @@ CONTEXT:
 - Date: ${new Date().toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' })}
 
 RULES:
-1. Write in ${langName[lang] || 'English'}
-2. Keep it concise — max 200 words
-3. Suggest a complete outfit: top, bottom, shoes, outerwear (if needed), accessories
+1. Write ENTIRELY in ${langName[lang] || 'English'}
+2. Write 150-200 words — NOT shorter
+3. Suggest a COMPLETE outfit with specific colors and materials: top, bottom, shoes, outerwear (if needed), accessories
 4. Consider the weather practically (temperature, rain, wind)
 5. Include a style tip of the day
 6. Be warm, friendly, and encouraging
-7. Format with clear sections using line breaks
-8. Do NOT use markdown headers — use plain text with emoji sparingly
+7. Format with clear sections using line breaks — each outfit item on its own line with a dash (-) prefix
+8. Do NOT use markdown headers or asterisks — use plain text with emoji sparingly
 
-OUTPUT FORMAT:
-- Greeting with today's weather summary
-- Outfit recommendation (each item on its own line)
-- Style tip of the day
-- Closing line`
+REQUIRED OUTPUT FORMAT (follow this structure exactly):
+1. Friendly greeting with today's weather summary (2-3 sentences)
+2. "Here's your outfit recommendation:" followed by each item on its own line:
+   - Top item with color and material
+   - Bottom item with color and material
+   - Shoes with specific style
+   - Outerwear (if weather requires)
+   - Accessories (bag, watch, scarf, etc.)
+3. Style tip of the day (1-2 sentences with practical advice)
+4. Warm closing line
+
+IMPORTANT: Your response must be at LEAST 120 words. Never give a one-line answer.`
 
   try {
     const res = await fetch('https://api.openai.com/v1/chat/completions', {
@@ -438,14 +445,30 @@ export const onRequestGet: PagesFunction<Env> = async (context) => {
       return errors.externalApi('Supabase', corsHeaders)
     }
 
-    const subscribers = await subRes.json() as Subscriber[]
+    const rawSubscribers = await subRes.json() as Subscriber[]
 
-    if (!subscribers || subscribers.length === 0) {
+    if (!rawSubscribers || rawSubscribers.length === 0) {
       return new Response(
         JSON.stringify({ message: 'No active subscribers', sent: 0 }),
         { status: 200, headers: { 'Content-Type': 'application/json', ...corsHeaders } }
       )
     }
+
+    // Deduplicate by email: prefer profile_complete record, then most recently updated
+    const emailMap = new Map<string, Subscriber>()
+    for (const sub of rawSubscribers) {
+      const existing = emailMap.get(sub.email)
+      if (!existing) {
+        emailMap.set(sub.email, sub)
+      } else {
+        // Prefer profile_complete over non-complete
+        if (sub.profile_complete && !existing.profile_complete) {
+          emailMap.set(sub.email, sub)
+        }
+      }
+    }
+    const subscribers = Array.from(emailMap.values())
+    console.log(`[cron] ${rawSubscribers.length} raw subscribers → ${subscribers.length} after dedup`)
 
     // 2. Filter subscribers at 6AM local time (skip if force=true)
     let eligibleSubscribers: Subscriber[]

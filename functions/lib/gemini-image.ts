@@ -52,7 +52,9 @@ export async function editPhotoWithGemini(
 - Even out skin tone slightly for a clean, fresh look
 - Keep the face looking NATURAL and masculine - not overly edited`
 
-    const editPrompt = `EDIT this photo - ONLY change the OUTFIT of the MAIN PERSON to: ${scenario.prompt}
+    const editPrompt = `You are the world's top celebrity stylist, trusted by A-list celebrities and fashion icons. Your styling choices are renowned for being perfectly tailored to each individual's unique body type, skin tone, and personal aura.
+
+EDIT this photo - ONLY change the OUTFIT of the MAIN PERSON to: ${scenario.prompt}
 
 CRITICAL: This is a ${genderWord}. The outfit MUST be appropriate for a ${genderWord}.
 ${gender === 'female' ? 'For women: Use soft, feminine clothing - NO masculine suits or blazers. Prefer dresses, blouses, cardigans, skirts in soft colors.' : ''}

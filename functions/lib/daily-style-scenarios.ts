@@ -1,6 +1,7 @@
 /**
  * Weather-based daily style scenarios for image generation
  * Returns 3 outfit scenarios: Today's Pick, Casual, Evening
+ * Uses color palettes and fashion-forward prompts for high-quality results
  */
 
 import type { ImageScenario } from './gemini-image'
@@ -11,59 +12,90 @@ interface WeatherInfo {
   wind_speed: number
 }
 
+// Color palettes for daily variety — rotated by day of year
+const maleColorPalettes = [
+  { tone: 'classic', c1: 'navy', c2: 'charcoal', c3: 'white', c4: 'cream', accent: 'burgundy' },
+  { tone: 'warm', c1: 'olive', c2: 'rust', c3: 'camel', c4: 'warm brown', accent: 'burnt orange' },
+  { tone: 'cool', c1: 'slate blue', c2: 'sage green', c3: 'stone grey', c4: 'off-white', accent: 'teal' },
+  { tone: 'earth', c1: 'terracotta', c2: 'forest green', c3: 'tan', c4: 'chocolate brown', accent: 'mustard' },
+  { tone: 'modern', c1: 'black', c2: 'ivory', c3: 'silver grey', c4: 'deep burgundy', accent: 'emerald' },
+  { tone: 'coastal', c1: 'sand beige', c2: 'ocean blue', c3: 'white linen', c4: 'light khaki', accent: 'coral' },
+  { tone: 'urban', c1: 'graphite', c2: 'steel blue', c3: 'bone white', c4: 'deep indigo', accent: 'amber' },
+]
+const femaleColorPalettes = [
+  { tone: 'soft', c1: 'cream', c2: 'dusty rose', c3: 'beige', c4: 'champagne', accent: 'gold' },
+  { tone: 'warm', c1: 'terracotta', c2: 'amber', c3: 'warm ivory', c4: 'cinnamon', accent: 'copper' },
+  { tone: 'cool', c1: 'lavender', c2: 'ice blue', c3: 'soft grey', c4: 'pearl white', accent: 'silver' },
+  { tone: 'rich', c1: 'emerald', c2: 'burgundy', c3: 'deep plum', c4: 'midnight blue', accent: 'bronze' },
+  { tone: 'fresh', c1: 'sage green', c2: 'blush pink', c3: 'sky blue', c4: 'lemon cream', accent: 'rose gold' },
+  { tone: 'romantic', c1: 'mauve', c2: 'ivory', c3: 'soft peach', c4: 'blush', accent: 'pearl' },
+  { tone: 'natural', c1: 'oatmeal', c2: 'olive green', c3: 'sand', c4: 'warm taupe', accent: 'amber' },
+]
+
+function getDayPaletteIndex(): number {
+  const now = new Date()
+  return Math.floor((now.getTime() / 86400000)) % 7
+}
+
 function getTodaysPickPrompt(weather: WeatherInfo, gender: string): string {
+  const idx = getDayPaletteIndex()
   const isCold = weather.temp < 10
   const isCool = weather.temp >= 10 && weather.temp < 20
   const isWarm = weather.temp >= 20 && weather.temp < 28
   const isHot = weather.temp >= 28
   const isRainy = ['Rain', 'Drizzle', 'Thunderstorm'].includes(weather.condition)
   const isSnowy = weather.condition === 'Snow'
-  const isWindy = weather.wind_speed > 7
 
   if (gender === 'female') {
-    if (isSnowy) return 'warm winter outfit: elegant long wool coat in cream or camel, cozy turtleneck sweater in soft ivory, fitted dark jeans or warm leggings under a midi skirt, insulated waterproof ankle boots, cashmere scarf and leather gloves - chic winter protection'
-    if (isRainy) return 'stylish rainy day outfit: waterproof trench coat in beige or navy, soft knit top, comfortable dark pants or jeans, waterproof chelsea boots or rain boots, compact crossbody bag - practical yet fashionable'
-    if (isCold) return 'cozy cold weather outfit: structured wool coat in charcoal or burgundy, cashmere V-neck sweater layered over silk blouse, tailored wool trousers, leather ankle boots, delicate gold jewelry - warm and elegant'
-    if (isCool && isWindy) return 'wind-ready chic outfit: fitted leather or suede jacket, lightweight cashmere sweater, high-waisted straight-leg pants, comfortable loafers, silk scarf for wind protection - effortlessly put-together'
-    if (isCool) return 'perfect layering outfit: soft knit cardigan in dusty rose or sage, fitted white tee underneath, high-waisted cropped trousers, white sneakers or ballet flats, minimalist gold necklace - relaxed sophistication'
-    if (isWarm) return 'breezy warm outfit: flowy linen blouse in soft pastel, comfortable wide-leg linen pants or midi skirt, flat sandals or espadrilles, straw tote bag, simple gold earrings - effortless summer elegance'
-    if (isHot) return 'cool summer outfit: light cotton or linen sundress in white or soft floral print, comfortable flat sandals, woven bag, delicate layered necklaces, sunglasses - fresh and feminine'
-    return 'versatile everyday outfit: soft cream cashmere V-neck sweater, high-waisted camel wide-leg trousers, nude ballet flats, delicate gold jewelry - refined effortless chic'
+    const p = femaleColorPalettes[idx % femaleColorPalettes.length]
+    if (isSnowy) return `luxurious winter outfit in ${p.tone} palette: stunning long wool coat in ${p.c1} with elegant draping, cozy cashmere turtleneck in ${p.c4}, tailored high-waisted wool trousers in ${p.c3}, premium insulated leather ankle boots, ${p.accent} cashmere scarf and leather gloves, delicate ${p.accent} jewelry - sophisticated winter elegance worthy of a fashion editorial`
+    if (isRainy) return `chic rainy day outfit in ${p.tone} palette: structured waterproof trench coat in ${p.c3} with sleek silhouette, fine-knit sweater in ${p.c2}, tailored dark pants with slight crop, polished waterproof chelsea boots, compact ${p.accent} crossbody bag, minimalist earrings - effortlessly stylish rain or shine`
+    if (isCold) return `elegant cold weather outfit in ${p.tone} palette: beautifully tailored wool coat in ${p.c2} with clean lines, soft cashmere V-neck in ${p.c1}, high-waisted wide-leg trousers in ${p.c3}, premium leather ankle boots, delicate ${p.accent} layered necklace - refined warmth with editorial sophistication`
+    if (isCool) return `polished layered outfit in ${p.tone} palette: soft cashmere cardigan in ${p.c1} draped over silk camisole in ${p.c4}, high-waisted tailored trousers in ${p.c3}, clean pointed-toe flats or loafers, minimalist ${p.accent} jewelry, structured tote bag - effortless Parisian chic`
+    if (isWarm) return `breezy elegant outfit in ${p.tone} palette: flowing linen blouse in ${p.c4} with feminine details, wide-leg linen pants or midi skirt in ${p.c3}, leather espadrilles or elegant sandals, ${p.accent} delicate bracelet, woven tote - refined summer sophistication`
+    if (isHot) return `cool summer outfit in ${p.tone} palette: lightweight silk or cotton dress in ${p.c2} with flattering cut, elegant flat sandals in natural leather, ${p.accent} minimalist jewelry, premium straw bag, chic sunglasses - fresh feminine elegance`
+    return `versatile chic outfit in ${p.tone} palette: premium cashmere sweater in ${p.c1}, high-waisted ${p.c3} wide-leg trousers, elegant pointed flats, delicate ${p.accent} jewelry - timeless refined style`
   }
 
   // Male
-  if (isSnowy) return 'warm winter outfit: insulated parka or heavy wool overcoat in navy or charcoal, chunky knit sweater, dark jeans or wool trousers, waterproof leather boots, warm scarf - rugged winter style'
-  if (isRainy) return 'rainy day outfit: waterproof jacket or mac coat in navy, cotton sweater, dark chinos, waterproof leather boots or chelsea boots - practical and sharp'
-  if (isCold) return 'cold weather outfit: tailored wool peacoat in charcoal, fine merino turtleneck in cream, dark fitted trousers, brown leather boots, minimal watch - warm and distinguished'
-  if (isCool && isWindy) return 'windproof outfit: cotton bomber jacket or harrington jacket, crew-neck sweater, fitted chinos in navy or grey, clean leather sneakers - structured and wind-ready'
-  if (isCool) return 'smart layered outfit: cotton crew-neck sweater over oxford shirt, well-fitted chinos, clean white sneakers or loafers, leather watch - polished casual'
-  if (isWarm) return 'warm weather outfit: breathable linen shirt in light blue or white, well-fitted chino shorts or light cotton pants, leather sandals or canvas sneakers, simple watch - cool and composed'
-  if (isHot) return 'summer cool outfit: lightweight polo shirt or linen camp collar shirt, breathable cotton shorts or light chinos, canvas sneakers or leather sandals, sunglasses - sharp summer comfort'
-  return 'clean modern outfit: cream fine-knit cashmere sweater, perfectly fitted navy chinos, brown leather belt, clean white sneakers - polished minimalist style'
+  const p = maleColorPalettes[idx % maleColorPalettes.length]
+  if (isSnowy) return `sharp winter outfit in ${p.tone} palette: premium insulated wool overcoat in ${p.c2} with structured shoulders, chunky cable-knit sweater in ${p.c3}, tailored dark wool trousers, waterproof leather boots in rich brown, ${p.accent} wool scarf, leather gloves - commanding winter presence with editorial quality`
+  if (isRainy) return `sleek rainy day outfit in ${p.tone} palette: modern waterproof mac coat in ${p.c1}, fine merino crew-neck in ${p.c3}, tailored dark chinos, polished waterproof chelsea boots, minimal ${p.accent} accent watch - sharp and weather-proof`
+  if (isCold) return `distinguished cold weather outfit in ${p.tone} palette: tailored wool peacoat in ${p.c2}, fine merino turtleneck in ${p.c3}, perfectly fitted dark trousers, premium brown leather boots, minimal ${p.accent} accent watch - warm yet sharp, magazine-worthy silhouette`
+  if (isCool) return `smart modern outfit in ${p.tone} palette: premium cotton crew-neck sweater in ${p.c3} layered over crisp oxford shirt collar showing, well-fitted chinos in ${p.c1}, clean leather sneakers or suede loafers, ${p.accent} accent leather belt - polished casual with editorial edge`
+  if (isWarm) return `refined warm weather outfit in ${p.tone} palette: breathable premium linen shirt in ${p.c3} with perfect drape, well-fitted cotton trousers in ${p.c4}, leather sandals or canvas sneakers, minimal ${p.accent} watch - cool composed elegance`
+  if (isHot) return `sharp summer outfit in ${p.tone} palette: lightweight camp-collar linen shirt in ${p.c3}, tailored cotton shorts or light chinos in ${p.c4}, premium leather sandals, ${p.accent} accent sunglasses - refined summer confidence`
+  return `clean modern outfit in ${p.tone} palette: fine-knit cashmere sweater in ${p.c3}, perfectly fitted chinos in ${p.c1}, premium leather belt, clean sneakers or suede loafers, ${p.accent} accent details - polished minimalist style`
 }
 
 function getCasualPrompt(gender: string, temp: number): string {
+  const idx = getDayPaletteIndex()
   const isWarm = temp >= 22
 
   if (gender === 'female') {
-    if (isWarm) return 'relaxed casual outfit: oversized vintage graphic tee tucked loosely into high-waisted light wash denim shorts or mom jeans, clean white sneakers, crossbody mini bag, simple hoop earrings - cool weekend vibes'
-    return 'cozy casual outfit: oversized soft beige or pale pink cashmere cardigan, simple white t-shirt, high-waisted light wash straight-leg jeans, white sneakers or tan loafers, minimal jewelry - comfortable yet stylish'
+    const p = femaleColorPalettes[(idx + 2) % femaleColorPalettes.length]
+    if (isWarm) return `relaxed yet chic casual outfit in ${p.tone} palette: premium oversized cotton tee in ${p.c4} loosely tucked into high-waisted ${p.c3} straight-leg jeans, clean white leather sneakers, ${p.accent} minimalist crossbody bag, simple hoop earrings - cool effortless weekend style with celebrity off-duty energy`
+    return `cozy chic casual outfit in ${p.tone} palette: luxurious oversized ${p.c1} cashmere cardigan over fitted white tee, high-waisted light wash straight-leg jeans, clean ${p.c3} sneakers or tan suede loafers, delicate ${p.accent} necklace - comfortable yet impeccably styled`
   }
 
-  if (isWarm) return 'relaxed casual outfit: soft cotton crew-neck tee in white or heather grey, comfortable well-fitted chino shorts, clean canvas sneakers or slides, simple watch - effortless weekend style'
-  return 'relaxed weekend outfit: soft grey cotton sweater or hoodie, well-fitted dark indigo jeans, clean white sneakers, minimal watch - effortlessly put-together'
+  const p = maleColorPalettes[(idx + 2) % maleColorPalettes.length]
+  if (isWarm) return `relaxed modern casual outfit in ${p.tone} palette: premium soft cotton crew-neck tee in ${p.c3}, comfortable well-fitted chino shorts in ${p.c4}, clean canvas sneakers or leather slides, minimal ${p.accent} watch - effortless cool weekend style`
+  return `elevated casual outfit in ${p.tone} palette: premium cotton ${p.c3} sweatshirt or half-zip pullover, well-fitted dark indigo jeans, clean white leather sneakers, minimal ${p.accent} watch - relaxed yet sharp weekend look`
 }
 
 function getEveningPrompt(gender: string, temp: number): string {
+  const idx = getDayPaletteIndex()
   const needsOuterwear = temp < 18
 
   if (gender === 'female') {
-    if (needsOuterwear) return 'elegant evening outfit: romantic midi dress in dusty rose or champagne with flattering draping, structured blazer or elegant coat draped over shoulders, strappy heeled sandals, gold statement earrings, delicate clutch - graceful evening allure'
-    return 'chic evening outfit: sleek slip dress in black or deep burgundy, strappy heeled sandals, gold layered necklaces, elegant clutch, subtle smoky makeup look - sophisticated night out'
+    const p = femaleColorPalettes[(idx + 4) % femaleColorPalettes.length]
+    if (needsOuterwear) return `glamorous evening outfit in ${p.tone} palette: stunning midi dress in ${p.c2} with elegant draping and flattering silhouette, structured ${p.c1} blazer or elegant coat draped over shoulders, strappy heeled sandals, ${p.accent} statement earrings, premium clutch bag - red-carpet ready evening allure`
+    return `captivating evening outfit in ${p.tone} palette: sleek silk slip dress in ${p.c2} or form-fitting knit dress in ${p.c4}, strappy heeled sandals, ${p.accent} layered necklaces, elegant clutch, subtle smoky eye look - sophisticated night-out glamour`
   }
 
-  if (needsOuterwear) return 'sharp evening outfit: slim-fit black or midnight blue blazer over charcoal turtleneck or dark dress shirt, dark fitted trousers, sleek black leather shoes, minimal watch - sophisticated evening style'
-  return 'stylish evening outfit: well-fitted dark button-up shirt with sleeves slightly rolled, slim dark trousers, polished leather loafers or dress shoes, minimal silver watch - relaxed evening elegance'
+  const p = maleColorPalettes[(idx + 4) % maleColorPalettes.length]
+  if (needsOuterwear) return `sharp evening outfit in ${p.tone} palette: slim-fit structured blazer in ${p.c1} over ${p.c2} turtleneck or dark dress shirt, tailored dark trousers with clean break, sleek leather dress shoes, minimal ${p.accent} watch and cufflinks - sophisticated evening confidence`
+  return `refined evening outfit in ${p.tone} palette: premium ${p.c1} button-up shirt with sleeves slightly rolled revealing ${p.accent} watch, slim dark tailored trousers, polished leather loafers or dress shoes - relaxed evening elegance with magazine-quality styling`
 }
 
 export function getDailyScenarios(weather: WeatherInfo, gender: string): ImageScenario[] {

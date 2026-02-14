@@ -34,9 +34,9 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
       return errors.validation('email is required', corsHeaders)
     }
 
-    // Look up subscriber
+    // Look up subscriber — prefer profile_complete record if duplicates exist
     const subRes = await fetch(
-      `${context.env.SUPABASE_URL}/rest/v1/subscribers?email=eq.${encodeURIComponent(body.email)}&select=id,photo_r2_key&limit=1`,
+      `${context.env.SUPABASE_URL}/rest/v1/subscribers?email=eq.${encodeURIComponent(body.email)}&select=id,photo_r2_key,profile_complete&order=profile_complete.desc`,
       {
         headers: {
           'apikey': context.env.SUPABASE_SERVICE_KEY,
@@ -46,12 +46,13 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
     )
 
     if (!subRes.ok) return errors.externalApi('Supabase', corsHeaders)
-    const subscribers = await subRes.json() as Array<{ id: string; photo_r2_key: string | null }>
+    const subscribers = await subRes.json() as Array<{ id: string; photo_r2_key: string | null; profile_complete: boolean }>
 
     if (!subscribers || subscribers.length === 0) {
       return errors.notFound('Subscriber', corsHeaders)
     }
 
+    // Use profile_complete record first (sorted desc), fallback to first
     const subscriber = subscribers[0]
 
     // Upload photo to R2 if provided
@@ -89,8 +90,9 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
     if (body.gender !== undefined) updateData.gender = body.gender
     if (photoR2Key) updateData.photo_r2_key = photoR2Key
 
+    // Update ALL records for this email (handles duplicates)
     const updateRes = await fetch(
-      `${context.env.SUPABASE_URL}/rest/v1/subscribers?id=eq.${subscriber.id}`,
+      `${context.env.SUPABASE_URL}/rest/v1/subscribers?email=eq.${encodeURIComponent(body.email)}`,
       {
         method: 'PATCH',
         headers: {
