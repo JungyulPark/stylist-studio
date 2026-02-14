@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
   Sitemap for kstylist.cc
-  AI Stylist - AI 헤어스타일 & 패션 추천 서비스
-  Last updated: 2026-02-06
+  PERSONAL STYLIST - 헤어스타일 & 패션 추천 서비스
+  Last updated: 2026-02-14
 
   Google Search Console에서 이 사이트맵을 제출하세요:
   https://search.google.com/search-console/sitemaps
@@ -23,7 +23,7 @@
        ================================================================ -->
   <url>
     <loc>https://kstylist.cc/</loc>
-    <lastmod>2026-02-06</lastmod>
+    <lastmod>2026-02-14</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
 
@@ -38,23 +38,23 @@
     <!-- 이미지 사이트맵 (이미지 검색 최적화) -->
     <image:image>
       <image:loc>https://kstylist.cc/og-image.png</image:loc>
-      <image:title>AI Stylist - AI 헤어스타일 추천 서비스</image:title>
-      <image:caption>AI가 얼굴형을 분석해 어울리는 헤어스타일과 패션을 추천하는 서비스입니다.</image:caption>
+      <image:title>PERSONAL STYLIST - 헤어스타일 & 패션 추천 서비스</image:title>
+      <image:caption>얼굴형을 분석해 어울리는 헤어스타일과 럭셔리 브랜드 영감 패션을 추천하는 서비스입니다.</image:caption>
       <image:geo_location>Seoul, South Korea</image:geo_location>
       <image:license>https://kstylist.cc/</image:license>
     </image:image>
 
     <image:image>
       <image:loc>https://kstylist.cc/hero-image.webp</image:loc>
-      <image:title>AI 헤어스타일 분석 예시</image:title>
-      <image:caption>사진 한 장으로 나만의 퍼스널 스타일을 발견하세요. AI가 5가지 헤어스타일과 6가지 패션을 추천합니다.</image:caption>
+      <image:title>헤어스타일 분석 예시</image:title>
+      <image:caption>사진 한 장으로 나만의 퍼스널 스타일을 발견하세요. 5가지 헤어스타일과 7가지 럭셔리 패션을 추천합니다.</image:caption>
       <image:geo_location>Seoul, South Korea</image:geo_location>
     </image:image>
 
     <image:image>
       <image:loc>https://kstylist.cc/hero-image.jpeg</image:loc>
-      <image:title>AI 헤어스타일 분석 예시 (JPEG)</image:title>
-      <image:caption>사진 한 장으로 나만의 퍼스널 스타일을 발견하세요. AI가 5가지 헤어스타일과 6가지 패션을 추천합니다.</image:caption>
+      <image:title>헤어스타일 분석 예시 (JPEG)</image:title>
+      <image:caption>사진 한 장으로 나만의 퍼스널 스타일을 발견하세요. 5가지 헤어스타일과 7가지 럭셔리 패션을 추천합니다.</image:caption>
       <image:geo_location>Seoul, South Korea</image:geo_location>
     </image:image>
   </url>
