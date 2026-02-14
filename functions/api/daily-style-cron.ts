@@ -309,12 +309,15 @@ function buildEmailHtml(
   }
   const emoji = weatherEmoji[weather.condition] || '🌤️'
 
-  const unsubscribeNote: Record<string, string> = {
-    ko: '구독을 관리하려면 아래 링크를 이용하세요.',
-    en: 'To manage your subscription, use the link below.',
-    ja: 'サブスクリプションの管理は以下のリンクから。',
-    zh: '管理您的订阅，请使用以下链接。',
-    es: 'Para gestionar tu suscripción, usa el enlace a continuación.',
+  const unsubToken = btoa(`${subscriber.id}:${subscriber.email}`)
+  const unsubLink = `https://kstylist.cc/api/unsubscribe?token=${unsubToken}`
+
+  const unsubscribeText: Record<string, string> = {
+    ko: '구독 해지',
+    en: 'Unsubscribe',
+    ja: '購読解除',
+    zh: '取消订阅',
+    es: 'Cancelar suscripción',
   }
 
   const outfitTitle: Record<string, string> = {
@@ -410,7 +413,7 @@ ${recommendation.replace(/\n/g, '<br/>')}
           <tr>
             <td align="center" style="border-top:1px solid #3a3a5c;padding-top:20px;">
               <p style="color:#888888;font-size:11px;margin:0;">
-                ${unsubscribeNote[subscriber.preferred_language] || unsubscribeNote.en}
+                <a href="${unsubLink}" style="color:#888888;text-decoration:underline;">${unsubscribeText[lang] || unsubscribeText.en}</a>
               </p>
             </td>
           </tr>
@@ -636,11 +639,18 @@ export const onRequestGet: PagesFunction<Env> = async (context) => {
             const html = buildEmailHtml(recommendation, weather, sub, outfitImages)
             const subject = emailSubjects[sub.preferred_language] || emailSubjects.en
 
+            const unsubToken = btoa(`${sub.id}:${sub.email}`)
+            const unsubUrl = `https://kstylist.cc/api/unsubscribe?token=${unsubToken}`
+
             await resend.emails.send({
               from: 'PERSONAL STYLIST <noreply@kstylist.cc>',
               to: sub.email,
               subject: `${subject} — ${sub.city} ${weather.temp}°C`,
               html,
+              headers: {
+                'List-Unsubscribe': `<${unsubUrl}>`,
+                'List-Unsubscribe-Post': 'List-Unsubscribe=One-Click',
+              },
             })
             emailSent = true
           } catch (e) {
