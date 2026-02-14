@@ -202,7 +202,14 @@ async function generateOutfitImages(
       return []
     }
     const photoBuffer = await photoObj.arrayBuffer()
-    const base64 = btoa(String.fromCharCode(...new Uint8Array(photoBuffer)))
+    // Convert to base64 in chunks to avoid stack overflow on large photos
+    const bytes = new Uint8Array(photoBuffer)
+    let binary = ''
+    const chunkSize = 8192
+    for (let i = 0; i < bytes.length; i += chunkSize) {
+      binary += String.fromCharCode(...bytes.subarray(i, i + chunkSize))
+    }
+    const base64 = btoa(binary)
     photoDataUri = `data:image/jpeg;base64,${base64}`
   } catch (e) {
     console.error(`[cron] Failed to read photo from R2:`, e)
@@ -409,7 +416,7 @@ export const onRequestGet: PagesFunction<Env> = async (context) => {
     return errors.configError(corsHeaders)
   }
 
-  const results: Array<{ email: string; status: string; images?: number; image_status?: string; image_conditions?: Record<string, boolean>; error?: string }> = []
+  const results: Array<{ email: string; status: string; images?: number; image_status?: string; image_conditions?: Record<string, boolean>; image_error?: string; error?: string }> = []
 
   // force=true: bypass 6AM check & already-sent check (for testing)
   const forceTest = url.searchParams.get('force') === 'true'
@@ -520,6 +527,7 @@ export const onRequestGet: PagesFunction<Env> = async (context) => {
         }
         console.log(`[cron] Image conditions for ${sub.email}:`, JSON.stringify(imgConditions))
 
+        let imageError: string | undefined
         if (sub.profile_complete && sub.photo_r2_key && sub.gender && context.env.GEMINI_API_KEY && context.env.DAILY_IMAGES_BUCKET) {
           try {
             imageStatus = 'generating'
@@ -530,10 +538,12 @@ export const onRequestGet: PagesFunction<Env> = async (context) => {
               context.env.PHOTOS_BUCKET,
               context.env.DAILY_IMAGES_BUCKET
             )
-            imageStatus = outfitImages.length > 0 ? 'generated' : 'failed'
+            imageStatus = outfitImages.length > 0 ? 'generated' : 'no_images_returned'
           } catch (e) {
-            console.error(`[cron] Image generation failed for ${sub.email}:`, e)
-            imageStatus = 'failed'
+            const errMsg = e instanceof Error ? e.message : String(e)
+            console.error(`[cron] Image generation failed for ${sub.email}:`, errMsg)
+            imageStatus = 'error'
+            imageError = errMsg
           }
         }
 
@@ -593,6 +603,7 @@ export const onRequestGet: PagesFunction<Env> = async (context) => {
           images: outfitImages.length,
           image_status: imageStatus,
           image_conditions: imgConditions,
+          image_error: imageError,
           error: emailError || undefined,
         })
 
