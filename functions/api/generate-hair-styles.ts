@@ -24,67 +24,63 @@ async function generateHairImageWithGemini(
     const base64Data = base64Match[2]
 
     const genderGuide = gender === 'female'
-      ? `This is a WOMAN. Apply a feminine, elegant hairstyle that suits women. Make it look natural and attractive for a woman.
-- Keep it classic and natural - NO extreme or avant-garde styles
-- NO hair accessories (clips, pins, ribbons, bows, headbands, butterfly clips, flower clips)
-- Style must be practical and wearable for everyday life`
-      : `This is a MAN. STRICT REQUIREMENTS for men's hair:
-- Hair length must be SHORT to MEDIUM (above shoulders, typically ear-length or shorter)
-- NO long flowing hair, NO hair past the shoulders
-- NO feminine accessories like flowers, ribbons, or decorative clips
-- Style must look masculine and natural for a man
-- Acceptable: short cuts, fades, textured crops, pompadours, slicked back, natural waves
-- NOT acceptable: long ponytails, braids, feminine updos, anything that looks like women's styling`
+      ? `This is a WOMAN. Apply a feminine hairstyle that suits women.
+- Keep it natural and practical — something a real salon would create
+- NO extreme or avant-garde styles, NO fantasy colors
+- NO hair accessories (clips, pins, ribbons, bows, headbands)
+- The result should look like the person actually went to a good salon`
+      : `This is a MAN. Requirements for men's hair:
+- Hair length must be SHORT to MEDIUM (above shoulders)
+- NO long flowing hair, NO feminine accessories
+- Style must look masculine and natural
+- The result should look like the person actually went to a good barber shop`
 
     // Each of the 5 styles gets a DISTINCT visual variation
     const maleVariations = [
-      { length: 'shorter and tighter on the sides', texture: 'clean and sleek', color: 'in a natural dark tone', volume: 'low volume, close to the head' },
-      { length: 'medium length with the top notably longer', texture: 'textured and slightly messy', color: 'with warm brown tones and subtle highlights', volume: 'medium volume with movement' },
-      { length: 'short on the sides with more length on top', texture: 'wavy and tousled', color: 'with ash brown or cool tones', volume: 'high volume, lifted at the front' },
-      { length: 'even medium length all around', texture: 'soft and flowing', color: 'with natural chestnut or dark caramel tones', volume: 'natural body and bounce' },
-      { length: 'a bit longer on top, tapered sides', texture: 'straight and polished', color: 'in a rich espresso or dark chocolate tone', volume: 'moderate volume with a defined shape' },
+      { length: 'short and clean on the sides', texture: 'clean and sleek', color: 'keep the person\'s natural hair color', volume: 'low volume, close to the head' },
+      { length: 'medium length with longer top', texture: 'textured with natural movement', color: 'keep the person\'s natural hair color', volume: 'medium volume with movement' },
+      { length: 'short on the sides with more length on top', texture: 'wavy and tousled', color: 'keep the person\'s natural hair color, add very subtle warm tone', volume: 'moderate volume, lifted at the front' },
+      { length: 'even medium length', texture: 'soft and natural', color: 'keep the person\'s natural hair color', volume: 'natural body' },
+      { length: 'slightly longer on top, tapered sides', texture: 'straight and polished', color: 'keep the person\'s natural hair color', volume: 'moderate volume with defined shape' },
     ]
     const femaleVariations = [
-      { length: 'shoulder length or above', texture: 'sleek and straight', color: 'with natural highlights and warm honey tones', volume: 'smooth and refined' },
-      { length: 'medium to long length', texture: 'soft waves and curls', color: 'with subtle balayage in caramel shades', volume: 'bouncy and voluminous' },
-      { length: 'shorter bob or lob style', texture: 'textured and layered', color: 'in a rich brunette or auburn tone', volume: 'airy and light' },
-      { length: 'long and flowing', texture: 'loose romantic waves', color: 'with soft ombre or sun-kissed ends', volume: 'full and luxurious' },
-      { length: 'medium layered cut', texture: 'natural and effortless', color: 'with dimensional color and face-framing highlights', volume: 'natural movement and body' },
+      { length: 'shoulder length or above', texture: 'sleek and straight', color: 'keep the person\'s natural hair color', volume: 'smooth and refined' },
+      { length: 'medium to long length', texture: 'soft natural waves', color: 'keep the person\'s natural hair color, add subtle warmth', volume: 'natural body and bounce' },
+      { length: 'shorter bob or lob style', texture: 'textured and layered', color: 'keep the person\'s natural hair color', volume: 'airy and light' },
+      { length: 'long and flowing', texture: 'loose gentle waves', color: 'keep the person\'s natural hair color', volume: 'natural fullness' },
+      { length: 'medium layered cut', texture: 'natural and effortless', color: 'keep the person\'s natural hair color, add subtle face-framing lightness', volume: 'natural movement and body' },
     ]
 
     const variations = gender === 'female' ? femaleVariations : maleVariations
     const v = variations[styleIndex % variations.length]
 
-    const editPrompt = `You are the world's most sought-after celebrity hair designer, known for transforming clients with hairstyles that perfectly complement their face shape, facial features, and personal style.
+    const editPrompt = `You are a professional salon hairstylist. Your job is to show the client how they would look with a new hairstyle — realistic and wearable.
 
-EDIT this photo - change the HAIRSTYLE to: "${styleName}"
+EDIT this photo - change ONLY the HAIRSTYLE to: "${styleName}"
 
-SPECIFIC STYLE REQUIREMENTS for this version:
+STYLE DETAILS:
 - Hair length: ${v.length}
 - Hair texture: ${v.texture}
 - Hair color: ${v.color}
 - Hair volume: ${v.volume}
 
-Analyze the person's face shape (oval, round, square, heart, oblong) and adapt the "${styleName}" style to best flatter their specific face proportions.
-
 ${genderGuide}
 
-IMPORTANT - MAKE THIS LOOK VISUALLY DISTINCT:
-This is 1 of 5 different style options. This particular version should be clearly distinguishable from the others through its unique combination of length, texture, color, and volume described above.
+CRITICAL RULES — VIOLATION IS FAILURE:
+1. Face MUST remain PIXEL-PERFECT identical (same eyes, nose, mouth, expression)
+2. Skin tone, pose, and background must NOT change
+3. Only the HAIR should change
+4. KEEP the person's NATURAL HAIR COLOR — do NOT dramatically change hair color
+5. NO unnatural colors, NO hair accessories
+6. The result MUST look like a real salon visit — natural, practical, and wearable
+7. NEVER crop, zoom, or change the framing of the photo
+8. Output resolution MUST match input resolution exactly
 
-CRITICAL REQUIREMENTS:
-- The person's FACE must remain EXACTLY identical (same eyes, nose, mouth, face shape)
-- Skin tone must stay the same
-- Expression and pose must not change
-- Only the HAIR should be modified to "${styleName}" style
-- Hair color should follow the color guidance above using natural-looking tones
-- NO unnatural or fantasy hair colors (no blue, pink, green, etc.)
-- NO hair accessories of any kind
-- Make it look like a real salon result, natural and wearable
+The goal is a SUBTLE, REALISTIC transformation — like showing a client a preview of their new haircut, not a dramatic makeover.
 
-Also apply subtle beauty retouching: smooth clear skin, even skin tone, soft professional studio lighting.
+Apply subtle beauty retouching: smooth clear skin, even skin tone, soft studio lighting.
 
-Generate the edited photo with the new hairstyle.`
+Generate the edited photo.`
 
     const geminiModels = [
       'gemini-3-pro-image-preview'

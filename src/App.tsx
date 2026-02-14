@@ -2802,6 +2802,17 @@ function App() {
 
     setIsGeneratingHair(false)
     setPage('hair-result')
+
+    // Save to analysis history
+    saveAnalysisToHistory('hair', null, null, generatedHairImages.map((img, i) => ({
+      id: `hair-${i}`,
+      label: img.style,
+      imageUrl: img.imageUrl
+    })), {
+      occasion: selectedOccasion,
+      vibe: selectedVibe,
+      language: lang
+    })
   }
 
   // 구독 폼 열기
@@ -2886,8 +2897,38 @@ function App() {
     const file = e.target.files?.[0]
     if (!file) return
     const reader = new FileReader()
-    reader.onload = (ev) => {
-      setDashProfilePhoto(ev.target?.result as string)
+    reader.onload = async (ev) => {
+      const photoData = ev.target?.result as string
+      setDashProfilePhoto(photoData)
+      // Auto-save if profile is already complete (user changing photo from summary view)
+      if (dashProfileComplete && !isDashProfileEditing) {
+        const email = user?.email
+        if (!email) return
+        setIsDashProfileSaving(true)
+        try {
+          const res = await fetch('/api/update-subscriber-profile', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              email,
+              user_id: user?.id || undefined,
+              height_cm: dashProfileHeight ? parseInt(dashProfileHeight, 10) : undefined,
+              weight_kg: dashProfileWeight ? parseInt(dashProfileWeight, 10) : undefined,
+              gender: dashProfileGender || undefined,
+              photo: photoData,
+              preferred_language: lang,
+            }),
+          })
+          if (res.ok) {
+            setDashProfilePhotoUrl(`/api/profile-photo?email=${encodeURIComponent(email)}&t=${Date.now()}`)
+            setDashProfilePhoto(null)
+          }
+        } catch (err) {
+          console.error('Auto-save photo error:', err)
+        } finally {
+          setIsDashProfileSaving(false)
+        }
+      }
     }
     reader.readAsDataURL(file)
   }
@@ -3696,42 +3737,42 @@ function App() {
         'vacation-classic': ['클래식 비치 웨이브', '젠틀맨 리조트', '타임리스 서머', '빈티지 비치', '올드스쿨 휴양지'],
       },
       en: {
-        'daily-elegant': ['Classic Two-Block', 'Neat Side Part', 'Clean Dandy Cut', 'Pomade Style', 'Slick Back'],
-        'daily-cute': ['Soft Two-Block', 'Natural Part', 'Airy Short Cut', 'Layered Short', 'Fluffy Fringe'],
-        'daily-chic': ['Undercut Side Part', 'Textured Crop', 'Modern Quiff', 'Clean Fade', 'Sleek Side'],
-        'daily-natural': ['Natural Short Cut', 'Casual Two-Block', 'Air Perm', 'Soft Waves', 'Casual Layered'],
-        'daily-trendy': ['Mullet Style', 'Wolf Cut', 'Hush Cut', 'Curtain Bangs', 'Textured Fringe'],
-        'daily-classic': ['Classic Side Part', 'Slick Back Style', 'Gentleman Cut', 'Timeless Crop', 'Classic Taper'],
-        'date-elegant': ['Pomade Side Part', 'Slick Back', 'Classic Quiff', 'Neat Layered', 'Elegant Wave'],
-        'date-cute': ['Soft Bangs', 'Natural Perm', 'Fluffy Short', 'Airy Layered', 'Casual Two-Block'],
-        'date-chic': ['Wet Look Style', 'Sharp Undercut', 'Modern Slick Back', 'Textured Quiff', 'Clean Fade'],
-        'date-natural': ['Natural Waves', 'Loose Style', 'Casual Layered', 'Beach Waves', 'Soft Curls'],
-        'date-trendy': ['Curtain Bangs', 'Wolf Perm', 'Layered Mullet', 'K-Style Perm', 'Textured Short'],
-        'date-classic': ['Classic Pomade', 'Gentleman Slick Back', 'Vintage Side Part', 'Old School Style', 'Retro Wave'],
-        'interview-elegant': ['Clean Side Part', 'Neat Two-Block', 'Professional Crop', 'Clean Taper', 'Business Style'],
-        'interview-cute': ['Soft Layered', 'Natural Short', 'Clean Part', 'Airy Crop', 'Neat Fringe'],
-        'interview-chic': ['Sharp Side Part', 'Modern Undercut', 'Clean Slick Back', 'Minimal Crop', 'Pro Fade'],
-        'interview-natural': ['Natural Short', 'Soft Side Part', 'Natural Layered', 'Clean Wave', 'Casual Crop'],
-        'interview-trendy': ['Modern Two-Block', 'Textured Side Part', 'Trendy Crop', 'Clean Layered', 'Smart Style'],
-        'interview-classic': ['Classic Business Cut', 'Gentleman Side Part', 'Formal Slick Back', 'Timeless Crop', 'Classic Taper'],
-        'party-elegant': ['Glam Slick Back', 'Volume Quiff', 'Stylish Pomade', 'Elegant Wave', 'Luxury Side Part'],
-        'party-cute': ['Fluffy Style', 'Soft Perm', 'Casual Wave', 'Airy Style', 'Natural Volume'],
-        'party-chic': ['Wet Look Slick Back', 'Sharp Undercut', 'Modern Quiff', 'Textured Style', 'Clean High Fade'],
-        'party-natural': ['Natural Waves', 'Loose Curls', 'Beach Style', 'Casual Volume', 'Air Dry Look'],
-        'party-trendy': ['Wolf Style', 'Mullet Perm', 'Curtain Bangs', 'Layered Texture', 'K-Style'],
-        'party-classic': ['Old School Pomade', 'Vintage Slick Back', 'Retro Quiff', 'Classic Wave', 'Gentleman Style'],
-        'wedding-elegant': ['Formal Side Part', 'Classic Slick Back', 'Elegant Pomade', 'Elegant Quiff', 'Wedding Style'],
-        'wedding-cute': ['Soft Style', 'Natural Wave', 'Clean Layered', 'Airy Volume', 'Romantic Short'],
-        'wedding-chic': ['Modern Slick Back', 'Sharp Side Part', 'Clean Undercut', 'Minimal Style', 'Sleek Crop'],
-        'wedding-natural': ['Natural Style', 'Soft Wave', 'Casual Side Part', 'Natural Volume', 'Air Dry Look'],
-        'wedding-trendy': ['Trendy Side Part', 'Modern Texture', 'Stylish Crop', 'Contemporary Style', 'Modern Wave'],
-        'wedding-classic': ['Classic Gentleman', 'Timeless Side Part', 'Formal Pomade', 'Vintage Slick Back', 'Old School Wave'],
-        'vacation-elegant': ['Resort Style', 'Beach Slick Back', 'Summer Side Part', 'Elegant Wave', 'Vacation Look'],
-        'vacation-cute': ['Beach Waves', 'Casual Short', 'Summer Layered', 'Playful Style', 'Sunshine Look'],
-        'vacation-chic': ['Wet Look Beach', 'Cool Slick Back', 'Modern Beach Style', 'Clean Short', 'Summer Undercut'],
-        'vacation-natural': ['Salt Spray Waves', 'Natural Beach Hair', 'Air Dry Style', 'Casual Waves', 'Surfer Look'],
-        'vacation-trendy': ['Beach Wolf', 'Summer Mullet', 'Trendy Beach', 'Festival Style', 'Holiday Look'],
-        'vacation-classic': ['Classic Beach Waves', 'Gentleman Resort', 'Timeless Summer', 'Vintage Beach', 'Old School Vacation'],
+        'daily-elegant': ['Clean Side Part', 'Textured Crop', 'Soft Pomade Style', 'Neat Layered Cut', 'Classic Taper'],
+        'daily-cute': ['Soft Fringe', 'Natural Layered Short', 'Fluffy Top', 'Casual Comma Hair', 'Light Perm'],
+        'daily-chic': ['Low Fade Side Part', 'Textured French Crop', 'Modern Buzz Fade', 'Matte Quiff', 'Clean Undercut'],
+        'daily-natural': ['Natural Short Cut', 'Soft Layered', 'Casual Wavy Top', 'Air-Dried Texture', 'Easy Side Sweep'],
+        'daily-trendy': ['Curtain Bangs', 'Wolf Cut', 'Textured Mullet', 'Layered Shag', 'Messy Fringe'],
+        'daily-classic': ['Ivy League Cut', 'Crew Cut', 'Classic Taper Fade', 'Regulation Cut', 'Side Part Comb-Over'],
+        'date-elegant': ['Polished Side Part', 'Soft Slick Back', 'Volumized Quiff', 'Layered Sweep Back', 'Defined Wave'],
+        'date-cute': ['Comma Hair', 'Fluffy Bangs', 'Soft Perm', 'Natural Wavy Fringe', 'Tousled Medium'],
+        'date-chic': ['Mid Fade Pompadour', 'Wet-Look Side Part', 'Textured Quiff', 'Sharp Taper', 'Matte Crop'],
+        'date-natural': ['Loose Natural Waves', 'Effortless Sweep', 'Beach Texture', 'Casual Layered', 'Soft Part'],
+        'date-trendy': ['Two-Block Cut', 'Korean Perm', 'Layered Wolf Cut', 'Textured Shag', 'Curtain Fringe'],
+        'date-classic': ['Gentleman Side Part', 'Light Pomade Sweep', 'Classic Quiff', 'Vintage Taper', 'Old Hollywood Wave'],
+        'interview-elegant': ['Business Side Part', 'Professional Taper', 'Neat Crop', 'Clean Layered', 'Executive Cut'],
+        'interview-cute': ['Soft Natural Short', 'Neat Bangs', 'Light Side Part', 'Clean Layered Short', 'Minimal Fringe'],
+        'interview-chic': ['Sharp Side Part', 'Clean Low Fade', 'Minimal Pompadour', 'Modern Crop', 'Precision Cut'],
+        'interview-natural': ['Natural Part', 'Soft Side Sweep', 'Easy Short Cut', 'Clean Natural Layer', 'Simple Crop'],
+        'interview-trendy': ['Modern Two-Block', 'Textured Side Part', 'Smart Crop', 'Clean Comma Hair', 'Tapered Layers'],
+        'interview-classic': ['Ivy League', 'Formal Side Part', 'Classic Crew Cut', 'Traditional Taper', 'Regulation Cut'],
+        'party-elegant': ['Volume Sweep Back', 'Polished Pompadour', 'Defined Side Part', 'Slick Wave', 'Sculpted Quiff'],
+        'party-cute': ['Fluffy Perm', 'Tousled Waves', 'Soft Volume', 'Playful Fringe', 'Bouncy Layers'],
+        'party-chic': ['High Fade Pompadour', 'Wet Look Sweep', 'Sharp Undercut', 'Textured Spike', 'Edgy Crop'],
+        'party-natural': ['Loose Beach Waves', 'Tousled Texture', 'Natural Volume', 'Effortless Curls', 'Relaxed Sweep'],
+        'party-trendy': ['Mullet Fade', 'Wolf Perm', 'Layered Shag', 'Curtain Bangs', 'Textured Mohawk Fade'],
+        'party-classic': ['Classic Pomade Side Part', 'Retro Sweep Back', 'Vintage Quiff', 'Dapper Wave', 'Old School Comb-Over'],
+        'wedding-elegant': ['Formal Side Part', 'Polished Slick Back', 'Elegant Sweep', 'Defined Quiff', 'Sculpted Taper'],
+        'wedding-cute': ['Soft Natural Wave', 'Light Layered', 'Gentle Sweep', 'Romantic Texture', 'Soft Fringe'],
+        'wedding-chic': ['Clean Slick Back', 'Sharp Side Part', 'Modern Taper', 'Minimal Pompadour', 'Precision Fade'],
+        'wedding-natural': ['Natural Side Part', 'Soft Wave', 'Easy Sweep Back', 'Relaxed Texture', 'Casual Elegance'],
+        'wedding-trendy': ['Textured Side Part', 'Modern Sweep', 'Styled Two-Block', 'Contemporary Layers', 'Soft Pompadour'],
+        'wedding-classic': ['Classic Gentleman Cut', 'Timeless Side Part', 'Formal Taper', 'Traditional Sweep', 'Vintage Comb-Over'],
+        'vacation-elegant': ['Resort Sweep Back', 'Relaxed Side Part', 'Effortless Wave', 'Summer Layers', 'Breezy Quiff'],
+        'vacation-cute': ['Beach Waves', 'Casual Fringe', 'Summer Layers', 'Playful Texture', 'Sun-Kissed Tousle'],
+        'vacation-chic': ['Wet Look Beach', 'Clean Buzz Fade', 'Modern Beach Cut', 'Sharp Short', 'Cool Crop'],
+        'vacation-natural': ['Salt Spray Texture', 'Natural Beach Hair', 'Air-Dried Waves', 'Casual Surf Style', 'Effortless Natural'],
+        'vacation-trendy': ['Beach Wolf Cut', 'Summer Shag', 'Textured Mullet', 'Festival Layers', 'Relaxed Curtain Bangs'],
+        'vacation-classic': ['Classic Beach Part', 'Summer Gentleman', 'Timeless Short', 'Vintage Beach Wave', 'Easy Taper'],
       }
     }
 
@@ -3943,7 +3984,7 @@ function App() {
   const handleLogout = () => {
     console.log('Logout button clicked!')
     // Clear user-specific localStorage data on logout
-    localStorage.removeItem('stylist_free_trial_used')
+    // Note: Do NOT remove stylist_free_trial_used — free trial is per-browser, not per-session
     localStorage.removeItem('stylist_subscription_active')
     localStorage.removeItem('stylist_subscription_checkout_id')
     localStorage.removeItem('paidCustomer')
@@ -3951,8 +3992,7 @@ function App() {
     localStorage.removeItem('pendingAnalysisFlag')
     localStorage.removeItem('productType')
     localStorage.removeItem('pending_subscription_data')
-    // Reset state
-    setHasUsedFreeTrial(false)
+    // Reset state (hasUsedFreeTrial is intentionally NOT reset — free trial is per-browser)
     setIsSubscribed(false)
     setStyleImages([])
     setGeneratedHairImages([])
@@ -4406,6 +4446,15 @@ function App() {
             <p className="dashboard-subtitle">{t.dashboardSubtitle}</p>
           </div>
 
+          {/* Hidden file input for profile photo (always rendered) */}
+          <input
+            ref={dashProfilePhotoRef}
+            type="file"
+            accept="image/*"
+            onChange={handleDashProfilePhotoUpload}
+            style={{ display: 'none' }}
+          />
+
           {/* Profile Section — first-time setup OR editable summary */}
           {!isDailyStyleLoading && (
             <>
@@ -4419,13 +4468,22 @@ function App() {
                     </button>
                   </div>
                   <div className="dashboard-profile-summary-content">
-                    {(dashProfilePhotoUrl || dashProfilePhoto) && (
-                      <img
-                        src={dashProfilePhoto || dashProfilePhotoUrl || ''}
-                        alt="Profile"
-                        className="dashboard-profile-summary-photo"
-                      />
-                    )}
+                    <div className="dashboard-profile-photo-wrapper" onClick={() => dashProfilePhotoRef.current?.click()} style={{ cursor: 'pointer', position: 'relative' }}>
+                      {(dashProfilePhotoUrl || dashProfilePhoto) ? (
+                        <img
+                          src={dashProfilePhoto || dashProfilePhotoUrl || ''}
+                          alt="Profile"
+                          className="dashboard-profile-summary-photo"
+                        />
+                      ) : (
+                        <div className="dashboard-profile-summary-photo" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#252540' }}>
+                          <span style={{ fontSize: '24px' }}>+</span>
+                        </div>
+                      )}
+                      <div style={{ position: 'absolute', bottom: 4, right: 4, background: 'rgba(201,169,98,0.9)', borderRadius: '50%', width: 28, height: 28, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '14px' }}>
+                        <span>&#x1F4F7;</span>
+                      </div>
+                    </div>
                     <div className="dashboard-profile-summary-info">
                       {dashProfileHeight && <span>{t.dashboardProfileHeight}: {dashProfileHeight}cm</span>}
                       {dashProfileWeight && <span>{t.dashboardProfileWeight}: {dashProfileWeight}kg</span>}
@@ -5180,9 +5238,6 @@ function App() {
             </div>
             <span className="logo-text">{t.title}</span>
           </div>
-          <button className="back-btn" onClick={() => setPage('landing')}>
-            ← {t.backToHome}
-          </button>
           <div className="lang-selector">
             {(Object.keys(languageNames) as Language[]).map((code) => (
               <button
@@ -5998,9 +6053,6 @@ function App() {
             </div>
             <span className="logo-text">{t.title}</span>
           </div>
-          <button className="back-btn" onClick={() => setPage('landing')}>
-            ← {t.backToHome}
-          </button>
           <div className="lang-selector">
             {(Object.keys(languageNames) as Language[]).map((code) => (
               <button
