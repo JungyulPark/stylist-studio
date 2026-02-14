@@ -35,9 +35,17 @@ async function generateHairImageWithGemini(
 - Acceptable: short cuts, fades, textured crops, pompadours, slicked back, natural waves
 - NOT acceptable: long ponytails, braids, feminine updos, anything that looks like women's styling`
 
-    const editPrompt = `You are the world's most sought-after celebrity hair designer, known for transforming clients with hairstyles that perfectly complement their face shape, facial features, and personal style. Your cuts are famous for enhancing each person's natural beauty.
+    // Add subtle variation to each style
+    const colorVariations = gender === 'female'
+      ? ['with natural highlights', 'with warm honey tones', 'with subtle balayage', 'with soft caramel highlights', 'in a rich natural tone']
+      : ['in a natural dark tone', 'with subtle texture', 'with a clean sharp finish', 'with a natural matte look', 'with soft volume']
+    const colorHint = colorVariations[Math.floor(Math.random() * colorVariations.length)]
 
-EDIT this photo - ONLY change the HAIRSTYLE to: ${styleName}
+    const editPrompt = `You are the world's most sought-after celebrity hair designer, known for transforming clients with hairstyles that perfectly complement their face shape, facial features, and personal style.
+
+EDIT this photo - change the HAIRSTYLE to: ${styleName} ${colorHint}
+
+Analyze the person's face shape (oval, round, square, heart, oblong) and adapt the "${styleName}" style to best flatter their specific face proportions.
 
 ${genderGuide}
 
@@ -45,11 +53,11 @@ CRITICAL REQUIREMENTS:
 - The person's FACE must remain EXACTLY identical (same eyes, nose, mouth, face shape)
 - Skin tone must stay the same
 - Expression and pose must not change
-- Only the HAIR SHAPE/STYLE should be modified to "${styleName}" style
-- KEEP the ORIGINAL natural hair color - do NOT change hair color
-- NO hair accessories of any kind (no clips, pins, ribbons, flowers, bows, headbands)
-- NO unnatural or fantasy hair colors
-- Keep the hairstyle natural, classic and wearable
+- Only the HAIR should be modified to "${styleName}" style
+- Hair color may have subtle natural variations (highlights, lowlights, toning) that complement their skin tone
+- NO unnatural or fantasy hair colors (no blue, pink, green, etc.)
+- NO hair accessories of any kind
+- Make it look like a real salon result, natural and wearable
 
 Also apply subtle beauty retouching: smooth clear skin, even skin tone, soft professional studio lighting.
 

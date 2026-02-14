@@ -3954,12 +3954,13 @@ function App() {
     }
   }, [user])
 
-  // Fetch history when profile page is opened
+  // Fetch history and favorites when profile page is opened
   useEffect(() => {
     if (page === 'profile' && user) {
       fetchAnalysisHistory()
+      loadFavorites()
     }
-  }, [page, user, fetchAnalysisHistory])
+  }, [page, user, fetchAnalysisHistory, loadFavorites])
 
   // Save analysis to history for logged-in users
   const saveAnalysisToHistory = async (
@@ -4568,6 +4569,33 @@ function App() {
                       >
                         {t.viewResult}
                       </button>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+
+            {/* Favorites Section */}
+            <div className="profile-section">
+              <h3>{t.favoritesTitle}</h3>
+              {favorites.length === 0 ? (
+                <p className="no-history">{t.favoritesEmpty}</p>
+              ) : (
+                <div className="profile-favorites-grid">
+                  {favorites.map((fav) => (
+                    <div key={fav.id} className="profile-fav-card">
+                      <div className="profile-fav-img-wrap" onClick={() => setFullscreenImage(fav.image_url)}>
+                        <img src={fav.image_url} alt={fav.label || ''} />
+                      </div>
+                      <div className="profile-fav-footer">
+                        <span className="profile-fav-label">{fav.label || fav.image_type}</span>
+                        <button
+                          className="favorite-btn active"
+                          onClick={() => toggleFavorite(fav.image_url, fav.image_type as 'style' | 'hair' | 'daily', fav.label || undefined)}
+                        >
+                          ♥
+                        </button>
+                      </div>
                     </div>
                   ))}
                 </div>

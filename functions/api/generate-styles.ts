@@ -24,6 +24,11 @@ const maleColorPalettes = [
   { tone: 'cool', colors: 'slate blue, sage green, stone grey, off-white', accent: 'teal' },
   { tone: 'earth', colors: 'terracotta, forest green, tan, chocolate brown', accent: 'mustard' },
   { tone: 'modern', colors: 'black, ivory, silver grey, deep burgundy', accent: 'emerald' },
+  { tone: 'coastal', colors: 'sand beige, ocean blue, white linen, light khaki', accent: 'coral' },
+  { tone: 'urban', colors: 'graphite, steel blue, bone white, deep indigo', accent: 'amber' },
+  { tone: 'vintage', colors: 'cognac brown, cream, denim blue, tobacco', accent: 'copper' },
+  { tone: 'nordic', colors: 'charcoal, oatmeal, pine green, light grey', accent: 'sky blue' },
+  { tone: 'mediterranean', colors: 'terracotta, linen white, cobalt blue, olive', accent: 'gold' },
 ]
 const femaleColorPalettes = [
   { tone: 'soft', colors: 'cream, dusty rose, beige, champagne', accent: 'gold' },
@@ -31,6 +36,11 @@ const femaleColorPalettes = [
   { tone: 'cool', colors: 'lavender, ice blue, soft grey, pearl white', accent: 'silver' },
   { tone: 'rich', colors: 'emerald, burgundy, deep plum, midnight blue', accent: 'bronze' },
   { tone: 'fresh', colors: 'sage green, blush pink, sky blue, lemon cream', accent: 'rose gold' },
+  { tone: 'romantic', colors: 'mauve, ivory, soft peach, blush', accent: 'pearl' },
+  { tone: 'bold', colors: 'deep red, black, cream, royal blue', accent: 'gold' },
+  { tone: 'natural', colors: 'oatmeal, olive green, sand, warm taupe', accent: 'amber' },
+  { tone: 'pastel', colors: 'baby blue, soft lilac, mint, pale yellow', accent: 'silver' },
+  { tone: 'autumn', colors: 'burnt sienna, deep moss, pumpkin, chocolate', accent: 'antique gold' },
 ]
 
 function getVariedScenarios(diversitySeed: number): StyleScenario[] {
