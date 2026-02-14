@@ -166,12 +166,34 @@ IMPORTANT: Your response must be at LEAST 120 words. Never give a one-line answe
       return { text: getFallbackRecommendation(weather, lang), source: 'fallback', error: `OpenAI ${res.status}: ${errText.substring(0, 200)}` }
     }
 
-    const data = await res.json() as {
-      choices: Array<{ message: { content: string } }>
+    const rawData = await res.json() as Record<string, unknown>
+    // gpt-5-mini may use output[] instead of choices[]
+    let content: string | null = null
+
+    // Try standard format: choices[0].message.content
+    const choices = rawData.choices as Array<{ message?: { content?: string } }> | undefined
+    if (choices?.[0]?.message?.content) {
+      content = choices[0].message.content
     }
-    const content = data.choices[0]?.message?.content
+
+    // Try gpt-5-mini format: output[].content[].text
+    if (!content && rawData.output) {
+      const output = rawData.output as Array<{ content?: Array<{ text?: string }>, type?: string }>
+      for (const item of output) {
+        if (item.type === 'message' && item.content) {
+          for (const part of item.content) {
+            if (part.text) {
+              content = part.text
+              break
+            }
+          }
+        }
+      }
+    }
+
     if (!content) {
-      return { text: getFallbackRecommendation(weather, lang), source: 'fallback', error: 'Empty GPT response' }
+      const debugKeys = Object.keys(rawData).join(',')
+      return { text: getFallbackRecommendation(weather, lang), source: 'fallback', error: `Empty GPT response. Keys: ${debugKeys}. Raw: ${JSON.stringify(rawData).substring(0, 300)}` }
     }
     return { text: content, source: 'gpt' }
   } catch (e) {
