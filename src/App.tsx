@@ -306,6 +306,10 @@ const translations: Record<Language, {
   subscriptionCta: string
   subscriptionActive: string
   subscriptionManage: string
+  subscriptionCancel: string
+  subscriptionCancelConfirm: string
+  subscriptionCancelSuccess: string
+  subscriptionCanceling: string
   subscriptionCityLabel: string
   subscriptionCityPlaceholder: string
   subscriptionCityRequired: string
@@ -572,6 +576,10 @@ const translations: Record<Language, {
     subscriptionCta: '무료 체험 시작',
     subscriptionActive: '구독 활성화됨',
     subscriptionManage: '구독 관리',
+    subscriptionCancel: '구독 취소',
+    subscriptionCancelConfirm: '정말 구독을 취소하시겠습니까? 현재 결제 기간이 끝날 때까지 이용 가능합니다.',
+    subscriptionCancelSuccess: '구독이 취소되었습니다.',
+    subscriptionCanceling: '취소 중...',
     subscriptionCityLabel: '도시',
     subscriptionCityPlaceholder: '서울, 부산, 뉴욕...',
     subscriptionCityRequired: '도시를 입력해주세요',
@@ -833,6 +841,10 @@ const translations: Record<Language, {
     subscriptionCta: 'Start Free Trial',
     subscriptionActive: 'Subscription Active',
     subscriptionManage: 'Manage Subscription',
+    subscriptionCancel: 'Cancel Subscription',
+    subscriptionCancelConfirm: 'Are you sure you want to cancel? You can still use the service until the end of your current billing period.',
+    subscriptionCancelSuccess: 'Your subscription has been canceled.',
+    subscriptionCanceling: 'Canceling...',
     subscriptionCityLabel: 'City',
     subscriptionCityPlaceholder: 'New York, London, Seoul...',
     subscriptionCityRequired: 'Please enter your city',
@@ -1094,6 +1106,10 @@ const translations: Record<Language, {
     subscriptionCta: '無料体験を始める',
     subscriptionActive: 'サブスク有効',
     subscriptionManage: 'サブスク管理',
+    subscriptionCancel: 'サブスク解約',
+    subscriptionCancelConfirm: '本当に解約しますか？現在の請求期間の終了まで引き続きご利用いただけます。',
+    subscriptionCancelSuccess: 'サブスクリプションが解約されました。',
+    subscriptionCanceling: '解約中...',
     subscriptionCityLabel: '都市',
     subscriptionCityPlaceholder: '東京、大阪、ソウル...',
     subscriptionCityRequired: '都市を入力してください',
@@ -1355,6 +1371,10 @@ const translations: Record<Language, {
     subscriptionCta: '开始免费试用',
     subscriptionActive: '订阅已激活',
     subscriptionManage: '管理订阅',
+    subscriptionCancel: '取消订阅',
+    subscriptionCancelConfirm: '确定要取消订阅吗？您可以继续使用到当前计费周期结束。',
+    subscriptionCancelSuccess: '订阅已取消。',
+    subscriptionCanceling: '取消中...',
     subscriptionCityLabel: '城市',
     subscriptionCityPlaceholder: '北京、上海、首尔...',
     subscriptionCityRequired: '请输入您的城市',
@@ -1616,6 +1636,10 @@ const translations: Record<Language, {
     subscriptionCta: 'Iniciar Prueba Gratis',
     subscriptionActive: 'Suscripción Activa',
     subscriptionManage: 'Gestionar Suscripción',
+    subscriptionCancel: 'Cancelar Suscripción',
+    subscriptionCancelConfirm: '¿Seguro que quieres cancelar? Puedes seguir usando el servicio hasta el final del período de facturación actual.',
+    subscriptionCancelSuccess: 'Tu suscripción ha sido cancelada.',
+    subscriptionCanceling: 'Cancelando...',
     subscriptionCityLabel: 'Ciudad',
     subscriptionCityPlaceholder: 'Madrid, Barcelona, México...',
     subscriptionCityRequired: 'Por favor ingresa tu ciudad',
@@ -2021,6 +2045,7 @@ function App() {
   const [dashProfileGender, setDashProfileGender] = useState<Gender>(null)
   const [dashProfilePhoto, setDashProfilePhoto] = useState<string | null>(null)
   const [isDashProfileSaving, setIsDashProfileSaving] = useState(false)
+  const [isCancelingSubscription, setIsCancelingSubscription] = useState(false)
   const [dashProfileComplete, setDashProfileComplete] = useState(false)
 
   // Favorites state
@@ -2843,6 +2868,30 @@ function App() {
       console.error('Profile save error:', e)
     } finally {
       setIsDashProfileSaving(false)
+    }
+  }
+
+  const handleCancelSubscription = async () => {
+    if (!user?.email) return
+    if (!window.confirm(t.subscriptionCancelConfirm)) return
+
+    setIsCancelingSubscription(true)
+    try {
+      const res = await fetch('/api/cancel-subscription', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: user.email }),
+      })
+      if (res.ok) {
+        alert(t.subscriptionCancelSuccess)
+        setIsSubscribed(false)
+        localStorage.removeItem('stylist_subscription_active')
+        setPage('landing')
+      }
+    } catch (e) {
+      console.error('Cancel subscription error:', e)
+    } finally {
+      setIsCancelingSubscription(false)
     }
   }
 
@@ -4461,6 +4510,17 @@ function App() {
               </div>
             </div>
           )}
+
+          {/* Subscription Management */}
+          <div className="dashboard-subscription-manage">
+            <button
+              className="dashboard-cancel-btn"
+              onClick={handleCancelSubscription}
+              disabled={isCancelingSubscription}
+            >
+              {isCancelingSubscription ? t.subscriptionCanceling : t.subscriptionCancel}
+            </button>
+          </div>
         </div>
 
         {/* Fullscreen Image Viewer */}

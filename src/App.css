@@ -4967,6 +4967,36 @@
   cursor: not-allowed;
 }
 
+/* Subscription Management */
+.dashboard-subscription-manage {
+  margin-top: 2rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid rgba(0, 0, 0, 0.06);
+  text-align: center;
+}
+
+.dashboard-cancel-btn {
+  padding: 0.6rem 1.5rem;
+  background: none;
+  border: 1px solid rgba(220, 53, 69, 0.3);
+  border-radius: 10px;
+  color: #dc3545;
+  font-size: 0.8rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.dashboard-cancel-btn:hover {
+  background: rgba(220, 53, 69, 0.06);
+  border-color: rgba(220, 53, 69, 0.5);
+}
+
+.dashboard-cancel-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
 /* Dashboard Favorites Section */
 .dashboard-favorites {
   margin-top: 1.5rem;
