@@ -5226,7 +5226,7 @@ function App() {
             </>
           )}
           <button className="btn-dark" onClick={handleRestart}>
-            {t.restart}
+            {t.backToHome}
           </button>
         </div>
 
