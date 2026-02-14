@@ -578,24 +578,41 @@
 }
 
 /* ===== V2 Unified 3-Card Grid ===== */
-.path-grid-3 {
-  display: grid;
-  grid-template-columns: 1fr;
+.path-grid-2-1 {
+  display: flex;
+  flex-direction: column;
   gap: 1.5rem;
   max-width: 1200px;
   margin: 0 auto;
 }
 
+.path-row-top {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.5rem;
+}
+
 @media (min-width: 640px) {
-  .path-grid-3 {
+  .path-row-top {
     grid-template-columns: repeat(2, 1fr);
+    gap: 2rem;
   }
 }
 
-@media (min-width: 1024px) {
-  .path-grid-3 {
-    grid-template-columns: repeat(3, 1fr);
-    gap: 2rem;
+.path-row-bottom {
+  display: flex;
+  justify-content: center;
+}
+
+.path-row-bottom .path-card-v2 {
+  width: 100%;
+  aspect-ratio: 2/3;
+}
+
+@media (min-width: 640px) {
+  .path-row-bottom .path-card-v2 {
+    width: 50%;
+    aspect-ratio: 3/4;
   }
 }
 

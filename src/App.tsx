@@ -4717,64 +4717,69 @@ function App() {
         <section className="path-section" id="features">
           <h2 className="section-title">{t.pathTitle}</h2>
           <div className="section-divider"></div>
-          <div className="path-grid-3">
-            {/* Card 1: Hair Styling */}
-            <div className="path-card-v2" onClick={() => setPage('hair-selection')}>
-              <div className="path-image path-image-1"></div>
-              <div className="path-overlay"></div>
-              <div className="path-content-v2">
-                <div className="path-header-v2">
-                  <span className="path-module-v2">HAIR STYLING</span>
-                  {!hasUsedFreeTrial && <span className="free-badge">{t.freeTrialBadge}</span>}
+          <div className="path-grid-2-1">
+            {/* Row 1: Daily Style + Full Package (2 large cards) */}
+            <div className="path-row-top">
+              {/* Card 1: Daily Style Subscription */}
+              <div className="path-card-v2 subscription" onClick={handleSubscription}>
+                <div className="path-image path-image-3"></div>
+                <div className="path-overlay"></div>
+                {isSubscribed && <span className="path-popular-badge active">{t.subscriptionActive}</span>}
+                <div className="path-content-v2">
+                  <div className="path-header-v2">
+                    <span className="path-module-v2">DAILY STYLE</span>
+                    {!isSubscribed && <span className="trial-badge">{t.subscriptionTrialDays}</span>}
+                  </div>
+                  <h3 className="path-title-v2">{t.subscriptionTitle}</h3>
+                  <p className="path-desc-v2">{isSubscribed ? t.dashboardSubtitle : t.subscriptionDesc}</p>
+                  <p className="daily-tagline">{t.dailyTagline}</p>
+                  <div className={`path-cta-v2 ${isSubscribed ? 'green' : ''}`}>
+                    {isSubscribed ? `${t.dashboardTitle} →` : t.subscriptionCta}
+                  </div>
+                  {!isSubscribed && <p className="path-plan-label">Monthly Plan · 7-day free trial</p>}
                 </div>
-                <h3 className="path-title-v2">{t.module1Title}</h3>
-                <p className="path-desc-v2">{!hasUsedFreeTrial ? t.freeTrialDesc : t.module1Desc}</p>
-                <ul className="path-features-v2">
-                  {t.module1Features.map((feature, i) => (
-                    <li key={i}>{feature}</li>
-                  ))}
-                </ul>
-                <div className="path-cta-v2">{t.explore} →</div>
+              </div>
+
+              {/* Card 2: Full Package (Featured) */}
+              <div className="path-card-v2 featured" onClick={() => setPage('input')}>
+                <div className="path-image path-image-2"></div>
+                <div className="path-overlay"></div>
+                <span className="path-popular-badge">{t.bestValue}</span>
+                <div className="path-content-v2">
+                  <div className="path-header-v2">
+                    <span className="path-module-v2">FULL PACKAGE</span>
+                  </div>
+                  <h3 className="path-title-v2">{t.module2Title}</h3>
+                  <p className="path-desc-v2">{t.module2Desc}</p>
+                  <ul className="path-features-v2">
+                    {t.module2Features.map((feature, i) => (
+                      <li key={i}>{feature}</li>
+                    ))}
+                  </ul>
+                  <div className="path-cta-v2 gold">{t.explore} →</div>
+                </div>
               </div>
             </div>
 
-            {/* Card 2: Full Package (Featured) */}
-            <div className="path-card-v2 featured" onClick={() => setPage('input')}>
-              <div className="path-image path-image-2"></div>
-              <div className="path-overlay"></div>
-              <span className="path-popular-badge">{t.bestValue}</span>
-              <div className="path-content-v2">
-                <div className="path-header-v2">
-                  <span className="path-module-v2">FULL PACKAGE</span>
+            {/* Row 2: Hair Styling (centered) */}
+            <div className="path-row-bottom">
+              <div className="path-card-v2 hair-card" onClick={() => setPage('hair-selection')}>
+                <div className="path-image path-image-1"></div>
+                <div className="path-overlay"></div>
+                <div className="path-content-v2">
+                  <div className="path-header-v2">
+                    <span className="path-module-v2">HAIR STYLING</span>
+                    {!hasUsedFreeTrial && <span className="free-badge">{t.freeTrialBadge}</span>}
+                  </div>
+                  <h3 className="path-title-v2">{t.module1Title}</h3>
+                  <p className="path-desc-v2">{!hasUsedFreeTrial ? t.freeTrialDesc : t.module1Desc}</p>
+                  <ul className="path-features-v2">
+                    {t.module1Features.map((feature, i) => (
+                      <li key={i}>{feature}</li>
+                    ))}
+                  </ul>
+                  <div className="path-cta-v2">{t.explore} →</div>
                 </div>
-                <h3 className="path-title-v2">{t.module2Title}</h3>
-                <p className="path-desc-v2">{t.module2Desc}</p>
-                <ul className="path-features-v2">
-                  {t.module2Features.map((feature, i) => (
-                    <li key={i}>{feature}</li>
-                  ))}
-                </ul>
-                <div className="path-cta-v2 gold">{t.explore} →</div>
-              </div>
-            </div>
-
-            {/* Card 3: Daily Style Subscription */}
-            <div className="path-card-v2 subscription" onClick={handleSubscription}>
-              <div className="path-image path-image-3"></div>
-              <div className="path-overlay"></div>
-              {isSubscribed && <span className="path-popular-badge active">{t.subscriptionActive}</span>}
-              <div className="path-content-v2">
-                <div className="path-header-v2">
-                  <span className="path-module-v2">DAILY STYLE</span>
-                  {!isSubscribed && <span className="trial-badge">{t.subscriptionTrialDays}</span>}
-                </div>
-                <h3 className="path-title-v2">{t.subscriptionTitle}</h3>
-                <p className="path-desc-v2">{isSubscribed ? t.dashboardSubtitle : t.subscriptionDesc}</p>
-                <p className="daily-tagline">{t.dailyTagline}</p>
-                <div className={`path-cta-v2 ${isSubscribed ? 'green' : ''}`}>
-                  {isSubscribed ? `${t.dashboardTitle} →` : t.subscriptionCta}
-                </div>
-                {!isSubscribed && <p className="path-plan-label">Monthly Plan · 7-day free trial</p>}
               </div>
             </div>
           </div>
