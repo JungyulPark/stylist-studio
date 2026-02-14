@@ -44,47 +44,52 @@ const femaleColorPalettes = [
 ]
 
 function getVariedScenarios(diversitySeed: number): StyleScenario[] {
-  const mi = diversitySeed % maleColorPalettes.length
-  const fi = diversitySeed % femaleColorPalettes.length
-  const mp = maleColorPalettes[mi]
-  const fp = femaleColorPalettes[fi]
+  // Each scenario uses a DIFFERENT palette for color diversity
+  const scenarioOffsets = [0, 2, 4, 6, 1, 3]
+
+  function mp(offset: number) {
+    return maleColorPalettes[(diversitySeed + offset) % maleColorPalettes.length]
+  }
+  function fp(offset: number) {
+    return femaleColorPalettes[(diversitySeed + offset) % femaleColorPalettes.length]
+  }
 
   return [
     {
       id: 'best-match',
       labelKo: '베스트 매치', labelEn: 'Best Match', labelJa: 'ベストマッチ', labelZh: '最佳搭配', labelEs: 'Mejor Combinación',
-      promptMale: `clean modern outfit in ${mp.tone} tones: fine-knit sweater in ${mp.colors.split(', ')[2]}, perfectly fitted chinos in ${mp.colors.split(', ')[1]}, leather belt, clean sneakers or suede loafers - polished minimalist style with ${mp.accent} accent details`,
-      promptFemale: `elegant everyday outfit in ${fp.tone} tones: soft ${fp.colors.split(', ')[0]} cashmere V-neck or silk blouse in ${fp.colors.split(', ')[1]}, high-waisted wide-leg trousers in ${fp.colors.split(', ')[2]}, delicate ${fp.accent} jewelry, ballet flats - refined effortless chic`,
+      promptMale: (() => { const p = mp(scenarioOffsets[0]); return `clean modern outfit in ${p.tone} tones: fine-knit sweater in ${p.colors.split(', ')[2]}, relaxed-fit chinos in ${p.colors.split(', ')[1]} with natural drape, leather belt, clean sneakers or suede loafers, ${p.accent} accent details — luxury editorial quality, naturally draped tailored silhouette` })(),
+      promptFemale: (() => { const p = fp(scenarioOffsets[0]); return `elegant everyday outfit in ${p.tone} tones: soft cashmere V-neck in ${p.colors.split(', ')[0]} or silk blouse in ${p.colors.split(', ')[1]}, high-waisted wide-leg trousers in ${p.colors.split(', ')[2]}, delicate ${p.accent} jewelry, ballet flats — luxury editorial quality, naturally draped elegant silhouette` })(),
     },
     {
       id: 'interview',
       labelKo: '인터뷰룩', labelEn: 'Interview', labelJa: 'インタビュー', labelZh: '面试装', labelEs: 'Entrevista',
-      promptMale: `professional business outfit: tailored suit in ${mp.colors.split(', ')[0]} with subtle texture, crisp dress shirt in ${mp.colors.split(', ')[2]}, ${mp.accent} silk tie, polished oxford shoes - confident executive style`,
-      promptFemale: `sophisticated professional outfit: silk blouse in ${fp.colors.split(', ')[1]}, tailored pencil skirt or wide-leg pants in ${fp.colors.split(', ')[2]}, delicate pearl earrings, pointed heels - feminine yet powerful`,
+      promptMale: (() => { const p = mp(scenarioOffsets[1]); return `professional business outfit: tailored suit in ${p.colors.split(', ')[0]} with natural shoulders, crisp dress shirt in ${p.colors.split(', ')[2]}, ${p.accent} silk tie, polished oxford shoes — luxury editorial quality, naturally draped tailored silhouette` })(),
+      promptFemale: (() => { const p = fp(scenarioOffsets[1]); return `sophisticated professional outfit: silk blouse in ${p.colors.split(', ')[1]}, tailored wide-leg pants or pencil skirt in ${p.colors.split(', ')[2]}, delicate pearl earrings, pointed heels — luxury editorial quality, naturally draped elegant silhouette` })(),
     },
     {
       id: 'date',
       labelKo: '데이트룩', labelEn: 'Date Night', labelJa: 'デートルック', labelZh: '约会装', labelEs: 'Cita',
-      promptMale: `relaxed stylish evening outfit: unstructured soft blazer in ${mp.colors.split(', ')[3] || mp.colors.split(', ')[0]}, comfortable crew-neck knit or open-collar shirt in ${mp.colors.split(', ')[2]}, relaxed-fit trousers with natural drape, clean leather shoes - effortlessly charming, NOT too formal or tight`,
-      promptFemale: `romantic evening outfit: elegant midi dress in ${fp.colors.split(', ')[1]} with flattering draping, delicate fabric that catches light, ${fp.accent} jewelry, strappy heels - graceful feminine allure`,
+      promptMale: (() => { const p = mp(scenarioOffsets[2]); return `relaxed stylish evening outfit: unstructured soft blazer in ${p.colors.split(', ')[3] || p.colors.split(', ')[0]}, comfortable crew-neck knit in ${p.colors.split(', ')[2]}, relaxed-fit trousers with natural drape, clean leather shoes — luxury editorial quality, naturally draped tailored silhouette` })(),
+      promptFemale: (() => { const p = fp(scenarioOffsets[2]); return `romantic evening outfit: elegant midi dress in ${p.colors.split(', ')[1]} with flattering draping, delicate fabric, ${p.accent} jewelry, strappy heels — luxury editorial quality, naturally draped elegant silhouette` })(),
     },
     {
       id: 'luxury',
       labelKo: '럭셔리', labelEn: 'Luxury', labelJa: 'ラグジュアリー', labelZh: '奢华', labelEs: 'Lujo',
-      promptMale: `luxurious outfit: premium cashmere overcoat in ${mp.colors.split(', ')[1]}, fine merino turtleneck in ${mp.colors.split(', ')[2]}, perfectly tailored trousers in ${mp.colors.split(', ')[0]}, Italian leather shoes - understated opulence`,
-      promptFemale: `luxurious outfit: stunning cashmere coat in ${fp.colors.split(', ')[2]} over silk blouse in ${fp.colors.split(', ')[0]}, elegant pleated midi skirt, ${fp.accent} statement jewelry, premium leather bag, classic pumps - timeless haute couture`,
+      promptMale: (() => { const p = mp(scenarioOffsets[3]); return `luxurious outfit: premium cashmere overcoat in ${p.colors.split(', ')[1]}, fine merino turtleneck in ${p.colors.split(', ')[2]}, relaxed tailored trousers in ${p.colors.split(', ')[0]} with natural drape, Italian leather shoes — luxury editorial quality, naturally draped tailored silhouette` })(),
+      promptFemale: (() => { const p = fp(scenarioOffsets[3]); return `luxurious outfit: stunning cashmere coat in ${p.colors.split(', ')[2]} over silk blouse in ${p.colors.split(', ')[0]}, elegant pleated midi skirt, ${p.accent} statement jewelry, premium leather bag, classic pumps — luxury editorial quality, naturally draped elegant silhouette` })(),
     },
     {
       id: 'casual',
       labelKo: '캐주얼', labelEn: 'Casual', labelJa: 'カジュアル', labelZh: '休闲', labelEs: 'Casual',
-      promptMale: `relaxed weekend outfit: soft cotton sweater in ${mp.colors.split(', ')[2]}, well-fitted oxford shirt in ${mp.colors.split(', ')[3] || 'white'} underneath, comfortable dark jeans, clean white sneakers - effortlessly put-together`,
-      promptFemale: `chic casual outfit: oversized cashmere cardigan in ${fp.colors.split(', ')[0]}, simple fitted t-shirt, high-waisted straight-leg jeans or cream pants, ${fp.colors.split(', ')[3] || 'tan'} loafers - cozy yet stylish`,
+      promptMale: (() => { const p = mp(scenarioOffsets[4]); return `relaxed weekend outfit: soft cotton sweater in ${p.colors.split(', ')[2]}, oxford shirt in ${p.colors.split(', ')[3] || 'white'} underneath, comfortable straight-leg jeans, clean white sneakers — luxury editorial quality, naturally draped silhouette` })(),
+      promptFemale: (() => { const p = fp(scenarioOffsets[4]); return `chic casual outfit: oversized cashmere cardigan in ${p.colors.split(', ')[0]}, simple fitted t-shirt, high-waisted straight-leg jeans, ${p.colors.split(', ')[3] || 'tan'} loafers — luxury editorial quality, naturally draped elegant silhouette` })(),
     },
     {
       id: 'daily',
       labelKo: '데일리', labelEn: 'Daily', labelJa: 'デイリー', labelZh: '日常', labelEs: 'Diario',
-      promptMale: `smart daily outfit: clean polo or crew-neck sweater in ${mp.colors.split(', ')[0]}, well-fitted chinos in ${mp.colors.split(', ')[2]}, minimalist leather watch, clean sneakers or loafers with ${mp.accent} accent - polished everyday look`,
-      promptFemale: `effortless daily outfit: soft knit top in ${fp.colors.split(', ')[1]}, flowing midi skirt or comfortable tailored pants in ${fp.colors.split(', ')[2]}, simple ${fp.accent} necklace, comfortable flats - modern feminine ease`,
+      promptMale: (() => { const p = mp(scenarioOffsets[5]); return `smart daily outfit: clean crew-neck sweater in ${p.colors.split(', ')[0]}, comfortable chinos in ${p.colors.split(', ')[2]} with relaxed fit, minimalist leather watch, clean sneakers or loafers, ${p.accent} accent — luxury editorial quality, naturally draped silhouette` })(),
+      promptFemale: (() => { const p = fp(scenarioOffsets[5]); return `effortless daily outfit: soft knit top in ${p.colors.split(', ')[1]}, flowing midi skirt or comfortable tailored pants in ${p.colors.split(', ')[2]}, simple ${p.accent} necklace, comfortable flats — luxury editorial quality, naturally draped elegant silhouette` })(),
     }
   ]
 }
@@ -128,12 +133,12 @@ async function editPhotoWithGemini(
 - Even out skin tone slightly for a clean, fresh look
 - Keep the face looking NATURAL and masculine - not overly edited`
 
-    const editPrompt = `You are the world's top celebrity stylist, trusted by A-list celebrities and fashion icons. Your styling choices are renowned for being perfectly tailored to each individual's unique body type, skin tone, and personal aura.
+    const editPrompt = `HIGH-END FASHION EDITORIAL — Style this photo as if shooting for Vogue or GQ. The result must look like a professionally styled luxury fashion photograph.
 
 EDIT this photo - ONLY change the OUTFIT of the MAIN PERSON to: ${stylePrompt}
 
 CRITICAL: This is a ${genderWord}. The outfit MUST be appropriate for a ${genderWord}. Choose clothing that flatters THIS specific person's body proportions and complexion.
-${gender === 'female' ? 'For women: Use soft, feminine clothing - NO masculine suits or blazers. Prefer dresses, blouses, cardigans, skirts in soft colors.' : 'For men: Ensure natural relaxed fit - NOT skin-tight. Trousers should have comfortable drape, jackets should sit naturally on shoulders.'}
+${gender === 'female' ? 'STYLING DIRECTION (Max Mara, The Row aesthetic): Naturally draped tailored silhouette with elegant proportions. Use soft, feminine clothing — dresses, blouses, cardigans, skirts in refined colors. Fabrics should have visible weight and texture, draping naturally on the body.' : 'STYLING DIRECTION (Loro Piana, Brunello Cucinelli aesthetic): Naturally draped tailored silhouette with relaxed elegance. Trousers should have comfortable drape with a straight or tapered leg. Jackets sit naturally on shoulders with soft structure. Fabrics have visible weight and texture, falling naturally on the body.'}
 
 ${beautyRetouch}
 

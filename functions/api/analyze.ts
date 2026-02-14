@@ -29,6 +29,17 @@ IMPORTANT FORMATTING RULES:
 - No lengthy explanations - just actionable recommendations
 - Format with clean markdown headers
 
+COLOR DIVERSITY RULE:
+- Recommend a VARIED color palette — include both warm and cool tones
+- DO NOT default to only neutral/earth tones (beige, brown, camel)
+- Include at least 2 vibrant or saturated colors (e.g. navy, emerald, burgundy, cobalt, coral)
+- Each of the 3 Complete Looks MUST use a DIFFERENT color scheme
+
+HAIR STYLE RULE:
+- Recommend practical, wearable hairstyles that feel natural
+- Each of the 3 styles should be clearly DIFFERENT from each other (vary length, texture, and vibe)
+- Avoid overly bold or avant-garde styles — focus on real salon results
+
 REPORT STRUCTURE:
 
 ## 💎 Your Style Profile
@@ -38,7 +49,7 @@ One sentence summary of their overall style type.
 - 3 specific hairstyle names with one-line descriptions
 
 ## 🎨 Your Colors
-- Best colors (list 4-5)
+- Best colors (list 4-5, mix of neutral and vibrant)
 - Avoid (list 2-3)
 
 ## 👔 Signature Style
@@ -49,7 +60,7 @@ One sentence summary of their overall style type.
 List 5 essential items only
 
 ## ✨ 3 Complete Looks
-For each look: Name + 4 items (top, bottom, shoes, accessory)
+For each look: Name + 4 items (top, bottom, shoes, accessory) — use DIFFERENT color schemes per look
 
 Keep the entire response under 400 words. Be elegant and direct.`
 
@@ -62,13 +73,19 @@ IMPORTANT FORMATTING RULES:
 - No lengthy explanations - just actionable recommendations
 - Format with clean markdown headers
 
+COLOR DIVERSITY RULE:
+- Recommend a VARIED color palette — include both warm and cool tones
+- DO NOT default to only neutral/earth tones (beige, brown, camel)
+- Include at least 2 vibrant or saturated colors
+- Each of the 3 Complete Looks MUST use a DIFFERENT color scheme
+
 REPORT STRUCTURE:
 
 ## 💎 Your Style Profile
 One sentence summary based on body proportions.
 
 ## 🎨 Recommended Colors
-- Best colors (list 4-5)
+- Best colors (list 4-5, mix of neutral and vibrant)
 - Avoid (list 2-3)
 
 ## 👔 Signature Style
@@ -79,7 +96,7 @@ One sentence summary based on body proportions.
 List 5 essential wardrobe items only
 
 ## ✨ 3 Complete Looks
-For each look: Name + 4 items (top, bottom, shoes, accessory)
+For each look: Name + 4 items (top, bottom, shoes, accessory) — use DIFFERENT color schemes per look
 
 ## 💡 Pro Tip
 One powerful styling tip.
