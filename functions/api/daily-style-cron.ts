@@ -1,6 +1,6 @@
 import { getCorsHeaders, createCorsPreflightResponse } from '../lib/cors'
 import { errors } from '../lib/errors'
-import { editPhotoWithGemini } from '../lib/gemini-image'
+import { editPhotoWithGemini, type ImageScenario } from '../lib/gemini-image'
 import { getDailyScenarios, dailyScenarioLabels } from '../lib/daily-style-scenarios'
 import { Resend } from 'resend'
 
@@ -100,7 +100,8 @@ interface RecommendationResult {
 async function generateStyleRecommendation(
   subscriber: Subscriber,
   weather: WeatherData,
-  apiKey: string
+  apiKey: string,
+  scenarioPrompts?: { id: string; prompt: string }[]
 ): Promise<RecommendationResult> {
   const lang = subscriber.preferred_language || 'en'
   const langName: Record<string, string> = {
@@ -113,6 +114,19 @@ async function generateStyleRecommendation(
     subscriber.weight_kg ? `Weight: ${subscriber.weight_kg}kg` : '',
   ].filter(Boolean).join(', ')
 
+  // Build outfit descriptions from the same scenarios used for image generation
+  let outfitSection = ''
+  if (scenarioPrompts && scenarioPrompts.length > 0) {
+    const dressyPrompt = scenarioPrompts.find(s => s.id === 'dressy')?.prompt || ''
+    const casualPrompt = scenarioPrompts.find(s => s.id === 'casual')?.prompt || ''
+    outfitSection = `
+OUTFITS TO DESCRIBE (the email includes images of these EXACT outfits — your text MUST match them):
+- Dressy Look: ${dressyPrompt}
+- Casual Look: ${casualPrompt}
+
+You MUST describe these two specific outfits. Do NOT invent different outfits.`
+  }
+
   const prompt = `You are an expert personal stylist. Write a daily outfit recommendation email (150-200 words) entirely in ${langName[lang] || 'English'}.
 
 CONTEXT:
@@ -120,10 +134,11 @@ CONTEXT:
 - Weather: ${weather.temp}°C (feels like ${weather.feels_like}°C), ${weather.description}, humidity ${weather.humidity}%, wind ${weather.wind_speed}m/s
 - Profile: ${profileDesc || 'Not specified'}
 - Date: ${new Date().toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' })}
+${outfitSection}
 
 INSTRUCTIONS:
 1. Start with a friendly greeting mentioning today's weather (2-3 sentences)
-2. Recommend a COMPLETE outfit — each item on its own line with a dash (-) prefix, including specific colors and materials: top, bottom, shoes, outerwear (if needed), accessories
+2. Present TWO outfit recommendations — "Dressy" and "Casual" — each with specific items (top, bottom, shoes, outerwear if needed, accessories) on their own lines with a dash (-) prefix, including colors and materials
 3. Add a style tip of the day (1-2 sentences)
 4. End with a warm closing line
 5. Use plain text with line breaks — no markdown headers or asterisks, emoji sparingly
@@ -215,7 +230,8 @@ async function generateOutfitImages(
   weather: WeatherData,
   geminiApiKey: string,
   photosBucket: R2Bucket,
-  imagesBucket: R2Bucket
+  imagesBucket: R2Bucket,
+  precomputedScenarios?: ImageScenario[]
 ): Promise<OutfitImage[]> {
   if (!subscriber.photo_r2_key || !subscriber.gender) {
     console.log(`[cron] Skipping image gen for ${subscriber.email}: no photo or gender`)
@@ -245,7 +261,7 @@ async function generateOutfitImages(
     return []
   }
 
-  const scenarios = getDailyScenarios(weather, subscriber.gender)
+  const scenarios = precomputedScenarios || getDailyScenarios(weather, subscriber.gender)
   const today = new Date().toISOString().split('T')[0]
   const lang = subscriber.preferred_language || 'en'
   const outfitImages: OutfitImage[] = []
@@ -575,8 +591,13 @@ export const onRequestGet: PagesFunction<Env> = async (context) => {
           }
         }
 
-        // Generate text recommendation
-        const recResult = await generateStyleRecommendation(sub, weather, context.env.OPENAI_API_KEY)
+        // Pre-compute scenarios so text and images use the SAME outfits
+        const scenarios = (sub.gender && sub.profile_complete)
+          ? getDailyScenarios(weather, sub.gender)
+          : undefined
+
+        // Generate text recommendation — pass scenario prompts so text matches images
+        const recResult = await generateStyleRecommendation(sub, weather, context.env.OPENAI_API_KEY, scenarios)
         const recommendation = recResult.text
 
         // Generate outfit images for profile-complete subscribers
@@ -603,7 +624,8 @@ export const onRequestGet: PagesFunction<Env> = async (context) => {
               weather,
               context.env.GEMINI_API_KEY,
               context.env.PHOTOS_BUCKET,
-              context.env.DAILY_IMAGES_BUCKET
+              context.env.DAILY_IMAGES_BUCKET,
+              scenarios
             )
             imageStatus = outfitImages.length > 0 ? 'generated' : 'no_images_returned'
           } catch (e) {

@@ -2918,34 +2918,33 @@ function App() {
     reader.onload = async (ev) => {
       const photoData = ev.target?.result as string
       setDashProfilePhoto(photoData)
-      // Auto-save if profile is already complete (user changing photo from summary view)
-      if (dashProfileComplete && !isDashProfileEditing) {
-        const email = user?.email
-        if (!email) return
-        setIsDashProfileSaving(true)
-        try {
-          const res = await fetch('/api/update-subscriber-profile', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              email,
-              user_id: user?.id || undefined,
-              height_cm: dashProfileHeight ? parseInt(dashProfileHeight, 10) : undefined,
-              weight_kg: dashProfileWeight ? parseInt(dashProfileWeight, 10) : undefined,
-              gender: dashProfileGender || undefined,
-              photo: photoData,
-              preferred_language: lang,
-            }),
-          })
-          if (res.ok) {
-            setDashProfilePhotoUrl(`/api/profile-photo?email=${encodeURIComponent(email)}&t=${Date.now()}`)
-            setDashProfilePhoto(null)
-          }
-        } catch (err) {
-          console.error('Auto-save photo error:', err)
-        } finally {
-          setIsDashProfileSaving(false)
+      // ALWAYS auto-save photo immediately — this is critical for daily recommendations
+      const email = user?.email
+      if (!email) return
+      setIsDashProfileSaving(true)
+      try {
+        const res = await fetch('/api/update-subscriber-profile', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            email,
+            user_id: user?.id || undefined,
+            height_cm: dashProfileHeight ? parseInt(dashProfileHeight, 10) : undefined,
+            weight_kg: dashProfileWeight ? parseInt(dashProfileWeight, 10) : undefined,
+            gender: dashProfileGender || undefined,
+            photo: photoData,
+            preferred_language: lang,
+          }),
+        })
+        if (res.ok) {
+          setDashProfilePhotoUrl(`/api/profile-photo?email=${encodeURIComponent(email)}&t=${Date.now()}`)
+          setDashProfilePhoto(null)
+          setDashProfileComplete(true)
         }
+      } catch (err) {
+        console.error('Auto-save photo error:', err)
+      } finally {
+        setIsDashProfileSaving(false)
       }
     }
     reader.readAsDataURL(file)
