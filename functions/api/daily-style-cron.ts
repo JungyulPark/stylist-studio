@@ -8,7 +8,6 @@ interface Env {
   SUPABASE_URL: string
   SUPABASE_SERVICE_KEY: string
   OPENWEATHER_API_KEY: string
-  OPENAI_API_KEY: string
   GEMINI_API_KEY: string
   RESEND_API_KEY: string
   CRON_SECRET: string
@@ -100,7 +99,7 @@ interface RecommendationResult {
 async function generateStyleRecommendation(
   subscriber: Subscriber,
   weather: WeatherData,
-  apiKey: string,
+  geminiApiKey: string,
   scenarioPrompts?: { id: string; prompt: string }[]
 ): Promise<RecommendationResult> {
   const lang = subscriber.preferred_language || 'en'
@@ -144,59 +143,38 @@ INSTRUCTIONS:
 5. Use plain text with line breaks — no markdown headers or asterisks, emoji sparingly
 6. Be warm, practical, and weather-appropriate`
 
+  // Use Gemini Flash for text generation (cheaper than GPT, same provider as images)
   try {
-    const res = await fetch('https://api.openai.com/v1/chat/completions', {
-      method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${apiKey}`,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        model: 'gpt-5-mini',
-        messages: [{ role: 'user', content: prompt }],
-        max_completion_tokens: 16000,
-      }),
-    })
+    const res = await fetch(
+      `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${geminiApiKey}`,
+      {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          contents: [{ role: 'user', parts: [{ text: prompt }] }],
+          generationConfig: { maxOutputTokens: 1024 },
+        }),
+      }
+    )
 
     if (!res.ok) {
       const errText = await res.text()
-      console.error('[cron] OpenAI error:', errText)
-      return { text: getFallbackRecommendation(weather, lang), source: 'fallback', error: `OpenAI ${res.status}: ${errText.substring(0, 200)}` }
+      console.error('[cron] Gemini text error:', errText)
+      return { text: getFallbackRecommendation(weather, lang), source: 'fallback', error: `Gemini ${res.status}: ${errText.substring(0, 200)}` }
     }
 
-    const rawData = await res.json() as Record<string, unknown>
-    // gpt-5-mini may use output[] instead of choices[]
-    let content: string | null = null
-
-    // Try standard format: choices[0].message.content
-    const choices = rawData.choices as Array<{ message?: { content?: string } }> | undefined
-    if (choices?.[0]?.message?.content) {
-      content = choices[0].message.content
+    const data = await res.json() as {
+      candidates?: Array<{ content?: { parts?: Array<{ text?: string }> } }>
     }
 
-    // Try gpt-5-mini format: output[].content[].text
-    if (!content && rawData.output) {
-      const output = rawData.output as Array<{ content?: Array<{ text?: string }>, type?: string }>
-      for (const item of output) {
-        if (item.type === 'message' && item.content) {
-          for (const part of item.content) {
-            if (part.text) {
-              content = part.text
-              break
-            }
-          }
-        }
-      }
-    }
-
+    const content = data.candidates?.[0]?.content?.parts?.[0]?.text
     if (!content) {
-      const debugKeys = Object.keys(rawData).join(',')
-      return { text: getFallbackRecommendation(weather, lang), source: 'fallback', error: `Empty GPT response. Keys: ${debugKeys}. Raw: ${JSON.stringify(rawData).substring(0, 300)}` }
+      return { text: getFallbackRecommendation(weather, lang), source: 'fallback', error: 'Empty Gemini text response' }
     }
     return { text: content, source: 'gpt' }
   } catch (e) {
     const errMsg = e instanceof Error ? e.message : String(e)
-    console.error('[cron] AI generation error:', e)
+    console.error('[cron] Gemini text error:', e)
     return { text: getFallbackRecommendation(weather, lang), source: 'fallback', error: errMsg }
   }
 }
@@ -288,10 +266,13 @@ async function generateOutfitImages(
         const base64Match = resultDataUri.match(/^data:image\/\w+;base64,(.+)/)
         if (base64Match) {
           const binaryData = Uint8Array.from(atob(base64Match[1]), c => c.charCodeAt(0))
-          const r2Key = `daily/${subscriber.id}/${today}/${scenario.id}.jpg`
+          // Include timestamp in R2 key to bypass CDN cache on re-runs
+          const runTs = Date.now()
+          const r2Key = `daily/${subscriber.id}/${today}/${scenario.id}-${runTs}.jpg`
 
           await imagesBucket.put(r2Key, binaryData, {
             httpMetadata: { contentType: 'image/jpeg' },
+            customMetadata: { generated: new Date().toISOString() },
           })
 
           // Public URL from R2
@@ -598,8 +579,8 @@ export const onRequestGet: PagesFunction<Env> = async (context) => {
           ? getDailyScenarios(weather, sub.gender)
           : undefined
 
-        // Generate text recommendation — pass scenario prompts so text matches images
-        const recResult = await generateStyleRecommendation(sub, weather, context.env.OPENAI_API_KEY, scenarios)
+        // Generate text recommendation with Gemini Flash (same provider as images, cheaper)
+        const recResult = await generateStyleRecommendation(sub, weather, context.env.GEMINI_API_KEY, scenarios)
         const recommendation = recResult.text
 
         // Generate outfit images for profile-complete subscribers
