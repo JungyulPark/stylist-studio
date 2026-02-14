@@ -2,7 +2,7 @@ import { useState, useRef, useEffect, useCallback } from 'react'
 import './App.css'
 import { renderMarkdownToHtml } from './utils/markdown'
 import { useAuth } from './contexts/AuthContext'
-import { supabase, type AnalysisHistory } from './lib/supabase'
+// supabase client is initialized in lib/supabase.ts and used by AuthContext
 
 // IndexedDB 헬퍼 함수 (큰 데이터 저장용)
 const DB_NAME = 'StylistStudioDB'
@@ -2027,7 +2027,7 @@ function App() {
   const t = translations[lang]
 
   // Auth state
-  const { user, signIn, signUp, signInWithGoogle, signOut, resetPassword, updatePassword, deleteAccount, updateProfile: updateAuthProfile, profile: authProfile, isSupabaseConfigured } = useAuth()
+  const { user, signIn, signUp, signInWithGoogle, signOut, resetPassword, updatePassword, deleteAccount, profile: authProfile, isSupabaseConfigured } = useAuth()
   const [newPassword, setNewPassword] = useState('')
   const [confirmNewPassword, setConfirmNewPassword] = useState('')
   const [authEmail, setAuthEmail] = useState('')
@@ -2037,9 +2037,6 @@ function App() {
   const [isAuthSubmitting, setIsAuthSubmitting] = useState(false)
   const [authSuccess, setAuthSuccess] = useState('')
   const [showForgotPassword, setShowForgotPassword] = useState(false)
-  const [analysisHistory, setAnalysisHistory] = useState<AnalysisHistory[]>([])
-  const [isLoadingHistory, setIsLoadingHistory] = useState(false)
-
   // 단위 설정 (영어 사용자는 선택 가능, 기본값: 영어는 imperial, 그 외는 metric)
   const [useMetric, setUseMetric] = useState(() => lang !== 'en')
   const isImperial = !useMetric
@@ -2123,8 +2120,15 @@ function App() {
   // 브라우저 뒤로가기 이벤트 처리
   useEffect(() => {
     const handlePopState = (event: PopStateEvent) => {
-      if (event.state?.page) {
-        setPageState(event.state.page)
+      const targetPage = event.state?.page
+      if (targetPage) {
+        // Skip loading page on back navigation — go to landing instead
+        if (targetPage === 'loading') {
+          setPageState('landing')
+          window.history.replaceState({ page: 'landing' }, '', '#landing')
+        } else {
+          setPageState(targetPage)
+        }
       } else {
         setPageState('landing')
       }
@@ -2540,14 +2544,6 @@ function App() {
       }
       setReport(analyzeData.report)
 
-      // Save to history if user is logged in (do not await - don't block UI)
-      saveAnalysisToHistory('full', analyzeData.report, null, null, {
-        height: profileData.height,
-        weight: profileData.weight,
-        gender: profileData.gender,
-        language: lang
-      })
-
       setLoadingProgress(100)
       setLoadingStep(lang === 'ko' ? '완료!' : 'Complete!')
       await new Promise(resolve => setTimeout(resolve, 400))
@@ -2609,32 +2605,6 @@ function App() {
         console.error('[Hair] Fetch failed:', hairResult.reason)
       }
       setIsTransformingHair(false)
-
-      // Update history with generated images (best effort)
-      if (user && supabase) {
-        const styleImgs = stylesResult.status === 'fulfilled' && stylesResult.value.ok
-          ? (await stylesResult.value.clone().json().catch(() => null))?.styles || null
-          : null
-        const hairImgs = hairResult.status === 'fulfilled' && hairResult.value.ok
-          ? (await hairResult.value.clone().json().catch(() => null))?.results || null
-          : null
-        if (styleImgs || hairImgs) {
-          // Find the most recent history entry and update it
-          const { data: recent } = await supabase
-            .from('analysis_history')
-            .select('id')
-            .eq('user_id', user.id)
-            .eq('analysis_type', 'full')
-            .order('created_at', { ascending: false })
-            .limit(1)
-          if (recent && recent.length > 0) {
-            await supabase.from('analysis_history').update({
-              style_images: styleImgs,
-              hair_images: hairImgs?.map((h: { id: string; label: string; imageUrl: string | null }) => ({ id: h.id, label: h.label, imageUrl: h.imageUrl })) || null,
-            }).eq('id', recent[0].id)
-          }
-        }
-      }
 
       // 리포트 성공 후 checkout ID 정리 (환불 불가 상태)
       localStorage.removeItem('lastCheckoutId')
@@ -2745,20 +2715,6 @@ function App() {
 
     setIsGeneratingHair(false)
     setPage('hair-result')
-
-    // Save hair analysis to history (after navigating to results)
-    if (generatedHairImages.length > 0) {
-      saveAnalysisToHistory('hair', null, null, generatedHairImages.map((img, i) => ({
-        id: `hair-${i}`,
-        label: img.style,
-        imageUrl: img.imageUrl
-      })), {
-        occasion: selectedOccasion,
-        vibe: selectedVibe,
-        gender: profile.gender,
-        language: lang
-      })
-    }
   }
 
   // 무료 체험 헤어 생성 (결제 없음)
@@ -2820,17 +2776,6 @@ function App() {
 
     setIsGeneratingHair(false)
     setPage('hair-result')
-
-    // Save to analysis history
-    saveAnalysisToHistory('hair', null, null, generatedHairImages.map((img, i) => ({
-      id: `hair-${i}`,
-      label: img.style,
-      imageUrl: img.imageUrl
-    })), {
-      occasion: selectedOccasion,
-      vibe: selectedVibe,
-      language: lang
-    })
   }
 
   // 구독 폼 열기
@@ -3255,14 +3200,6 @@ function App() {
 
       const analyzeData = await analyzeResponse.json()
       setReport(analyzeData.report)
-
-      // Save to history if user is logged in
-      saveAnalysisToHistory('full', analyzeData.report, null, null, {
-        height: profile.height,
-        weight: profile.weight,
-        gender: profile.gender,
-        language: lang
-      })
 
       // Wait for images to finish
       setIsGeneratingStyles(true)
@@ -3697,17 +3634,6 @@ function App() {
 
     setIsGeneratingHair(false)
 
-    // Save hair analysis to history after images are set
-    saveAnalysisToHistory('hair', null, null, generatedHairImages.map((img, i) => ({
-      id: `hair-${i}`,
-      label: img.style,
-      imageUrl: img.imageUrl
-    })), {
-      occasion: selectedOccasion,
-      vibe: selectedVibe,
-      language: lang
-    })
-
     setPage('hair-result')
   }
 
@@ -4106,92 +4032,14 @@ function App() {
   }
 
   // Fetch analysis history for logged-in users
-  const fetchAnalysisHistory = useCallback(async () => {
-    if (!user || !supabase) {
-      setIsLoadingHistory(false)
-      setAnalysisHistory([])
-      return
-    }
-
-    setIsLoadingHistory(true)
-    // Safety timeout: stop loading after 8 seconds no matter what
-    const timeout = setTimeout(() => {
-      setIsLoadingHistory(false)
-    }, 8000)
-
-    try {
-      const { data, error } = await supabase
-        .from('analysis_history')
-        .select('*')
-        .eq('user_id', user.id)
-        .order('created_at', { ascending: false })
-        .limit(20)
-
-      clearTimeout(timeout)
-
-      if (error) {
-        console.error('Failed to fetch analysis history:', error.message, error.code, error.details)
-        setAnalysisHistory([])
-      } else {
-        setAnalysisHistory(data || [])
-      }
-    } catch (e) {
-      clearTimeout(timeout)
-      console.error('Error fetching analysis history:', e)
-      setAnalysisHistory([])
-    } finally {
-      setIsLoadingHistory(false)
-    }
-  }, [user])
-
-  // Fetch history and favorites when profile page is opened
+  // Fetch favorites when profile page is opened
   useEffect(() => {
     if (page === 'profile' && user) {
-      fetchAnalysisHistory()
       loadFavorites()
     }
-  }, [page, user, fetchAnalysisHistory, loadFavorites])
+  }, [page, user, loadFavorites])
 
   // Save analysis to history for logged-in users
-  const saveAnalysisToHistory = async (
-    analysisType: 'full' | 'hair',
-    reportContent: string | null,
-    styleImagesData: { id: string; label: string; imageUrl: string | null }[] | null,
-    hairImagesData: { id: string; label: string; imageUrl: string | null }[] | null,
-    inputData: Record<string, unknown>
-  ) => {
-    if (!user || !supabase) return
-
-    try {
-      const { error } = await supabase.from('analysis_history').insert({
-        user_id: user.id,
-        analysis_type: analysisType,
-        report_content: reportContent,
-        style_images: styleImagesData,
-        hair_images: hairImagesData,
-        input_data: inputData
-      })
-
-      if (error) {
-        console.error('Failed to save analysis history:', error)
-      } else {
-        console.log('Analysis saved to history')
-      }
-
-      // Also update user profile with the latest analysis data
-      if (profile.height || profile.weight || profile.gender) {
-        await updateAuthProfile({
-          height_cm: profile.height ? parseInt(profile.height) : null,
-          weight_kg: profile.weight ? parseInt(profile.weight) : null,
-          gender: profile.gender,
-          preferred_language: lang
-        })
-      }
-    } catch (e) {
-      console.error('Error saving analysis:', e)
-    }
-  }
-
   // Login Page
   if (page === 'login') {
     return (
@@ -4798,60 +4646,6 @@ function App() {
               )}
             </div>
 
-            <div className="profile-section">
-              <h3>{t.analysisHistory}</h3>
-              {isLoadingHistory ? (
-                <div className="no-history"><div className="dashboard-loading-spinner" style={{ width: 20, height: 20, margin: '0 auto 8px' }} /><p>Loading...</p></div>
-              ) : analysisHistory.length === 0 ? (
-                <p className="no-history">{t.noHistory}</p>
-              ) : (
-                <div className="history-list">
-                  {analysisHistory.map((item) => (
-                    <div key={item.id} className="history-item">
-                      <div className="history-item-info">
-                        <span className="history-type">
-                          {item.analysis_type === 'full' ? t.fullAnalysis : t.hairAnalysis}
-                        </span>
-                        <span className="history-date">
-                          {new Date(item.created_at).toLocaleDateString(lang === 'ko' ? 'ko-KR' : lang === 'ja' ? 'ja-JP' : lang === 'zh' ? 'zh-CN' : lang === 'es' ? 'es-ES' : 'en-US', {
-                            year: 'numeric',
-                            month: 'short',
-                            day: 'numeric',
-                            hour: '2-digit',
-                            minute: '2-digit'
-                          })}
-                        </span>
-                      </div>
-                      <button
-                        type="button"
-                        className="btn-outline-sm"
-                        onClick={() => {
-                          // Load the analysis result and navigate to result page
-                          if (item.analysis_type === 'full' && item.report_content) {
-                            setReport(item.report_content)
-                            // Restore style images if available
-                            if (item.style_images && Array.isArray(item.style_images)) {
-                              const images = item.style_images as unknown as { id: string; label: string; imageUrl: string | null }[]
-                              setStyleImages(images.map(img => ({ ...img, isDemo: false })))
-                            }
-                            setPage('result')
-                          } else if (item.analysis_type === 'hair') {
-                            // Restore hair images if available
-                            if (item.hair_images && Array.isArray(item.hair_images)) {
-                              const hairImages = item.hair_images as unknown as { id: string; label: string; imageUrl: string | null }[]
-                              setGeneratedHairImages(hairImages.map(img => ({ style: img.label, imageUrl: img.imageUrl })))
-                            }
-                            setPage('hair-result')
-                          }
-                        }}
-                      >
-                        {t.viewResult}
-                      </button>
-                    </div>
-                  ))}
-                </div>
-              )}
-            </div>
 
             {/* Favorites Section */}
             <div className="profile-section">

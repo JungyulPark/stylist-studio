@@ -343,23 +343,25 @@ function buildEmailHtml(
 
   const lang = subscriber.preferred_language || 'en'
 
-  // Build outfit images HTML section
+  // Build outfit images HTML section — use table layout for email client compatibility
   let imagesHtml = ''
   if (outfitImages.length > 0) {
-    const imageCards = outfitImages.map(img => `
-      <div style="flex:1;min-width:150px;max-width:180px;text-align:center;">
-        <img src="${img.url}" alt="${img.label}" style="width:100%;border-radius:12px;border:1px solid rgba(201,169,98,0.3);margin-bottom:8px;" />
-        <p style="color:#c9a962;font-size:12px;font-weight:600;margin:0;">${img.label}</p>
-      </div>
+    const imageCells = outfitImages.map(img => `
+          <td width="${Math.floor(100 / outfitImages.length)}%" style="text-align:center;padding:0 6px;vertical-align:top;">
+            <img src="${img.url}" alt="${img.label}" style="width:100%;max-width:240px;border-radius:12px;border:1px solid rgba(201,169,98,0.3);margin-bottom:8px;display:block;margin-left:auto;margin-right:auto;" />
+            <p style="color:#c9a962;font-size:12px;font-weight:600;margin:0;text-align:center;">${img.label}</p>
+          </td>
     `).join('')
 
     imagesHtml = `
     <!-- Outfit Images -->
     <div style="margin-bottom:24px;">
       <h2 style="color:#c9a962;font-size:14px;letter-spacing:2px;text-align:center;margin-bottom:16px;">${outfitTitle[lang] || outfitTitle.en}</h2>
-      <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;">
-        ${imageCards}
-      </div>
+      <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin:0 auto;">
+        <tr>
+          ${imageCells}
+        </tr>
+      </table>
     </div>
     `
   }
