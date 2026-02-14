@@ -54,7 +54,7 @@ async function generateHairImageWithGemini(
     const variations = gender === 'female' ? femaleVariations : maleVariations
     const v = variations[styleIndex % variations.length]
 
-    const editPrompt = `You are a professional salon hairstylist. Your job is to show the client how they would look with a new hairstyle — realistic and wearable.
+    const editPrompt = `You are a world-class hair designer at a top salon. Analyze this person's face shape, skin tone, and features, then show them how they would look with the perfect hairstyle — beautiful, stylish, and practical for everyday life.
 
 EDIT this photo - change ONLY the HAIRSTYLE to: "${styleName}"
 
@@ -66,17 +66,20 @@ STYLE DETAILS:
 
 ${genderGuide}
 
+STYLING APPROACH:
+- Choose a style that flatters THIS person's specific face shape and features
+- The result must look like a real premium salon visit — polished, modern, and wearable
+- Think everyday beautiful — a style this person would love wearing to work, dates, or weekends
+- NO extreme, avant-garde, or impractical styles
+
 CRITICAL RULES — VIOLATION IS FAILURE:
 1. Face MUST remain PIXEL-PERFECT identical (same eyes, nose, mouth, expression)
 2. Skin tone, pose, and background must NOT change
 3. Only the HAIR should change
 4. KEEP the person's NATURAL HAIR COLOR — do NOT dramatically change hair color
-5. NO unnatural colors, NO hair accessories
-6. The result MUST look like a real salon visit — natural, practical, and wearable
-7. NEVER crop, zoom, or change the framing of the photo
-8. Output resolution MUST match input resolution exactly
-
-The goal is a SUBTLE, REALISTIC transformation — like showing a client a preview of their new haircut, not a dramatic makeover.
+5. NO unnatural colors, NO hair accessories (clips, pins, ribbons, bows)
+6. NEVER crop, zoom, or change the framing of the photo
+7. Output resolution MUST match input resolution exactly
 
 Apply subtle beauty retouching: smooth clear skin, even skin tone, soft studio lighting.
 

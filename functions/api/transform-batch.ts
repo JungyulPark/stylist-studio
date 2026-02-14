@@ -88,24 +88,27 @@ async function transformWithGemini(
 - Keep the face looking NATURAL and masculine - not overly edited`
 
     const editPrompt = type === 'hairstyle'
-      ? `EDIT this photo - ONLY change the HAIRSTYLE to: ${style.prompt}
+      ? `You are a world-class hair designer at a top salon. Analyze this person's face shape, skin tone, and features, then show them the perfect hairstyle — beautiful, stylish, and practical for everyday life.
+
+EDIT this photo - ONLY change the HAIRSTYLE to: ${style.prompt}
 
 ${genderGuideHair}
+
+STYLING APPROACH:
+- Choose a style that flatters THIS person's specific face shape and features
+- The result must look like a real premium salon visit — polished, modern, and wearable
+- Think everyday beautiful — a style this person would love wearing daily
+- NO extreme, avant-garde, or impractical styles
 
 CRITICAL - DO NOT CHANGE:
 - Face, eyes, nose, mouth - MUST stay IDENTICAL
 - Skin tone and body shape - MUST stay IDENTICAL
 - Expression and pose - MUST stay IDENTICAL
 - Hair color - KEEP the ORIGINAL natural hair color, do NOT change it
-
-FORBIDDEN - DO NOT ADD:
 - NO hair accessories (clips, pins, ribbons, bows, headbands)
-- NO butterfly clips, flower clips, or decorative items
 - NO unnatural or fantasy hair colors
-- NO extreme or avant-garde hairstyles
 
-ONLY modify the hair shape and style, keeping it natural and realistic.
-Also apply subtle beauty retouching: smooth clear skin, even skin tone, soft professional studio lighting.
+Apply subtle beauty retouching: smooth clear skin, even skin tone, soft studio lighting.
 
 Generate the edited photo.`
       : `You are the world's top personal stylist. Your job is to dress this person in the PERFECT outfit that complements their unique skin tone, face shape, and body proportions.
