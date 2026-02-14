@@ -15,18 +15,18 @@ interface StyleOption {
 
 const hairstyles: Record<string, StyleOption[]> = {
   male: [
-    { id: 'korean-actor', ko: '코리안 시크', en: 'Korean Chic', prompt: 'sophisticated Korean actor hairstyle like Park Seo-jun or Gong Yoo - clean textured cut with natural volume, effortlessly stylish and modern, natural hair color' },
-    { id: 'classic-gentleman', ko: '클래식 젠틀맨', en: 'Classic Gentleman', prompt: 'timeless gentleman hairstyle inspired by George Clooney or David Beckham - refined side part or slicked back, polished and sophisticated, natural hair color' },
-    { id: 'modern-textured', ko: '모던 텍스처', en: 'Modern Textured', prompt: 'modern textured cut inspired by Timothée Chalamet or BTS style - soft natural texture with movement, contemporary and youthful, natural hair color' },
-    { id: 'business-elite', ko: '비즈니스 엘리트', en: 'Business Elite', prompt: 'executive business hairstyle like Korean CEO or Wall Street style - impeccably groomed, clean and professional, commands respect, natural hair color' },
-    { id: 'soft-natural', ko: '소프트 내추럴', en: 'Soft Natural', prompt: 'natural relaxed hairstyle like Song Joong-ki or Won Bin - soft layers with gentle movement, approachable and charming, natural hair color' }
+    { id: 'clean-short', ko: '클린 숏컷', en: 'Clean Short', prompt: 'SHORT clean cut — sides closely tapered/faded, top about 2-3cm, neat and minimal. Like a clean crew cut or buzz fade. Very short and sharp. Keep natural hair color. Result should look like a real barber visit.' },
+    { id: 'side-part', ko: '사이드 파트', en: 'Side Part', prompt: 'MEDIUM length classic side part — top about 5-7cm swept to one side, sides shorter and tapered, clean and polished. Think classic gentlemen style. Keep natural hair color. Result should look like a real barber visit.' },
+    { id: 'textured-crop', ko: '텍스처드 크롭', en: 'Textured Crop', prompt: 'MEDIUM textured crop — top about 4-6cm with natural texture and movement, slightly messy and tousled, sides tapered. Modern and casual. Keep natural hair color. Result should look like a real barber visit.' },
+    { id: 'comma-hair', ko: '쉼표 머리', en: 'Comma Hair', prompt: 'MEDIUM-LONG Korean comma hair — top about 7-10cm with a comma-shaped fringe falling to one side, soft and natural texture, sides layered. Trendy and youthful. Keep natural hair color. Result should look like a real salon visit.' },
+    { id: 'wavy-natural', ko: '웨이비 내추럴', en: 'Wavy Natural', prompt: 'MEDIUM natural wavy style — top about 6-8cm with soft loose waves, relaxed and effortless volume, sides blended. Casual and approachable. Keep natural hair color. Result should look like a real salon visit.' }
   ],
   female: [
-    { id: 'korean-actress', ko: '코리안 엘레강스', en: 'Korean Elegance', prompt: 'elegant Korean actress hairstyle like Song Hye-kyo or Jun Ji-hyun - graceful long layers with soft face framing, luxurious shine and movement, natural hair color' },
-    { id: 'french-chic', ko: '프렌치 시크', en: 'French Chic', prompt: 'effortless French chic hairstyle inspired by Charlotte Gainsbourg or Jeanne Damas - relaxed waves or subtle texture, understated Parisian elegance, natural hair color' },
-    { id: 'modern-bob', ko: '모던 밥', en: 'Modern Bob', prompt: 'sophisticated modern bob inspired by fashion editors and Celine models - clean lines with subtle movement, chic and contemporary, natural hair color' },
-    { id: 'romantic-waves', ko: '로맨틱 웨이브', en: 'Romantic Waves', prompt: 'romantic soft waves like Suzy or IU style - gentle flowing waves with beautiful volume, feminine and dreamy, natural hair color' },
-    { id: 'natural-goddess', ko: '내추럴 여신', en: 'Natural Goddess', prompt: 'effortlessly beautiful natural hairstyle like Son Ye-jin or Han Ji-min - soft flowing layers with gentle movement, healthy shine and feminine grace, natural hair color' }
+    { id: 'long-straight', ko: '롱 스트레이트', en: 'Long Straight', prompt: 'LONG sleek straight hair — past shoulders, smooth and glossy with subtle face-framing layers, elegant and refined. Keep natural hair color. Result should look like a real salon blowout.' },
+    { id: 'shoulder-bob', ko: '숄더 밥', en: 'Shoulder Bob', prompt: 'SHOULDER-LENGTH bob — clean one-length or slightly layered bob ending at shoulders, sleek with subtle inward curve, chic and modern. Keep natural hair color. Result should look like a real salon cut.' },
+    { id: 'soft-waves', ko: '소프트 웨이브', en: 'Soft Waves', prompt: 'MEDIUM-LONG soft waves — past shoulders with loose gentle waves, romantic and feminine volume, natural flow. Keep natural hair color. Result should look like a real salon styling.' },
+    { id: 'layered-medium', ko: '레이어드 미디', en: 'Layered Medium', prompt: 'MEDIUM layered cut — collarbone length with face-framing layers, natural movement and body, effortless and modern. Keep natural hair color. Result should look like a real salon cut.' },
+    { id: 'short-pixie', ko: '숏 픽시', en: 'Short Pixie', prompt: 'SHORT pixie or cropped bob — above ear or chin length, textured and bold, feminine yet edgy, easy to maintain. Keep natural hair color. Result should look like a real salon cut.' }
   ]
 }
 

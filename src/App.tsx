@@ -2332,6 +2332,24 @@ function App() {
     return () => window.removeEventListener('popstate', handlePopState)
   }, [])
 
+  // Sync language to subscriber records whenever user changes language
+  useEffect(() => {
+    if (!user?.email || !isSubscribed) return
+    // Debounce: only sync after 500ms of no changes
+    const timer = setTimeout(() => {
+      fetch('/api/update-subscriber-profile', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          email: user.email,
+          user_id: user.id || undefined,
+          preferred_language: lang,
+        }),
+      }).catch(() => {})
+    }, 500)
+    return () => clearTimeout(timer)
+  }, [lang, user?.email, isSubscribed])
+
   // 로딩 프로그레스 타이머 (자연스러운 진행률 표시)
   useEffect(() => {
     if (page !== 'loading') return
