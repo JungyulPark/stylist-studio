@@ -175,6 +175,7 @@ DO NOT generate full body if original only shows partial body.
 Generate the edited photo with IDENTICAL composition to the input.`
 
     const geminiModels = [
+      'gemini-2.5-flash-image',
       'gemini-3-pro-image-preview'
     ]
 

@@ -83,6 +83,7 @@ Apply subtle beauty retouching: smooth clear skin, even skin tone, soft studio l
 Generate the edited photo.`
 
     const geminiModels = [
+      'gemini-2.5-flash-image',
       'gemini-3-pro-image-preview'
     ]
 

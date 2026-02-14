@@ -93,30 +93,45 @@ DO NOT generate full body if original only shows partial body.
 
 Generate the edited photo with IDENTICAL composition to the input.`
 
-    const response = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/gemini-3-pro-image-preview:generateContent?key=${apiKey}`,
-      {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          contents: [{
-            role: 'user',
-            parts: [
-              { inlineData: { mimeType, data: base64Data } },
-              { text: editPrompt }
-            ]
-          }],
-          generationConfig: {
-            responseModalities: ['IMAGE', 'TEXT'],
-            imageConfig: { imageSize: '1K' }
-          }
-        })
+    const geminiModels = ['gemini-2.5-flash-image', 'gemini-3-pro-image-preview']
+    const requestBody = JSON.stringify({
+      contents: [{
+        role: 'user',
+        parts: [
+          { inlineData: { mimeType, data: base64Data } },
+          { text: editPrompt }
+        ]
+      }],
+      generationConfig: {
+        responseModalities: ['IMAGE', 'TEXT'],
+        imageConfig: { imageSize: '1K' }
       }
-    )
+    })
 
-    if (!response.ok) {
-      const errorBody = await response.text()
-      console.error(`[Gemini] Failed for ${scenario.id} (${response.status}): ${errorBody.substring(0, 500)}`)
+    let response: Response | null = null
+    for (const model of geminiModels) {
+      try {
+        response = await fetch(
+          `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`,
+          {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: requestBody
+          }
+        )
+        if (response.ok) {
+          console.log(`[Gemini] ${model} succeeded for ${scenario.id}`)
+          break
+        }
+        console.log(`[Gemini] ${model} failed (${response.status}) for ${scenario.id}`)
+      } catch (e) {
+        console.error(`[Gemini] ${model} error:`, e)
+      }
+    }
+
+    if (!response || !response.ok) {
+      const errorBody = response ? await response.text() : 'No response'
+      console.error(`[Gemini] All models failed for ${scenario.id}: ${errorBody.substring(0, 500)}`)
       if (retryCount < MAX_RETRIES) {
         const delay = (retryCount + 1) * 2000
         console.log(`[Gemini] Retrying ${scenario.id} in ${delay}ms (attempt ${retryCount + 2}/${MAX_RETRIES + 1})`)
