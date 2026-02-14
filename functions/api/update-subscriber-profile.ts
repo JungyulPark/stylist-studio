@@ -67,7 +67,10 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
 
         photoR2Key = `photos/${subscriber.id}.jpg`
         await context.env.PHOTOS_BUCKET.put(photoR2Key, binaryData, {
-          httpMetadata: { contentType: 'image/jpeg' },
+          httpMetadata: {
+            contentType: 'image/jpeg',
+            cacheControl: 'no-cache, must-revalidate',
+          },
         })
       } catch (e) {
         console.error('[update-profile] R2 upload error:', e)

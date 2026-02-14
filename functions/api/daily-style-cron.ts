@@ -274,7 +274,10 @@ async function generateOutfitImages(
           const r2Key = `daily/${subscriber.id}/${today}/${scenario.id}-${runTs}.jpg`
 
           await imagesBucket.put(r2Key, binaryData, {
-            httpMetadata: { contentType: 'image/jpeg' },
+            httpMetadata: {
+              contentType: 'image/jpeg',
+              cacheControl: 'public, max-age=604800, immutable',
+            },
             customMetadata: { generated: new Date().toISOString() },
           })
 
