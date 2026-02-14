@@ -2834,6 +2834,10 @@ function App() {
       if (res.ok) {
         const data = await res.json()
         setDashProfileComplete(data.profile_complete)
+        // After profile save, load today's style recommendation
+        if (data.profile_complete && !dailyStyle) {
+          loadDailyStyle()
+        }
       }
     } catch (e) {
       console.error('Profile save error:', e)
@@ -4285,6 +4289,79 @@ function App() {
             <p className="dashboard-subtitle">{t.dashboardSubtitle}</p>
           </div>
 
+          {/* Profile Completion Form — shown FIRST for new subscribers */}
+          {!dashProfileComplete && !isDailyStyleLoading && (
+            <div className="dashboard-profile-form dashboard-profile-first">
+              <div className="dashboard-profile-badge">
+                <span>{t.dashboardProfileIncomplete}</span>
+              </div>
+              <h3>{t.dashboardProfileTitle}</h3>
+              <p className="dashboard-profile-desc">{t.dashboardProfileDesc}</p>
+
+              <div className="dashboard-profile-fields">
+                <div className="dashboard-profile-row">
+                  <label>{t.dashboardProfileHeight}</label>
+                  <input
+                    type="number"
+                    value={dashProfileHeight}
+                    onChange={(e) => setDashProfileHeight(e.target.value)}
+                    placeholder="170"
+                  />
+                </div>
+                <div className="dashboard-profile-row">
+                  <label>{t.dashboardProfileWeight}</label>
+                  <input
+                    type="number"
+                    value={dashProfileWeight}
+                    onChange={(e) => setDashProfileWeight(e.target.value)}
+                    placeholder="65"
+                  />
+                </div>
+                <div className="dashboard-profile-row">
+                  <label>{t.dashboardProfileGender}</label>
+                  <div className="dashboard-profile-gender-btns">
+                    {(['male', 'female', 'other'] as const).map(g => (
+                      <button
+                        key={g}
+                        className={`dashboard-gender-btn ${dashProfileGender === g ? 'active' : ''}`}
+                        onClick={() => setDashProfileGender(g)}
+                      >
+                        {g === 'male' ? t.male : g === 'female' ? t.female : t.other}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+                <div className="dashboard-profile-row">
+                  <label>{t.dashboardProfilePhoto}</label>
+                  <input
+                    ref={dashProfilePhotoRef}
+                    type="file"
+                    accept="image/*"
+                    onChange={handleDashProfilePhotoUpload}
+                    style={{ display: 'none' }}
+                  />
+                  <button
+                    className="dashboard-photo-upload-btn"
+                    onClick={() => dashProfilePhotoRef.current?.click()}
+                  >
+                    {dashProfilePhoto ? '✓ ' + t.dashboardProfilePhoto : t.dashboardProfilePhoto}
+                  </button>
+                  {dashProfilePhoto && (
+                    <img src={dashProfilePhoto} alt="Preview" className="dashboard-profile-photo-preview" />
+                  )}
+                </div>
+              </div>
+
+              <button
+                className="dashboard-profile-save-btn"
+                onClick={handleDashProfileSave}
+                disabled={isDashProfileSaving}
+              >
+                {isDashProfileSaving ? t.dashboardProfileSaving : t.dashboardProfileSave}
+              </button>
+            </div>
+          )}
+
           {isDailyStyleLoading && (
             <div className="dashboard-loading">
               <div className="dashboard-loading-spinner" />
@@ -4358,79 +4435,6 @@ function App() {
 
               <p className="dashboard-footer-note">{t.dashboardNewDay}</p>
             </>
-          )}
-
-          {/* Profile Completion Form */}
-          {!dashProfileComplete && !isDailyStyleLoading && (
-            <div className="dashboard-profile-form">
-              <div className="dashboard-profile-badge">
-                <span>{t.dashboardProfileIncomplete}</span>
-              </div>
-              <h3>{t.dashboardProfileTitle}</h3>
-              <p className="dashboard-profile-desc">{t.dashboardProfileDesc}</p>
-
-              <div className="dashboard-profile-fields">
-                <div className="dashboard-profile-row">
-                  <label>{t.dashboardProfileHeight}</label>
-                  <input
-                    type="number"
-                    value={dashProfileHeight}
-                    onChange={(e) => setDashProfileHeight(e.target.value)}
-                    placeholder="170"
-                  />
-                </div>
-                <div className="dashboard-profile-row">
-                  <label>{t.dashboardProfileWeight}</label>
-                  <input
-                    type="number"
-                    value={dashProfileWeight}
-                    onChange={(e) => setDashProfileWeight(e.target.value)}
-                    placeholder="65"
-                  />
-                </div>
-                <div className="dashboard-profile-row">
-                  <label>{t.dashboardProfileGender}</label>
-                  <div className="dashboard-profile-gender-btns">
-                    {(['male', 'female', 'other'] as const).map(g => (
-                      <button
-                        key={g}
-                        className={`dashboard-gender-btn ${dashProfileGender === g ? 'active' : ''}`}
-                        onClick={() => setDashProfileGender(g)}
-                      >
-                        {g === 'male' ? t.male : g === 'female' ? t.female : t.other}
-                      </button>
-                    ))}
-                  </div>
-                </div>
-                <div className="dashboard-profile-row">
-                  <label>{t.dashboardProfilePhoto}</label>
-                  <input
-                    ref={dashProfilePhotoRef}
-                    type="file"
-                    accept="image/*"
-                    onChange={handleDashProfilePhotoUpload}
-                    style={{ display: 'none' }}
-                  />
-                  <button
-                    className="dashboard-photo-upload-btn"
-                    onClick={() => dashProfilePhotoRef.current?.click()}
-                  >
-                    {dashProfilePhoto ? '✓ ' + t.dashboardProfilePhoto : t.dashboardProfilePhoto}
-                  </button>
-                  {dashProfilePhoto && (
-                    <img src={dashProfilePhoto} alt="Preview" className="dashboard-profile-photo-preview" />
-                  )}
-                </div>
-              </div>
-
-              <button
-                className="dashboard-profile-save-btn"
-                onClick={handleDashProfileSave}
-                disabled={isDashProfileSaving}
-              >
-                {isDashProfileSaving ? t.dashboardProfileSaving : t.dashboardProfileSave}
-              </button>
-            </div>
           )}
 
           {/* Favorites Section */}
