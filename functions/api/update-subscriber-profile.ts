@@ -81,7 +81,7 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
     const hasHeight = !!(body.height_cm || body.height_cm === 0)
     const hasWeight = !!(body.weight_kg || body.weight_kg === 0)
     const hasGender = !!body.gender
-    const hasPhoto = !!photoR2Key
+    const hasPhoto = !!photoR2Key || !!subscriber.photo_r2_key
     const profileComplete = hasHeight && hasWeight && hasGender && hasPhoto
 
     // Update subscriber in Supabase
