@@ -14,6 +14,7 @@ interface ProfileUpdateRequest {
   weight_kg?: number
   gender?: string
   photo?: string // base64 data URI
+  preferred_language?: string
 }
 
 export const onRequestPost: PagesFunction<Env> = async (context) => {
@@ -90,6 +91,10 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
     if (body.weight_kg !== undefined) updateData.weight_kg = body.weight_kg
     if (body.gender !== undefined) updateData.gender = body.gender
     if (photoR2Key) updateData.photo_r2_key = photoR2Key
+    const supportedLangs = ['ko', 'en', 'ja', 'zh', 'es']
+    if (body.preferred_language && supportedLangs.includes(body.preferred_language)) {
+      updateData.preferred_language = body.preferred_language
+    }
 
     // Update ALL records for this email (handles duplicates)
     await fetch(
@@ -122,16 +127,12 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
     }
 
     const updateRes = await fetch(
-      `${context.env.SUPABASE_URL}/rest/v1/subscribers?email=eq.${encodeURIComponent(body.email)}&limit=1`,
+      `${context.env.SUPABASE_URL}/rest/v1/subscribers?email=eq.${encodeURIComponent(body.email)}&order=profile_complete.desc&limit=1`,
       {
-        method: 'PATCH',
         headers: {
           'apikey': context.env.SUPABASE_SERVICE_KEY,
           'Authorization': `Bearer ${context.env.SUPABASE_SERVICE_KEY}`,
-          'Content-Type': 'application/json',
-          'Prefer': 'return=representation',
         },
-        body: JSON.stringify(updateData),
       }
     )
 

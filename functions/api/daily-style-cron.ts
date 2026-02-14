@@ -33,6 +33,7 @@ interface Subscriber {
   canceled_at: string | null
   current_period_end: string | null
   trial_ends_at: string | null
+  updated_at: string | null
 }
 
 interface WeatherData {
@@ -112,7 +113,7 @@ async function generateStyleRecommendation(
     subscriber.weight_kg ? `Weight: ${subscriber.weight_kg}kg` : '',
   ].filter(Boolean).join(', ')
 
-  const prompt = `You are an expert personal stylist trusted by celebrities. Generate a warm, detailed daily outfit recommendation email.
+  const prompt = `You are an expert personal stylist. Write a daily outfit recommendation email (150-200 words) entirely in ${langName[lang] || 'English'}.
 
 CONTEXT:
 - City: ${subscriber.city}
@@ -120,28 +121,13 @@ CONTEXT:
 - Profile: ${profileDesc || 'Not specified'}
 - Date: ${new Date().toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' })}
 
-RULES:
-1. Write ENTIRELY in ${langName[lang] || 'English'}
-2. Write 150-200 words — NOT shorter
-3. Suggest a COMPLETE outfit with specific colors and materials: top, bottom, shoes, outerwear (if needed), accessories
-4. Consider the weather practically (temperature, rain, wind)
-5. Include a style tip of the day
-6. Be warm, friendly, and encouraging
-7. Format with clear sections using line breaks — each outfit item on its own line with a dash (-) prefix
-8. Do NOT use markdown headers or asterisks — use plain text with emoji sparingly
-
-REQUIRED OUTPUT FORMAT (follow this structure exactly):
-1. Friendly greeting with today's weather summary (2-3 sentences)
-2. "Here's your outfit recommendation:" followed by each item on its own line:
-   - Top item with color and material
-   - Bottom item with color and material
-   - Shoes with specific style
-   - Outerwear (if weather requires)
-   - Accessories (bag, watch, scarf, etc.)
-3. Style tip of the day (1-2 sentences with practical advice)
-4. Warm closing line
-
-IMPORTANT: Your response must be at LEAST 120 words. Never give a one-line answer.`
+INSTRUCTIONS:
+1. Start with a friendly greeting mentioning today's weather (2-3 sentences)
+2. Recommend a COMPLETE outfit — each item on its own line with a dash (-) prefix, including specific colors and materials: top, bottom, shoes, outerwear (if needed), accessories
+3. Add a style tip of the day (1-2 sentences)
+4. End with a warm closing line
+5. Use plain text with line breaks — no markdown headers or asterisks, emoji sparingly
+6. Be warm, practical, and weather-appropriate`
 
   try {
     const res = await fetch('https://api.openai.com/v1/chat/completions', {
@@ -152,11 +138,8 @@ IMPORTANT: Your response must be at LEAST 120 words. Never give a one-line answe
       },
       body: JSON.stringify({
         model: 'gpt-5-mini',
-        messages: [
-          { role: 'system', content: 'You are an expert personal stylist writing a daily outfit recommendation email. Always write detailed, warm, helpful responses with at least 150 words. Never give short or one-line answers.' },
-          { role: 'user', content: prompt },
-        ],
-        max_completion_tokens: 800,
+        messages: [{ role: 'user', content: prompt }],
+        max_completion_tokens: 16000,
       }),
     })
 
@@ -514,8 +497,13 @@ export const onRequestGet: PagesFunction<Env> = async (context) => {
       const existing = emailMap.get(sub.email)
       if (!existing) {
         emailMap.set(sub.email, sub)
-      } else {
-        if (sub.profile_complete && !existing.profile_complete) {
+      } else if (sub.profile_complete && !existing.profile_complete) {
+        emailMap.set(sub.email, sub)
+      } else if (sub.profile_complete && existing.profile_complete) {
+        // Both profile_complete: prefer most recently updated
+        const subTime = sub.updated_at ? new Date(sub.updated_at).getTime() : 0
+        const existTime = existing.updated_at ? new Date(existing.updated_at).getTime() : 0
+        if (subTime > existTime) {
           emailMap.set(sub.email, sub)
         }
       }

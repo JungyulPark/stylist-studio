@@ -124,7 +124,7 @@ OUTPUT FORMAT:
       body: JSON.stringify({
         model: 'gpt-5-mini',
         messages: [{ role: 'user', content: prompt }],
-        max_completion_tokens: 500,
+        max_completion_tokens: 16000,
       }),
     })
 

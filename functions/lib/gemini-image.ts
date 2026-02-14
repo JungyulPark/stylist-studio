@@ -52,12 +52,12 @@ export async function editPhotoWithGemini(
 - Even out skin tone slightly for a clean, fresh look
 - Keep the face looking NATURAL and masculine - not overly edited`
 
-    const editPrompt = `You are the world's top celebrity stylist, trusted by A-list celebrities and fashion icons. Your styling choices are renowned for being perfectly tailored to each individual's unique body type, skin tone, and personal aura.
+    const editPrompt = `HIGH-END FASHION EDITORIAL — Style this photo as if shooting for Vogue or GQ. The result must look like a professionally styled luxury fashion photograph.
 
 EDIT this photo - ONLY change the OUTFIT of the MAIN PERSON to: ${scenario.prompt}
 
 CRITICAL: This is a ${genderWord}. The outfit MUST be appropriate for a ${genderWord}. Choose clothing that flatters THIS specific person's body proportions and complexion.
-${gender === 'female' ? 'For women: Use soft, feminine clothing - NO masculine suits or blazers. Prefer dresses, blouses, cardigans, skirts in soft colors.' : 'For men: Ensure natural relaxed fit - NOT skin-tight. Trousers should have comfortable drape, jackets should sit naturally on shoulders. NEVER make pants or shirts look spray-painted on the body.'}
+${gender === 'female' ? 'STYLING DIRECTION (Max Mara, The Row aesthetic): Naturally draped tailored silhouette with elegant proportions. Use soft, feminine clothing — dresses, blouses, cardigans, skirts in refined colors. Fabrics should have visible weight and texture, draping naturally on the body.' : 'STYLING DIRECTION (Loro Piana, Brunello Cucinelli aesthetic): Naturally draped tailored silhouette with relaxed elegance. Trousers should have comfortable drape with a straight or tapered leg. Jackets sit naturally on shoulders with soft structure. Fabrics have visible weight and texture, falling naturally on the body.'}
 
 ${beautyRetouch}
 

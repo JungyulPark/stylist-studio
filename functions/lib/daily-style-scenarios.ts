@@ -57,15 +57,15 @@ function getTodaysPickPrompt(weather: WeatherInfo, gender: string): string {
     return `versatile chic outfit in ${p.tone} palette: premium cashmere sweater in ${p.c1}, high-waisted ${p.c3} wide-leg trousers, elegant pointed flats, delicate ${p.accent} jewelry - timeless refined style`
   }
 
-  // Male — all pants/trousers MUST be relaxed fit with natural drape, NEVER skin-tight
+  // Male — Loro Piana/Brunello Cucinelli aesthetic: naturally draped tailored silhouette
   const p = maleColorPalettes[idx % maleColorPalettes.length]
-  if (isSnowy) return `sharp winter outfit in ${p.tone} palette: premium insulated wool overcoat in ${p.c2} with structured shoulders, chunky cable-knit sweater in ${p.c3}, relaxed-fit dark wool trousers with natural drape, waterproof leather boots in rich brown, ${p.accent} wool scarf, leather gloves - commanding winter presence with editorial quality, NOT skin-tight`
-  if (isRainy) return `sleek rainy day outfit in ${p.tone} palette: modern waterproof mac coat in ${p.c1}, fine merino crew-neck in ${p.c3}, relaxed-fit dark chinos with comfortable drape, polished waterproof chelsea boots, minimal ${p.accent} accent watch - sharp and weather-proof, natural relaxed silhouette`
-  if (isCold) return `distinguished cold weather outfit in ${p.tone} palette: tailored wool peacoat in ${p.c2}, fine merino turtleneck in ${p.c3}, straight-leg dark trousers with natural drape NOT tight, premium brown leather boots, minimal ${p.accent} accent watch - warm yet sharp, magazine-worthy silhouette`
-  if (isCool) return `smart modern outfit in ${p.tone} palette: premium cotton crew-neck sweater in ${p.c3} layered over crisp oxford shirt collar showing, relaxed straight-leg chinos in ${p.c1} with comfortable fit, clean leather sneakers or suede loafers, ${p.accent} accent leather belt - polished casual with editorial edge, NOT skin-tight`
-  if (isWarm) return `refined warm weather outfit in ${p.tone} palette: breathable premium linen shirt in ${p.c3} with perfect drape, relaxed-fit cotton trousers in ${p.c4} with natural comfortable drape, leather sandals or canvas sneakers, minimal ${p.accent} watch - cool composed elegance`
-  if (isHot) return `sharp summer outfit in ${p.tone} palette: lightweight camp-collar linen shirt in ${p.c3}, relaxed-fit cotton shorts or comfortable light chinos in ${p.c4}, premium leather sandals, ${p.accent} accent sunglasses - refined summer confidence, natural fit NOT tight`
-  return `clean modern outfit in ${p.tone} palette: fine-knit cashmere sweater in ${p.c3}, relaxed straight-leg chinos in ${p.c1} with natural drape, premium leather belt, clean sneakers or suede loafers, ${p.accent} accent details - polished minimalist style, comfortable NOT tight`
+  if (isSnowy) return `sharp winter outfit in ${p.tone} palette: premium insulated wool overcoat in ${p.c2} with structured shoulders, chunky cable-knit sweater in ${p.c3}, relaxed-fit dark wool trousers with natural drape, waterproof leather boots in rich brown, ${p.accent} wool scarf, leather gloves — luxury editorial quality, naturally draped tailored silhouette`
+  if (isRainy) return `sleek rainy day outfit in ${p.tone} palette: modern waterproof mac coat in ${p.c1}, fine merino crew-neck in ${p.c3}, relaxed-fit dark chinos with comfortable drape, polished waterproof chelsea boots, minimal ${p.accent} accent watch — luxury editorial quality, naturally draped silhouette`
+  if (isCold) return `distinguished cold weather outfit in ${p.tone} palette: tailored wool peacoat in ${p.c2}, fine merino turtleneck in ${p.c3}, straight-leg dark trousers with natural drape, premium brown leather boots, minimal ${p.accent} accent watch — luxury editorial quality, naturally draped tailored silhouette`
+  if (isCool) return `smart modern outfit in ${p.tone} palette: premium cotton crew-neck sweater in ${p.c3} layered over crisp oxford shirt collar showing, relaxed straight-leg chinos in ${p.c1} with comfortable fit, clean leather sneakers or suede loafers, ${p.accent} accent leather belt — luxury editorial quality, naturally draped silhouette`
+  if (isWarm) return `refined warm weather outfit in ${p.tone} palette: breathable premium linen shirt in ${p.c3} with perfect drape, relaxed-fit cotton trousers in ${p.c4} with natural comfortable drape, leather sandals or canvas sneakers, minimal ${p.accent} watch — luxury editorial quality, naturally draped silhouette`
+  if (isHot) return `sharp summer outfit in ${p.tone} palette: lightweight camp-collar linen shirt in ${p.c3}, relaxed-fit cotton shorts or comfortable light chinos in ${p.c4}, premium leather sandals, ${p.accent} accent sunglasses — luxury editorial quality, naturally draped silhouette`
+  return `clean modern outfit in ${p.tone} palette: fine-knit cashmere sweater in ${p.c3}, relaxed straight-leg chinos in ${p.c1} with natural drape, premium leather belt, clean sneakers or suede loafers, ${p.accent} accent details — luxury editorial quality, naturally draped silhouette`
 }
 
 function getCasualPrompt(gender: string, temp: number): string {
@@ -74,13 +74,13 @@ function getCasualPrompt(gender: string, temp: number): string {
 
   if (gender === 'female') {
     const p = femaleColorPalettes[(idx + 2) % femaleColorPalettes.length]
-    if (isWarm) return `relaxed yet chic casual outfit in ${p.tone} palette: premium oversized cotton tee in ${p.c4} loosely tucked into high-waisted ${p.c3} straight-leg jeans, clean white leather sneakers, ${p.accent} minimalist crossbody bag, simple hoop earrings - cool effortless weekend style with celebrity off-duty energy`
-    return `cozy chic casual outfit in ${p.tone} palette: luxurious oversized ${p.c1} cashmere cardigan over fitted white tee, high-waisted light wash straight-leg jeans, clean ${p.c3} sneakers or tan suede loafers, delicate ${p.accent} necklace - comfortable yet impeccably styled`
+    if (isWarm) return `relaxed yet chic casual outfit in ${p.tone} palette: premium oversized cotton tee in ${p.c4} loosely tucked into high-waisted ${p.c3} straight-leg jeans, clean white leather sneakers, ${p.accent} minimalist crossbody bag, simple hoop earrings — luxury editorial quality, naturally draped elegant silhouette`
+    return `cozy chic casual outfit in ${p.tone} palette: luxurious oversized ${p.c1} cashmere cardigan over fitted white tee, high-waisted light wash straight-leg jeans, clean ${p.c3} sneakers or tan suede loafers, delicate ${p.accent} necklace — luxury editorial quality, naturally draped elegant silhouette`
   }
 
   const p = maleColorPalettes[(idx + 2) % maleColorPalettes.length]
-  if (isWarm) return `relaxed modern casual outfit in ${p.tone} palette: premium soft cotton crew-neck tee in ${p.c3}, comfortable relaxed-fit chino shorts in ${p.c4} with natural drape, clean canvas sneakers or leather slides, minimal ${p.accent} watch - effortless cool weekend style, NOT tight`
-  return `elevated casual outfit in ${p.tone} palette: premium cotton ${p.c3} sweatshirt or half-zip pullover, straight-leg dark indigo jeans with comfortable relaxed fit, clean white leather sneakers, minimal ${p.accent} watch - relaxed yet sharp weekend look, NOT skin-tight`
+  if (isWarm) return `relaxed modern casual outfit in ${p.tone} palette: premium soft cotton crew-neck tee in ${p.c3}, comfortable relaxed-fit chino shorts in ${p.c4} with natural drape, clean canvas sneakers or leather slides, minimal ${p.accent} watch — luxury editorial quality, naturally draped silhouette`
+  return `elevated casual outfit in ${p.tone} palette: premium cotton ${p.c3} sweatshirt or half-zip pullover, straight-leg dark indigo jeans with comfortable relaxed fit, clean white leather sneakers, minimal ${p.accent} watch — luxury editorial quality, naturally draped silhouette`
 }
 
 function getEveningPrompt(gender: string, temp: number): string {
@@ -89,13 +89,13 @@ function getEveningPrompt(gender: string, temp: number): string {
 
   if (gender === 'female') {
     const p = femaleColorPalettes[(idx + 4) % femaleColorPalettes.length]
-    if (needsOuterwear) return `glamorous evening outfit in ${p.tone} palette: stunning midi dress in ${p.c2} with elegant draping and flattering silhouette, structured ${p.c1} blazer or elegant coat draped over shoulders, strappy heeled sandals, ${p.accent} statement earrings, premium clutch bag - red-carpet ready evening allure`
-    return `captivating evening outfit in ${p.tone} palette: sleek silk slip dress in ${p.c2} or form-fitting knit dress in ${p.c4}, strappy heeled sandals, ${p.accent} layered necklaces, elegant clutch, subtle smoky eye look - sophisticated night-out glamour`
+    if (needsOuterwear) return `glamorous evening outfit in ${p.tone} palette: stunning midi dress in ${p.c2} with elegant draping and flattering silhouette, structured ${p.c1} blazer or elegant coat draped over shoulders, strappy heeled sandals, ${p.accent} statement earrings, premium clutch bag — luxury editorial quality, naturally draped elegant silhouette`
+    return `captivating evening outfit in ${p.tone} palette: sleek silk slip dress in ${p.c2} or form-fitting knit dress in ${p.c4}, strappy heeled sandals, ${p.accent} layered necklaces, elegant clutch, subtle smoky eye look — luxury editorial quality, naturally draped elegant silhouette`
   }
 
   const p = maleColorPalettes[(idx + 4) % maleColorPalettes.length]
-  if (needsOuterwear) return `sharp evening outfit in ${p.tone} palette: unstructured soft blazer in ${p.c1} with natural shoulders over ${p.c2} turtleneck or relaxed dark dress shirt, straight-leg dark trousers with comfortable drape NOT tight, sleek leather dress shoes, minimal ${p.accent} watch - sophisticated evening confidence with natural relaxed fit`
-  return `refined evening outfit in ${p.tone} palette: premium ${p.c1} button-up shirt with sleeves slightly rolled revealing ${p.accent} watch, relaxed-fit dark trousers with natural drape NOT tight, polished leather loafers or dress shoes - relaxed evening elegance with magazine-quality styling`
+  if (needsOuterwear) return `sharp evening outfit in ${p.tone} palette: unstructured soft blazer in ${p.c1} with natural shoulders over ${p.c2} turtleneck or relaxed dark dress shirt, straight-leg dark trousers with comfortable drape, sleek leather dress shoes, minimal ${p.accent} watch — luxury editorial quality, naturally draped tailored silhouette`
+  return `refined evening outfit in ${p.tone} palette: premium ${p.c1} button-up shirt with sleeves slightly rolled revealing ${p.accent} watch, relaxed-fit dark trousers with natural drape, polished leather loafers or dress shoes — luxury editorial quality, naturally draped tailored silhouette`
 }
 
 export function getDailyScenarios(weather: WeatherInfo, gender: string): ImageScenario[] {

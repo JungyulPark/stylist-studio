@@ -2862,7 +2862,7 @@ function App() {
               if (data.canceled_at) setDashCanceledAt(data.canceled_at)
               // Load profile photo from R2
               if (data.has_photo) {
-                setDashProfilePhotoUrl(`/api/profile-photo?email=${encodeURIComponent(user.email!)}`)
+                setDashProfilePhotoUrl(`/api/profile-photo?email=${encodeURIComponent(user.email!)}&t=${Date.now()}`)
               }
             }
           } catch { /* ignore */ }
@@ -2899,11 +2899,17 @@ function App() {
           weight_kg: dashProfileWeight ? parseInt(dashProfileWeight, 10) : undefined,
           gender: dashProfileGender || undefined,
           photo: dashProfilePhoto || undefined,
+          preferred_language: lang,
         }),
       })
       if (res.ok) {
         const data = await res.json()
         setDashProfileComplete(data.profile_complete)
+        // Refresh profile photo URL with cache-busting timestamp
+        if (dashProfilePhoto) {
+          setDashProfilePhotoUrl(`/api/profile-photo?email=${encodeURIComponent(email)}&t=${Date.now()}`)
+          setDashProfilePhoto(null)
+        }
         // After profile save, load today's style recommendation
         if (data.profile_complete && !dailyStyle) {
           loadDailyStyle()

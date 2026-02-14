@@ -50,7 +50,7 @@ export const onRequestGet: PagesFunction<Env> = async (context) => {
       status: 200,
       headers: {
         'Content-Type': photoObj.httpMetadata?.contentType || 'image/jpeg',
-        'Cache-Control': 'public, max-age=3600',
+        'Cache-Control': 'no-cache, must-revalidate',
         ...corsHeaders,
       },
     })
