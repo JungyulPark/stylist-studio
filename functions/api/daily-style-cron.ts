@@ -135,7 +135,7 @@ OUTPUT FORMAT:
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        model: 'gpt-4o-mini',
+        model: 'gpt-5-mini',
         messages: [{ role: 'user', content: prompt }],
         max_tokens: 500,
         temperature: 0.8,
@@ -509,6 +509,17 @@ export const onRequestGet: PagesFunction<Env> = async (context) => {
         let outfitImages: OutfitImage[] = []
         let imageStatus = 'skipped'
 
+        // Debug: log which conditions are met for image generation
+        const imgConditions = {
+          profile_complete: !!sub.profile_complete,
+          has_photo_key: !!sub.photo_r2_key,
+          has_gender: !!sub.gender,
+          has_gemini_key: !!context.env.GEMINI_API_KEY,
+          has_images_bucket: !!context.env.DAILY_IMAGES_BUCKET,
+          has_photos_bucket: !!context.env.PHOTOS_BUCKET,
+        }
+        console.log(`[cron] Image conditions for ${sub.email}:`, JSON.stringify(imgConditions))
+
         if (sub.profile_complete && sub.photo_r2_key && sub.gender && context.env.GEMINI_API_KEY && context.env.DAILY_IMAGES_BUCKET) {
           try {
             imageStatus = 'generating'
@@ -580,6 +591,8 @@ export const onRequestGet: PagesFunction<Env> = async (context) => {
           email: sub.email,
           status: emailSent ? 'sent' : 'generated_not_sent',
           images: outfitImages.length,
+          image_status: imageStatus,
+          image_conditions: imgConditions,
           error: emailError || undefined,
         })
 
