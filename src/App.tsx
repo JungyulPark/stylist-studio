@@ -341,6 +341,9 @@ const translations: Record<Language, {
   dashboardProfileSaving: string
   dashboardProfileComplete: string
   dashboardProfileIncomplete: string
+  dashboardProfileEdit: string
+  dashboardProfilePhotoChange: string
+  subscriptionCanceledNotice: string
   // Dashboard Gallery
   dashboardGalleryTitle: string
   dashboardGalleryEmpty: string
@@ -609,6 +612,9 @@ const translations: Record<Language, {
     dashboardProfileSaving: '저장 중...',
     dashboardProfileComplete: '프로필 완성',
     dashboardProfileIncomplete: '프로필 미완성',
+    dashboardProfileEdit: '프로필 수정',
+    dashboardProfilePhotoChange: '사진 변경',
+    subscriptionCanceledNotice: '구독이 취소되었습니다. 현재 결제 기간이 끝날 때까지 매일 스타일 추천을 받으실 수 있습니다.',
     dashboardGalleryTitle: '오늘의 스타일 룩',
     dashboardGalleryEmpty: '내일 아침 6시에 맞춤 스타일이 도착합니다',
     dashboardGalleryTodaysPick: '오늘의 추천',
@@ -874,6 +880,9 @@ const translations: Record<Language, {
     dashboardProfileSaving: 'Saving...',
     dashboardProfileComplete: 'Profile Complete',
     dashboardProfileIncomplete: 'Profile Incomplete',
+    dashboardProfileEdit: 'Edit Profile',
+    dashboardProfilePhotoChange: 'Change Photo',
+    subscriptionCanceledNotice: 'Subscription canceled. Daily style emails continue until the end of your billing period.',
     dashboardGalleryTitle: "Today's Style Looks",
     dashboardGalleryEmpty: 'Your personalized styles arrive tomorrow at 6AM',
     dashboardGalleryTodaysPick: "Today's Pick",
@@ -1139,6 +1148,9 @@ const translations: Record<Language, {
     dashboardProfileSaving: '保存中...',
     dashboardProfileComplete: 'プロフィール完了',
     dashboardProfileIncomplete: 'プロフィール未完了',
+    dashboardProfileEdit: 'プロフィール編集',
+    dashboardProfilePhotoChange: '写真変更',
+    subscriptionCanceledNotice: 'サブスクリプションがキャンセルされました。現在の請求期間が終了するまで毎日のスタイル提案を受け取れます。',
     dashboardGalleryTitle: '今日のスタイルルック',
     dashboardGalleryEmpty: '明日朝6時にパーソナルスタイルが届きます',
     dashboardGalleryTodaysPick: '今日のおすすめ',
@@ -1404,6 +1416,9 @@ const translations: Record<Language, {
     dashboardProfileSaving: '保存中...',
     dashboardProfileComplete: '资料已完善',
     dashboardProfileIncomplete: '资料未完善',
+    dashboardProfileEdit: '编辑资料',
+    dashboardProfilePhotoChange: '更换照片',
+    subscriptionCanceledNotice: '订阅已取消。在当前计费周期结束前，您将继续收到每日穿搭推荐。',
     dashboardGalleryTitle: '今日穿搭图',
     dashboardGalleryEmpty: '明天早上6点将收到专属穿搭推荐',
     dashboardGalleryTodaysPick: '今日推荐',
@@ -1669,6 +1684,9 @@ const translations: Record<Language, {
     dashboardProfileSaving: 'Guardando...',
     dashboardProfileComplete: 'Perfil Completo',
     dashboardProfileIncomplete: 'Perfil Incompleto',
+    dashboardProfileEdit: 'Editar Perfil',
+    dashboardProfilePhotoChange: 'Cambiar Foto',
+    subscriptionCanceledNotice: 'Suscripción cancelada. Los correos de estilo diario continuarán hasta el final de tu período de facturación.',
     dashboardGalleryTitle: 'Looks de Hoy',
     dashboardGalleryEmpty: 'Tus estilos personalizados llegan mañana a las 6AM',
     dashboardGalleryTodaysPick: 'Elección del Día',
@@ -2044,9 +2062,12 @@ function App() {
   const [dashProfileWeight, setDashProfileWeight] = useState('')
   const [dashProfileGender, setDashProfileGender] = useState<Gender>(null)
   const [dashProfilePhoto, setDashProfilePhoto] = useState<string | null>(null)
+  const [dashProfilePhotoUrl, setDashProfilePhotoUrl] = useState<string | null>(null)
   const [isDashProfileSaving, setIsDashProfileSaving] = useState(false)
+  const [isDashProfileEditing, setIsDashProfileEditing] = useState(false)
   const [isCancelingSubscription, setIsCancelingSubscription] = useState(false)
   const [dashProfileComplete, setDashProfileComplete] = useState(false)
+  const [dashCanceledAt, setDashCanceledAt] = useState<string | null>(null)
 
   // Favorites state
   const [favorites, setFavorites] = useState<Array<{ id: string; image_url: string; image_type: string; label: string | null }>>([])
@@ -2838,6 +2859,11 @@ function App() {
               if (data.height_cm) setDashProfileHeight(String(data.height_cm))
               if (data.weight_kg) setDashProfileWeight(String(data.weight_kg))
               if (data.gender) setDashProfileGender(data.gender)
+              if (data.canceled_at) setDashCanceledAt(data.canceled_at)
+              // Load profile photo from R2
+              if (data.has_photo) {
+                setDashProfilePhotoUrl(`/api/profile-photo?email=${encodeURIComponent(user.email!)}`)
+              }
             }
           } catch { /* ignore */ }
         })()
@@ -2902,9 +2928,8 @@ function App() {
       })
       if (res.ok) {
         alert(t.subscriptionCancelSuccess)
-        setIsSubscribed(false)
-        localStorage.removeItem('stylist_subscription_active')
-        setPage('landing')
+        setDashCanceledAt(new Date().toISOString())
+        // Don't remove subscription — access continues until period ends
       }
     } catch (e) {
       console.error('Cancel subscription error:', e)
@@ -4366,77 +4391,136 @@ function App() {
             <p className="dashboard-subtitle">{t.dashboardSubtitle}</p>
           </div>
 
-          {/* Profile Completion Form — shown FIRST for new subscribers */}
-          {!dashProfileComplete && !isDailyStyleLoading && (
-            <div className="dashboard-profile-form dashboard-profile-first">
-              <div className="dashboard-profile-badge">
-                <span>{t.dashboardProfileIncomplete}</span>
-              </div>
-              <h3>{t.dashboardProfileTitle}</h3>
-              <p className="dashboard-profile-desc">{t.dashboardProfileDesc}</p>
-
-              <div className="dashboard-profile-fields">
-                <div className="dashboard-profile-row">
-                  <label>{t.dashboardProfileHeight}</label>
-                  <input
-                    type="number"
-                    value={dashProfileHeight}
-                    onChange={(e) => setDashProfileHeight(e.target.value)}
-                    placeholder="170"
-                  />
-                </div>
-                <div className="dashboard-profile-row">
-                  <label>{t.dashboardProfileWeight}</label>
-                  <input
-                    type="number"
-                    value={dashProfileWeight}
-                    onChange={(e) => setDashProfileWeight(e.target.value)}
-                    placeholder="65"
-                  />
-                </div>
-                <div className="dashboard-profile-row">
-                  <label>{t.dashboardProfileGender}</label>
-                  <div className="dashboard-profile-gender-btns">
-                    {(['male', 'female', 'other'] as const).map(g => (
-                      <button
-                        key={g}
-                        className={`dashboard-gender-btn ${dashProfileGender === g ? 'active' : ''}`}
-                        onClick={() => setDashProfileGender(g)}
-                      >
-                        {g === 'male' ? t.male : g === 'female' ? t.female : t.other}
-                      </button>
-                    ))}
+          {/* Profile Section — first-time setup OR editable summary */}
+          {!isDailyStyleLoading && (
+            <>
+              {/* Completed profile: show summary with edit button */}
+              {dashProfileComplete && !isDashProfileEditing && (
+                <div className="dashboard-profile-summary">
+                  <div className="dashboard-profile-summary-header">
+                    <h3>{t.dashboardProfileTitle}</h3>
+                    <button className="dashboard-profile-edit-btn" onClick={() => setIsDashProfileEditing(true)}>
+                      {t.dashboardProfileEdit || 'Edit'}
+                    </button>
                   </div>
-                </div>
-                <div className="dashboard-profile-row">
-                  <label>{t.dashboardProfilePhoto}</label>
-                  <input
-                    ref={dashProfilePhotoRef}
-                    type="file"
-                    accept="image/*"
-                    onChange={handleDashProfilePhotoUpload}
-                    style={{ display: 'none' }}
-                  />
-                  <button
-                    className="dashboard-photo-upload-btn"
-                    onClick={() => dashProfilePhotoRef.current?.click()}
-                  >
-                    {dashProfilePhoto ? '✓ ' + t.dashboardProfilePhoto : t.dashboardProfilePhoto}
-                  </button>
-                  {dashProfilePhoto && (
-                    <img src={dashProfilePhoto} alt="Preview" className="dashboard-profile-photo-preview" />
+                  <div className="dashboard-profile-summary-content">
+                    {(dashProfilePhotoUrl || dashProfilePhoto) && (
+                      <img
+                        src={dashProfilePhoto || dashProfilePhotoUrl || ''}
+                        alt="Profile"
+                        className="dashboard-profile-summary-photo"
+                      />
+                    )}
+                    <div className="dashboard-profile-summary-info">
+                      {dashProfileHeight && <span>{t.dashboardProfileHeight}: {dashProfileHeight}cm</span>}
+                      {dashProfileWeight && <span>{t.dashboardProfileWeight}: {dashProfileWeight}kg</span>}
+                      {dashProfileGender && <span>{dashProfileGender === 'male' ? t.male : dashProfileGender === 'female' ? t.female : t.other}</span>}
+                    </div>
+                  </div>
+                  {dashCanceledAt && (
+                    <div className="dashboard-cancel-notice">
+                      {t.subscriptionCanceledNotice || 'Subscription canceled. Daily style emails continue until your billing period ends.'}
+                    </div>
                   )}
                 </div>
-              </div>
+              )}
 
-              <button
-                className="dashboard-profile-save-btn"
-                onClick={handleDashProfileSave}
-                disabled={isDashProfileSaving}
-              >
-                {isDashProfileSaving ? t.dashboardProfileSaving : t.dashboardProfileSave}
-              </button>
-            </div>
+              {/* Profile form: first-time OR editing mode */}
+              {(!dashProfileComplete || isDashProfileEditing) && (
+                <div className={`dashboard-profile-form ${!dashProfileComplete ? 'dashboard-profile-first' : ''}`}>
+                  {!dashProfileComplete && (
+                    <div className="dashboard-profile-badge">
+                      <span>{t.dashboardProfileIncomplete}</span>
+                    </div>
+                  )}
+                  <h3>{dashProfileComplete ? (t.dashboardProfileEdit || 'Edit Profile') : t.dashboardProfileTitle}</h3>
+                  <p className="dashboard-profile-desc">{t.dashboardProfileDesc}</p>
+
+                  {/* Current photo preview */}
+                  {(dashProfilePhoto || dashProfilePhotoUrl) && (
+                    <div className="dashboard-profile-current-photo">
+                      <img
+                        src={dashProfilePhoto || dashProfilePhotoUrl || ''}
+                        alt="Current profile"
+                        className="dashboard-profile-photo-preview"
+                      />
+                    </div>
+                  )}
+
+                  <div className="dashboard-profile-fields">
+                    <div className="dashboard-profile-row">
+                      <label>{t.dashboardProfileHeight}</label>
+                      <input
+                        type="number"
+                        value={dashProfileHeight}
+                        onChange={(e) => setDashProfileHeight(e.target.value)}
+                        placeholder="170"
+                      />
+                    </div>
+                    <div className="dashboard-profile-row">
+                      <label>{t.dashboardProfileWeight}</label>
+                      <input
+                        type="number"
+                        value={dashProfileWeight}
+                        onChange={(e) => setDashProfileWeight(e.target.value)}
+                        placeholder="65"
+                      />
+                    </div>
+                    <div className="dashboard-profile-row">
+                      <label>{t.dashboardProfileGender}</label>
+                      <div className="dashboard-profile-gender-btns">
+                        {(['male', 'female', 'other'] as const).map(g => (
+                          <button
+                            key={g}
+                            className={`dashboard-gender-btn ${dashProfileGender === g ? 'active' : ''}`}
+                            onClick={() => setDashProfileGender(g)}
+                          >
+                            {g === 'male' ? t.male : g === 'female' ? t.female : t.other}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                    <div className="dashboard-profile-row">
+                      <label>{t.dashboardProfilePhoto}</label>
+                      <input
+                        ref={dashProfilePhotoRef}
+                        type="file"
+                        accept="image/*"
+                        onChange={handleDashProfilePhotoUpload}
+                        style={{ display: 'none' }}
+                      />
+                      <button
+                        className="dashboard-photo-upload-btn"
+                        onClick={() => dashProfilePhotoRef.current?.click()}
+                      >
+                        {dashProfilePhoto ? '✓ ' + (t.dashboardProfilePhotoChange || 'Change Photo') : (t.dashboardProfilePhoto)}
+                      </button>
+                    </div>
+                  </div>
+
+                  <div className="dashboard-profile-actions">
+                    <button
+                      className="dashboard-profile-save-btn"
+                      onClick={async () => {
+                        await handleDashProfileSave()
+                        setIsDashProfileEditing(false)
+                      }}
+                      disabled={isDashProfileSaving}
+                    >
+                      {isDashProfileSaving ? t.dashboardProfileSaving : t.dashboardProfileSave}
+                    </button>
+                    {isDashProfileEditing && (
+                      <button
+                        className="dashboard-profile-cancel-btn"
+                        onClick={() => setIsDashProfileEditing(false)}
+                      >
+                        {t.cancel || 'Cancel'}
+                      </button>
+                    )}
+                  </div>
+                </div>
+              )}
+            </>
           )}
 
           {isDailyStyleLoading && (

@@ -109,7 +109,8 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
       }
     }
 
-    // 4. Update Supabase status to canceled
+    // 4. Mark canceled_at but keep status active until period ends
+    //    Cron continues sending emails while status is active/trialing
     const updateRes = await fetch(
       `${SUPABASE_URL}/rest/v1/subscribers?email=eq.${encodeURIComponent(email)}`,
       {
@@ -120,7 +121,7 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          status: 'canceled',
+          canceled_at: new Date().toISOString(),
           updated_at: new Date().toISOString(),
         }),
       }
@@ -133,9 +134,7 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
         success: true,
         polar_canceled: polarCanceled,
         supabase_updated: supabaseUpdated,
-        message: polarCanceled
-          ? 'Subscription canceled. Access continues until the end of current billing period.'
-          : 'Subscription marked as canceled.',
+        message: 'Subscription canceled. Daily style emails continue until the end of your current billing period.',
       }),
       { status: 200, headers: { 'Content-Type': 'application/json', ...corsHeaders } }
     )

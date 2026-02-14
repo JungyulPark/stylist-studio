@@ -30,6 +30,9 @@ interface Subscriber {
   longitude: number | null
   preferred_language: string
   style_preferences: Record<string, unknown>
+  canceled_at: string | null
+  current_period_end: string | null
+  trial_ends_at: string | null
 }
 
 interface WeatherData {
@@ -454,14 +457,22 @@ export const onRequestGet: PagesFunction<Env> = async (context) => {
       )
     }
 
-    // Deduplicate by email: prefer profile_complete record, then most recently updated
+    // Deduplicate by email: prefer profile_complete record
+    // Also skip canceled subscribers whose billing period has ended
+    const now = new Date()
     const emailMap = new Map<string, Subscriber>()
     for (const sub of rawSubscribers) {
+      // Skip if canceled AND period has ended
+      if (sub.canceled_at) {
+        const periodEnd = sub.current_period_end || sub.trial_ends_at
+        if (periodEnd && new Date(periodEnd) < now) {
+          continue // period expired, skip
+        }
+      }
       const existing = emailMap.get(sub.email)
       if (!existing) {
         emailMap.set(sub.email, sub)
       } else {
-        // Prefer profile_complete over non-complete
         if (sub.profile_complete && !existing.profile_complete) {
           emailMap.set(sub.email, sub)
         }
