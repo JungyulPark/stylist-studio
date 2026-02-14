@@ -1983,6 +1983,17 @@ interface StyleImage {
   isDemo: boolean
 }
 
+// GA4 custom event tracking
+function trackEvent(eventName: string, params?: Record<string, string | number | boolean>) {
+  try {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const w = window as any  // gtag is loaded by GA4 script in index.html
+    if (typeof w?.gtag === 'function') {
+      w.gtag('event', eventName, params)
+    }
+  } catch { /* noop */ }
+}
+
 function App() {
   const [lang, setLang] = useState<Language>('en')
   const [page, setPageState] = useState<Page>('landing')
@@ -2115,6 +2126,7 @@ function App() {
   const setPage = useCallback((newPage: Page) => {
     setPageState(newPage)
     window.history.pushState({ page: newPage }, '', `#${newPage}`)
+    trackEvent('page_view', { page_name: newPage })
   }, [])
 
   // 브라우저 뒤로가기 이벤트 처리
@@ -2479,6 +2491,7 @@ function App() {
 
   // 결제 후 분석 수행 (프로필 데이터를 직접 받음)
   const startAnalysisAfterPayment = async (profileData: typeof profile, paymentCheckoutId?: string | null) => {
+    trackEvent('analysis_start', { type: 'full_style', paid: true })
     // 결제 1회 사용 제한: 분석 시작 시 결제 상태 제거
     localStorage.removeItem('paidCustomer')
     setIsFullPaid(false)
@@ -2622,6 +2635,7 @@ function App() {
   const startHairGenerationAfterPayment = async (savedData: {
     hairPhoto?: string; selectedOccasion?: string; selectedVibe?: string; gender?: Gender
   }, paymentCheckoutId?: string | null) => {
+    trackEvent('analysis_start', { type: 'hair', paid: true })
     // 결제 1회 사용 제한: 분석 시작 시 결제 상태 제거
     localStorage.removeItem('paidCustomer')
     setIsHairPaid(false)
@@ -2719,6 +2733,7 @@ function App() {
 
   // 무료 체험 헤어 생성 (결제 없음)
   const startFreeTrialHairGeneration = async () => {
+    trackEvent('free_trial_start', { type: 'hair' })
     // 즉시 localStorage에 저장 (악용 방지)
     localStorage.setItem('stylist_free_trial_used', 'true')
     setHasUsedFreeTrial(true)
@@ -2790,6 +2805,7 @@ function App() {
       loadDailyStyle()
       return
     }
+    trackEvent('subscription_form_open')
     setSubscriptionCity('')
     setSubscriptionCityError('')
     setShowSubscriptionForm(true)
@@ -3115,6 +3131,7 @@ function App() {
       }
       localStorage.setItem('pending_subscription_data', JSON.stringify(subscriptionData))
 
+      trackEvent('checkout_start', { product: 'daily_style' })
       // Polar 결제 생성
       const response = await fetch('/api/create-checkout', {
         method: 'POST',
@@ -3363,6 +3380,7 @@ function App() {
 
   // 결과 공유 - 모달 열기
   const handleShareResult = () => {
+    trackEvent('share_click', { page: page })
     setShowShareModal(true)
   }
 
@@ -3547,6 +3565,7 @@ function App() {
 
     // 사진 없이 데모 모드로 진행하는 경우 (기존 로직)
     if (!hairPhoto) {
+      trackEvent('checkout_start', { product: 'hair', has_photo: false })
       setIsProcessingPayment(true)
       try {
         // 결제 전 데이터 저장
@@ -5530,6 +5549,7 @@ function App() {
     const selectedVibeData = hairVibes.find(v => v.id === selectedVibe)
 
     const handleHairPayment = async () => {
+      trackEvent('checkout_start', { product: 'hair', has_photo: true })
       setIsProcessingPayment(true)
       try {
         // 결제 전 데이터 저장
