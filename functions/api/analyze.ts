@@ -10,7 +10,7 @@ interface Env {
 const ENABLE_API = true
 
 // 사용할 모델 설정
-const MODEL = 'gpt-4o-mini'
+const MODEL = 'gpt-5.2'
 
 const languagePrompts: Record<string, string> = {
   ko: '한국어로 답변해주세요.',
