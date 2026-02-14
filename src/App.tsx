@@ -4977,7 +4977,9 @@ function App() {
             </div>
             <span className="logo-text">{t.title}</span>
           </div>
-          <h1 className="page-title">{t.report}</h1>
+          <button className="back-btn" onClick={() => setPage('landing')}>
+            ← {t.backToHome}
+          </button>
           <div className="lang-selector">
             {(Object.keys(languageNames) as Language[]).map((code) => (
               <button
@@ -5793,7 +5795,9 @@ function App() {
             </div>
             <span className="logo-text">{t.title}</span>
           </div>
-          <h1 className="page-title">{t.hairResultTitle}</h1>
+          <button className="back-btn" onClick={() => setPage('landing')}>
+            ← {t.backToHome}
+          </button>
           <div className="lang-selector">
             {(Object.keys(languageNames) as Language[]).map((code) => (
               <button
