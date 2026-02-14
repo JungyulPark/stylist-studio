@@ -2762,11 +2762,11 @@ function App() {
   const handleSubscription = () => {
     if (!user) {
       setError(t.subscriptionLoginRequired)
-      setPageState('login')
+      setPage('login')
       return
     }
     if (isSubscribed) {
-      setPageState('subscription-dashboard')
+      setPage('subscription-dashboard')
       loadDailyStyle()
       return
     }
@@ -4263,7 +4263,7 @@ function App() {
     return (
       <div className="app-container" style={{ background: 'var(--bg-light)', minHeight: '100vh' }}>
         <div className="dashboard-page">
-          <button className="dashboard-back" onClick={() => setPageState('landing')}>
+          <button className="dashboard-back" onClick={() => setPage('landing')}>
             {t.dashboardBack}
           </button>
 
