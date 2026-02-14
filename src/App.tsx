@@ -2596,7 +2596,7 @@ function App() {
         if (stylesResult.value.ok) {
           const stylesData = await stylesResult.value.json()
           console.log('[Fashion] Success:', stylesData)
-          setStyleImages(stylesData.styles || [])
+          setStyleImages(stylesData.results || stylesData.styles || [])
         } else {
           console.error('[Fashion] API error:', stylesResult.value.status, await stylesResult.value.text())
         }
@@ -3229,7 +3229,7 @@ function App() {
         if (stylesResult.value.ok) {
           const stylesData = await stylesResult.value.json()
           console.log('[Fashion] Success:', stylesData)
-          setStyleImages(stylesData.styles || [])
+          setStyleImages(stylesData.results || stylesData.styles || [])
         } else {
           console.error('[Fashion] API error:', stylesResult.value.status, await stylesResult.value.text())
         }
