@@ -133,12 +133,19 @@ async function editPhotoWithGemini(
 - Even out skin tone slightly for a clean, fresh look
 - Keep the face looking NATURAL and masculine - not overly edited`
 
-    const editPrompt = `HIGH-END FASHION EDITORIAL — Style this photo as if shooting for Vogue or GQ. The result must look like a professionally styled luxury fashion photograph.
+    const editPrompt = `You are the world's top personal stylist. Your job is to dress this person in the PERFECT outfit that complements their unique skin tone, face shape, and body proportions.
 
 EDIT this photo - ONLY change the OUTFIT of the MAIN PERSON to: ${stylePrompt}
 
-CRITICAL: This is a ${genderWord}. The outfit MUST be appropriate for a ${genderWord}. Choose clothing that flatters THIS specific person's body proportions and complexion.
-${gender === 'female' ? 'STYLING DIRECTION (Max Mara, The Row aesthetic): Naturally draped tailored silhouette with elegant proportions. Use soft, feminine clothing — dresses, blouses, cardigans, skirts in refined colors. Fabrics should have visible weight and texture, draping naturally on the body.' : 'STYLING DIRECTION (Loro Piana, Brunello Cucinelli aesthetic): Naturally draped tailored silhouette with relaxed elegance. Trousers should have comfortable drape with a straight or tapered leg. Jackets sit naturally on shoulders with soft structure. Fabrics have visible weight and texture, falling naturally on the body.'}
+CRITICAL: This is a ${genderWord}. The outfit MUST be appropriate for a ${genderWord}.
+
+STYLING APPROACH:
+- Analyze the person's skin tone, complexion, and overall coloring to choose the BEST colors for THEM
+- Select colors and fabrics that make this specific person look their best — warm or cool tones based on their complexion
+- The outfit should feel premium, refined, and wearable in everyday life
+- Quality fabrics with natural texture and drape, not stiff or costume-like
+- Avoid overly theatrical, costume-like, or neon outfits — keep it realistic and tasteful
+${gender === 'female' ? '- Use soft, feminine clothing — dresses, blouses, cardigans, skirts' : '- Relaxed, comfortable silhouette — NOT tight, NOT skinny fit\n- Trousers with comfortable straight-leg or slightly wide drape, jackets with soft natural shoulders\n- Mix of relaxed tailored fit and easy casual fit — modern men prefer comfort over constriction'}
 
 ${beautyRetouch}
 
@@ -156,6 +163,12 @@ INPAINTING RULES - THIS IS AN INPAINTING TASK:
 5. Clothing layers: body underneath, clothes on top - NEVER overlap incorrectly
 6. DO NOT extend the image or add new body parts that weren't visible
 
+BODY PROPORTION PRESERVATION (CRITICAL):
+- The person's BODY PROPORTIONS must stay EXACTLY the same as the original photo
+- LEG LENGTH must be IDENTICAL to the original — do NOT shorten or compress legs
+- TORSO-to-LEG ratio must match the original exactly
+- Waistline position must stay at the SAME height as in the original photo
+
 ABSOLUTE REQUIREMENTS - VIOLATION IS FAILURE:
 1. NEVER CROP OR ZOOM - output must have IDENTICAL framing as input
 2. NEVER change aspect ratio - if input is portrait, output is portrait
@@ -166,6 +179,7 @@ ABSOLUTE REQUIREMENTS - VIOLATION IS FAILURE:
 7. Output resolution MUST match input resolution exactly
 8. Legs must be BEHIND/INSIDE pants or skirt - NEVER on top of clothing
 9. Arms must be THROUGH sleeves - NEVER floating above clothes
+10. Body proportions (especially leg length) - ZERO distortion allowed
 
 This is a clothing REPLACEMENT task for the MAIN PERSON only.
 Keep the person's HEAD and FACE at the EXACT same position.

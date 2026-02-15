@@ -18,8 +18,8 @@ const hairstyles: Record<string, StyleOption[]> = {
     { id: 'clean-short', ko: '클린 숏컷', en: 'Clean Short', prompt: 'SHORT clean cut — sides closely tapered/faded, top about 2-3cm, neat and minimal. Like a clean crew cut or buzz fade. Very short and sharp. Keep natural hair color. Result should look like a real barber visit.' },
     { id: 'side-part', ko: '사이드 파트', en: 'Side Part', prompt: 'MEDIUM length classic side part — top about 5-7cm swept to one side, sides shorter and tapered, clean and polished. Think classic gentlemen style. Keep natural hair color. Result should look like a real barber visit.' },
     { id: 'textured-crop', ko: '텍스처드 크롭', en: 'Textured Crop', prompt: 'MEDIUM textured crop — top about 4-6cm with natural texture and movement, slightly messy and tousled, sides tapered. Modern and casual. Keep natural hair color. Result should look like a real barber visit.' },
-    { id: 'comma-hair', ko: '쉼표 머리', en: 'Comma Hair', prompt: 'MEDIUM-LONG Korean comma hair — top about 7-10cm with a comma-shaped fringe falling to one side, soft and natural texture, sides layered. Trendy and youthful. Keep natural hair color. Result should look like a real salon visit.' },
-    { id: 'wavy-natural', ko: '웨이비 내추럴', en: 'Wavy Natural', prompt: 'MEDIUM natural wavy style — top about 6-8cm with soft loose waves, relaxed and effortless volume, sides blended. Casual and approachable. Keep natural hair color. Result should look like a real salon visit.' }
+    { id: 'comma-hair', ko: '쉼표 머리', en: 'Comma Hair', prompt: 'MEDIUM Korean comma hair — top about 5-7cm with a subtle comma-shaped fringe falling to one side, sides tapered short. Clean and modern, NOT long or flowing. Keep natural hair color. Result should look like a real barber visit.' },
+    { id: 'wavy-natural', ko: '웨이비 내추럴', en: 'Wavy Natural', prompt: 'SHORT-MEDIUM natural wavy style — top about 4-6cm with slight soft texture, sides tapered clean. Casual and approachable, NOT long or flowing. Keep natural hair color. Result should look like a real barber visit.' }
   ],
   female: [
     { id: 'long-straight', ko: '롱 스트레이트', en: 'Long Straight', prompt: 'LONG sleek straight hair — past shoulders, smooth and glossy with subtle face-framing layers, elegant and refined. Keep natural hair color. Result should look like a real salon blowout.' },
@@ -121,6 +121,7 @@ STYLING APPROACH:
 - The outfit should feel premium, refined, and wearable in everyday life
 - Quality fabrics with natural texture and drape, not stiff or costume-like
 - Avoid overly theatrical, costume-like, or neon outfits — keep it realistic and tasteful
+${gender === 'male' ? '- Relaxed, comfortable silhouette — NOT tight, NOT skinny fit\n- Trousers with comfortable straight-leg or slightly wide drape, jackets with soft natural shoulders\n- Mix of relaxed tailored fit and easy casual fit — modern men prefer comfort over constriction' : '- Use soft, feminine clothing — dresses, blouses, cardigans, skirts'}
 
 CRITICAL: ${genderGuideFashion}
 

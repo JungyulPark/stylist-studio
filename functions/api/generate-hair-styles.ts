@@ -38,10 +38,10 @@ async function generateHairImageWithGemini(
     // Each of the 5 styles gets a DISTINCT visual variation
     const maleVariations = [
       { length: 'short and clean on the sides', texture: 'clean and sleek', color: 'keep the person\'s natural hair color', volume: 'low volume, close to the head' },
-      { length: 'medium length with longer top', texture: 'textured with natural movement', color: 'keep the person\'s natural hair color', volume: 'medium volume with movement' },
-      { length: 'short on the sides with more length on top', texture: 'wavy and tousled', color: 'keep the person\'s natural hair color, add very subtle warm tone', volume: 'moderate volume, lifted at the front' },
-      { length: 'even medium length', texture: 'soft and natural', color: 'keep the person\'s natural hair color', volume: 'natural body' },
-      { length: 'slightly longer on top, tapered sides', texture: 'straight and polished', color: 'keep the person\'s natural hair color', volume: 'moderate volume with defined shape' },
+      { length: 'short to medium, longer on top (5-7cm)', texture: 'textured with natural movement', color: 'keep the person\'s natural hair color', volume: 'medium volume with movement' },
+      { length: 'short on the sides, moderate top (4-6cm)', texture: 'slightly wavy and tousled', color: 'keep the person\'s natural hair color, add very subtle warm tone', volume: 'moderate volume, lifted at the front' },
+      { length: 'short to medium, even all around (3-5cm)', texture: 'soft and natural', color: 'keep the person\'s natural hair color', volume: 'natural body' },
+      { length: 'medium on top (5-7cm), tapered sides', texture: 'straight and polished', color: 'keep the person\'s natural hair color', volume: 'moderate volume with defined shape' },
     ]
     const femaleVariations = [
       { length: 'shoulder length or above', texture: 'sleek and straight', color: 'keep the person\'s natural hair color', volume: 'smooth and refined' },
