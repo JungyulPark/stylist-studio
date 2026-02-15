@@ -529,7 +529,7 @@ export const onRequestGet: PagesFunction<Env> = async (context) => {
       eligibleSubscribers = subscribers
       console.log(`[cron] FORCE TEST: processing all ${subscribers.length} subscribers`)
     } else {
-      const targetHour = 6
+      const targetHour = 18 // TEMP: testing at 6PM KST — change back to 6 after test
       eligibleSubscribers = subscribers.filter(sub => {
         const localHour = getLocalHour(sub.timezone)
         return localHour === targetHour
