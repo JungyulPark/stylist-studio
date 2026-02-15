@@ -1,9 +1,11 @@
 import { getCorsHeaders, createCorsPreflightResponse } from '../lib/cors'
 import { validateGenerateStylesRequest, createValidationErrorResponse } from '../lib/validation'
 import { errors } from '../lib/errors'
+import { editPhotoWithOpenAI } from '../lib/openai-image'
 
 interface Env {
   GEMINI_API_KEY: string
+  OPENAI_API_KEY?: string
 }
 
 interface StyleScenario {
@@ -105,6 +107,7 @@ async function editPhotoWithGemini(
   scenario: StyleScenario,
   gender: string,
   apiKey: string,
+  openaiKey?: string,
   retryCount: number = 0
 ): Promise<string | null> {
   const MAX_RETRIES = 2
@@ -188,6 +191,18 @@ DO NOT generate full body if original only shows partial body.
 
 Generate the edited photo with IDENTICAL composition to the input.`
 
+    // Try OpenAI gpt-image-1.5 first
+    if (openaiKey) {
+      console.log(`[OpenAI] Trying gpt-image-1.5 for ${scenario.id}`)
+      const openaiResult = await editPhotoWithOpenAI(base64Data, mimeType, editPrompt, openaiKey)
+      if (openaiResult) {
+        console.log(`[OpenAI] Success for ${scenario.id}`)
+        return openaiResult
+      }
+      console.log(`[OpenAI] Failed for ${scenario.id}, falling back to Gemini`)
+    }
+
+    // Fallback to Gemini
     const geminiModels = [
       'gemini-3-pro-image-preview',
       'gemini-2.5-flash-image'
@@ -298,13 +313,14 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
     const { photo, language, gender, height, weight } = validation.data!
 
     const geminiKey = context.env.GEMINI_API_KEY
+    const openaiKey = context.env.OPENAI_API_KEY
     const hasPhoto = photo && photo.length > 100
 
     // Generate diversity seed from user characteristics + timestamp
     const diversitySeed = (parseInt(height || '170') + parseInt(weight || '70') + Date.now()) % maleColorPalettes.length
     const styleScenarios = getVariedScenarios(diversitySeed)
 
-    if (!geminiKey) {
+    if (!geminiKey && !openaiKey) {
       const demoResults = styleScenarios.map(scenario => ({
         id: scenario.id,
         label: scenario[`label${language === 'ko' ? 'Ko' : language === 'ja' ? 'Ja' : language === 'zh' ? 'Zh' : language === 'es' ? 'Es' : 'En'}` as keyof StyleScenario] as string,
@@ -331,7 +347,7 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
         let imageUrl: string | null = null
 
         if (hasPhoto) {
-          imageUrl = await editPhotoWithGemini(photo, scenario, gender, geminiKey)
+          imageUrl = await editPhotoWithGemini(photo, scenario, gender, geminiKey, openaiKey)
         }
 
         const labelKey = `label${language === 'ko' ? 'Ko' : language === 'ja' ? 'Ja' : language === 'zh' ? 'Zh' : language === 'es' ? 'Es' : 'En'}` as keyof StyleScenario

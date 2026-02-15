@@ -1,9 +1,11 @@
 import { getCorsHeaders, createCorsPreflightResponse } from '../lib/cors'
 import { validateHairStylesRequest, createValidationErrorResponse } from '../lib/validation'
 import { errors } from '../lib/errors'
+import { editPhotoWithOpenAI } from '../lib/openai-image'
 
 interface Env {
   GEMINI_API_KEY: string
+  OPENAI_API_KEY?: string
 }
 
 // ===== Gemini Image Editing =====
@@ -12,7 +14,8 @@ async function generateHairImageWithGemini(
   styleName: string,
   gender: string,
   styleIndex: number,
-  apiKey: string
+  apiKey: string,
+  openaiKey?: string
 ): Promise<{ style: string; imageUrl: string | null }> {
   try {
     const base64Match = photo.match(/^data:image\/(\w+);base64,(.+)$/)
@@ -85,6 +88,18 @@ Apply subtle beauty retouching: smooth clear skin, even skin tone, soft studio l
 
 Generate the edited photo.`
 
+    // Try OpenAI gpt-image-1.5 first
+    if (openaiKey) {
+      console.log(`[OpenAI] Trying gpt-image-1.5 for hair: ${styleName}`)
+      const openaiResult = await editPhotoWithOpenAI(base64Data, mimeType, editPrompt, openaiKey)
+      if (openaiResult) {
+        console.log(`[OpenAI] Success for hair: ${styleName}`)
+        return { style: styleName, imageUrl: openaiResult }
+      }
+      console.log(`[OpenAI] Failed for hair: ${styleName}, falling back to Gemini`)
+    }
+
+    // Fallback to Gemini
     const geminiModels = [
       'gemini-3-pro-image-preview',
       'gemini-2.5-flash-image'
@@ -170,16 +185,17 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
     const { photo, styles, gender } = validation.data!
 
     const geminiKey = context.env.GEMINI_API_KEY
+    const openaiKey = context.env.OPENAI_API_KEY
 
-    if (!geminiKey) {
+    if (!geminiKey && !openaiKey) {
       console.error('[generate-hair-styles] Image generation API not configured')
       return errors.configError(corsHeaders)
     }
 
-    console.log(`[API Hair] Generating ${styles.length} hairstyles with Gemini`)
+    console.log(`[API Hair] Generating ${styles.length} hairstyles (OpenAI primary, Gemini fallback)`)
 
     const images = await Promise.all(
-      styles.map((styleName, index) => generateHairImageWithGemini(photo, styleName, gender || 'male', index, geminiKey))
+      styles.map((styleName, index) => generateHairImageWithGemini(photo, styleName, gender || 'male', index, geminiKey, openaiKey))
     )
 
     const successCount = images.filter(r => r.imageUrl).length

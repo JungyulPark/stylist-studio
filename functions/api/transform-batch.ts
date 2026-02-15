@@ -1,9 +1,11 @@
 import { getCorsHeaders, createCorsPreflightResponse } from '../lib/cors'
 import { validateTransformBatchRequest, createValidationErrorResponse } from '../lib/validation'
 import { errors } from '../lib/errors'
+import { editPhotoWithOpenAI } from '../lib/openai-image'
 
 interface Env {
   GEMINI_API_KEY: string
+  OPENAI_API_KEY?: string
 }
 
 interface StyleOption {
@@ -57,7 +59,8 @@ async function transformWithGemini(
   type: 'hairstyle' | 'fashion',
   style: StyleOption,
   gender: string,
-  apiKey: string
+  apiKey: string,
+  openaiKey?: string
 ): Promise<string | null> {
   try {
     const base64Match = photo.match(/^data:image\/(\w+);base64,(.+)$/)
@@ -166,6 +169,18 @@ DO NOT generate full body if original only shows partial body.
 
 Generate the edited photo with IDENTICAL composition to the input.`
 
+    // Try OpenAI gpt-image-1.5 first
+    if (openaiKey) {
+      console.log(`[OpenAI] Trying gpt-image-1.5 for ${style.id}`)
+      const openaiResult = await editPhotoWithOpenAI(base64Data, mimeType, editPrompt, openaiKey)
+      if (openaiResult) {
+        console.log(`[OpenAI] Success for ${style.id}`)
+        return openaiResult
+      }
+      console.log(`[OpenAI] Failed for ${style.id}, falling back to Gemini`)
+    }
+
+    // Fallback to Gemini
     const geminiModels = [
       'gemini-3-pro-image-preview',
       'gemini-2.5-flash-image'
@@ -248,8 +263,9 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
     const { photo, type, gender, language } = validation.data!
 
     const geminiKey = context.env.GEMINI_API_KEY
+    const openaiKey = context.env.OPENAI_API_KEY
 
-    if (!geminiKey) {
+    if (!geminiKey && !openaiKey) {
       console.error('[transform-batch] Image generation API not configured')
       return errors.configError(corsHeaders)
     }
@@ -257,11 +273,11 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
     const genderKey = gender === 'female' ? 'female' : 'male'
     const styles = type === 'hairstyle' ? hairstyles[genderKey] : fashionStyles[genderKey]
 
-    console.log(`[transform-batch] Generating ${styles.length} ${type} styles with Gemini`)
+    console.log(`[transform-batch] Generating ${styles.length} ${type} styles (OpenAI primary, Gemini fallback)`)
 
     const results = await Promise.all(
       styles.map(async (style) => {
-        const imageUrl = await transformWithGemini(photo, type, style, genderKey, geminiKey)
+        const imageUrl = await transformWithGemini(photo, type, style, genderKey, geminiKey, openaiKey)
         const label = language === 'ko' ? style.ko : style.en
         return { id: style.id, label, imageUrl }
       })

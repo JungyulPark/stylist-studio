@@ -1,7 +1,9 @@
 /**
- * Shared Gemini image generation utilities
- * Extracted from generate-styles.ts for reuse in daily-style-cron.ts
+ * Shared image generation utilities
+ * Uses OpenAI gpt-image-1.5 as primary, Gemini as fallback
  */
+
+import { editPhotoWithOpenAI } from './openai-image'
 
 export interface ImageScenario {
   id: string
@@ -13,11 +15,12 @@ async function sleep(ms: number): Promise<void> {
 }
 
 /**
- * Edit a photo using Gemini image inpainting
+ * Edit a photo using OpenAI (primary) or Gemini (fallback)
  * @param photo - base64 data URI of the photo
  * @param scenario - { id, prompt } describing the outfit
  * @param gender - 'male' | 'female'
  * @param apiKey - Gemini API key
+ * @param openaiKey - OpenAI API key (optional, used as primary)
  * @param retryCount - internal retry counter
  * @returns base64 data URI of the edited photo, or null on failure
  */
@@ -26,6 +29,7 @@ export async function editPhotoWithGemini(
   scenario: ImageScenario,
   gender: string,
   apiKey: string,
+  openaiKey?: string,
   retryCount: number = 0
 ): Promise<string | null> {
   const MAX_RETRIES = 2
@@ -108,6 +112,18 @@ DO NOT generate full body if original only shows partial body.
 
 Generate the edited photo with IDENTICAL composition to the input.`
 
+    // Try OpenAI gpt-image-1.5 first
+    if (openaiKey) {
+      console.log(`[OpenAI] Trying gpt-image-1.5 for ${scenario.id}`)
+      const openaiResult = await editPhotoWithOpenAI(base64Data, mimeType, editPrompt, openaiKey)
+      if (openaiResult) {
+        console.log(`[OpenAI] Success for ${scenario.id}`)
+        return openaiResult
+      }
+      console.log(`[OpenAI] Failed for ${scenario.id}, falling back to Gemini`)
+    }
+
+    // Fallback to Gemini
     const geminiModels = ['gemini-3-pro-image-preview', 'gemini-2.5-flash-image']
     const requestBody = JSON.stringify({
       contents: [{

@@ -9,6 +9,7 @@ interface Env {
   SUPABASE_SERVICE_KEY: string
   OPENWEATHER_API_KEY: string
   GEMINI_API_KEY: string
+  OPENAI_API_KEY?: string
   RESEND_API_KEY: string
   CRON_SECRET: string
   PHOTOS_BUCKET: R2Bucket
@@ -209,7 +210,8 @@ async function generateOutfitImages(
   geminiApiKey: string,
   photosBucket: R2Bucket,
   imagesBucket: R2Bucket,
-  precomputedScenarios?: ImageScenario[]
+  precomputedScenarios?: ImageScenario[],
+  openaiApiKey?: string
 ): Promise<{ images: OutfitImage[]; photoSizeBytes: number }> {
   if (!subscriber.photo_r2_key || !subscriber.gender) {
     console.log(`[cron] Skipping image gen for ${subscriber.email}: no photo or gender`)
@@ -256,7 +258,8 @@ async function generateOutfitImages(
         photoDataUri,
         scenario,
         subscriber.gender,
-        geminiApiKey
+        geminiApiKey,
+        openaiApiKey
       )
 
       if (!resultDataUri) {
@@ -608,7 +611,7 @@ export const onRequestGet: PagesFunction<Env> = async (context) => {
 
         let imageError: string | undefined
         let photoSizeBytes: number | undefined
-        if (sub.profile_complete && sub.photo_r2_key && sub.gender && context.env.GEMINI_API_KEY && context.env.DAILY_IMAGES_BUCKET) {
+        if (sub.profile_complete && sub.photo_r2_key && sub.gender && (context.env.GEMINI_API_KEY || context.env.OPENAI_API_KEY) && context.env.DAILY_IMAGES_BUCKET) {
           try {
             imageStatus = 'generating'
             const imgResult = await generateOutfitImages(
@@ -617,7 +620,8 @@ export const onRequestGet: PagesFunction<Env> = async (context) => {
               context.env.GEMINI_API_KEY,
               context.env.PHOTOS_BUCKET,
               context.env.DAILY_IMAGES_BUCKET,
-              scenarios
+              scenarios,
+              context.env.OPENAI_API_KEY
             )
             outfitImages = imgResult.images
             photoSizeBytes = imgResult.photoSizeBytes
