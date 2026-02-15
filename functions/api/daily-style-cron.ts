@@ -555,7 +555,8 @@ export const onRequestGet: PagesFunction<Env> = async (context) => {
         const today = new Date().toISOString().split('T')[0]
 
         // Check if already sent today (skip if force=true)
-        if (!forceTest) {
+        // TEMP: disabled for 6PM test — re-enable after test
+        if (false && !forceTest) {
           const checkRes = await fetch(
             `${context.env.SUPABASE_URL}/rest/v1/daily_recommendations?subscriber_id=eq.${sub.id}&sent_date=eq.${today}&limit=1`,
             {
