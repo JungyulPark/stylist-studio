@@ -66,6 +66,21 @@ function getLocalHour(timezone: string): number {
   }
 }
 
+function getLocalDate(timezone: string): string {
+  try {
+    const now = new Date()
+    const formatter = new Intl.DateTimeFormat('en-CA', {
+      timeZone: timezone,
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit',
+    })
+    return formatter.format(now) // returns YYYY-MM-DD
+  } catch {
+    return new Date().toISOString().split('T')[0]
+  }
+}
+
 async function getWeather(lat: number, lon: number, apiKey: string): Promise<WeatherData | null> {
   try {
     const res = await fetch(
@@ -245,7 +260,7 @@ async function generateOutfitImages(
 
   const photoSizeBytes = photoDataUri.length  // approximate size for debug
   const scenarios = precomputedScenarios || getDailyScenarios(weather, subscriber.gender)
-  const today = new Date().toISOString().split('T')[0]
+  const today = getLocalDate(subscriber.timezone)
   const lang = subscriber.preferred_language || 'en'
   const outfitImages: OutfitImage[] = []
 
@@ -529,7 +544,7 @@ export const onRequestGet: PagesFunction<Env> = async (context) => {
       eligibleSubscribers = subscribers
       console.log(`[cron] FORCE TEST: processing all ${subscribers.length} subscribers`)
     } else {
-      const targetHour = 18 // TEMP: testing at 6PM KST — change back to 6 after test
+      const targetHour = 7
       eligibleSubscribers = subscribers.filter(sub => {
         const localHour = getLocalHour(sub.timezone)
         return localHour === targetHour
@@ -552,11 +567,9 @@ export const onRequestGet: PagesFunction<Env> = async (context) => {
     // 3. Process each eligible subscriber
     for (const sub of eligibleSubscribers) {
       try {
-        const today = new Date().toISOString().split('T')[0]
-
-        // Check if already sent today (skip if force=true)
-        // TEMP: disabled for 6PM test — re-enable after test
-        if (false && !forceTest) {
+        // Use subscriber's LOCAL date (not UTC) — fixes timezone mismatch for UTC+ zones
+        const today = getLocalDate(sub.timezone)
+        if (!forceTest) {
           const checkRes = await fetch(
             `${context.env.SUPABASE_URL}/rest/v1/daily_recommendations?subscriber_id=eq.${sub.id}&sent_date=eq.${today}&limit=1`,
             {
