@@ -167,7 +167,7 @@ Generate the edited photo with IDENTICAL composition to the input.`
         const delay = (retryCount + 1) * 2000
         console.log(`[Gemini] Retrying ${scenario.id} in ${delay}ms (attempt ${retryCount + 2}/${MAX_RETRIES + 1})`)
         await sleep(delay)
-        return editPhotoWithGemini(photo, scenario, gender, apiKey, retryCount + 1)
+        return editPhotoWithGemini(photo, scenario, gender, apiKey, openaiKey, retryCount + 1)
       }
       return null
     }
@@ -191,7 +191,7 @@ Generate the edited photo with IDENTICAL composition to the input.`
       const delay = (retryCount + 1) * 2000
       console.log(`[Gemini] No image returned for ${scenario.id}, retrying in ${delay}ms`)
       await sleep(delay)
-      return editPhotoWithGemini(photo, scenario, gender, apiKey, retryCount + 1)
+      return editPhotoWithGemini(photo, scenario, gender, apiKey, openaiKey, retryCount + 1)
     }
 
     return null
@@ -200,7 +200,7 @@ Generate the edited photo with IDENTICAL composition to the input.`
     if (retryCount < MAX_RETRIES) {
       const delay = (retryCount + 1) * 2000
       await sleep(delay)
-      return editPhotoWithGemini(photo, scenario, gender, apiKey, retryCount + 1)
+      return editPhotoWithGemini(photo, scenario, gender, apiKey, openaiKey, retryCount + 1)
     }
     return null
   }

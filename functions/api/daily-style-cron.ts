@@ -230,7 +230,7 @@ async function generateOutfitImages(
 ): Promise<{ images: OutfitImage[]; photoSizeBytes: number }> {
   if (!subscriber.photo_r2_key || !subscriber.gender) {
     console.log(`[cron] Skipping image gen for ${subscriber.email}: no photo or gender`)
-    return []
+    return { images: [], photoSizeBytes: 0 }
   }
 
   // Fetch subscriber's photo from R2
@@ -240,7 +240,7 @@ async function generateOutfitImages(
     const photoObj = await photosBucket.get(subscriber.photo_r2_key)
     if (!photoObj) {
       console.error(`[cron] Photo not found in R2: ${subscriber.photo_r2_key}`)
-      return []
+      return { images: [], photoSizeBytes: 0 }
     }
     const photoBuffer = await photoObj.arrayBuffer()
     console.log(`[cron] Photo loaded: ${photoBuffer.byteLength} bytes for ${subscriber.email}`)
@@ -255,7 +255,7 @@ async function generateOutfitImages(
     photoDataUri = `data:image/jpeg;base64,${base64}`
   } catch (e) {
     console.error(`[cron] Failed to read photo from R2:`, e)
-    return []
+    return { images: [], photoSizeBytes: 0 }
   }
 
   const photoSizeBytes = photoDataUri.length  // approximate size for debug
@@ -538,7 +538,7 @@ export const onRequestGet: PagesFunction<Env> = async (context) => {
     const rawCount = rawSubscribers.length
     console.log(`[cron] ${rawCount} raw subscribers → ${subscribers.length} after dedup`)
 
-    // 2. Filter subscribers at 6AM local time (skip if force=true)
+    // 2. Filter subscribers at 7AM local time (skip if force=true)
     let eligibleSubscribers: Subscriber[]
     if (forceTest) {
       eligibleSubscribers = subscribers
@@ -554,7 +554,7 @@ export const onRequestGet: PagesFunction<Env> = async (context) => {
     if (eligibleSubscribers.length === 0) {
       return new Response(
         JSON.stringify({
-          message: 'No subscribers at 6AM right now',
+          message: 'No subscribers at 7AM right now',
           total_active: subscribers.length,
           sent: 0,
         }),
@@ -628,7 +628,9 @@ export const onRequestGet: PagesFunction<Env> = async (context) => {
         if (sub.profile_complete && sub.photo_r2_key && sub.gender && (context.env.GEMINI_API_KEY || context.env.OPENAI_API_KEY) && context.env.DAILY_IMAGES_BUCKET) {
           try {
             imageStatus = 'generating'
-            const imgResult = await generateOutfitImages(
+            // 90-second timeout to prevent infinite loops from blocking email delivery
+            const IMAGE_TIMEOUT_MS = 90_000
+            const imgPromise = generateOutfitImages(
               sub,
               weather,
               context.env.GEMINI_API_KEY,
@@ -637,6 +639,10 @@ export const onRequestGet: PagesFunction<Env> = async (context) => {
               scenarios,
               context.env.OPENAI_API_KEY
             )
+            const timeoutPromise = new Promise<never>((_, reject) =>
+              setTimeout(() => reject(new Error('Image generation timed out after 90s')), IMAGE_TIMEOUT_MS)
+            )
+            const imgResult = await Promise.race([imgPromise, timeoutPromise])
             outfitImages = imgResult.images
             photoSizeBytes = imgResult.photoSizeBytes
             imageStatus = outfitImages.length > 0 ? 'generated' : 'no_images_returned'
