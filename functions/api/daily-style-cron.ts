@@ -544,7 +544,7 @@ export const onRequestGet: PagesFunction<Env> = async (context) => {
       eligibleSubscribers = subscribers
       console.log(`[cron] FORCE TEST: processing all ${subscribers.length} subscribers`)
     } else {
-      const targetHour = 13 // TEMP: 1PM KST test (revert to 7 after)
+      const targetHour = 7
       eligibleSubscribers = subscribers.filter(sub => {
         const localHour = getLocalHour(sub.timezone)
         return localHour === targetHour
@@ -569,23 +569,22 @@ export const onRequestGet: PagesFunction<Env> = async (context) => {
       try {
         // Use subscriber's LOCAL date (not UTC) — fixes timezone mismatch for UTC+ zones
         const today = getLocalDate(sub.timezone)
-        // TEMP: Disabled already-sent check for 1PM test (revert after)
-        // if (!forceTest) {
-        //   const checkRes = await fetch(
-        //     `${context.env.SUPABASE_URL}/rest/v1/daily_recommendations?subscriber_id=eq.${sub.id}&sent_date=eq.${today}&limit=1`,
-        //     {
-        //       headers: {
-        //         'apikey': context.env.SUPABASE_SERVICE_KEY,
-        //         'Authorization': `Bearer ${context.env.SUPABASE_SERVICE_KEY}`,
-        //       },
-        //     }
-        //   )
-        //   const existing = await checkRes.json() as Array<unknown>
-        //   if (existing && existing.length > 0) {
-        //     results.push({ email: sub.email, status: 'skipped_already_sent' })
-        //     continue
-        //   }
-        // }
+        if (!forceTest) {
+          const checkRes = await fetch(
+            `${context.env.SUPABASE_URL}/rest/v1/daily_recommendations?subscriber_id=eq.${sub.id}&sent_date=eq.${today}&limit=1`,
+            {
+              headers: {
+                'apikey': context.env.SUPABASE_SERVICE_KEY,
+                'Authorization': `Bearer ${context.env.SUPABASE_SERVICE_KEY}`,
+              },
+            }
+          )
+          const existing = await checkRes.json() as Array<unknown>
+          if (existing && existing.length > 0) {
+            results.push({ email: sub.email, status: 'skipped_already_sent' })
+            continue
+          }
+        }
 
         // Fetch weather
         let weather: WeatherData | null = null
