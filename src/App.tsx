@@ -4863,7 +4863,11 @@ function App() {
         {/* Hero Section */}
         <section className="hero-section">
           <div className="hero-image">
-            <div className="hero-image-bg"></div>
+            <picture className="hero-image-bg">
+              <source type="image/avif" srcSet="/hero-800w.avif 800w, /hero-1024w.avif 1024w" sizes="(min-width: 768px) 50vw, 100vw" />
+              <source type="image/webp" srcSet="/hero-800w.webp 800w, /hero-1024w.webp 1024w" sizes="(min-width: 768px) 50vw, 100vw" />
+              <img src="/hero-800w.webp" alt="AI Personal Styling Preview" className="hero-image-bg-img" fetchPriority="high" width="800" height="1000" />
+            </picture>
             <div className="glass-card">
               <span className="glass-tag">PERSONAL STYLING</span>
               <p className="glass-text">Your Style, Reimagined</p>
@@ -4910,7 +4914,11 @@ function App() {
             <div className="path-row-top">
               {/* Card 1: Daily Style Subscription */}
               <div className="path-card-v2 subscription" onClick={handleSubscription}>
-                <div className="path-image path-image-3"></div>
+                <picture className="path-image">
+                  <source type="image/avif" srcSet="/dailynew-800w.avif" />
+                  <source type="image/webp" srcSet="/dailynew-800w.webp" />
+                  <img src="/dailynew-800w.webp" alt="Daily Style" className="path-image-img" loading="lazy" width="800" height="600" />
+                </picture>
                 <div className="path-overlay"></div>
                 {isSubscribed && <span className="path-popular-badge active">{t.subscriptionActive}</span>}
                 <div className="path-content-v2">
@@ -4930,7 +4938,11 @@ function App() {
 
               {/* Card 2: Full Package (Featured) */}
               <div className="path-card-v2 featured" onClick={() => { trackEvent('select_item', { item_category: 'full_style' }); setPage('input') }}>
-                <div className="path-image path-image-2"></div>
+                <picture className="path-image">
+                  <source type="image/avif" srcSet="/full-800w.avif" />
+                  <source type="image/webp" srcSet="/full-800w.webp" />
+                  <img src="/full-800w.webp" alt="Full Style Package" className="path-image-img" loading="lazy" width="800" height="600" />
+                </picture>
                 <div className="path-overlay"></div>
                 <span className="path-popular-badge">{t.bestValue}</span>
                 <div className="path-content-v2">
@@ -4952,7 +4964,11 @@ function App() {
             {/* Row 2: Hair Styling (centered) */}
             <div className="path-row-bottom">
               <div className="path-card-v2 hair-card" onClick={() => { trackEvent('select_item', { item_category: 'hair' }); setPage('hair-selection') }}>
-                <div className="path-image path-image-1"></div>
+                <picture className="path-image">
+                  <source type="image/avif" srcSet="/hairnew-800w.avif" />
+                  <source type="image/webp" srcSet="/hairnew-800w.webp" />
+                  <img src="/hairnew-800w.webp" alt="Hair Styling" className="path-image-img" loading="lazy" width="800" height="600" />
+                </picture>
                 <div className="path-overlay"></div>
                 <div className="path-content-v2">
                   <div className="path-header-v2">

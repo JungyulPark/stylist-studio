@@ -168,13 +168,18 @@
 .hero-image-bg {
   position: absolute;
   inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   background: linear-gradient(135deg, #2a2025 0%, #1a1518 100%);
-  background-image: url('/hero.png');
-  background-size: contain;
-  background-position: center center;
-  background-repeat: no-repeat;
-  image-rendering: high-quality;
   transition: transform 0.7s;
+}
+
+.hero-image-bg-img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  object-position: center center;
 }
 
 .hero-image:hover .hero-image-bg {
@@ -634,8 +639,7 @@
 .path-card-v2 .path-image {
   position: absolute;
   inset: 0;
-  background-size: cover;
-  background-position: center;
+  overflow: hidden;
   transition: transform 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
 
@@ -643,9 +647,11 @@
   transform: scale(1.08);
 }
 
-.path-image-3 {
-  background-image: url('/dailynew.png');
-  background-position: center 15%;
+.path-image-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 15%;
 }
 
 .path-card-v2 .path-overlay {
@@ -888,8 +894,7 @@
 .path-image {
   position: absolute;
   inset: 0;
-  background-size: cover;
-  background-position: center;
+  overflow: hidden;
   transition: transform 1s;
 }
 
@@ -897,14 +902,12 @@
   transform: scale(1.1);
 }
 
-.path-image-1 {
-  background-image: url('/hairnew.png');
-  background-position: center 20%;
+.path-card-v2.hair-card .path-image-img {
+  object-position: center 20%;
 }
 
-.path-image-2 {
-  background-image: url('/full.png');
-  background-position: center 15%;
+.path-card-v2.featured .path-image-img {
+  object-position: center 15%;
 }
 
 .path-overlay {
@@ -4149,12 +4152,21 @@
   border-radius: 20px;
   letter-spacing: 0.1em;
   text-transform: uppercase;
+  position: relative;
+}
+
+.free-badge::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  box-shadow: 0 0 20px rgba(0, 200, 83, 0.7);
   animation: badge-glow 2s ease-in-out infinite;
 }
 
 @keyframes badge-glow {
-  0%, 100% { box-shadow: 0 0 8px rgba(0, 200, 83, 0.4); }
-  50% { box-shadow: 0 0 20px rgba(0, 200, 83, 0.7); }
+  0%, 100% { opacity: 0.4; }
+  50% { opacity: 1; }
 }
 
 /* Green pulse CTA button */
@@ -4170,6 +4182,14 @@
   position: relative;
   transition: all 0.3s;
   box-shadow: 0 4px 20px rgba(0, 200, 83, 0.35);
+}
+
+.free-cta-pulse::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  box-shadow: 0 4px 30px rgba(0, 200, 83, 0.6), 0 0 0 8px rgba(0, 200, 83, 0.1);
   animation: pulse-green 2s ease-in-out infinite;
 }
 
@@ -4179,8 +4199,8 @@
 }
 
 @keyframes pulse-green {
-  0%, 100% { box-shadow: 0 4px 20px rgba(0, 200, 83, 0.35); }
-  50% { box-shadow: 0 4px 30px rgba(0, 200, 83, 0.6), 0 0 0 8px rgba(0, 200, 83, 0.1); }
+  0%, 100% { opacity: 0; }
+  50% { opacity: 1; }
 }
 
 /* Share Result section */

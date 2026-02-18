@@ -14,7 +14,8 @@
     "test:watch": "vitest",
     "test:coverage": "vitest run --coverage",
     "deploy": "npm run build && wrangler pages deploy dist",
-    "pages:dev": "wrangler pages dev dist --compatibility-date=2024-01-01"
+    "pages:dev": "wrangler pages dev dist --compatibility-date=2024-01-01",
+    "optimize-images": "node scripts/optimize-images.mjs"
   },
   "dependencies": {
     "@polar-sh/checkout": "^0.2.0",

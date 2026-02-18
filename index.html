@@ -10,10 +10,12 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
     <link rel="apple-touch-icon" href="/icon-192.svg" />
 
+    <!-- Preload hero image for fast LCP -->
+    <link rel="preload" as="image" type="image/avif" imagesrcset="/hero-800w.avif 800w, /hero-1024w.avif 1024w" imagesizes="(min-width: 768px) 50vw, 100vw" />
+
     <!-- Preconnect for performance (렌더 블로킹 방지) -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link rel="preconnect" href="https://www.googletagmanager.com" />
     <link rel="dns-prefetch" href="https://www.clarity.ms" />
 
     <!-- SEO Meta Tags -->
