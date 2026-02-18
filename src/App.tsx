@@ -2073,7 +2073,7 @@ function App() {
   const [dashProfilePhotoUrl, setDashProfilePhotoUrl] = useState<string | null>(null)
   const [isDashProfileSaving, setIsDashProfileSaving] = useState(false)
   const [isDashProfileEditing, setIsDashProfileEditing] = useState(false)
-  const [isCancelingSubscription, setIsCancelingSubscription] = useState(false)
+  const [isOpeningPortal, setIsOpeningPortal] = useState(false)
   const [dashProfileComplete, setDashProfileComplete] = useState(false)
   const [dashCanceledAt, setDashCanceledAt] = useState<string | null>(null)
 
@@ -2949,26 +2949,26 @@ function App() {
     }
   }
 
-  const handleCancelSubscription = async () => {
+  const handleManageSubscription = async () => {
     if (!user?.email) return
-    if (!window.confirm(t.subscriptionCancelConfirm)) return
 
-    setIsCancelingSubscription(true)
+    setIsOpeningPortal(true)
     try {
-      const res = await fetch('/api/cancel-subscription', {
+      const res = await fetch('/api/customer-portal', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email: user.email }),
       })
       if (res.ok) {
-        alert(t.subscriptionCancelSuccess)
-        setDashCanceledAt(new Date().toISOString())
-        // Don't remove subscription — access continues until period ends
+        const data = await res.json()
+        if (data.url) {
+          window.open(data.url, '_blank')
+        }
       }
     } catch (e) {
-      console.error('Cancel subscription error:', e)
+      console.error('Manage subscription error:', e)
     } finally {
-      setIsCancelingSubscription(false)
+      setIsOpeningPortal(false)
     }
   }
 
@@ -4571,11 +4571,11 @@ function App() {
           {/* Subscription Management */}
           <div className="dashboard-subscription-manage">
             <button
-              className="dashboard-cancel-btn"
-              onClick={handleCancelSubscription}
-              disabled={isCancelingSubscription}
+              className="dashboard-manage-btn"
+              onClick={handleManageSubscription}
+              disabled={isOpeningPortal}
             >
-              {isCancelingSubscription ? t.subscriptionCanceling : t.subscriptionCancel}
+              {isOpeningPortal ? '...' : t.subscriptionManage}
             </button>
           </div>
         </div>
