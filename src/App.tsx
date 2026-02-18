@@ -2174,6 +2174,7 @@ function App() {
       // 구독 결제 성공 처리
       const subscriptionParam = urlParams.get('subscription')
       if (subscriptionParam === 'active' || purchasedProductType === 'daily_style') {
+        trackEvent('purchase', { product: 'daily_style', currency: 'USD', value: 6.99 })
         localStorage.setItem('stylist_subscription_active', 'true')
         if (polarCheckoutId) {
           localStorage.setItem('stylist_subscription_checkout_id', polarCheckoutId)
@@ -2257,6 +2258,8 @@ function App() {
 
             if (savedData) {
               // Hair Only 상품인 경우
+              if (purchasedProductType === 'hair') trackEvent('purchase', { product: 'hair', currency: 'USD', value: 2.99 })
+              else trackEvent('purchase', { product: 'full_style', currency: 'USD', value: 4.99 })
               if (purchasedProductType === 'hair' && savedData.hairPhoto) {
                 setHairPhoto(savedData.hairPhoto)
                 setSelectedOccasion(savedData.selectedOccasion || null)
@@ -2420,6 +2423,7 @@ function App() {
   const handlePhotoUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
     if (file) {
+      trackEvent('photo_upload', { funnel: 'full_style' })
       processFile(file)
     }
   }
@@ -2453,6 +2457,7 @@ function App() {
 
   // Polar 결제 처리
   const handlePayment = async (productType: 'full' | 'hair' = 'full') => {
+    trackEvent('begin_checkout', { product: productType, currency: 'USD', value: productType === 'full' ? 4.99 : 2.99 })
     setIsProcessingPayment(true)
     try {
       // 결제 전 폼 데이터 저장 (IndexedDB - 사진 포함 가능)
@@ -2497,7 +2502,7 @@ function App() {
 
   // 결제 후 분석 수행 (프로필 데이터를 직접 받음)
   const startAnalysisAfterPayment = async (profileData: typeof profile, paymentCheckoutId?: string | null) => {
-    trackEvent('analysis_start', { type: 'full_style', paid: true })
+    trackEvent('generation_start', { type: 'full_style' })
     // 결제 1회 사용 제한: 분석 시작 시 결제 상태 제거
     localStorage.removeItem('paidCustomer')
     setIsFullPaid(false)
@@ -2566,6 +2571,8 @@ function App() {
       setLoadingProgress(100)
       setLoadingStep(lang === 'ko' ? '완료!' : 'Complete!')
       await new Promise(resolve => setTimeout(resolve, 400))
+      trackEvent('generation_complete', { type: 'full_style' })
+      trackEvent('result_view', { type: 'full_style' })
       setPage('result')
 
       // Step 2: Generate style images AND hairstyles AFTER showing result page
@@ -2641,7 +2648,7 @@ function App() {
   const startHairGenerationAfterPayment = async (savedData: {
     hairPhoto?: string; selectedOccasion?: string; selectedVibe?: string; gender?: Gender
   }, paymentCheckoutId?: string | null) => {
-    trackEvent('analysis_start', { type: 'hair', paid: true })
+    trackEvent('generation_start', { type: 'hair', paid: true })
     // 결제 1회 사용 제한: 분석 시작 시 결제 상태 제거
     localStorage.removeItem('paidCustomer')
     setIsHairPaid(false)
@@ -2734,6 +2741,8 @@ function App() {
     }
 
     setIsGeneratingHair(false)
+    trackEvent('generation_complete', { type: 'hair', paid: false, image_count: generatedHairImages.length })
+    trackEvent('result_view', { type: 'hair', is_free_trial: true })
     setPage('hair-result')
   }
 
@@ -2796,6 +2805,8 @@ function App() {
     }
 
     setIsGeneratingHair(false)
+    trackEvent('generation_complete', { type: 'hair', paid: true, image_count: generatedHairImages.length })
+    trackEvent('result_view', { type: 'hair', paid: true })
     setPage('hair-result')
   }
 
@@ -2811,7 +2822,8 @@ function App() {
       loadDailyStyle()
       return
     }
-    trackEvent('subscription_form_open')
+    trackEvent('select_item', { item_category: 'daily_style' })
+    trackEvent('sub_form_view')
     setSubscriptionCity('')
     setSubscriptionCityError('')
     setShowSubscriptionForm(true)
@@ -2840,6 +2852,7 @@ function App() {
   // Auto-load daily style + check profile when dashboard page is shown
   useEffect(() => {
     if (page === 'subscription-dashboard' && isSubscribed) {
+      trackEvent('sub_dashboard_view')
       // Load daily style if not loaded
       if (!dailyStyle && !isDailyStyleLoading) {
         loadDailyStyle()
@@ -2938,6 +2951,7 @@ function App() {
       if (res.ok) {
         const data = await res.json()
         setDashProfileComplete(data.profile_complete)
+        if (data.profile_complete) trackEvent('sub_profile_complete')
         // Refresh profile photo URL with cache-busting timestamp
         if (dashProfilePhoto) {
           setDashProfilePhotoUrl(`/api/profile-photo?email=${encodeURIComponent(email)}&t=${Date.now()}`)
@@ -2957,7 +2971,7 @@ function App() {
 
   const handleManageSubscription = async () => {
     if (!user?.email) return
-
+    trackEvent('manage_subscription')
     setIsOpeningPortal(true)
     try {
       const res = await fetch('/api/customer-portal', {
@@ -2998,6 +3012,7 @@ function App() {
     if (!user?.id || isFavoriteLoading) return
     // Optimistic UI — toggle immediately
     const wasActive = favoriteUrls.has(imageUrl)
+    trackEvent('favorite_toggle', { action: wasActive ? 'remove' : 'add', image_type: imageType })
     if (wasActive) {
       setFavoriteUrls(prev => { const next = new Set(prev); next.delete(imageUrl); return next })
     } else {
@@ -3047,6 +3062,7 @@ function App() {
 
   // Download/save image (works on mobile as wallpaper save)
   const downloadImage = async (imageUrl: string, filename?: string) => {
+    trackEvent('image_download', { content_type: filename?.includes('hair') ? 'hair' : filename?.includes('daily') ? 'daily' : 'style' })
     try {
       // For data URIs, create blob directly
       if (imageUrl.startsWith('data:')) {
@@ -3137,7 +3153,8 @@ function App() {
       }
       localStorage.setItem('pending_subscription_data', JSON.stringify(subscriptionData))
 
-      trackEvent('checkout_start', { product: 'daily_style' })
+      trackEvent('sub_city_submit', { city: subscriptionCity.trim() })
+      trackEvent('begin_checkout', { product: 'daily_style', currency: 'USD', value: 6.99 })
       // Polar 결제 생성
       const response = await fetch('/api/create-checkout', {
         method: 'POST',
@@ -3273,6 +3290,7 @@ function App() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
+    trackEvent('full_input_submit', { has_photo: !!profile.photo, is_paid: isFullPaid })
 
     if (isFullPaid) {
       // 결제 완료 → 결과 페이지로
@@ -3386,7 +3404,7 @@ function App() {
 
   // 결과 공유 - 모달 열기
   const handleShareResult = () => {
-    trackEvent('share_click', { page: page })
+    trackEvent('share_modal_open', { page: page })
     setShowShareModal(true)
   }
 
@@ -3415,31 +3433,37 @@ function App() {
 
   // 플랫폼별 공유 함수
   const shareToFacebook = () => {
+    trackEvent('share', { method: 'facebook', content_type: page })
     const { url } = getShareData()
     window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`, '_blank', 'width=600,height=400')
   }
 
   const shareToX = () => {
+    trackEvent('share', { method: 'twitter', content_type: page })
     const { text, url } = getShareData()
     window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(url)}`, '_blank', 'width=600,height=400')
   }
 
   const shareToWhatsApp = () => {
+    trackEvent('share', { method: 'whatsapp', content_type: page })
     const { text, url } = getShareData()
     window.open(`https://wa.me/?text=${encodeURIComponent(text + ' ' + url)}`, '_blank')
   }
 
   const shareToThreads = () => {
+    trackEvent('share', { method: 'threads', content_type: page })
     const { text, url } = getShareData()
     window.open(`https://www.threads.net/intent/post?text=${encodeURIComponent(text + ' ' + url)}`, '_blank')
   }
 
   const shareToiMessage = () => {
+    trackEvent('share', { method: 'imessage', content_type: page })
     const { text, url } = getShareData()
     window.location.href = `sms:&body=${encodeURIComponent(text + ' ' + url)}`
   }
 
   const copyShareLink = async () => {
+    trackEvent('share', { method: 'copy_link', content_type: page })
     try {
       await navigator.clipboard.writeText('https://kstylist.cc')
       setShareToast(t.copiedToClipboard)
@@ -3534,6 +3558,7 @@ function App() {
   const handleHairPhotoUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
     if (file && file.type.startsWith('image/')) {
+      trackEvent('photo_upload', { funnel: 'hair' })
       const reader = new FileReader()
       reader.onloadend = () => {
         setHairPhoto(reader.result as string)
@@ -3544,6 +3569,7 @@ function App() {
 
   const handleHairRecommendation = async () => {
     if (!selectedOccasion || !selectedVibe) return
+    trackEvent('hair_submit', { has_photo: !!hairPhoto, occasion: selectedOccasion, vibe: selectedVibe })
 
     // 사진이 있고 헤어 결제 완료된 경우 바로 결과 생성
     if (hairPhoto && isHairPaid) {
@@ -3571,7 +3597,7 @@ function App() {
 
     // 사진 없이 데모 모드로 진행하는 경우 (기존 로직)
     if (!hairPhoto) {
-      trackEvent('checkout_start', { product: 'hair', has_photo: false })
+      trackEvent('begin_checkout', { product: 'hair', currency: 'USD', value: 2.99 })
       setIsProcessingPayment(true)
       try {
         // 결제 전 데이터 저장
@@ -3897,6 +3923,7 @@ function App() {
     if (error) {
       setAuthError(error.message || t.authError)
     } else {
+      trackEvent('login', { method: 'email' })
       setAuthSuccess(t.loginSuccess)
       setAuthEmail('')
       setAuthPassword('')
@@ -3929,6 +3956,7 @@ function App() {
     if (error) {
       setAuthError(error.message || t.authError)
     } else {
+      trackEvent('sign_up', { method: 'email' })
       setAuthSuccess(t.signupSuccess)
       setAuthEmail('')
       setAuthPassword('')
@@ -3968,6 +3996,8 @@ function App() {
         console.error('Google login error:', error)
         setAuthError(error.message || t.authError)
         setIsAuthSubmitting(false)
+      } else {
+        trackEvent('login', { method: 'google' })
       }
       // OAuth 리다이렉트가 발생하므로 성공 시 isAuthSubmitting은 리셋되지 않음
     } catch (err) {
@@ -4851,7 +4881,7 @@ function App() {
             <p className="hero-desc">{t.heroDesc}</p>
             <div className="hero-buttons">
               {!hasUsedFreeTrial ? (
-                <button className="free-cta-pulse" onClick={() => setPage('hair-selection')}>
+                <button className="free-cta-pulse" onClick={() => { trackEvent('hero_cta_click', { type: 'free_trial' }); setPage('hair-selection') }}>
                   {t.freeTrialCta}
                 </button>
               ) : (
@@ -4899,7 +4929,7 @@ function App() {
               </div>
 
               {/* Card 2: Full Package (Featured) */}
-              <div className="path-card-v2 featured" onClick={() => setPage('input')}>
+              <div className="path-card-v2 featured" onClick={() => { trackEvent('select_item', { item_category: 'full_style' }); setPage('input') }}>
                 <div className="path-image path-image-2"></div>
                 <div className="path-overlay"></div>
                 <span className="path-popular-badge">{t.bestValue}</span>
@@ -4921,7 +4951,7 @@ function App() {
 
             {/* Row 2: Hair Styling (centered) */}
             <div className="path-row-bottom">
-              <div className="path-card-v2 hair-card" onClick={() => setPage('hair-selection')}>
+              <div className="path-card-v2 hair-card" onClick={() => { trackEvent('select_item', { item_category: 'hair' }); setPage('hair-selection') }}>
                 <div className="path-image path-image-1"></div>
                 <div className="path-overlay"></div>
                 <div className="path-content-v2">
@@ -5571,7 +5601,7 @@ function App() {
     const selectedVibeData = hairVibes.find(v => v.id === selectedVibe)
 
     const handleHairPayment = async () => {
-      trackEvent('checkout_start', { product: 'hair', has_photo: true })
+      trackEvent('begin_checkout', { product: 'hair', currency: 'USD', value: 2.99 })
       setIsProcessingPayment(true)
       try {
         // 결제 전 데이터 저장
@@ -6001,6 +6031,7 @@ function App() {
               <p className="upsell-subtitle">{t.upsellSubtitle}</p>
               <div className="upsell-cards">
                 <div className="upsell-option" onClick={() => {
+                  trackEvent('upsell_click', { product: 'hair_again', value: 2.99 })
                   setIsFreeTrial(false)
                   setSelectedOccasion(null)
                   setSelectedVibe(null)
@@ -6012,6 +6043,7 @@ function App() {
                   <p className="upsell-price">$2.99</p>
                 </div>
                 <div className="upsell-option featured" onClick={() => {
+                  trackEvent('upsell_click', { product: 'full_package', value: 4.99 })
                   setIsFreeTrial(false)
                   setPage('input')
                 }}>
