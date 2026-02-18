@@ -362,6 +362,14 @@ const translations: Record<Language, {
   favoritesEmpty: string
   favoritesGallery: string
   saveImage: string
+  // Referral
+  referralTitle: string
+  referralDesc: string
+  referralInvited: string
+  referralCredits: string
+  referralCopyLink: string
+  referralInlineText: string
+  referralCreditAvailable: string
 }> = {
   ko: {
     title: 'PERSONAL STYLIST',
@@ -631,6 +639,13 @@ const translations: Record<Language, {
     favoritesEmpty: '아직 즐겨찾기가 없습니다',
     favoritesGallery: '즐겨찾기',
     saveImage: '이미지 저장',
+    referralTitle: '친구 초대하고 무료 스타일 받기',
+    referralDesc: '친구가 결제하면 무료 헤어 스타일링 크레딧을 받아요',
+    referralInvited: '명 초대 완료',
+    referralCredits: '개 크레딧 보유',
+    referralCopyLink: '초대 링크 복사',
+    referralInlineText: '친구 초대하고 무료 스타일 받기',
+    referralCreditAvailable: '리퍼럴 크레딧 사용 가능',
   },
   en: {
     title: 'PERSONAL STYLIST',
@@ -900,6 +915,13 @@ const translations: Record<Language, {
     favoritesEmpty: 'No favorites yet',
     favoritesGallery: 'Favorites',
     saveImage: 'Save Image',
+    referralTitle: 'Invite Friends, Get Free Styles',
+    referralDesc: 'Earn a free hair styling credit when your friend makes a purchase',
+    referralInvited: ' friends invited',
+    referralCredits: ' credits available',
+    referralCopyLink: 'Copy Invite Link',
+    referralInlineText: 'Invite friends & get free styles',
+    referralCreditAvailable: 'Referral credit available',
   },
   ja: {
     title: 'PERSONAL STYLIST',
@@ -1169,6 +1191,13 @@ const translations: Record<Language, {
     favoritesEmpty: 'まだお気に入りがありません',
     favoritesGallery: 'お気に入り',
     saveImage: '画像を保存',
+    referralTitle: '友達を招待して無料スタイルをゲット',
+    referralDesc: '友達が購入すると無料ヘアスタイリングクレジットがもらえます',
+    referralInvited: '人招待済み',
+    referralCredits: 'クレジット利用可能',
+    referralCopyLink: '招待リンクをコピー',
+    referralInlineText: '友達を招待して無料スタイルをゲット',
+    referralCreditAvailable: 'リファラルクレジット利用可能',
   },
   zh: {
     title: 'PERSONAL STYLIST',
@@ -1438,6 +1467,13 @@ const translations: Record<Language, {
     favoritesEmpty: '暂无收藏',
     favoritesGallery: '收藏',
     saveImage: '保存图片',
+    referralTitle: '邀请好友，获得免费造型',
+    referralDesc: '好友购买后您将获得免费发型设计积分',
+    referralInvited: '位好友已邀请',
+    referralCredits: '个积分可用',
+    referralCopyLink: '复制邀请链接',
+    referralInlineText: '邀请好友获得免费造型',
+    referralCreditAvailable: '推荐积分可用',
   },
   es: {
     title: 'PERSONAL STYLIST',
@@ -1707,6 +1743,13 @@ const translations: Record<Language, {
     favoritesEmpty: 'Aún no hay favoritos',
     favoritesGallery: 'Favoritos',
     saveImage: 'Guardar Imagen',
+    referralTitle: 'Invita amigos y obtén estilos gratis',
+    referralDesc: 'Gana un crédito de peinado gratis cuando tu amigo realice una compra',
+    referralInvited: ' amigos invitados',
+    referralCredits: ' créditos disponibles',
+    referralCopyLink: 'Copiar enlace de invitación',
+    referralInlineText: 'Invita amigos y obtén estilos gratis',
+    referralCreditAvailable: 'Crédito de referido disponible',
   }
 }
 
@@ -2088,6 +2131,11 @@ function App() {
   const [favoriteToast, setFavoriteToast] = useState('')
   const [favoriteUrls, setFavoriteUrls] = useState<Set<string>>(new Set())
 
+  // Referral state
+  const [referralCode, setReferralCode] = useState<string | null>(null)
+  const [referralStats, setReferralStats] = useState({ total: 0, credits: 0 })
+  const [referralToast, setReferralToast] = useState('')
+
   // Fullscreen image viewer
   const [fullscreenImage, setFullscreenImage] = useState<string | null>(null)
 
@@ -2156,6 +2204,29 @@ function App() {
 
     // 결제 성공 후 리다이렉트 처리
     const urlParams = new URLSearchParams(window.location.search)
+
+    // 리퍼럴 코드 캡처 — 유효한 코드만 저장 + 무료 체험 리셋
+    const refCode = urlParams.get('ref')
+    if (refCode) {
+      // URL에서 ref 파라미터 즉시 제거 (깔끔한 URL 유지)
+      urlParams.delete('ref')
+      const cleanSearch = urlParams.toString()
+      window.history.replaceState({}, '', window.location.pathname + (cleanSearch ? `?${cleanSearch}` : '') + window.location.hash)
+
+      // API로 코드 유효성 검증 후에만 저장 + 리셋
+      fetch(`/api/referral?code=${encodeURIComponent(refCode)}`)
+        .then(res => res.json())
+        .then((data: unknown) => {
+          const result = data as { valid?: boolean }
+          if (result.valid) {
+            localStorage.setItem('stylist_referral_code', refCode)
+            localStorage.removeItem('stylist_free_trial_used')
+            setHasUsedFreeTrial(false)
+          }
+        })
+        .catch(() => { /* 검증 실패 시 무시 — 리셋 안 함 */ })
+    }
+
     const customerSessionToken = urlParams.get('customer_session_token')
     const paymentSuccess = urlParams.get('payment')
 
@@ -2169,6 +2240,42 @@ function App() {
       if (polarCheckoutId) {
         setCheckoutId(polarCheckoutId)
         localStorage.setItem('lastCheckoutId', polarCheckoutId)
+      }
+
+      // 리퍼럴 전환 기록 (비동기)
+      const storedRefCode = localStorage.getItem('stylist_referral_code')
+      if (storedRefCode) {
+        (async () => {
+          try {
+            // 결제 이메일 조회
+            let refEmail = user?.email || ''
+            if (!refEmail && polarCheckoutId) {
+              try {
+                const infoRes = await fetch(`/api/checkout-info?id=${polarCheckoutId}`)
+                if (infoRes.ok) {
+                  const info = await infoRes.json() as { email?: string }
+                  if (info.email) refEmail = info.email
+                }
+              } catch { /* ignore */ }
+            }
+            if (refEmail) {
+              await fetch('/api/referral', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                  referral_code: storedRefCode,
+                  referred_email: refEmail,
+                  referred_user_id: user?.id || '',
+                  purchase_type: purchasedProductType,
+                  checkout_id: polarCheckoutId || '',
+                }),
+              })
+            }
+            localStorage.removeItem('stylist_referral_code')
+          } catch (e) {
+            console.error('Failed to record referral:', e)
+          }
+        })()
       }
 
       // 구독 결제 성공 처리
@@ -2374,6 +2481,27 @@ function App() {
     }, 500)
     return () => clearTimeout(timer)
   }, [lang, user?.email, isSubscribed])
+
+  // Fetch referral code on login
+  useEffect(() => {
+    if (!user?.id) {
+      setReferralCode(null)
+      setReferralStats({ total: 0, credits: 0 })
+      return
+    }
+    (async () => {
+      try {
+        const res = await fetch(`/api/referral?user_id=${user.id}`)
+        if (res.ok) {
+          const data = await res.json() as { code: string; total_referrals: number; available_credits: number }
+          setReferralCode(data.code)
+          setReferralStats({ total: data.total_referrals, credits: data.available_credits })
+        }
+      } catch (e) {
+        console.error('Failed to fetch referral code:', e)
+      }
+    })()
+  }, [user?.id])
 
   // 로딩 프로그레스 타이머 (자연스러운 진행률 표시)
   useEffect(() => {
@@ -3424,10 +3552,11 @@ function App() {
       zh: '我找到了适合我的发型和时尚！你也来试试吧！',
       es: '¡Encontré peinados y moda que me quedan perfectos! ¡Pruébalo tú también!'
     }
+    const baseUrl = referralCode ? `https://kstylist.cc/?ref=${referralCode}` : 'https://kstylist.cc'
     return {
       title: titles[lang],
       text: texts[lang],
-      url: 'https://kstylist.cc'
+      url: baseUrl
     }
   }
 
@@ -3465,9 +3594,22 @@ function App() {
   const copyShareLink = async () => {
     trackEvent('share', { method: 'copy_link', content_type: page })
     try {
-      await navigator.clipboard.writeText('https://kstylist.cc')
+      const shareUrl = referralCode ? `https://kstylist.cc/?ref=${referralCode}` : 'https://kstylist.cc'
+      await navigator.clipboard.writeText(shareUrl)
       setShareToast(t.copiedToClipboard)
       setTimeout(() => setShareToast(''), 2000)
+    } catch (err) {
+      console.error('Copy failed:', err)
+    }
+  }
+
+  const copyReferralLink = async () => {
+    if (!referralCode) return
+    trackEvent('referral_copy_link', { code: referralCode })
+    try {
+      await navigator.clipboard.writeText(`https://kstylist.cc/?ref=${referralCode}`)
+      setReferralToast(t.copiedToClipboard)
+      setTimeout(() => setReferralToast(''), 2000)
     } catch (err) {
       console.error('Copy failed:', err)
     }
@@ -3587,6 +3729,28 @@ function App() {
     if (hairPhoto && !isHairPaid && !hasUsedFreeTrial) {
       startFreeTrialHairGeneration()
       return
+    }
+
+    // 리퍼럴 크레딧으로 무료 생성
+    if (hairPhoto && !isHairPaid && referralStats.credits > 0 && user?.id) {
+      try {
+        const creditRes = await fetch('/api/referral', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ action: 'use_credit', user_id: user.id }),
+        })
+        if (creditRes.ok) {
+          const creditData = await creditRes.json() as { success: boolean; credits_remaining: number }
+          if (creditData.success) {
+            setReferralStats(prev => ({ ...prev, credits: creditData.credits_remaining }))
+            trackEvent('referral_credit_used', { credits_remaining: creditData.credits_remaining })
+            startFreeTrialHairGeneration()
+            return
+          }
+        }
+      } catch (e) {
+        console.error('Failed to use referral credit:', e)
+      }
     }
 
     // 사진이 있고 결제 안됨 → 프리뷰 페이지로 이동 (Value Gate)
@@ -5009,6 +5173,30 @@ function App() {
           </div>
         </section>
 
+        {/* Referral Section — logged-in users only */}
+        {user && referralCode && (
+          <section className="referral-section">
+            <h2 className="referral-section-title">{t.referralTitle}</h2>
+            <p className="referral-section-desc">{t.referralDesc}</p>
+            <div className="referral-stats">
+              <span className="referral-stat">{referralStats.total}{t.referralInvited}</span>
+              <span className="referral-stat">{referralStats.credits}{t.referralCredits}</span>
+            </div>
+            <div className="referral-link-box">
+              <input
+                type="text"
+                readOnly
+                value={`kstylist.cc/?ref=${referralCode}`}
+                className="referral-link-input"
+              />
+              <button className="referral-copy-btn" onClick={copyReferralLink}>
+                {t.referralCopyLink}
+              </button>
+            </div>
+            {referralToast && <div className="referral-toast">{referralToast}</div>}
+          </section>
+        )}
+
         {/* Footer */}
         <footer className="landing-footer">
           <div className="footer-content">
@@ -5909,6 +6097,12 @@ function App() {
               />
             </div>
 
+            {user && referralStats.credits > 0 && hasUsedFreeTrial && (
+              <div className="referral-credit-badge">
+                {referralStats.credits}x {t.referralCreditAvailable}
+              </div>
+            )}
+
             <button
               className="btn-gold submit-btn"
               onClick={handleHairRecommendation}
@@ -6037,6 +6231,16 @@ function App() {
                 {t.shareMyResult}
               </button>
               <p className="share-result-hint">kstylist.cc</p>
+            </div>
+          )}
+
+          {/* Referral Inline CTA */}
+          {user && referralCode && (
+            <div className="referral-inline" onClick={copyReferralLink}>
+              <span className="referral-inline-icon">🎁</span>
+              <span className="referral-inline-text">{t.referralInlineText}</span>
+              <span className="referral-inline-arrow">→</span>
+              {referralToast && <div className="referral-toast">{referralToast}</div>}
             </div>
           )}
 
