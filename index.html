@@ -287,6 +287,10 @@
 
     <!-- Analytics: 페이지 로드 후 비동기 로드 (렌더 블로킹 방지) -->
     <script>
+      // GA4: 글로벌 gtag 즉시 정의 — 스크립트 로드 전에도 이벤트 큐잉 가능
+      window.dataLayer = window.dataLayer || [];
+      window.gtag = function(){dataLayer.push(arguments);};
+
       // Google Analytics 4 - 지연 로드
       window.addEventListener('load', function() {
         setTimeout(function() {
@@ -296,10 +300,8 @@
           document.head.appendChild(ga);
 
           ga.onload = function() {
-            window.dataLayer = window.dataLayer || [];
-            function gtag(){dataLayer.push(arguments);}
-            gtag('js', new Date());
-            gtag('config', 'G-42DC8CJX3E', {
+            window.gtag('js', new Date());
+            window.gtag('config', 'G-42DC8CJX3E', {
               'anonymize_ip': true,
               'cookie_flags': 'SameSite=None;Secure'
             });

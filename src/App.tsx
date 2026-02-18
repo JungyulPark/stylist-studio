@@ -2252,6 +2252,7 @@ function App() {
     setPageState(newPage)
     window.history.pushState({ page: newPage }, '', `#${newPage}`)
     trackEvent('page_view', { page_name: newPage })
+    if (newPage === 'landing') trackEvent('funnel_step', { step_name: 'landing_view', step_number: 1 })
   }, [])
 
   // 브라우저 뒤로가기 이벤트 처리
@@ -2303,6 +2304,7 @@ function App() {
 
     if (customerSessionToken || paymentSuccess === 'success') {
       // 결제 성공
+      trackEvent('checkout_return', { type: urlParams.get('type') || 'unknown' })
       localStorage.setItem('paidCustomer', 'true')
       const purchasedProductType = urlParams.get('type') || localStorage.getItem('productType') || 'full'
       const polarCheckoutId = urlParams.get('checkout_id')
@@ -2438,6 +2440,7 @@ function App() {
               // Hair Only 상품인 경우
               if (purchasedProductType === 'hair') trackEvent('purchase', { product: 'hair', currency: 'USD', value: 2.99 })
               else trackEvent('purchase', { product: 'full_style', currency: 'USD', value: 4.99 })
+              trackEvent('funnel_step', { step_name: 'purchase', step_number: 5 })
               if (purchasedProductType === 'hair' && savedData.hairPhoto) {
                 setHairPhoto(savedData.hairPhoto)
                 setSelectedOccasion(savedData.selectedOccasion || null)
@@ -2531,6 +2534,7 @@ function App() {
     } else {
       window.history.replaceState({ page: 'landing' }, '', '#landing')
     }
+    trackEvent('funnel_step', { step_name: 'landing_view', step_number: 1 })
 
     return () => window.removeEventListener('popstate', handlePopState)
   }, [])
@@ -2623,6 +2627,7 @@ function App() {
     const file = e.target.files?.[0]
     if (file) {
       trackEvent('photo_upload', { funnel: 'full_style' })
+      trackEvent('funnel_step', { step_name: 'photo_upload', step_number: 2 })
       processFile(file)
     }
   }
@@ -2657,6 +2662,7 @@ function App() {
   // Polar 결제 처리
   const handlePayment = async (productType: 'full' | 'hair' = 'full') => {
     trackEvent('begin_checkout', { product: productType, currency: 'USD', value: productType === 'full' ? 4.99 : 2.99 })
+    trackEvent('funnel_step', { step_name: 'begin_checkout', step_number: 4 })
     setIsProcessingPayment(true)
     try {
       // 결제 전 폼 데이터 저장 (IndexedDB - 사진 포함 가능)
@@ -2716,6 +2722,7 @@ function App() {
 
     // 자동 환불 처리 함수
     const processAutoRefund = async (reason: string) => {
+      trackEvent('refund_initiated', { reason, type: 'full_style' })
       if (!activeCheckoutId) {
         console.error('No checkout ID available for refund')
         return
@@ -2755,6 +2762,7 @@ function App() {
 
       if (!analyzeResponse.ok) {
         // 텍스트 분석 실패 - 자동 환불
+        trackEvent('generation_error', { type: 'full_style', reason: 'api_error' })
         await processAutoRefund('Text analysis failed - API error')
         throw new Error('Analysis failed')
       }
@@ -2762,6 +2770,7 @@ function App() {
       const analyzeData = await analyzeResponse.json()
       if (!analyzeData.report) {
         // 리포트 생성 실패 - 자동 환불
+        trackEvent('generation_error', { type: 'full_style', reason: 'empty_response' })
         await processAutoRefund('Report generation failed - empty response')
         throw new Error('No report generated')
       }
@@ -2772,6 +2781,7 @@ function App() {
       await new Promise(resolve => setTimeout(resolve, 400))
       trackEvent('generation_complete', { type: 'full_style' })
       trackEvent('result_view', { type: 'full_style' })
+      trackEvent('funnel_step', { step_name: 'result_view', step_number: 6 })
       setPage('result')
 
       // Step 2: Generate style images AND hairstyles AFTER showing result page
@@ -2858,6 +2868,7 @@ function App() {
 
     // 자동 환불 처리 함수
     const processAutoRefund = async (reason: string) => {
+      trackEvent('refund_initiated', { reason, type: 'hair' })
       if (!activeCheckoutId) {
         console.error('No checkout ID available for refund')
         return
@@ -2914,6 +2925,7 @@ function App() {
             setCheckoutId(null)
           } else {
             // 이미지 생성 실패 - 자동 환불
+            trackEvent('generation_error', { type: 'hair', reason: 'no_images' })
             await processAutoRefund('Hair style generation failed - no images returned')
             setGeneratedHairImages([])
             setError(lang === 'ko'
@@ -2922,6 +2934,7 @@ function App() {
           }
         } else {
           // API 오류 - 자동 환불
+          trackEvent('generation_error', { type: 'hair', reason: 'api_error' })
           await processAutoRefund('Hair style generation failed - API error')
           setGeneratedHairImages([])
           setError(lang === 'ko'
@@ -2931,6 +2944,7 @@ function App() {
       } catch (e) {
         console.error('Hair generation error:', e)
         // 예외 발생 - 자동 환불
+        trackEvent('generation_error', { type: 'hair', reason: 'exception' })
         await processAutoRefund('Hair style generation failed - exception')
         setGeneratedHairImages([])
         setError(lang === 'ko'
@@ -2942,6 +2956,7 @@ function App() {
     setIsGeneratingHair(false)
     trackEvent('generation_complete', { type: 'hair', paid: false, image_count: generatedHairImages.length })
     trackEvent('result_view', { type: 'hair', is_free_trial: true })
+    trackEvent('funnel_step', { step_name: 'result_view', step_number: 6 })
     setPage('hair-result')
   }
 
@@ -3006,6 +3021,7 @@ function App() {
     setIsGeneratingHair(false)
     trackEvent('generation_complete', { type: 'hair', paid: true, image_count: generatedHairImages.length })
     trackEvent('result_view', { type: 'hair', paid: true })
+    trackEvent('funnel_step', { step_name: 'result_view', step_number: 6 })
     setPage('hair-result')
   }
 
@@ -3501,6 +3517,7 @@ function App() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     trackEvent('full_input_submit', { has_photo: !!profile.photo, is_paid: isFullPaid })
+    trackEvent('funnel_step', { step_name: 'form_submit', step_number: 3 })
 
     if (isFullPaid) {
       // 결제 완료 → 결과 페이지로
@@ -3869,6 +3886,7 @@ function App() {
     const file = e.target.files?.[0]
     if (file && file.type.startsWith('image/')) {
       trackEvent('photo_upload', { funnel: 'hair' })
+      trackEvent('funnel_step', { step_name: 'photo_upload', step_number: 2 })
       const reader = new FileReader()
       reader.onloadend = () => {
         setHairPhoto(reader.result as string)
@@ -3880,6 +3898,7 @@ function App() {
   const handleHairRecommendation = async () => {
     if (!selectedOccasion || !selectedVibe) return
     trackEvent('hair_submit', { has_photo: !!hairPhoto, occasion: selectedOccasion, vibe: selectedVibe })
+    trackEvent('funnel_step', { step_name: 'form_submit', step_number: 3 })
 
     // 사진이 있고 헤어 결제 완료된 경우 바로 결과 생성
     if (hairPhoto && isHairPaid) {
