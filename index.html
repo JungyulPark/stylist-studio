@@ -11,7 +11,7 @@
     <link rel="apple-touch-icon" href="/icon-192.svg" />
 
     <!-- Preload hero image for fast LCP -->
-    <link rel="preload" as="image" type="image/avif" imagesrcset="/hero-800w.avif 800w, /hero-1024w.avif 1024w" imagesizes="(min-width: 768px) 50vw, 100vw" />
+    <link rel="preload" as="image" type="image/avif" imagesrcset="/hero-480w.avif 480w, /hero-800w.avif 800w, /hero-1024w.avif 1024w" imagesizes="(min-width: 768px) 50vw, 100vw" />
 
     <!-- Preconnect for performance (렌더 블로킹 방지) -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -282,7 +282,7 @@
     </script>
   </head>
   <body>
-    <div id="root"></div>
+    <div id="root"><!-- Static hero shell for instant LCP — replaced by React on mount --><div style="display:flex;flex-direction:column;min-height:100vh;background:#1a1518"><div style="position:relative;width:100%;height:400px;overflow:hidden;background:#2a2025"><picture style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center"><source type="image/avif" srcset="/hero-480w.avif 480w, /hero-800w.avif 800w, /hero-1024w.avif 1024w" sizes="(min-width:768px) 50vw,100vw"><source type="image/webp" srcset="/hero-480w.webp 480w, /hero-800w.webp 800w, /hero-1024w.webp 1024w" sizes="(min-width:768px) 50vw,100vw"><img src="/hero-480w.webp" alt="" fetchpriority="high" width="480" height="600" style="width:100%;height:100%;object-fit:contain"></picture></div></div></div>
     <script type="module" src="/src/main.tsx"></script>
 
     <!-- Analytics: 페이지 로드 후 비동기 로드 (렌더 블로킹 방지) -->

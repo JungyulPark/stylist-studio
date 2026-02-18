@@ -4864,9 +4864,9 @@ function App() {
         <section className="hero-section">
           <div className="hero-image">
             <picture className="hero-image-bg">
-              <source type="image/avif" srcSet="/hero-800w.avif 800w, /hero-1024w.avif 1024w" sizes="(min-width: 768px) 50vw, 100vw" />
-              <source type="image/webp" srcSet="/hero-800w.webp 800w, /hero-1024w.webp 1024w" sizes="(min-width: 768px) 50vw, 100vw" />
-              <img src="/hero-800w.webp" alt="AI Personal Styling Preview" className="hero-image-bg-img" fetchPriority="high" width="800" height="1000" />
+              <source type="image/avif" srcSet="/hero-480w.avif 480w, /hero-800w.avif 800w, /hero-1024w.avif 1024w" sizes="(min-width: 768px) 50vw, 100vw" />
+              <source type="image/webp" srcSet="/hero-480w.webp 480w, /hero-800w.webp 800w, /hero-1024w.webp 1024w" sizes="(min-width: 768px) 50vw, 100vw" />
+              <img src="/hero-480w.webp" alt="AI Personal Styling Preview" className="hero-image-bg-img" fetchPriority="high" width="480" height="600" />
             </picture>
             <div className="glass-card">
               <span className="glass-tag">PERSONAL STYLING</span>

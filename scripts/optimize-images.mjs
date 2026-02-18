@@ -7,7 +7,7 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 const publicDir = join(__dirname, '..', 'public');
 
 const images = [
-  { src: 'hero.png', widths: [800, 1024] },
+  { src: 'hero.png', widths: [480, 800, 1024] },
   { src: 'hairnew.png', widths: [800] },
   { src: 'full.png', widths: [800] },
   { src: 'dailynew.png', widths: [800] },
