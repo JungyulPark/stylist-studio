@@ -79,8 +79,8 @@ export const onRequest: PagesFunction = async (context) => {
   const url = new URL(context.request.url)
   const path = url.pathname
 
-  // Skip non-API routes and exempt paths
-  if (!path.startsWith('/api/') || EXEMPT_PATHS.includes(path)) {
+  // Skip non-API routes, exempt paths, and CORS preflight
+  if (!path.startsWith('/api/') || EXEMPT_PATHS.includes(path) || context.request.method === 'OPTIONS') {
     return context.next()
   }
 
@@ -94,6 +94,7 @@ export const onRequest: PagesFunction = async (context) => {
   const key = `${clientIp}:${path}`
 
   if (isRateLimited(key, maxReqs, windowMs)) {
+    const origin = context.request.headers.get('Origin') || ''
     return new Response(
       JSON.stringify({
         error: 'Too many requests. Please try again later.',
@@ -105,6 +106,9 @@ export const onRequest: PagesFunction = async (context) => {
         headers: {
           'Content-Type': 'application/json',
           'Retry-After': String(Math.ceil(windowMs / 1000)),
+          'Access-Control-Allow-Origin': origin,
+          'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
+          'Access-Control-Allow-Headers': 'Content-Type',
         },
       }
     )

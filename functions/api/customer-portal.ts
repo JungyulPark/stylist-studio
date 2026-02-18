@@ -95,8 +95,9 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
       return errors.externalApi('Polar', corsHeaders)
     }
 
-    const session = await sessionRes.json() as { customer_portal_url?: string }
-    const portalUrl = session.customer_portal_url
+    const session = await sessionRes.json() as Record<string, unknown>
+    // Polar API may return camelCase (SDK) or snake_case (REST) — handle both
+    const portalUrl = (session.customer_portal_url || session.customerPortalUrl) as string | undefined
 
     if (!portalUrl) {
       console.error('[customer-portal] No portal URL in response:', JSON.stringify(session))
