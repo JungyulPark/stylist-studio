@@ -152,6 +152,9 @@ const femaleMoods = [
   { name: 'Dior structured', guide: 'Architectural French femininity. Fitted bar jacket or structured coat-dress with nipped waist. A-line midi skirt or tailored cigarette trousers. Lady-like pumps, structured handbag. Pearl or gold accessories. Polished and poised.' },
 ]
 
+// ─── Skin Tone Adaptive Directive (appended to all prompts) ──────
+const SKIN_TONE_DIRECTIVE = ' Adapt specified colors to this person\'s skin undertone — shift warm if golden/peachy skin, shift cool if pink/rosy skin.'
+
 // ─── Index Helpers ────────────────────────────────────────────────
 function getDayIndex(): number {
   return Math.floor(Date.now() / 86400000)
@@ -179,7 +182,7 @@ function getTodaysPickPrompt(weather: WeatherInfo, gender: string): string {
   if (gender === 'female') {
     const p = femaleColorPalettes[pIdx % femaleColorPalettes.length]
     const m = femaleMoods[mIdx % femaleMoods.length]
-    const arch = `STYLING: ${m.name} — ${m.guide}`
+    const arch = `STYLING: ${m.name} — ${m.guide}${SKIN_TONE_DIRECTIVE}`
 
     if (isSnowy) return `luxurious winter outfit (${p.tone}): ankle-length double-face wool coat in ${p.c1}, cashmere ribbed turtleneck in ${p.c4}, high-waisted wool flannel wide-leg trousers in ${p.c3}, insulated leather ankle boots with lug sole, ${p.accent} cashmere scarf tucked into coat, leather gloves. ${arch}`
     if (isRainy) return `polished rainy day outfit (${p.tone}): water-resistant gabardine trench coat in ${p.c3} with belt cinched, fine-gauge merino crewneck in ${p.c2}, cropped tailored trousers in dark ${p.c1}, polished waterproof chelsea boots, compact leather crossbody in ${p.accent}, minimal stud earrings. ${arch}`
@@ -193,7 +196,7 @@ function getTodaysPickPrompt(weather: WeatherInfo, gender: string): string {
   // Male
   const p = maleColorPalettes[pIdx % maleColorPalettes.length]
   const m = maleMoods[mIdx % maleMoods.length]
-  const arch = `STYLING: ${m.name} — ${m.guide}`
+  const arch = `STYLING: ${m.name} — ${m.guide}${SKIN_TONE_DIRECTIVE}`
 
   if (isSnowy) return `sharp winter outfit (${p.tone}): double-breasted wool overcoat in ${p.c2} with peak lapel, chunky Shetland cable-knit sweater in ${p.c3}, straight-leg flannel trousers in dark ${p.c1} with half-break hem, waterproof leather derby boots in rich brown, ${p.accent} brushed-wool scarf, leather cashmere-lined gloves. ${arch}`
   if (isRainy) return `sleek rainy day outfit (${p.tone}): water-resistant cotton gabardine mac coat in ${p.c1} with concealed placket, fine merino crewneck in ${p.c3}, straight-leg dark cotton drill chinos with clean hem, polished waterproof chelsea boots, minimal ${p.accent}-dial watch. ${arch}`
@@ -245,7 +248,7 @@ function getCasualPrompt(gender: string, temp: number): string {
   if (gender === 'female') {
     const p = femaleColorPalettes[pIdx % femaleColorPalettes.length]
     const m = femaleCasualMoods[mIdx % femaleCasualMoods.length]
-    const arch = `STYLING: ${m.name} — ${m.guide}`
+    const arch = `STYLING: ${m.name} — ${m.guide}${SKIN_TONE_DIRECTIVE}`
 
     if (isWarm) return `relaxed chic casual outfit (${p.tone}): oversized cotton tee in ${p.c4} with dropped shoulders, loosely tucked into ${p.c3} straight-leg jeans or cotton skirt, clean white sneakers or simple sandals, ${p.accent} minimal crossbody bag, simple hoop earrings. ${arch}`
     if (isCold) return `cozy weekend casual outfit (${p.tone}): chunky ribbed cardigan in ${p.c1} over fitted white cotton tee, dark straight-leg jeans, ${p.c3} ankle boots or clean sneakers, ${p.accent} knit beanie, simple leather tote. ${arch}`
@@ -254,7 +257,7 @@ function getCasualPrompt(gender: string, temp: number): string {
 
   const p = maleColorPalettes[pIdx % maleColorPalettes.length]
   const m = maleCasualMoods[mIdx % maleCasualMoods.length]
-  const arch = `STYLING: ${m.name} — ${m.guide}`
+  const arch = `STYLING: ${m.name} — ${m.guide}${SKIN_TONE_DIRECTIVE}`
 
   if (isWarm) return `relaxed summer casual outfit (${p.tone}): garment-dyed cotton crewneck tee in ${p.c3}, comfortable cotton shorts in ${p.c4} or light chinos with rolled hem, clean canvas sneakers or leather slides, simple ${p.accent} watch. ${arch}`
   if (isCold) return `cozy layered casual outfit (${p.tone}): ${p.c3} fleece zip-up or knit hoodie layered under ${p.c1} cotton overshirt or shirt jacket, straight-leg dark jeans, ${p.c4} suede boots or leather sneakers, ${p.accent} knit beanie or scarf. ${arch}`

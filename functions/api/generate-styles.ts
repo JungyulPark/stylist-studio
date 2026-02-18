@@ -102,13 +102,34 @@ async function sleep(ms: number): Promise<void> {
 }
 
 // ===== Gemini Image Editing =====
+function getSilhouetteGuide(gender: string, height?: string, weight?: string): string {
+  const h = parseInt(height || '0')
+  const w = parseInt(weight || '0')
+  if (!h || !w) return ''
+
+  const bmi = w / ((h / 100) ** 2)
+
+  if (gender === 'female') {
+    if (bmi < 18.5) return '\nSILHOUETTE: Slim build — add visual volume with layered textures, soft ruffles, and A-line shapes. Warm colors add presence.'
+    if (bmi < 23) return '\nSILHOUETTE: Balanced build — most silhouettes work well. Highlight waist with belts or fitted mid-sections for defined proportions.'
+    if (bmi < 27) return '\nSILHOUETTE: Curvy build — emphasize slim areas (wrists, ankles, collarbone). X-silhouette with defined waist. Vertical lines and monochromatic tones for a streamlined look.'
+    return '\nSILHOUETTE: Fuller build — show slim areas (wrists, ankles, collarbone). Vertical lines and monochromatic tones for streamlined look. X-design with defined waist. Avoid overly tight or baggy.'
+  }
+
+  if (bmi < 18.5) return '\nSILHOUETTE: Slim build — add structure with layered pieces, textured fabrics, and structured shoulders to build visual volume.'
+  if (bmi < 24) return '\nSILHOUETTE: Balanced build — most fits work well. Clean proportions with well-fitted pieces that follow the body naturally.'
+  if (bmi < 28) return '\nSILHOUETTE: Stocky build — vertical lines, monochromatic color flow, and structured fabrics for a lean look. V-shaped layering draws eyes upward.'
+  return '\nSILHOUETTE: Fuller build — dark vertical lines and structured fabrics for a streamlined silhouette. V-neck and open collars elongate. Avoid overly tight or boxy cuts.'
+}
+
 async function editPhotoWithGemini(
   photo: string,
   scenario: StyleScenario,
   gender: string,
   apiKey: string,
   openaiKey?: string,
-  retryCount: number = 0
+  retryCount: number = 0,
+  silhouetteGuide: string = ''
 ): Promise<string | null> {
   const MAX_RETRIES = 2
 
@@ -142,13 +163,15 @@ EDIT this photo - ONLY change the OUTFIT of the MAIN PERSON to: ${stylePrompt}
 
 CRITICAL: This is a ${genderWord}. The outfit MUST be appropriate for a ${genderWord}.
 
-STYLING APPROACH:
-- Analyze the person's skin tone, complexion, and overall coloring to choose the BEST colors for THEM
-- Select colors and fabrics that make this specific person look their best — warm or cool tones based on their complexion
-- The outfit should feel premium, refined, and wearable in everyday life
+STYLING APPROACH — PERSONAL COLOR ANALYSIS:
+- Examine skin undertone from the photo:
+  * WARM (golden, peachy, yellow): Best in terracotta, olive, camel, mustard, coral, cream. Avoid stark cool tones.
+  * COOL (pink, rosy, bluish): Best in navy, lavender, ice blue, emerald, burgundy, pearl white. Avoid warm yellows/oranges.
+- Dark skin + warm tones = striking harmony; light skin + cool tones = refined elegance
+- The specified color palette is a SUGGESTION — shift shades warmer or cooler to suit this person's undertone
 - Quality fabrics with natural texture and drape, not stiff or costume-like
 - Avoid overly theatrical, costume-like, or neon outfits — keep it realistic and tasteful
-${gender === 'female' ? '- Use soft, feminine clothing — dresses, blouses, cardigans, skirts' : '- Relaxed, comfortable silhouette — NOT tight, NOT skinny fit\n- Trousers with comfortable straight-leg or slightly wide drape, jackets with soft natural shoulders\n- Mix of relaxed tailored fit and easy casual fit — modern men prefer comfort over constriction'}
+${gender === 'female' ? '- Use soft, feminine clothing — dresses, blouses, cardigans, skirts' : '- Relaxed, comfortable silhouette — NOT tight, NOT skinny fit\n- Trousers with comfortable straight-leg or slightly wide drape, jackets with soft natural shoulders\n- Mix of relaxed tailored fit and easy casual fit — modern men prefer comfort over constriction'}${silhouetteGuide}
 
 ${beautyRetouch}
 
@@ -257,7 +280,7 @@ Generate the edited photo with IDENTICAL composition to the input.`
         const delay = (retryCount + 1) * 2000 // 2s, 4s
         console.log(`[Gemini] Retrying ${scenario.id} in ${delay}ms (attempt ${retryCount + 2}/${MAX_RETRIES + 1})`)
         await sleep(delay)
-        return editPhotoWithGemini(photo, scenario, gender, apiKey, retryCount + 1)
+        return editPhotoWithGemini(photo, scenario, gender, apiKey, openaiKey, retryCount + 1, silhouetteGuide)
       }
       return null
     }
@@ -281,7 +304,7 @@ Generate the edited photo with IDENTICAL composition to the input.`
       const delay = (retryCount + 1) * 2000
       console.log(`[Gemini] No image returned for ${scenario.id}, retrying in ${delay}ms`)
       await sleep(delay)
-      return editPhotoWithGemini(photo, scenario, gender, apiKey, retryCount + 1)
+      return editPhotoWithGemini(photo, scenario, gender, apiKey, openaiKey, retryCount + 1, silhouetteGuide)
     }
 
     return null
@@ -292,7 +315,7 @@ Generate the edited photo with IDENTICAL composition to the input.`
       const delay = (retryCount + 1) * 2000
       console.log(`[Gemini] Exception for ${scenario.id}, retrying in ${delay}ms`)
       await sleep(delay)
-      return editPhotoWithGemini(photo, scenario, gender, apiKey, retryCount + 1)
+      return editPhotoWithGemini(photo, scenario, gender, apiKey, openaiKey, retryCount + 1, silhouetteGuide)
     }
     return null
   }
@@ -334,6 +357,7 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
       )
     }
 
+    const silhouetteGuide = getSilhouetteGuide(gender, height, weight)
     console.log(`[API Styles] Generating ${styleScenarios.length} styles (palette: ${diversitySeed}) with Gemini, hasPhoto: ${hasPhoto}`)
 
     // Stagger requests to avoid rate limiting (500ms between each start)
@@ -347,7 +371,7 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
         let imageUrl: string | null = null
 
         if (hasPhoto) {
-          imageUrl = await editPhotoWithGemini(photo, scenario, gender, geminiKey, openaiKey)
+          imageUrl = await editPhotoWithGemini(photo, scenario, gender, geminiKey, openaiKey, 0, silhouetteGuide)
         }
 
         const labelKey = `label${language === 'ko' ? 'Ko' : language === 'ja' ? 'Ja' : language === 'zh' ? 'Zh' : language === 'es' ? 'Es' : 'En'}` as keyof StyleScenario

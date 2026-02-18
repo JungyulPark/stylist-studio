@@ -97,8 +97,16 @@ EDIT this photo - ONLY change the HAIRSTYLE to: ${style.prompt}
 
 ${genderGuideHair}
 
+FACE SHAPE ANALYSIS — classify this face and apply the correction:
+- OVAL: Ideal. Any style works. Updos highlight balance. Avoid heavy full bangs.
+- ROUND (wide cheeks, short chin): Create VERTICAL elongation. Root volume on top. Expose forehead (no full bangs). Avoid chin-length bobs.
+- OBLONG (long, narrow): Reduce vertical, add horizontal. Eye-level bangs shorten face. Side waves add width. NEVER long straight hair.
+- SQUARE (wide jaw, angular): Soften angles. Layered cuts below jaw with C-curl ends. Side-swept or sheer bangs — NEVER blunt straight-across.
+- HEART/DIAMOND (wide forehead/cheekbones, narrow chin): Volume at jawline to balance. Diagonal bangs.
+
 STYLING APPROACH:
-- Choose a style that flatters THIS person's specific face shape and features
+- Choose a style that flatters THIS person's specific face shape using the classification above
+- HAIR-SKIN CONTRAST: Lower contrast between hair and skin looks more natural. Keep shifts subtle.
 - The result must look like a real premium salon visit — polished, modern, and wearable
 - Think everyday beautiful — a style this person would love wearing daily
 - NO extreme, avant-garde, or impractical styles
@@ -118,13 +126,20 @@ Generate the edited photo.`
 
 EDIT this photo - ONLY change the OUTFIT of the MAIN PERSON to: ${style.prompt}
 
-STYLING APPROACH:
-- Analyze the person's skin tone, complexion, and overall coloring to choose the BEST colors for THEM
-- Select colors and fabrics that make this specific person look their best — warm or cool tones based on their complexion
-- The outfit should feel premium, refined, and wearable in everyday life
+STYLING APPROACH — PERSONAL COLOR ANALYSIS:
+- Examine skin undertone from the photo:
+  * WARM (golden, peachy, yellow): Best in terracotta, olive, camel, mustard, coral, cream. Avoid stark cool tones.
+  * COOL (pink, rosy, bluish): Best in navy, lavender, ice blue, emerald, burgundy, pearl white. Avoid warm yellows/oranges.
+- Dark skin + warm tones = striking harmony; light skin + cool tones = refined elegance
+- The specified color palette is a SUGGESTION — shift shades warmer or cooler to suit this person's undertone
 - Quality fabrics with natural texture and drape, not stiff or costume-like
 - Avoid overly theatrical, costume-like, or neon outfits — keep it realistic and tasteful
 ${gender === 'male' ? '- Relaxed, comfortable silhouette — NOT tight, NOT skinny fit\n- Trousers with comfortable straight-leg or slightly wide drape, jackets with soft natural shoulders\n- Mix of relaxed tailored fit and easy casual fit — modern men prefer comfort over constriction' : '- Use soft, feminine clothing — dresses, blouses, cardigans, skirts'}
+
+BODY PROPORTION STYLING:
+- Observe body proportions and select silhouettes that FLATTER this build
+- For shorter torsos: visual waistline higher for longer leg line
+- Use vertical lines and monochromatic color flow for elongation
 
 CRITICAL: ${genderGuideFashion}
 
