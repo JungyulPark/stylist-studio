@@ -3844,6 +3844,14 @@ function App() {
     return recommendations[langKey]?.[key] || recommendations[langKey]?.['daily-natural'] || []
   }
 
+  // Fetch favorites when profile page is opened
+  // (Must be before any early returns to satisfy Rules of Hooks)
+  useEffect(() => {
+    if (page === 'profile' && user) {
+      loadFavorites()
+    }
+  }, [page, user, loadFavorites])
+
   const isFormValid = profile.photo && profile.height && profile.weight && profile.gender
 
   // How to Use Page
@@ -4073,14 +4081,6 @@ function App() {
     // deleteAccount이 로컬 정리 + 리다이렉트를 즉시 처리함
     deleteAccount()
   }
-
-  // Fetch analysis history for logged-in users
-  // Fetch favorites when profile page is opened
-  useEffect(() => {
-    if (page === 'profile' && user) {
-      loadFavorites()
-    }
-  }, [page, user, loadFavorites])
 
   // Save analysis to history for logged-in users
   // Login Page
