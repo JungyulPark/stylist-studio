@@ -370,6 +370,16 @@ const translations: Record<Language, {
   referralCopyLink: string
   referralInlineText: string
   referralCreditAvailable: string
+  // Before/After & CTA
+  beforeAfterTitle: string
+  beforeLabel: string
+  afterLabel: string
+  showcaseTitle: string
+  showcaseDesc: string
+  timerTitle: string
+  timerDesc: string
+  unlockAllStyles: string
+  blurredRemaining: string
 }> = {
   ko: {
     title: 'PERSONAL STYLIST',
@@ -646,6 +656,15 @@ const translations: Record<Language, {
     referralCopyLink: '초대 링크 복사',
     referralInlineText: '친구 초대하고 무료 스타일 받기',
     referralCreditAvailable: '리퍼럴 크레딧 사용 가능',
+    beforeAfterTitle: 'Before & After',
+    beforeLabel: 'BEFORE',
+    afterLabel: 'AFTER',
+    showcaseTitle: 'AI가 만드는 놀라운 변신',
+    showcaseDesc: '사진 한 장으로 나에게 어울리는 스타일을 발견하세요',
+    timerTitle: '첫 방문 특별 할인',
+    timerDesc: '후 종료',
+    unlockAllStyles: '모든 스타일 잠금 해제',
+    blurredRemaining: '개 스타일 더 보기',
   },
   en: {
     title: 'PERSONAL STYLIST',
@@ -922,6 +941,15 @@ const translations: Record<Language, {
     referralCopyLink: 'Copy Invite Link',
     referralInlineText: 'Invite friends & get free styles',
     referralCreditAvailable: 'Referral credit available',
+    beforeAfterTitle: 'Before & After',
+    beforeLabel: 'BEFORE',
+    afterLabel: 'AFTER',
+    showcaseTitle: 'Amazing AI Transformations',
+    showcaseDesc: 'Discover your perfect style with just one photo',
+    timerTitle: 'First Visit Special',
+    timerDesc: ' left',
+    unlockAllStyles: 'Unlock All Styles',
+    blurredRemaining: ' more styles',
   },
   ja: {
     title: 'PERSONAL STYLIST',
@@ -1198,6 +1226,15 @@ const translations: Record<Language, {
     referralCopyLink: '招待リンクをコピー',
     referralInlineText: '友達を招待して無料スタイルをゲット',
     referralCreditAvailable: 'リファラルクレジット利用可能',
+    beforeAfterTitle: 'ビフォー＆アフター',
+    beforeLabel: 'BEFORE',
+    afterLabel: 'AFTER',
+    showcaseTitle: 'AIが作る驚きの変身',
+    showcaseDesc: '写真1枚であなたに似合うスタイルを発見',
+    timerTitle: '初回限定割引',
+    timerDesc: 'で終了',
+    unlockAllStyles: '全スタイルをロック解除',
+    blurredRemaining: 'つのスタイルをもっと見る',
   },
   zh: {
     title: 'PERSONAL STYLIST',
@@ -1474,6 +1511,15 @@ const translations: Record<Language, {
     referralCopyLink: '复制邀请链接',
     referralInlineText: '邀请好友获得免费造型',
     referralCreditAvailable: '推荐积分可用',
+    beforeAfterTitle: '变身前后对比',
+    beforeLabel: '变身前',
+    afterLabel: '变身后',
+    showcaseTitle: 'AI打造惊艳变身',
+    showcaseDesc: '一张照片发现最适合你的风格',
+    timerTitle: '首次访问特惠',
+    timerDesc: '后结束',
+    unlockAllStyles: '解锁全部风格',
+    blurredRemaining: '个风格等你解锁',
   },
   es: {
     title: 'PERSONAL STYLIST',
@@ -1750,6 +1796,15 @@ const translations: Record<Language, {
     referralCopyLink: 'Copiar enlace de invitación',
     referralInlineText: 'Invita amigos y obtén estilos gratis',
     referralCreditAvailable: 'Crédito de referido disponible',
+    beforeAfterTitle: 'Antes y Después',
+    beforeLabel: 'ANTES',
+    afterLabel: 'DESPUÉS',
+    showcaseTitle: 'Transformaciones increíbles con IA',
+    showcaseDesc: 'Descubre tu estilo perfecto con solo una foto',
+    timerTitle: 'Oferta de primera visita',
+    timerDesc: ' restante',
+    unlockAllStyles: 'Desbloquear todos los estilos',
+    blurredRemaining: ' estilos más',
   }
 }
 
@@ -2130,6 +2185,22 @@ function App() {
   const [favorites, setFavorites] = useState<Array<{ id: string; image_url: string; image_type: string; label: string | null }>>([])
   const [favoriteToast, setFavoriteToast] = useState('')
   const [favoriteUrls, setFavoriteUrls] = useState<Set<string>>(new Set())
+
+  // Before/After slider state
+  const [sliderPos, setSliderPos] = useState(50)
+  const sliderRef = useRef<HTMLDivElement>(null)
+
+  // First-visit timer discount
+  const [timerEnd, setTimerEnd] = useState<number | null>(() => {
+    const stored = localStorage.getItem('stylist_first_visit_timer')
+    if (stored) {
+      const end = parseInt(stored, 10)
+      if (end > Date.now()) return end
+      return null // expired
+    }
+    return null
+  })
+  const [timerText, setTimerText] = useState('')
 
   // Referral state
   const [referralCode, setReferralCode] = useState<string | null>(null)
@@ -3192,7 +3263,20 @@ function App() {
   const downloadImage = async (imageUrl: string, filename?: string) => {
     trackEvent('image_download', { content_type: filename?.includes('hair') ? 'hair' : filename?.includes('daily') ? 'daily' : 'style' })
     try {
-      // For data URIs, create blob directly
+      // Try to add watermark via canvas
+      const wmBlob = await addWatermark(imageUrl).catch(() => null)
+      if (wmBlob) {
+        const url = URL.createObjectURL(wmBlob)
+        const a = document.createElement('a')
+        a.href = url
+        a.download = filename || 'stylist-image.jpg'
+        document.body.appendChild(a)
+        a.click()
+        document.body.removeChild(a)
+        URL.revokeObjectURL(url)
+        return
+      }
+      // Fallback: download without watermark
       if (imageUrl.startsWith('data:')) {
         const res = await fetch(imageUrl)
         const blob = await res.blob()
@@ -3205,7 +3289,6 @@ function App() {
         document.body.removeChild(a)
         URL.revokeObjectURL(url)
       } else {
-        // For remote URLs, open in new tab (browser handles download)
         const a = document.createElement('a')
         a.href = imageUrl
         a.download = filename || 'stylist-image.jpg'
@@ -3217,7 +3300,6 @@ function App() {
       }
     } catch (e) {
       console.error('Download error:', e)
-      // Fallback: open in new tab
       window.open(imageUrl, '_blank')
     }
   }
@@ -3511,15 +3593,15 @@ function App() {
     const validUrls = imageUrls.filter(url => url)
     if (validUrls.length === 0) return
 
-    // 각 이미지를 다운로드
     for (let i = 0; i < validUrls.length; i++) {
       try {
-        const response = await fetch(validUrls[i])
-        const blob = await response.blob()
+        // Try watermarked download
+        const wmBlob = await addWatermark(validUrls[i]).catch(() => null as Blob | null)
+        const blob: Blob = wmBlob ?? await fetch(validUrls[i]).then(r => r.blob())
         const url = window.URL.createObjectURL(blob)
         const a = document.createElement('a')
         a.href = url
-        a.download = `stylist-result-${i + 1}.png`
+        a.download = `stylist-result-${i + 1}.jpg`
         document.body.appendChild(a)
         a.click()
         document.body.removeChild(a)
@@ -3614,6 +3696,92 @@ function App() {
       console.error('Copy failed:', err)
     }
   }
+
+  // Before/After slider drag handler
+  const handleSliderDrag = useCallback((clientX: number) => {
+    if (!sliderRef.current) return
+    const rect = sliderRef.current.getBoundingClientRect()
+    const x = clientX - rect.left
+    const pct = Math.max(0, Math.min(100, (x / rect.width) * 100))
+    setSliderPos(pct)
+  }, [])
+
+  const handleSliderMouseDown = useCallback(() => {
+    const onMove = (e: MouseEvent) => handleSliderDrag(e.clientX)
+    const onUp = () => {
+      document.removeEventListener('mousemove', onMove)
+      document.removeEventListener('mouseup', onUp)
+    }
+    document.addEventListener('mousemove', onMove)
+    document.addEventListener('mouseup', onUp)
+  }, [handleSliderDrag])
+
+  const handleSliderTouchStart = useCallback(() => {
+    const onMove = (e: TouchEvent) => handleSliderDrag(e.touches[0].clientX)
+    const onEnd = () => {
+      document.removeEventListener('touchmove', onMove)
+      document.removeEventListener('touchend', onEnd)
+    }
+    document.addEventListener('touchmove', onMove)
+    document.addEventListener('touchend', onEnd)
+  }, [handleSliderDrag])
+
+  // Watermark: draw image with subtle branding
+  const addWatermark = useCallback(async (imageUrl: string): Promise<Blob> => {
+    const img = new Image()
+    img.crossOrigin = 'anonymous'
+    await new Promise<void>((resolve, reject) => {
+      img.onload = () => resolve()
+      img.onerror = reject
+      img.src = imageUrl
+    })
+    const canvas = document.createElement('canvas')
+    canvas.width = img.width
+    canvas.height = img.height
+    const ctx = canvas.getContext('2d')!
+    ctx.drawImage(img, 0, 0)
+    // Subtle watermark — bottom-right, semi-transparent
+    const fontSize = Math.max(14, Math.round(img.width * 0.025))
+    ctx.font = `${fontSize}px -apple-system, sans-serif`
+    ctx.fillStyle = 'rgba(255, 255, 255, 0.35)'
+    ctx.textAlign = 'right'
+    ctx.textBaseline = 'bottom'
+    ctx.fillText('kstylist.cc', img.width - fontSize * 0.8, img.height - fontSize * 0.5)
+    // Thin shadow for readability on light backgrounds
+    ctx.fillStyle = 'rgba(0, 0, 0, 0.15)'
+    ctx.fillText('kstylist.cc', img.width - fontSize * 0.8 + 1, img.height - fontSize * 0.5 + 1)
+    return new Promise(resolve => canvas.toBlob(blob => resolve(blob!), 'image/jpeg', 0.92))
+  }, [])
+
+  // First-visit timer: start 24h countdown on first hair result view
+  useEffect(() => {
+    if (page === 'hair-result' && isFreeTrial && !timerEnd) {
+      const end = Date.now() + 24 * 60 * 60 * 1000
+      localStorage.setItem('stylist_first_visit_timer', end.toString())
+      setTimerEnd(end)
+    }
+  }, [page, isFreeTrial, timerEnd])
+
+  // Timer countdown tick
+  useEffect(() => {
+    if (!timerEnd) return
+    const tick = () => {
+      const remaining = timerEnd - Date.now()
+      if (remaining <= 0) {
+        setTimerText('')
+        setTimerEnd(null)
+        localStorage.removeItem('stylist_first_visit_timer')
+        return
+      }
+      const h = Math.floor(remaining / 3600000)
+      const m = Math.floor((remaining % 3600000) / 60000)
+      const s = Math.floor((remaining % 60000) / 1000)
+      setTimerText(`${h.toString().padStart(2, '0')}:${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`)
+    }
+    tick()
+    const interval = setInterval(tick, 1000)
+    return () => clearInterval(interval)
+  }, [timerEnd])
 
   const handleNativeShare = async () => {
     const shareData = getShareData()
@@ -5069,6 +5237,37 @@ function App() {
           </div>
         </section>
 
+        {/* Before/After Showcase — full-width visual strip */}
+        <section className="showcase-section">
+          <h2 className="showcase-title">{t.showcaseTitle}</h2>
+          <p className="showcase-desc">{t.showcaseDesc}</p>
+          <div className="showcase-strip">
+            {[
+              { before: '/hairnew-800w.webp', label: 'Hair Styling', icon: '✂️' },
+              { before: '/full-800w.webp', label: 'Full Package', icon: '👗' },
+              { before: '/dailynew-800w.webp', label: 'Daily Style', icon: '☀️' },
+            ].map((item, i) => (
+              <div key={i} className="showcase-card">
+                <div className="showcase-card-image">
+                  <img src={item.before} alt={item.label} loading="lazy" />
+                  <div className="showcase-card-overlay">
+                    <div className="showcase-ba-badge">
+                      <span>{t.beforeLabel}</span>
+                      <span className="showcase-arrow">→</span>
+                      <span>{t.afterLabel}</span>
+                    </div>
+                  </div>
+                  <div className="showcase-card-shine"></div>
+                </div>
+                <div className="showcase-card-info">
+                  <span className="showcase-card-icon">{item.icon}</span>
+                  <span className="showcase-card-label">{item.label}</span>
+                </div>
+              </div>
+            ))}
+          </div>
+        </section>
+
         {/* Services Section — unified 3-card grid */}
         <section className="path-section" id="features">
           <h2 className="section-title">{t.pathTitle}</h2>
@@ -6188,31 +6387,93 @@ function App() {
                   <p>{lang === 'ko' ? '스타일을 합성 중입니다...' : 'Synthesizing styles...'}</p>
                 </div>
               ) : generatedHairImages.length > 0 ? (
-                <div className="generated-images-grid">
-                  {generatedHairImages.map((item, index) => (
-                    <div key={index} className="generated-image-card">
-                      {item.imageUrl ? (
-                        <div className="style-image-container">
-                          <img src={item.imageUrl} alt={item.style} className="generated-image" onClick={() => setFullscreenImage(item.imageUrl)} />
-                          {user && (
-                            <button
-                              className={`favorite-btn-overlay ${favoriteUrls.has(item.imageUrl) ? 'active' : ''}`}
-                              onClick={() => toggleFavorite(item.imageUrl!, 'hair', item.style)}
-                            >
-                              {favoriteUrls.has(item.imageUrl) ? '♥' : '♡'}
-                            </button>
-                          )}
+                <>
+                  {/* Before/After Slider — first generated image */}
+                  {generatedHairImages[0]?.imageUrl && (
+                    <div className="ba-section">
+                      <h4 className="ba-section-title">{t.beforeAfterTitle}</h4>
+                      <div
+                        className="ba-slider"
+                        ref={sliderRef}
+                        onMouseDown={handleSliderMouseDown}
+                        onTouchStart={handleSliderTouchStart}
+                      >
+                        <img src={generatedHairImages[0].imageUrl} alt="After" className="ba-img ba-after" />
+                        <div className="ba-before-clip" style={{ width: `${sliderPos}%` }}>
+                          <img src={hairPhoto} alt="Before" className="ba-img ba-before" />
                         </div>
-                      ) : (
-                        <div className="generated-placeholder">
-                          <span>🎨</span>
-                          <span>{item.style}</span>
+                        <div className="ba-handle" style={{ left: `${sliderPos}%` }}>
+                          <div className="ba-handle-line"></div>
+                          <div className="ba-handle-circle">
+                            <span>◄►</span>
+                          </div>
+                          <div className="ba-handle-line"></div>
                         </div>
-                      )}
-                      <p className="generated-style-name">{item.style}</p>
+                        <span className="ba-label ba-label-before">{t.beforeLabel}</span>
+                        <span className="ba-label ba-label-after">{t.afterLabel}</span>
+                      </div>
+                      <p className="ba-style-name">{generatedHairImages[0].style}</p>
                     </div>
-                  ))}
-                </div>
+                  )}
+
+                  {/* Remaining images — blurred for free trial */}
+                  <div className="generated-images-grid">
+                    {generatedHairImages.map((item, index) => (
+                      <div key={index} className={`generated-image-card ${isFreeTrial && index > 0 ? 'blurred-card' : ''}`}>
+                        {item.imageUrl ? (
+                          <div className="style-image-container">
+                            <img
+                              src={item.imageUrl}
+                              alt={item.style}
+                              className={`generated-image ${isFreeTrial && index > 0 ? 'blurred-image' : ''}`}
+                              onClick={() => {
+                                if (isFreeTrial && index > 0) return
+                                setFullscreenImage(item.imageUrl)
+                              }}
+                            />
+                            {isFreeTrial && index > 0 && (
+                              <div className="blur-lock-overlay">
+                                <span className="blur-lock-icon">🔒</span>
+                              </div>
+                            )}
+                            {!(isFreeTrial && index > 0) && user && (
+                              <button
+                                className={`favorite-btn-overlay ${favoriteUrls.has(item.imageUrl) ? 'active' : ''}`}
+                                onClick={() => toggleFavorite(item.imageUrl!, 'hair', item.style)}
+                              >
+                                {favoriteUrls.has(item.imageUrl) ? '♥' : '♡'}
+                              </button>
+                            )}
+                          </div>
+                        ) : (
+                          <div className="generated-placeholder">
+                            <span>🎨</span>
+                            <span>{item.style}</span>
+                          </div>
+                        )}
+                        <p className="generated-style-name">{item.style}</p>
+                      </div>
+                    ))}
+                  </div>
+
+                  {/* Blur unlock CTA for free trial */}
+                  {isFreeTrial && generatedHairImages.filter(img => img.imageUrl).length > 1 && (
+                    <div className="blur-unlock-cta" onClick={() => {
+                      trackEvent('blur_unlock_click', { count: generatedHairImages.length - 1 })
+                      setIsFreeTrial(false)
+                      setSelectedOccasion(null)
+                      setSelectedVibe(null)
+                      setHairRecommendations([])
+                      setGeneratedHairImages([])
+                      setPage('hair-selection')
+                    }}>
+                      <span className="blur-unlock-text">
+                        {t.unlockAllStyles} — {generatedHairImages.length - 1}{t.blurredRemaining}
+                      </span>
+                      <span className="blur-unlock-price">$2.99</span>
+                    </div>
+                  )}
+                </>
               ) : (
                 <div className="ai-coming-soon">
                   <p>{lang === 'ko' ? '업로드한 사진에 스타일 합성 기능이 곧 제공됩니다' : 'Style synthesis for your uploaded photo coming soon'}</p>
@@ -6241,6 +6502,24 @@ function App() {
               <span className="referral-inline-text">{t.referralInlineText}</span>
               <span className="referral-inline-arrow">→</span>
               {referralToast && <div className="referral-toast">{referralToast}</div>}
+            </div>
+          )}
+
+          {/* Timer Discount Banner */}
+          {isFreeTrial && timerText && (
+            <div className="timer-discount-banner">
+              <div className="timer-discount-badge">-30%</div>
+              <div className="timer-discount-text">
+                <h4>{t.timerTitle}</h4>
+                <div className="timer-countdown">
+                  <span className="timer-digits">{timerText}</span>
+                  <span className="timer-suffix">{t.timerDesc}</span>
+                </div>
+              </div>
+              <div className="timer-discount-prices">
+                <span className="timer-original">$2.99</span>
+                <span className="timer-sale">$1.99</span>
+              </div>
             </div>
           )}
 

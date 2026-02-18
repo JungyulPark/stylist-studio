@@ -5454,3 +5454,407 @@
     gap: 0.5rem;
   }
 }
+
+/* =========================
+   Before/After Slider
+   ========================= */
+
+.ba-section {
+  margin: 2rem 0;
+}
+
+.ba-section-title {
+  text-align: center;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #d4af37;
+  margin-bottom: 1rem;
+  letter-spacing: 1px;
+}
+
+.ba-slider {
+  position: relative;
+  width: 100%;
+  max-width: 500px;
+  margin: 0 auto;
+  aspect-ratio: 3/4;
+  border-radius: 16px;
+  overflow: hidden;
+  cursor: ew-resize;
+  user-select: none;
+  -webkit-user-select: none;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+}
+
+.ba-img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.ba-after {
+  position: absolute;
+  inset: 0;
+}
+
+.ba-before-clip {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  overflow: hidden;
+  z-index: 2;
+}
+
+.ba-before-clip .ba-before {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  min-width: 0;
+}
+
+.ba-handle {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  z-index: 3;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  transform: translateX(-50%);
+  pointer-events: none;
+}
+
+.ba-handle-line {
+  width: 2px;
+  flex: 1;
+  background: #fff;
+  box-shadow: 0 0 8px rgba(0, 0, 0, 0.5);
+}
+
+.ba-handle-circle {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.4);
+  font-size: 0.7rem;
+  color: #333;
+  letter-spacing: -1px;
+  flex-shrink: 0;
+}
+
+.ba-label {
+  position: absolute;
+  top: 12px;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  color: #fff;
+  padding: 4px 10px;
+  border-radius: 4px;
+  background: rgba(0, 0, 0, 0.45);
+  z-index: 4;
+}
+
+.ba-label-before { left: 12px; }
+.ba-label-after { right: 12px; }
+
+.ba-style-name {
+  text-align: center;
+  font-size: 0.9rem;
+  color: rgba(255, 255, 255, 0.7);
+  margin-top: 0.75rem;
+}
+
+/* =========================
+   Blurred Image Gate
+   ========================= */
+
+.blurred-card {
+  position: relative;
+}
+
+.blurred-image {
+  filter: blur(12px);
+  pointer-events: none;
+}
+
+.blur-lock-overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2;
+}
+
+.blur-lock-icon {
+  font-size: 2rem;
+  filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.5));
+}
+
+.blur-unlock-cta {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  padding: 1rem 2rem;
+  margin: 1.5rem auto;
+  max-width: 420px;
+  background: linear-gradient(135deg, #d4af37 0%, #f4d03f 100%);
+  color: #1a1a2e;
+  border-radius: 14px;
+  cursor: pointer;
+  transition: all 0.3s;
+  font-weight: 600;
+}
+
+.blur-unlock-cta:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 24px rgba(212, 175, 55, 0.5);
+}
+
+.blur-unlock-text {
+  font-size: 0.95rem;
+}
+
+.blur-unlock-price {
+  font-size: 1.1rem;
+  font-weight: 800;
+}
+
+/* =========================
+   Timer Discount Banner
+   ========================= */
+
+.timer-discount-banner {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem 1.5rem;
+  margin: 1.5rem auto;
+  max-width: 450px;
+  background: linear-gradient(135deg, rgba(255, 59, 48, 0.12), rgba(255, 149, 0, 0.08));
+  border: 1px solid rgba(255, 59, 48, 0.3);
+  border-radius: 16px;
+  animation: timer-pulse 2s ease-in-out infinite;
+}
+
+@keyframes timer-pulse {
+  0%, 100% { border-color: rgba(255, 59, 48, 0.3); }
+  50% { border-color: rgba(255, 59, 48, 0.6); }
+}
+
+.timer-discount-badge {
+  font-size: 1.5rem;
+  font-weight: 900;
+  color: #ff3b30;
+  white-space: nowrap;
+}
+
+.timer-discount-text {
+  flex: 1;
+}
+
+.timer-discount-text h4 {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #fff;
+  margin: 0 0 0.25rem;
+}
+
+.timer-countdown {
+  display: flex;
+  align-items: baseline;
+  gap: 0.25rem;
+}
+
+.timer-digits {
+  font-size: 1.3rem;
+  font-weight: 800;
+  color: #ff3b30;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 1px;
+}
+
+.timer-suffix {
+  font-size: 0.75rem;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.timer-discount-prices {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+}
+
+.timer-original {
+  font-size: 0.8rem;
+  color: rgba(255, 255, 255, 0.4);
+  text-decoration: line-through;
+}
+
+.timer-sale {
+  font-size: 1.2rem;
+  font-weight: 800;
+  color: #ff3b30;
+}
+
+/* =========================
+   Landing Showcase Section
+   ========================= */
+
+.showcase-section {
+  padding: 3rem 1.5rem;
+  text-align: center;
+  overflow: hidden;
+}
+
+.showcase-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #fff;
+  margin-bottom: 0.5rem;
+}
+
+.showcase-desc {
+  font-size: 0.95rem;
+  color: rgba(255, 255, 255, 0.6);
+  margin-bottom: 2rem;
+}
+
+.showcase-strip {
+  display: flex;
+  gap: 1.25rem;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  padding: 0.5rem 0 1.5rem;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+}
+
+.showcase-strip::-webkit-scrollbar {
+  display: none;
+}
+
+.showcase-card {
+  flex: 0 0 280px;
+  scroll-snap-align: center;
+  border-radius: 16px;
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  transition: transform 0.3s;
+}
+
+.showcase-card:hover {
+  transform: translateY(-4px);
+}
+
+.showcase-card-image {
+  position: relative;
+  aspect-ratio: 4/5;
+  overflow: hidden;
+}
+
+.showcase-card-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.showcase-card-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to right,
+    rgba(0, 0, 0, 0.5) 0%,
+    transparent 40%,
+    transparent 60%,
+    rgba(212, 175, 55, 0.2) 100%
+  );
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  padding-bottom: 1rem;
+}
+
+.showcase-ba-badge {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.4rem 0.8rem;
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(8px);
+  border-radius: 20px;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 1px;
+  color: #fff;
+}
+
+.showcase-arrow {
+  color: #d4af37;
+  font-size: 0.9rem;
+}
+
+.showcase-card-shine {
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 50%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+  animation: showcase-shine 4s ease-in-out infinite;
+}
+
+@keyframes showcase-shine {
+  0%, 100% { left: -100%; }
+  50% { left: 150%; }
+}
+
+.showcase-card-info {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.75rem;
+}
+
+.showcase-card-icon {
+  font-size: 1.1rem;
+}
+
+.showcase-card-label {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.8);
+  letter-spacing: 0.5px;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .showcase-strip {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+  .showcase-card {
+    flex: 0 0 240px;
+  }
+  .ba-slider {
+    max-width: 100%;
+  }
+  .timer-discount-banner {
+    flex-wrap: wrap;
+    justify-content: center;
+    text-align: center;
+  }
+}
