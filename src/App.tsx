@@ -306,6 +306,7 @@ const translations: Record<Language, {
   subscriptionCta: string
   subscriptionActive: string
   subscriptionManage: string
+  subscriptionManageDesc: string
   subscriptionCancel: string
   subscriptionCancelConfirm: string
   subscriptionCancelSuccess: string
@@ -579,6 +580,7 @@ const translations: Record<Language, {
     subscriptionCta: '무료 체험 시작',
     subscriptionActive: '구독 활성화됨',
     subscriptionManage: '구독 관리',
+    subscriptionManageDesc: '결제 수단 변경, 인보이스 확인, 구독 취소를 관리합니다.',
     subscriptionCancel: '구독 취소',
     subscriptionCancelConfirm: '정말 구독을 취소하시겠습니까? 현재 결제 기간이 끝날 때까지 이용 가능합니다.',
     subscriptionCancelSuccess: '구독이 취소되었습니다.',
@@ -847,6 +849,7 @@ const translations: Record<Language, {
     subscriptionCta: 'Start Free Trial',
     subscriptionActive: 'Subscription Active',
     subscriptionManage: 'Manage Subscription',
+    subscriptionManageDesc: 'Manage billing, payment method, and cancellation.',
     subscriptionCancel: 'Cancel Subscription',
     subscriptionCancelConfirm: 'Are you sure you want to cancel? You can still use the service until the end of your current billing period.',
     subscriptionCancelSuccess: 'Your subscription has been canceled.',
@@ -1115,6 +1118,7 @@ const translations: Record<Language, {
     subscriptionCta: '無料体験を始める',
     subscriptionActive: 'サブスク有効',
     subscriptionManage: 'サブスク管理',
+    subscriptionManageDesc: 'お支払い方法の変更、請求書の確認、解約を管理します。',
     subscriptionCancel: 'サブスク解約',
     subscriptionCancelConfirm: '本当に解約しますか？現在の請求期間の終了まで引き続きご利用いただけます。',
     subscriptionCancelSuccess: 'サブスクリプションが解約されました。',
@@ -1383,6 +1387,7 @@ const translations: Record<Language, {
     subscriptionCta: '开始免费试用',
     subscriptionActive: '订阅已激活',
     subscriptionManage: '管理订阅',
+    subscriptionManageDesc: '管理付款方式、查看发票和取消订阅。',
     subscriptionCancel: '取消订阅',
     subscriptionCancelConfirm: '确定要取消订阅吗？您可以继续使用到当前计费周期结束。',
     subscriptionCancelSuccess: '订阅已取消。',
@@ -1651,6 +1656,7 @@ const translations: Record<Language, {
     subscriptionCta: 'Iniciar Prueba Gratis',
     subscriptionActive: 'Suscripción Activa',
     subscriptionManage: 'Gestionar Suscripción',
+    subscriptionManageDesc: 'Gestiona el método de pago, facturas y cancelación.',
     subscriptionCancel: 'Cancelar Suscripción',
     subscriptionCancelConfirm: '¿Seguro que quieres cancelar? Puedes seguir usando el servicio hasta el final del período de facturación actual.',
     subscriptionCancelSuccess: 'Tu suscripción ha sido cancelada.',
@@ -4715,7 +4721,23 @@ function App() {
                 </button>
               </form>
 
-              <div className="setting-item" style={{ marginTop: '1.5rem' }}>
+              {isSubscribed && (
+                <div className="setting-item" style={{ marginTop: '1.5rem' }}>
+                  <div className="setting-info">
+                    <strong>{t.subscriptionManage}</strong>
+                    <p>{t.subscriptionManageDesc || 'Manage billing, payment method, and cancellation.'}</p>
+                  </div>
+                  <button
+                    onClick={handleManageSubscription}
+                    className="btn-outline-sm"
+                    disabled={isOpeningPortal}
+                  >
+                    {isOpeningPortal ? '...' : t.subscriptionManage}
+                  </button>
+                </div>
+              )}
+
+              <div className="setting-item" style={{ marginTop: isSubscribed ? '0' : '1.5rem' }}>
                 <div className="setting-info">
                   <strong>{t.resetPassword}</strong>
                   <p>{t.resetPasswordDesc}</p>
