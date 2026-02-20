@@ -303,7 +303,8 @@
             window.gtag('js', new Date());
             window.gtag('config', 'G-42DC8CJX3E', {
               'anonymize_ip': true,
-              'cookie_flags': 'SameSite=None;Secure'
+              'cookie_flags': 'SameSite=None;Secure',
+              'send_page_view': false   // SPA: 수동으로 page_view 전송 (자동 중복 방지)
             });
           };
 

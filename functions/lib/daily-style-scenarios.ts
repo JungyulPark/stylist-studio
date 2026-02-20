@@ -208,35 +208,35 @@ function getTodaysPickPrompt(weather: WeatherInfo, gender: string): string {
 }
 
 // ─── Casual Prompt ────────────────────────────────────────────────
-// 10 casual moods — mix of everyday accessible (COS, Comoli, APC) and elevated luxury (Zegna, Loro Piana)
+// 10 casual moods with mood-specific bottoms for real outfit variety
 const maleCasualMoods = [
   // Everyday accessible
-  { name: 'COS clean minimal', guide: 'Simple well-cut basics. Relaxed cotton tee or clean sweatshirt, straight-leg jeans or chinos. White sneakers, simple canvas tote. No logos, no fuss.' },
-  { name: 'Comoli relaxed', guide: 'Japanese relaxed silhouette. Oversized cotton shirt or band-collar pullover, wide straight-leg trousers in natural fabric. Leather sandals or simple sneakers. Unhurried, effortless.' },
-  { name: 'Auralee soft texture', guide: 'Fabric-first comfort. Garment-washed cotton or brushed jersey in muted tones. Dropped shoulders, relaxed body. Simple canvas shoes or suede sneakers. Understated.' },
-  { name: 'Massimo Dutti smart casual', guide: 'Slightly polished everyday. Cotton polo or OCBD shirt, well-fitted chinos or dark jeans. Clean leather sneakers or loafers. Leather belt, simple watch. Put-together without trying.' },
-  { name: 'APC Parisian', guide: 'French casual ease. Plain crew-neck tee or breton stripe, dark straight-leg jeans, clean white sneakers. Simple leather jacket or cotton harrington if cool. Minimal, timeless.' },
-  { name: 'Norse Projects Nordic', guide: 'Scandinavian functional minimalism. Midweight cotton sweatshirt or zip-up fleece, tapered chinos or utility trousers. Simple sneakers, nylon crossbody bag. Clean, practical.' },
-  { name: 'nanamica outdoor-city', guide: 'City-meets-outdoor utility. Cotton-nylon overshirt or light shell jacket, relaxed cargo pants or climbing pants. Trail sneakers or simple boots. Functional but clean.' },
+  { name: 'COS clean minimal', guide: 'Simple well-cut basics. Relaxed cotton tee or clean sweatshirt. White sneakers, simple canvas tote. No logos, no fuss.', bottom: 'relaxed chinos', warmBottom: 'cotton shorts' },
+  { name: 'Comoli relaxed', guide: 'Japanese relaxed silhouette. Oversized cotton shirt or band-collar pullover. Leather sandals or simple sneakers. Unhurried, effortless.', bottom: 'wide straight-leg cotton trousers', warmBottom: 'wide linen shorts' },
+  { name: 'Auralee soft texture', guide: 'Fabric-first comfort. Garment-washed cotton or brushed jersey in muted tones. Dropped shoulders, relaxed body. Simple canvas shoes or suede sneakers.', bottom: 'tapered cotton pants', warmBottom: 'relaxed linen shorts' },
+  { name: 'Sweat setup', guide: 'Clean coordinated sweatshirt-and-jogger set in premium cotton fleece. Relaxed but not sloppy — fitted enough through the body. Clean sneakers. One simple accessory like a cap or watch.', bottom: 'matching jogger pants', warmBottom: 'matching jersey shorts' },
+  { name: 'APC Parisian', guide: 'French casual ease. Plain crew-neck tee or breton stripe. Simple leather jacket or cotton harrington if cool. Clean white sneakers. Minimal, timeless.', bottom: 'straight-leg dark jeans', warmBottom: 'light cotton chinos with rolled hem' },
+  { name: 'Norse Projects Nordic', guide: 'Scandinavian functional minimalism. Midweight cotton sweatshirt or zip-up fleece. Simple sneakers, nylon crossbody bag. Clean, practical.', bottom: 'tapered utility trousers', warmBottom: 'nylon-cotton shorts' },
+  { name: 'nanamica outdoor-city', guide: 'City-meets-outdoor utility. Cotton-nylon overshirt or light shell jacket. Trail sneakers or simple boots. Functional but clean.', bottom: 'relaxed cargo pants', warmBottom: 'light climbing shorts' },
   // Elevated luxury casual
-  { name: 'Zegna leisure', guide: 'Luxe casual with polish. Cashmere crewneck or zip hoodie, tailored jogger-style trousers with elastic cuff. Premium leather sneakers. Soft and refined, elevated lounge.' },
-  { name: 'Loro Piana weekend', guide: 'Quiet luxury off-duty. Fine-gauge cashmere polo or cotton-cashmere crewneck, linen trousers or soft chinos. Suede loafers, no socks. Leather weekend bag. Understated wealth.' },
-  { name: 'Cucinelli warm layers', guide: 'Warm relaxed layering. Fine knit sweater over simple tee, collar peeking optional. Relaxed straight-leg pants. Suede desert boots or clean sneakers. Comfortable, approachable elegance.' },
+  { name: 'Zegna leisure', guide: 'Luxe casual with polish. Cashmere crewneck or zip hoodie. Premium leather sneakers. Soft and refined, elevated lounge.', bottom: 'tailored jogger-style trousers', warmBottom: 'tailored cotton shorts' },
+  { name: 'Loro Piana weekend', guide: 'Quiet luxury off-duty. Fine-gauge cashmere polo or cotton-cashmere crewneck. Suede loafers, no socks. Leather weekend bag. Understated wealth.', bottom: 'soft linen-cotton chinos', warmBottom: 'linen drawstring trousers' },
+  { name: 'Cucinelli warm layers', guide: 'Warm relaxed layering. Fine knit sweater over simple tee, collar peeking optional. Suede desert boots or clean sneakers. Comfortable, approachable elegance.', bottom: 'relaxed straight-leg cotton pants', warmBottom: 'light cotton trousers' },
 ]
 
 const femaleCasualMoods = [
   // Everyday accessible
-  { name: 'COS modern minimal', guide: 'Clean everyday simplicity. Oversized cotton shirt or structured tee, straight-leg jeans or wide trousers. White sneakers or simple flats. Canvas tote. No accessories needed.' },
-  { name: 'Auralee soft drape', guide: 'Soft oversized knits or washed cotton, gentle drape. One fitted piece for balance. Simple leather flats or clean sneakers. Muted natural palette. Cozy and understated.' },
-  { name: 'Massimo Dutti polished', guide: 'Neat everyday polish. Cotton knit or simple blouse, well-fitted dark jeans or tailored trousers. Loafers or pointed flats. Simple gold studs, structured crossbody bag.' },
-  { name: 'Comoli relaxed', guide: 'Japanese relaxed ease. Oversized cotton shirt dress or wide-leg trousers with band-collar blouse. Natural linen and cotton. Leather sandals or simple flats. Unhurried silhouette.' },
-  { name: 'Totême Scandinavian', guide: 'Clean Nordic lines. Fitted ribbed knit or simple turtleneck, straight-leg jeans, structured coat if cool. Pointed-toe boots or clean sneakers. Minimal gold jewelry, structured bag.' },
-  { name: 'APC French off-duty', guide: 'Parisian everyday. Breton stripe or plain cotton tee, straight-leg dark jeans, ballet flats or white sneakers. Simple leather crossbody, no fuss. Effortlessly chic.' },
-  { name: 'Margaret Howell understated', guide: 'British understated craft. Cotton oxford shirt or simple wool knit, relaxed chinos or corduroy trousers. Leather brogues or simple trainers. Natural fabrics, muted tones.' },
+  { name: 'COS modern minimal', guide: 'Clean everyday simplicity. Oversized cotton shirt or structured tee. White sneakers or simple flats. Canvas tote. No accessories needed.', bottom: 'wide cotton trousers', warmBottom: 'cotton midi skirt' },
+  { name: 'Auralee soft drape', guide: 'Soft oversized knits or washed cotton, gentle drape. One fitted piece for balance. Simple leather flats or clean sneakers. Muted natural palette. Cozy and understated.', bottom: 'relaxed cotton trousers', warmBottom: 'light linen wide-leg pants' },
+  { name: 'Massimo Dutti polished', guide: 'Neat everyday polish. Cotton knit or simple blouse. Loafers or pointed flats. Simple gold studs, structured crossbody bag.', bottom: 'tailored trousers', warmBottom: 'cotton bermuda shorts' },
+  { name: 'Athleisure chic', guide: 'Coordinated sweatshirt-and-jogger set or hoodie with fitted joggers. Premium cotton fleece, clean lines. White sneakers or simple slides. Minimal jewelry.', bottom: 'matching jogger pants', warmBottom: 'matching cotton shorts' },
+  { name: 'Totême Scandinavian', guide: 'Clean Nordic lines. Fitted ribbed knit or simple turtleneck. Pointed-toe boots or clean sneakers. Minimal gold jewelry, structured bag.', bottom: 'straight-leg dark jeans', warmBottom: 'cotton tailored shorts' },
+  { name: 'APC French off-duty', guide: 'Parisian everyday. Breton stripe or plain cotton tee. Ballet flats or white sneakers. Simple leather crossbody, no fuss. Effortlessly chic.', bottom: 'straight-leg cotton pants', warmBottom: 'cotton skirt' },
+  { name: 'Margaret Howell understated', guide: 'British understated craft. Cotton oxford shirt or simple wool knit. Leather brogues or simple trainers. Natural fabrics, muted tones.', bottom: 'relaxed chinos', warmBottom: 'cotton canvas trousers' },
   // Elevated luxury casual
-  { name: 'Loro Piana luxury casual', guide: 'Quiet luxury ease. Cashmere cardigan or fine knit polo, silk-blend trousers or soft tailored jeans. Suede loafers, delicate gold jewelry. Effortless sophistication.' },
-  { name: 'Cucinelli weekend warmth', guide: 'Warm layered comfort. Soft knit over fitted tee, relaxed cashmere joggers or soft trousers. Suede ankle boots or clean sneakers. Earth tones, approachable elegance.' },
-  { name: 'Zegna feminine leisure', guide: 'Modern luxe comfort. Cashmere hoodie or zip knit, tailored wide-leg jogger trousers. Premium leather sneakers, minimal gold bracelet. Relaxed but refined.' },
+  { name: 'Loro Piana luxury casual', guide: 'Quiet luxury ease. Cashmere cardigan or fine knit polo. Suede loafers, delicate gold jewelry. Effortless sophistication.', bottom: 'silk-blend wide trousers', warmBottom: 'linen palazzo pants' },
+  { name: 'Cucinelli weekend warmth', guide: 'Warm layered comfort. Soft knit over fitted tee. Suede ankle boots or clean sneakers. Earth tones, approachable elegance.', bottom: 'soft knit joggers or relaxed trousers', warmBottom: 'light cotton wide-leg pants' },
+  { name: 'Zegna feminine leisure', guide: 'Modern luxe comfort. Cashmere hoodie or zip knit. Premium leather sneakers, minimal gold bracelet. Relaxed but refined.', bottom: 'tailored wide-leg jogger trousers', warmBottom: 'tailored jersey shorts' },
 ]
 
 function getCasualPrompt(gender: string, temp: number): string {
@@ -250,18 +250,18 @@ function getCasualPrompt(gender: string, temp: number): string {
     const m = femaleCasualMoods[mIdx % femaleCasualMoods.length]
     const arch = `STYLING: ${m.name} — ${m.guide}${SKIN_TONE_DIRECTIVE}`
 
-    if (isWarm) return `relaxed chic casual outfit (${p.tone}): oversized cotton tee in ${p.c4} with dropped shoulders, loosely tucked into ${p.c3} straight-leg jeans or cotton skirt, clean white sneakers or simple sandals, ${p.accent} minimal crossbody bag, simple hoop earrings. ${arch}`
-    if (isCold) return `cozy weekend casual outfit (${p.tone}): chunky ribbed cardigan in ${p.c1} over fitted white cotton tee, dark straight-leg jeans, ${p.c3} ankle boots or clean sneakers, ${p.accent} knit beanie, simple leather tote. ${arch}`
-    return `easy chic casual outfit (${p.tone}): soft cotton cardigan in ${p.c1} draped open over fitted white tee, straight-leg jeans or cotton trousers, clean ${p.c3} sneakers or simple loafers, delicate ${p.accent} pendant necklace. ${arch}`
+    if (isWarm) return `relaxed casual outfit (${p.tone}): oversized cotton tee in ${p.c4}, ${m.warmBottom} in ${p.c3}, clean sneakers or simple sandals, ${p.accent} minimal accessory. ${arch}`
+    if (isCold) return `cozy casual outfit (${p.tone}): chunky cardigan or cozy knit in ${p.c1} over fitted tee, ${m.bottom} in ${p.c3}, ankle boots or clean sneakers, ${p.accent} simple accessory. ${arch}`
+    return `easy chic casual outfit (${p.tone}): soft cardigan in ${p.c1} over fitted tee, ${m.bottom} in ${p.c3}, clean sneakers or simple loafers, delicate ${p.accent} pendant. ${arch}`
   }
 
   const p = maleColorPalettes[pIdx % maleColorPalettes.length]
   const m = maleCasualMoods[mIdx % maleCasualMoods.length]
   const arch = `STYLING: ${m.name} — ${m.guide}${SKIN_TONE_DIRECTIVE}`
 
-  if (isWarm) return `relaxed summer casual outfit (${p.tone}): garment-dyed cotton crewneck tee in ${p.c3}, comfortable cotton shorts in ${p.c4} or light chinos with rolled hem, clean canvas sneakers or leather slides, simple ${p.accent} watch. ${arch}`
-  if (isCold) return `cozy layered casual outfit (${p.tone}): ${p.c3} fleece zip-up or knit hoodie layered under ${p.c1} cotton overshirt or shirt jacket, straight-leg dark jeans, ${p.c4} suede boots or leather sneakers, ${p.accent} knit beanie or scarf. ${arch}`
-  return `clean everyday casual outfit (${p.tone}): ${p.c3} cotton sweatshirt or crewneck knit, straight-leg dark jeans with relaxed fit, clean white sneakers, simple ${p.accent} watch, cotton jacket if needed. ${arch}`
+  if (isWarm) return `relaxed casual outfit (${p.tone}): cotton crewneck tee in ${p.c3}, ${m.warmBottom} in ${p.c4}, clean sneakers or leather slides, simple ${p.accent} watch. ${arch}`
+  if (isCold) return `cozy casual outfit (${p.tone}): ${p.c3} knit sweater or hoodie over simple tee, ${m.bottom} in ${p.c1}, clean sneakers or simple boots, ${p.accent} simple accessory. ${arch}`
+  return `clean everyday casual outfit (${p.tone}): ${p.c3} cotton sweatshirt or crewneck knit, ${m.bottom} in ${p.c1}, clean sneakers, simple ${p.accent} watch. ${arch}`
 }
 
 export function getDailyScenarios(weather: WeatherInfo, gender: string): ImageScenario[] {

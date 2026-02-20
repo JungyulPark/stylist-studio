@@ -2098,6 +2098,20 @@ function trackEvent(eventName: string, params?: Record<string, string | number |
   } catch { /* noop */ }
 }
 
+// GA4 SPA virtual pageview — page_title & page_location 포함해야 GA4 표준 리포트에 표시됨
+function trackPageView(pageName: string) {
+  try {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const w = window as any
+    if (typeof w?.gtag === 'function') {
+      w.gtag('event', 'page_view', {
+        page_title: pageName,
+        page_location: `${window.location.origin}/${pageName}`,
+      })
+    }
+  } catch { /* noop */ }
+}
+
 function App() {
   const [lang, setLang] = useState<Language>('en')
   const [page, setPageState] = useState<Page>('landing')
@@ -2251,7 +2265,7 @@ function App() {
   const setPage = useCallback((newPage: Page) => {
     setPageState(newPage)
     window.history.pushState({ page: newPage }, '', `#${newPage}`)
-    trackEvent('page_view', { page_name: newPage })
+    trackPageView(newPage)
     if (newPage === 'landing') trackEvent('funnel_step', { step_name: 'landing_view', step_number: 1 })
   }, [])
 
@@ -2633,6 +2647,7 @@ function App() {
   }
 
   const handlePhotoClick = () => {
+    trackEvent('photo_upload_click', { page: 'input' })
     fileInputRef.current?.click()
   }
 
@@ -3585,6 +3600,7 @@ function App() {
 
   // 패션 변환 (3x3 그리드)
   const handleRestart = () => {
+    trackEvent('restart', { from_page: page })
     setProfile({ photo: null, height: '', weight: '', gender: null })
     setHeightFeet('')
     setHeightInches('')
@@ -5178,7 +5194,7 @@ function App() {
                 <button
                   key={code}
                   className={`lang-btn-sm ${lang === code ? 'active' : ''}`}
-                  onClick={() => setLang(code)}
+                  onClick={() => { setLang(code); trackEvent('language_change', { language: code }) }}
                 >
                   {languageNames[code]}
                 </button>
@@ -5187,7 +5203,7 @@ function App() {
             {isSupabaseConfigured && (
               user ? (
                 <div className="auth-buttons">
-                  <button type="button" onClick={() => setPage('profile')} className="btn-primary-sm">
+                  <button type="button" onClick={() => { trackEvent('header_click', { button: 'my_profile' }); setPage('profile') }} className="btn-primary-sm">
                     {t.myProfile}
                   </button>
                   <button type="button" onClick={handleLogout} className="btn-outline-sm">
@@ -5196,16 +5212,16 @@ function App() {
                 </div>
               ) : (
                 <div className="auth-buttons">
-                  <button onClick={() => setPage('login')} className="btn-outline-sm">
+                  <button onClick={() => { trackEvent('header_click', { button: 'login' }); setPage('login') }} className="btn-outline-sm">
                     {t.login}
                   </button>
-                  <button onClick={() => setPage('signup')} className="btn-primary-sm">
+                  <button onClick={() => { trackEvent('header_click', { button: 'signup' }); setPage('signup') }} className="btn-primary-sm">
                     {t.signup}
                   </button>
                 </div>
               )
             )}
-            <button className="btn-primary" onClick={() => document.getElementById('features')?.scrollIntoView({ behavior: 'smooth' })}>
+            <button className="btn-primary" onClick={() => { trackEvent('landing_start_click'); document.getElementById('features')?.scrollIntoView({ behavior: 'smooth' }) }}>
               {t.startBtn}
             </button>
           </div>
@@ -5699,7 +5715,7 @@ function App() {
               </button>
             </>
           )}
-          <button className="btn-dark" onClick={handleRestart}>
+          <button className="btn-dark" onClick={() => { trackEvent('back_to_home_click', { from_page: 'result' }); handleRestart() }}>
             {t.backToHome}
           </button>
         </div>
@@ -6232,7 +6248,7 @@ function App() {
                   <button
                     key={occasion.id}
                     className={`option-card ${selectedOccasion === occasion.id ? 'active' : ''}`}
-                    onClick={() => setSelectedOccasion(occasion.id)}
+                    onClick={() => { setSelectedOccasion(occasion.id); trackEvent('occasion_select', { occasion: occasion.id, page: 'hair-selection' }) }}
                   >
                     <span className="option-icon">{occasion.icon}</span>
                     <span className="option-label">{getOccasionLabel(occasion)}</span>
@@ -6248,7 +6264,7 @@ function App() {
                   <button
                     key={vibe.id}
                     className={`option-card ${selectedVibe === vibe.id ? 'active' : ''}`}
-                    onClick={() => setSelectedVibe(vibe.id)}
+                    onClick={() => { setSelectedVibe(vibe.id); trackEvent('vibe_select', { vibe: vibe.id, page: 'hair-selection' }) }}
                   >
                     <span className="option-icon">{vibe.icon}</span>
                     <span className="option-label">{getVibeLabel(vibe)}</span>
@@ -6263,21 +6279,21 @@ function App() {
                 <button
                   type="button"
                   className={`gender-btn ${profile.gender === 'male' ? 'active' : ''}`}
-                  onClick={() => setProfile(prev => ({ ...prev, gender: 'male' }))}
+                  onClick={() => { setProfile(prev => ({ ...prev, gender: 'male' })); trackEvent('gender_select', { gender: 'male', page: 'hair-selection' }) }}
                 >
                   {t.male}
                 </button>
                 <button
                   type="button"
                   className={`gender-btn ${profile.gender === 'female' ? 'active' : ''}`}
-                  onClick={() => setProfile(prev => ({ ...prev, gender: 'female' }))}
+                  onClick={() => { setProfile(prev => ({ ...prev, gender: 'female' })); trackEvent('gender_select', { gender: 'female', page: 'hair-selection' }) }}
                 >
                   {t.female}
                 </button>
                 <button
                   type="button"
                   className={`gender-btn ${profile.gender === 'other' ? 'active' : ''}`}
-                  onClick={() => setProfile(prev => ({ ...prev, gender: 'other' }))}
+                  onClick={() => { setProfile(prev => ({ ...prev, gender: 'other' })); trackEvent('gender_select', { gender: 'other', page: 'hair-selection' }) }}
                 >
                   {t.other}
                 </button>
@@ -6295,7 +6311,7 @@ function App() {
               </p>
               <div
                 className={`mini-photo-upload ${hairPhoto ? 'has-photo' : ''}`}
-                onClick={() => hairPhotoRef.current?.click()}
+                onClick={() => { trackEvent('photo_upload_click', { page: 'hair-selection' }); hairPhotoRef.current?.click() }}
               >
                 {hairPhoto ? (
                   <img src={hairPhoto} alt="My photo" className="mini-photo-preview" />
@@ -6573,7 +6589,7 @@ function App() {
               </div>
               {/* Subscription Card */}
               {!isSubscribed && (
-                <div className="subscription-card" onClick={handleSubscription}>
+                <div className="subscription-card" onClick={() => { trackEvent('subscription_upsell_click', { from_page: 'hair-result' }); handleSubscription() }}>
                   <span className="subscription-badge">{t.subscriptionTrialDays}</span>
                   <h4>{t.subscriptionTitle}</h4>
                   <p className="subscription-desc">{t.subscriptionDesc}</p>
@@ -6583,7 +6599,7 @@ function App() {
                   <div className="subscription-cta">{t.subscriptionCta}</div>
                 </div>
               )}
-              <button className="upsell-dismiss" onClick={() => setIsFreeTrial(false)}>
+              <button className="upsell-dismiss" onClick={() => { trackEvent('upsell_dismiss_click'); setIsFreeTrial(false) }}>
                 {t.upsellDismiss}
               </button>
             </div>
@@ -6594,18 +6610,19 @@ function App() {
               <>
                 <button
                   className="btn-outline"
-                  onClick={() => handleDownloadResult(
+                  onClick={() => { trackEvent('download_click', { page: 'hair-result' }); handleDownloadResult(
                     generatedHairImages.map(img => img.imageUrl).filter(Boolean) as string[]
-                  )}
+                  ) }}
                 >
                   {t.downloadResult}
                 </button>
-                <button className="btn-outline" onClick={handleShareResult}>
+                <button className="btn-outline" onClick={() => { trackEvent('share_click', { page: 'hair-result' }); handleShareResult() }}>
                   {t.shareResult}
                 </button>
               </>
             )}
             <button className="btn-outline" onClick={() => {
+              trackEvent('try_another_click', { from_page: 'hair-result' })
               setSelectedOccasion(null)
               setSelectedVibe(null)
               setHairRecommendations([])
@@ -6613,7 +6630,7 @@ function App() {
             }}>
               {t.tryAnother}
             </button>
-            <button className="btn-dark" onClick={handleRestart}>
+            <button className="btn-dark" onClick={() => { trackEvent('back_to_home_click', { from_page: 'hair-result' }); handleRestart() }}>
               {t.backToHome}
             </button>
           </div>
@@ -6993,21 +7010,21 @@ function App() {
                   <button
                     type="button"
                     className={`gender-btn ${profile.gender === 'male' ? 'active' : ''}`}
-                    onClick={() => setProfile(prev => ({ ...prev, gender: 'male' }))}
+                    onClick={() => { setProfile(prev => ({ ...prev, gender: 'male' })); trackEvent('gender_select', { gender: 'male', page: 'input' }) }}
                   >
                     {t.male}
                   </button>
                   <button
                     type="button"
                     className={`gender-btn ${profile.gender === 'female' ? 'active' : ''}`}
-                    onClick={() => setProfile(prev => ({ ...prev, gender: 'female' }))}
+                    onClick={() => { setProfile(prev => ({ ...prev, gender: 'female' })); trackEvent('gender_select', { gender: 'female', page: 'input' }) }}
                   >
                     {t.female}
                   </button>
                   <button
                     type="button"
                     className={`gender-btn ${profile.gender === 'other' ? 'active' : ''}`}
-                    onClick={() => setProfile(prev => ({ ...prev, gender: 'other' }))}
+                    onClick={() => { setProfile(prev => ({ ...prev, gender: 'other' })); trackEvent('gender_select', { gender: 'other', page: 'input' }) }}
                   >
                     {t.other}
                   </button>
