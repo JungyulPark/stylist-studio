@@ -520,7 +520,7 @@ const translations: Record<Language, {
       'casual': '캐주얼',
       'daily': '데일리'
     },
-    downloadResult: '📥 결과 저장',
+    downloadResult: '결과 리포트 보기',
     shareResult: '📤 공유하기',
     linkCopied: '링크가 복사되었습니다!',
     emailReport: '📧 이메일로 받기',
@@ -823,7 +823,7 @@ const translations: Record<Language, {
       'casual': 'Casual',
       'daily': 'Daily'
     },
-    downloadResult: '📥 Save Results',
+    downloadResult: 'View Style Report',
     shareResult: '📤 Share',
     linkCopied: 'Link copied!',
     emailReport: '📧 Email Report',
@@ -1126,7 +1126,7 @@ const translations: Record<Language, {
       'casual': 'カジュアル',
       'daily': 'デイリー'
     },
-    downloadResult: '📥 結果を保存',
+    downloadResult: 'スタイルレポートを見る',
     shareResult: '📤 シェア',
     linkCopied: 'リンクがコピーされました！',
     emailReport: '📧 メールで受け取る',
@@ -1429,7 +1429,7 @@ const translations: Record<Language, {
       'casual': '休闲',
       'daily': '日常'
     },
-    downloadResult: '📥 保存结果',
+    downloadResult: '查看风格报告',
     shareResult: '📤 分享',
     linkCopied: '链接已复制！',
     emailReport: '📧 发送到邮箱',
@@ -1732,7 +1732,7 @@ const translations: Record<Language, {
       'casual': 'Casual',
       'daily': 'Diario'
     },
-    downloadResult: '📥 Guardar',
+    downloadResult: 'Ver Informe de Estilo',
     shareResult: '📤 Compartir',
     linkCopied: '¡Enlace copiado!',
     emailReport: '📧 Enviar por Email',
@@ -3739,28 +3739,101 @@ function App() {
     setPage('landing')
   }
 
-  // 결과 다운로드 (이미지 URL들을 새 탭에서 열기)
+  // 결과 리포트 생성 (새 탭에서 보고서 형태로 열기)
   const handleDownloadResult = async (imageUrls: string[]) => {
     const validUrls = imageUrls.filter(url => url)
     if (validUrls.length === 0) return
 
-    for (let i = 0; i < validUrls.length; i++) {
-      try {
-        // Try watermarked download
-        const wmBlob = await addWatermark(validUrls[i]).catch(() => null as Blob | null)
-        const blob: Blob = wmBlob ?? await fetch(validUrls[i]).then(r => r.blob())
-        const url = window.URL.createObjectURL(blob)
-        const a = document.createElement('a')
-        a.href = url
-        a.download = `stylist-result-${i + 1}.jpg`
-        document.body.appendChild(a)
-        a.click()
-        document.body.removeChild(a)
-        window.URL.revokeObjectURL(url)
-      } catch (err) {
-        console.error('Download failed:', err)
-      }
+    trackEvent('save_report_click', { image_count: validUrls.length })
+
+    // Build styled report HTML
+    const styleLabelsMap: Record<string, string> = {
+      'best-match': t.styleLabels['best-match'] || 'Best Match',
+      interview: t.styleLabels.interview || 'Interview',
+      date: t.styleLabels.date || 'Date Night',
+      luxury: t.styleLabels.luxury || 'Luxury',
+      casual: t.styleLabels.casual || 'Casual',
+      daily: t.styleLabels.daily || 'Daily',
     }
+
+    const allImages = [
+      ...styleImages.filter(s => s.imageUrl).map(s => ({ url: s.imageUrl!, label: styleLabelsMap[s.id] || s.label, type: 'style' })),
+      ...transformedHairstyles.filter(s => s.imageUrl).map(s => ({ url: s.imageUrl!, label: s.label, type: 'hair' })),
+    ]
+
+    const reportTitle = lang === 'ko' ? '나의 스타일 리포트' : lang === 'ja' ? 'マイスタイルレポート' : lang === 'zh' ? '我的风格报告' : lang === 'es' ? 'Mi Informe de Estilo' : 'My Style Report'
+    const reportSubtitle = lang === 'ko' ? `${profile.gender === 'female' ? '여성' : '남성'} · ${profile.height}cm · ${profile.weight}kg` : `${profile.gender === 'female' ? 'Female' : 'Male'} · ${profile.height}cm · ${profile.weight}kg`
+    const styleSection = lang === 'ko' ? '패션 스타일링' : 'Fashion Styling'
+    const hairSection = lang === 'ko' ? '헤어 스타일링' : 'Hair Styling'
+    const brandLine = 'kstylist.cc'
+
+    const styleImgs = allImages.filter(i => i.type === 'style')
+    const hairImgs = allImages.filter(i => i.type === 'hair')
+    const bestMatch = styleImgs[0]
+
+    // Convert images to data URLs for the report
+    const imgDataMap = new Map<string, string>()
+    await Promise.all(allImages.slice(0, 8).map(async (img) => {
+      try {
+        const wmBlob = await addWatermark(img.url).catch(() => null as Blob | null)
+        const blob: Blob = wmBlob ?? await fetch(img.url).then(r => r.blob())
+        const reader = new FileReader()
+        const dataUrl = await new Promise<string>((resolve) => {
+          reader.onloadend = () => resolve(reader.result as string)
+          reader.readAsDataURL(blob)
+        })
+        imgDataMap.set(img.url, dataUrl)
+      } catch { /* skip */ }
+    }))
+
+    const reportHtml = `<!DOCTYPE html>
+<html lang="${lang}">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>${reportTitle} — ${brandLine}</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#fafafa;color:#1a1a1a;line-height:1.6}
+.report{max-width:800px;margin:0 auto;padding:2rem 1.5rem}
+.header{text-align:center;padding:2rem 0;border-bottom:1px solid #eee;margin-bottom:2rem}
+.header h1{font-size:1.6rem;font-weight:700;letter-spacing:-0.02em;margin-bottom:0.25rem}
+.header p{font-size:0.85rem;color:#888}
+.brand{font-size:0.75rem;color:#b8962e;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;margin-bottom:0.5rem}
+.section{margin-bottom:2.5rem}
+.section h2{font-size:1.1rem;font-weight:600;margin-bottom:1rem;padding-bottom:0.5rem;border-bottom:1px solid #eee}
+.hero{text-align:center;margin-bottom:2rem}
+.hero img{max-width:400px;width:100%;border-radius:12px;box-shadow:0 4px 20px rgba(0,0,0,0.08)}
+.hero .label{display:inline-block;margin-top:0.75rem;font-size:0.85rem;font-weight:600;color:#b8962e}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:1rem}
+.card{border-radius:10px;overflow:hidden;background:#fff;box-shadow:0 1px 6px rgba(0,0,0,0.06)}
+.card img{width:100%;aspect-ratio:3/4;object-fit:cover;display:block}
+.card .label{padding:0.6rem;text-align:center;font-size:0.8rem;font-weight:500;color:#555}
+${report ? '.analysis{background:#fff;padding:1.5rem;border-radius:12px;border:1px solid #eee;font-size:0.85rem;line-height:1.8;white-space:pre-wrap}' : ''}
+.footer{text-align:center;padding:2rem 0;border-top:1px solid #eee;margin-top:2rem;font-size:0.75rem;color:#aaa}
+.print-btn{display:block;margin:2rem auto 0;padding:0.75rem 2rem;background:#1a1518;color:#fff;border:none;border-radius:8px;font-size:0.9rem;cursor:pointer}
+@media print{.print-btn{display:none} .card{break-inside:avoid}}
+</style>
+</head>
+<body>
+<div class="report">
+<div class="header">
+<div class="brand">${brandLine}</div>
+<h1>${reportTitle}</h1>
+<p>${reportSubtitle}</p>
+</div>
+${bestMatch ? `<div class="hero"><img src="${imgDataMap.get(bestMatch.url) || bestMatch.url}" alt="${bestMatch.label}"><div class="label">${bestMatch.label}</div></div>` : ''}
+${report ? `<div class="section"><h2>${lang === 'ko' ? '스타일 분석 요약' : 'Style Analysis Summary'}</h2><div class="analysis">${report.replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/\n/g, '<br>')}</div></div>` : ''}
+${styleImgs.length > 1 ? `<div class="section"><h2>${styleSection}</h2><div class="grid">${styleImgs.slice(1).map(img => `<div class="card"><img src="${imgDataMap.get(img.url) || img.url}" alt="${img.label}"><div class="label">${img.label}</div></div>`).join('')}</div></div>` : ''}
+${hairImgs.length > 0 ? `<div class="section"><h2>${hairSection}</h2><div class="grid">${hairImgs.map(img => `<div class="card"><img src="${imgDataMap.get(img.url) || img.url}" alt="${img.label}"><div class="label">${img.label}</div></div>`).join('')}</div></div>` : ''}
+<button class="print-btn" onclick="window.print()">${lang === 'ko' ? 'PDF로 저장 / 인쇄' : 'Save as PDF / Print'}</button>
+<div class="footer">${brandLine} — Personal Stylist Report</div>
+</div>
+</body>
+</html>`
+
+    const blob = new Blob([reportHtml], { type: 'text/html' })
+    const url = URL.createObjectURL(blob)
+    window.open(url, '_blank')
   }
 
   // 결과 공유 - 모달 열기
@@ -5390,39 +5463,34 @@ function App() {
           </div>
         </section>
 
-        {/* Service Showcase — clean professional cards */}
-        <section className="showcase-section">
-          <h2 className="showcase-title">{t.galleryTitle}</h2>
-          <p className="showcase-subtitle">{t.gallerySubtitle}</p>
-          <div className="showcase-grid">
-            {[
-              { img: '/gallery/ba-1-hair-after.webp', fallback: '/hairnew-800w.webp', label: t.galleryBadgeHair, desc: lang === 'ko' ? '얼굴형 분석 기반 헤어스타일 5종' : 'Face-analyzed 5 hairstyle previews' },
-              { img: '/gallery/ba-2-hair-after.webp', fallback: '/hairnew-800w.webp', label: t.galleryBadgeOutfit, desc: lang === 'ko' ? '체형 맞춤 럭셔리 패션 코디 7종' : 'Body-tailored luxury fashion 7 looks' },
-              { img: '/gallery/ba-3-hair-after.webp', fallback: '/hairnew-800w.webp', label: t.galleryBadgeDaily, desc: lang === 'ko' ? '날씨 기반 매일 아침 스타일 추천' : 'Weather-based daily morning styling' },
-            ].map((item, i) => (
-              <div key={i} className="showcase-card" onClick={() => { trackEvent('showcase_card_click', { card: item.label }); setPage('hair-selection') }}>
-                <div className="showcase-img-wrap">
-                  <img
-                    src={item.img}
-                    alt={item.label}
-                    loading="lazy"
-                    onError={(e) => { (e.target as HTMLImageElement).src = item.fallback }}
-                  />
-                  <div className="showcase-overlay" />
-                  <div className="showcase-card-content">
-                    <span className="showcase-card-label">{item.label}</span>
-                    <span className="showcase-card-desc">{item.desc}</span>
-                  </div>
-                </div>
-              </div>
-            ))}
+        {/* How It Works — 3-step process */}
+        <section className="how-it-works-section">
+          <h2 className="how-title">{lang === 'ko' ? '이렇게 진행됩니다' : lang === 'ja' ? '流れはこちら' : lang === 'zh' ? '使用流程' : lang === 'es' ? 'Cómo funciona' : 'How It Works'}</h2>
+          <div className="how-steps">
+            <div className="how-step">
+              <div className="how-step-num">1</div>
+              <h3 className="how-step-title">{lang === 'ko' ? '사진 업로드' : lang === 'ja' ? '写真をアップロード' : lang === 'zh' ? '上传照片' : lang === 'es' ? 'Sube tu foto' : 'Upload Photo'}</h3>
+              <p className="how-step-desc">{lang === 'ko' ? '셀카 또는 전신 사진 한 장이면 충분합니다' : lang === 'ja' ? 'セルフィーまたは全身写真1枚でOK' : lang === 'zh' ? '一张自拍或全身照即可' : lang === 'es' ? 'Una selfie o foto de cuerpo completo' : 'A selfie or full-body photo is all you need'}</p>
+            </div>
+            <div className="how-step-arrow">→</div>
+            <div className="how-step">
+              <div className="how-step-num">2</div>
+              <h3 className="how-step-title">{lang === 'ko' ? '스타일 분석' : lang === 'ja' ? 'スタイル分析' : lang === 'zh' ? '风格分析' : lang === 'es' ? 'Análisis de estilo' : 'Style Analysis'}</h3>
+              <p className="how-step-desc">{lang === 'ko' ? '얼굴형, 체형, 피부톤을 종합 분석합니다' : lang === 'ja' ? '顔型・体型・肌色を総合分析' : lang === 'zh' ? '综合分析脸型、体型、肤色' : lang === 'es' ? 'Análisis integral de tu rostro, cuerpo y tono de piel' : 'Face shape, body type, and skin tone analyzed'}</p>
+            </div>
+            <div className="how-step-arrow">→</div>
+            <div className="how-step">
+              <div className="how-step-num">3</div>
+              <h3 className="how-step-title">{lang === 'ko' ? '맞춤 결과' : lang === 'ja' ? 'パーソナル結果' : lang === 'zh' ? '个性化结果' : lang === 'es' ? 'Resultados personalizados' : 'Your Results'}</h3>
+              <p className="how-step-desc">{lang === 'ko' ? '헤어스타일 5종 + 패션 코디 6종을 받아보세요' : lang === 'ja' ? 'ヘアスタイル5種＋ファッションコーデ6種' : lang === 'zh' ? '获得5种发型+6套穿搭推荐' : lang === 'es' ? '5 peinados + 6 looks de moda' : '5 hairstyles + 6 fashion looks delivered'}</p>
+            </div>
           </div>
-          <button className="showcase-cta" onClick={() => { trackEvent('gallery_cta_click', { section: 'showcase' }); setPage('hair-selection') }}>
+          <button className="how-cta" onClick={() => { trackEvent('how_cta_click'); setPage('hair-selection') }}>
             {t.galleryCta}
           </button>
         </section>
 
-        {/* Trust Signals */}
+        {/* Trust Signals — minimal, no emojis */}
         <section className="trust-section" ref={(el) => {
           if (el) {
             const observer = new IntersectionObserver(([entry]) => {
@@ -5431,27 +5499,18 @@ function App() {
             observer.observe(el)
           }
         }}>
-          <h2 className="trust-title">{t.trustTitle}</h2>
           <div className="trust-grid">
             <div className="trust-item">
-              <span className="trust-icon">★</span>
               <span className="trust-value">{t.trustRating}</span>
               <span className="trust-desc">{t.trustRatingCount}</span>
             </div>
             <div className="trust-item">
-              <span className="trust-icon">⚡</span>
               <span className="trust-value">{t.trustSpeed}</span>
               <span className="trust-desc">{t.trustSpeedDesc}</span>
             </div>
             <div className="trust-item">
-              <span className="trust-icon">🛡️</span>
               <span className="trust-value">{t.trustRefund}</span>
               <span className="trust-desc">{t.trustRefundDesc}</span>
-            </div>
-            <div className="trust-item">
-              <span className="trust-icon">🤖</span>
-              <span className="trust-value">{t.trustAI}</span>
-              <span className="trust-desc">{t.trustAIDesc}</span>
             </div>
           </div>
         </section>

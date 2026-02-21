@@ -9,8 +9,8 @@ interface Env {
 // API 활성화
 const ENABLE_API = true
 
-// 사용할 모델 설정
-const MODEL = 'gpt-5.2'
+// Models to try in order (fallback chain)
+const MODELS = ['gpt-5.2', 'gpt-4.1', 'gpt-4o']
 
 const languagePrompts: Record<string, string> = {
   ko: '한국어로 답변해주세요.',
@@ -291,7 +291,7 @@ ${languagePrompts[language] || languagePrompts.en}
 
 Provide a detailed, personalized style report with general recommendations based on body type and proportions.`
 
-    // OpenAI Chat Completions API 호출
+    // OpenAI Chat Completions API 호출 (with model fallback)
     const userContent = hasPhoto
       ? [
           { type: 'text', text: userMessage },
@@ -299,37 +299,58 @@ Provide a detailed, personalized style report with general recommendations based
         ]
       : userMessage
 
-    const response = await fetch('https://api.openai.com/v1/chat/completions', {
-      method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${apiKey}`,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        model: MODEL,
-        messages: [
-          { role: 'system', content: hasPhoto ? systemPromptWithPhoto : systemPromptNoPhoto },
-          {
-            role: 'user',
-            content: userContent
-          }
-        ],
-        max_completion_tokens: 1500,
-        temperature: 0.7
-      })
-    })
+    let report = ''
+    let lastError = ''
 
-    if (!response.ok) {
-      const errorData = await response.text()
-      console.error('OpenAI API Error:', errorData)
+    for (const model of MODELS) {
+      try {
+        console.log(`[analyze] Trying model: ${model}`)
+        const response = await fetch('https://api.openai.com/v1/chat/completions', {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${apiKey}`,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            model,
+            messages: [
+              { role: 'system', content: hasPhoto ? systemPromptWithPhoto : systemPromptNoPhoto },
+              {
+                role: 'user',
+                content: userContent
+              }
+            ],
+            max_completion_tokens: 1500,
+            temperature: 0.7
+          })
+        })
+
+        if (!response.ok) {
+          const errorData = await response.text()
+          lastError = `${model}: ${response.status} - ${errorData.substring(0, 300)}`
+          console.error(`[analyze] ${lastError}`)
+          continue
+        }
+
+        const data = await response.json() as {
+          choices: Array<{ message: { content: string } }>
+        }
+
+        report = data.choices[0]?.message?.content || ''
+        if (report) {
+          console.log(`[analyze] Success with model: ${model}`)
+          break
+        }
+      } catch (e) {
+        lastError = `${model}: ${e}`
+        console.error(`[analyze] ${lastError}`)
+      }
+    }
+
+    if (!report) {
+      console.error(`[analyze] All models failed. Last: ${lastError}`)
       return errors.externalApi('OpenAI', corsHeaders)
     }
-
-    const data = await response.json() as {
-      choices: Array<{ message: { content: string } }>
-    }
-
-    const report = data.choices[0]?.message?.content || 'No analysis available'
 
     return new Response(
       JSON.stringify({ report }),

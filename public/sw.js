@@ -1,4 +1,4 @@
-const CACHE_NAME = 'stylist-v1'
+const CACHE_NAME = 'stylist-v2'
 const STATIC_ASSETS = [
   '/',
   '/og-image.png',
@@ -22,15 +22,20 @@ self.addEventListener('activate', (event) => {
 
 self.addEventListener('fetch', (event) => {
   const { request } = event
+  const url = new URL(request.url)
 
-  // Skip non-GET, API, and non-http(s) requests (chrome-extension, etc.)
-  if (request.method !== 'GET' || request.url.includes('/api/') || !request.url.startsWith('http')) return
+  // Only handle same-origin GET requests; skip API, cross-origin, and non-http
+  if (
+    request.method !== 'GET' ||
+    url.origin !== self.location.origin ||
+    url.pathname.startsWith('/api/')
+  ) return
 
   event.respondWith(
     fetch(request)
       .then((response) => {
         // Cache successful responses for static assets
-        if (response.ok && (request.url.match(/\.(js|css|png|jpg|svg|woff2?)$/) || request.url.endsWith('/'))) {
+        if (response.ok && request.url.match(/\.(js|css|png|jpg|webp|avif|svg|woff2?)$/)) {
           const clone = response.clone()
           caches.open(CACHE_NAME).then((cache) => cache.put(request, clone))
         }
