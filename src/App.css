@@ -5725,7 +5725,7 @@
 .how-title {
   font-size: 1.4rem;
   font-weight: 700;
-  color: #fff;
+  color: var(--charcoal);
   letter-spacing: -0.02em;
   margin-bottom: 2.5rem;
 }
@@ -5750,9 +5750,9 @@
   width: 40px;
   height: 40px;
   border-radius: 50%;
-  background: rgba(212, 175, 55, 0.15);
-  border: 1.5px solid rgba(212, 175, 55, 0.4);
-  color: #d4af37;
+  background: rgba(212, 114, 140, 0.1);
+  border: 1.5px solid rgba(212, 114, 140, 0.3);
+  color: #b8962e;
   font-size: 1rem;
   font-weight: 700;
   display: flex;
@@ -5764,19 +5764,19 @@
 .how-step-title {
   font-size: 0.95rem;
   font-weight: 600;
-  color: #fff;
+  color: var(--charcoal);
   margin: 0;
 }
 
 .how-step-desc {
   font-size: 0.8rem;
-  color: rgba(255, 255, 255, 0.5);
+  color: rgba(26, 26, 26, 0.5);
   line-height: 1.5;
   margin: 0;
 }
 
 .how-step-arrow {
-  color: rgba(255, 255, 255, 0.2);
+  color: rgba(26, 26, 26, 0.2);
   font-size: 1.4rem;
   margin-top: 0.5rem;
   flex-shrink: 0;
@@ -5818,7 +5818,7 @@
    ========================= */
 
 .trust-section {
-  padding: 1.5rem 1.5rem 2.5rem;
+  padding: 0 1.5rem 3rem;
   text-align: center;
 }
 
@@ -5849,7 +5849,7 @@
 
 .trust-desc {
   font-size: 0.75rem;
-  color: rgba(255, 255, 255, 0.5);
+  color: rgba(26, 26, 26, 0.5);
   font-weight: 500;
 }
 

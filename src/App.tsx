@@ -2659,9 +2659,11 @@ function App() {
       return () => window.removeEventListener('popstate', handlePopState)
     }
 
-    // 초기 상태 설정
+    // 초기 상태 설정 — 새로고침 시 데이터 없는 페이지는 랜딩으로 리다이렉트
     const hashPage = window.location.hash.slice(1) as Page
-    if (hashPage && ['landing', 'input', 'hair-selection', 'hair-result', 'how-to-use', 'result', 'login', 'signup', 'profile'].includes(hashPage)) {
+    // Only restore pages that make sense without session data
+    const persistablePages = ['landing', 'how-to-use', 'login', 'signup', 'profile']
+    if (hashPage && persistablePages.includes(hashPage)) {
       setPageState(hashPage)
     } else {
       window.history.replaceState({ page: 'landing' }, '', '#landing')
