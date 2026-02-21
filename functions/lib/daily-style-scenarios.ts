@@ -172,7 +172,10 @@ function getMoodIndex(): number {
 function getTodaysPickPrompt(weather: WeatherInfo, gender: string): string {
   const pIdx = getPaletteIndex()
   const mIdx = getMoodIndex()
-  const isCold = weather.temp < 10
+  // Granular temperature ranges — 1°C and 9°C need very different outfits
+  const isFreezing = weather.temp < 0        // 영하: heavy padded coat, thermal layers
+  const isBitterCold = weather.temp >= 0 && weather.temp < 5  // 0-5°C: heavy wool coat, scarf, gloves
+  const isCold = weather.temp >= 5 && weather.temp < 10       // 5-10°C: coat, turtleneck
   const isCool = weather.temp >= 10 && weather.temp < 20
   const isWarm = weather.temp >= 20 && weather.temp < 28
   const isHot = weather.temp >= 28
@@ -184,7 +187,8 @@ function getTodaysPickPrompt(weather: WeatherInfo, gender: string): string {
     const m = femaleMoods[mIdx % femaleMoods.length]
     const arch = `STYLING: ${m.name} — ${m.guide}${SKIN_TONE_DIRECTIVE}`
 
-    if (isSnowy) return `luxurious winter outfit (${p.tone}): ankle-length double-face wool coat in ${p.c1}, cashmere ribbed turtleneck in ${p.c4}, high-waisted wool flannel wide-leg trousers in ${p.c3}, insulated leather ankle boots with lug sole, ${p.accent} cashmere scarf tucked into coat, leather gloves. ${arch}`
+    if (isSnowy || isFreezing) return `luxurious extreme winter outfit (${p.tone}): ankle-length padded down coat or double-face wool coat in ${p.c1} with high collar, cashmere ribbed turtleneck in ${p.c4} over thermal base layer, high-waisted wool flannel wide-leg trousers in ${p.c3} lined for warmth, insulated leather ankle boots with lug sole, ${p.accent} thick cashmere scarf wrapped around neck, leather cashmere-lined gloves, knit beanie or ear warmers. IMPORTANT: temperature is ${weather.temp}°C — full winter protection required, no exposed skin. ${arch}`
+    if (isBitterCold) return `warm elegant winter outfit (${p.tone}): tailored heavy wool coat in ${p.c2} with double-breasted closure reaching below knee, cashmere turtleneck in ${p.c1} with thick gauge, high-waisted pressed wool trousers in ${p.c3} with single pleat, insulated pointed-toe leather ankle boots, ${p.accent} wool-cashmere blend scarf, leather gloves, structured leather bag. IMPORTANT: temperature is ${weather.temp}°C — warm coat and scarf essential. ${arch}`
     if (isRainy) return `polished rainy day outfit (${p.tone}): water-resistant gabardine trench coat in ${p.c3} with belt cinched, fine-gauge merino crewneck in ${p.c2}, cropped tailored trousers in dark ${p.c1}, polished waterproof chelsea boots, compact leather crossbody in ${p.accent}, minimal stud earrings. ${arch}`
     if (isCold) return `refined cold weather outfit (${p.tone}): tailored cashmere-blend coat in ${p.c2} with notch lapel, silk-cashmere V-neck in ${p.c1}, high-waisted pressed wool trousers in ${p.c3} with single pleat, pointed-toe leather ankle boots, delicate ${p.accent} layered necklace. ${arch}`
     if (isCool) return `polished layered outfit (${p.tone}): unstructured soft blazer in ${p.c1} over fine-knit silk camisole in ${p.c4}, high-waisted tailored trousers in ${p.c3} with gentle drape, pointed ballet flats or suede loafers, ${p.accent} minimal bracelet, structured leather tote. ${arch}`
@@ -198,7 +202,8 @@ function getTodaysPickPrompt(weather: WeatherInfo, gender: string): string {
   const m = maleMoods[mIdx % maleMoods.length]
   const arch = `STYLING: ${m.name} — ${m.guide}${SKIN_TONE_DIRECTIVE}`
 
-  if (isSnowy) return `sharp winter outfit (${p.tone}): double-breasted wool overcoat in ${p.c2} with peak lapel, chunky Shetland cable-knit sweater in ${p.c3}, straight-leg flannel trousers in dark ${p.c1} with half-break hem, waterproof leather derby boots in rich brown, ${p.accent} brushed-wool scarf, leather cashmere-lined gloves. ${arch}`
+  if (isSnowy || isFreezing) return `sharp extreme winter outfit (${p.tone}): long padded down parka or double-breasted heavy wool overcoat in ${p.c2} with high collar, chunky Shetland cable-knit sweater in ${p.c3} over thermal base layer, straight-leg heavy flannel trousers in dark ${p.c1} with half-break hem, waterproof insulated leather derby boots, ${p.accent} thick brushed-wool scarf, leather cashmere-lined gloves, knit beanie. IMPORTANT: temperature is ${weather.temp}°C — full winter protection required, heavy outerwear mandatory. ${arch}`
+  if (isBitterCold) return `warm refined winter outfit (${p.tone}): heavy wool overcoat in ${p.c2} reaching below knee with peak lapel, fine-gauge merino turtleneck in ${p.c3} layered over thermal base, straight-leg pressed wool trousers in ${p.c1}, insulated leather chelsea boots, ${p.accent} wool scarf, leather cashmere-lined gloves. IMPORTANT: temperature is ${weather.temp}°C — warm coat, scarf and gloves essential. ${arch}`
   if (isRainy) return `sleek rainy day outfit (${p.tone}): water-resistant cotton gabardine mac coat in ${p.c1} with concealed placket, fine merino crewneck in ${p.c3}, straight-leg dark cotton drill chinos with clean hem, polished waterproof chelsea boots, minimal ${p.accent}-dial watch. ${arch}`
   if (isCold) return `refined cold weather outfit (${p.tone}): single-breasted wool peacoat in ${p.c2} with notch lapel, fine-gauge merino turtleneck in ${p.c3}, straight-leg pressed wool trousers in ${p.c1} with natural drape, premium brown suede chelsea boots, minimal ${p.accent} accent watch, leather gloves. ${arch}`
   if (isCool) return `smart modern outfit (${p.tone}): cashmere-cotton crewneck sweater in ${p.c3} layered over oxford shirt with collar visible, straight-leg cotton chinos in ${p.c1} with single pleat, clean suede loafers or polished leather sneakers, ${p.accent} woven leather belt, brushed metal watch. ${arch}`
@@ -242,7 +247,10 @@ const femaleCasualMoods = [
 function getCasualPrompt(gender: string, temp: number): string {
   const pIdx = (getPaletteIndex() + 7) % 21
   const mIdx = (getMoodIndex() + 5) % 10
-  const isCold = temp < 10
+  // Granular temperature ranges for casual — outerwear mandatory in cold weather
+  const isFreezing = temp < 0
+  const isBitterCold = temp >= 0 && temp < 5
+  const isCold = temp >= 5 && temp < 10
   const isWarm = temp >= 22
 
   if (gender === 'female') {
@@ -251,7 +259,9 @@ function getCasualPrompt(gender: string, temp: number): string {
     const arch = `STYLING: ${m.name} — ${m.guide}${SKIN_TONE_DIRECTIVE}`
 
     if (isWarm) return `relaxed casual outfit (${p.tone}): oversized cotton tee in ${p.c4}, ${m.warmBottom} in ${p.c3}, clean sneakers or simple sandals, ${p.accent} minimal accessory. ${arch}`
-    if (isCold) return `cozy casual outfit (${p.tone}): chunky cardigan or cozy knit in ${p.c1} over fitted tee, ${m.bottom} in ${p.c3}, ankle boots or clean sneakers, ${p.accent} simple accessory. ${arch}`
+    if (isFreezing) return `warm cozy winter casual outfit (${p.tone}): heavy padded down jacket or long puffer coat in ${p.c1} over thick ${p.c3} knit sweater and thermal base layer, ${m.bottom} in ${p.c1} (fleece-lined or heavy weight), insulated boots or warm lined sneakers, thick ${p.accent} knit scarf, warm gloves, knit beanie. IMPORTANT: temperature is ${temp}°C — heavy winter outerwear and layers mandatory. ${arch}`
+    if (isBitterCold) return `warm casual layered outfit (${p.tone}): padded coat or heavy quilted jacket in ${p.c1} over chunky knit sweater in ${p.c3}, ${m.bottom} in ${p.c1} (warm weight), warm ankle boots or fleece-lined sneakers, ${p.accent} wool scarf, gloves. IMPORTANT: temperature is ${temp}°C — proper coat and warm layers essential. ${arch}`
+    if (isCold) return `cozy casual outfit (${p.tone}): quilted jacket or wool coat in ${p.c1} over chunky cardigan or cozy knit, ${m.bottom} in ${p.c3}, ankle boots or clean sneakers, ${p.accent} simple accessory. ${arch}`
     return `easy chic casual outfit (${p.tone}): soft cardigan in ${p.c1} over fitted tee, ${m.bottom} in ${p.c3}, clean sneakers or simple loafers, delicate ${p.accent} pendant. ${arch}`
   }
 
@@ -260,7 +270,9 @@ function getCasualPrompt(gender: string, temp: number): string {
   const arch = `STYLING: ${m.name} — ${m.guide}${SKIN_TONE_DIRECTIVE}`
 
   if (isWarm) return `relaxed casual outfit (${p.tone}): cotton crewneck tee in ${p.c3}, ${m.warmBottom} in ${p.c4}, clean sneakers or leather slides, simple ${p.accent} watch. ${arch}`
-  if (isCold) return `cozy casual outfit (${p.tone}): ${p.c3} knit sweater or hoodie over simple tee, ${m.bottom} in ${p.c1}, clean sneakers or simple boots, ${p.accent} simple accessory. ${arch}`
+  if (isFreezing) return `warm cozy winter casual outfit (${p.tone}): heavy padded down parka or long puffer jacket in ${p.c1} over thick ${p.c3} knit sweater or heavyweight hoodie and thermal base layer, ${m.bottom} in ${p.c1} (fleece-lined or heavy weight), insulated boots or warm lined sneakers, thick ${p.accent} knit scarf, warm gloves, knit beanie. IMPORTANT: temperature is ${temp}°C — heavy winter outerwear mandatory, no exposed skin. ${arch}`
+  if (isBitterCold) return `warm casual layered outfit (${p.tone}): padded coat or heavy quilted jacket in ${p.c1} over ${p.c3} knit sweater or heavyweight hoodie, ${m.bottom} in ${p.c1} (warm weight), warm boots or lined sneakers, ${p.accent} wool scarf, gloves. IMPORTANT: temperature is ${temp}°C — proper coat and warm layers essential. ${arch}`
+  if (isCold) return `cozy casual outfit (${p.tone}): quilted jacket or wool coat in ${p.c1} over ${p.c3} knit sweater or hoodie, ${m.bottom} in ${p.c1}, warm sneakers or simple boots, ${p.accent} simple accessory. ${arch}`
   return `clean everyday casual outfit (${p.tone}): ${p.c3} cotton sweatshirt or crewneck knit, ${m.bottom} in ${p.c1}, clean sneakers, simple ${p.accent} watch. ${arch}`
 }
 

@@ -370,12 +370,32 @@ const translations: Record<Language, {
   referralCopyLink: string
   referralInlineText: string
   referralCreditAvailable: string
-  // Before/After & CTA
+  // Before/After Gallery & CTA
   beforeAfterTitle: string
   beforeLabel: string
   afterLabel: string
   showcaseTitle: string
   showcaseDesc: string
+  galleryTitle: string
+  gallerySubtitle: string
+  galleryBadgeHair: string
+  galleryBadgeOutfit: string
+  galleryBadgeDaily: string
+  galleryCta: string
+  galleryResultTime: string
+  // Trust Signals
+  trustTitle: string
+  trustRating: string
+  trustRatingCount: string
+  trustSpeed: string
+  trustSpeedDesc: string
+  trustRefund: string
+  trustRefundDesc: string
+  trustAI: string
+  trustAIDesc: string
+  // SEO meta
+  metaTitle: string
+  metaDescription: string
   timerTitle: string
   timerDesc: string
   unlockAllStyles: string
@@ -661,6 +681,24 @@ const translations: Record<Language, {
     afterLabel: 'AFTER',
     showcaseTitle: 'AI가 만드는 놀라운 변신',
     showcaseDesc: '사진 한 장으로 나에게 어울리는 스타일을 발견하세요',
+    galleryTitle: '실제 AI 변신 결과',
+    gallerySubtitle: '사진 한 장으로 이렇게 달라집니다',
+    galleryBadgeHair: '헤어',
+    galleryBadgeOutfit: '아웃핏',
+    galleryBadgeDaily: '데일리',
+    galleryCta: '나도 변신하기',
+    galleryResultTime: '30초 만에 결과 확인',
+    trustTitle: '왜 고객들이 선택할까요?',
+    trustRating: '4.8/5.0',
+    trustRatingCount: '만족도',
+    trustSpeed: '30초',
+    trustSpeedDesc: '결과 생성',
+    trustRefund: '100%',
+    trustRefundDesc: '환불 보장',
+    trustAI: 'GPT + Gemini',
+    trustAIDesc: '최신 AI 기술',
+    metaTitle: 'PERSONAL STYLIST | 헤어스타일 추천 & 런웨이 패션 스타일링',
+    metaDescription: '사진 한 장으로 나만의 스타일을 찾으세요. 첫 방문 무료! 헤어스타일 5종 미리보기 + 럭셔리 브랜드 영감 패션 코디 7종 추천.',
     timerTitle: '첫 방문 특별 할인',
     timerDesc: '후 종료',
     unlockAllStyles: '모든 스타일 잠금 해제',
@@ -946,6 +984,24 @@ const translations: Record<Language, {
     afterLabel: 'AFTER',
     showcaseTitle: 'Amazing AI Transformations',
     showcaseDesc: 'Discover your perfect style with just one photo',
+    galleryTitle: 'Real AI Transformation Results',
+    gallerySubtitle: 'See how one photo changes everything',
+    galleryBadgeHair: 'Hair',
+    galleryBadgeOutfit: 'Outfit',
+    galleryBadgeDaily: 'Daily',
+    galleryCta: 'Try My Transformation',
+    galleryResultTime: 'Results in 30 seconds',
+    trustTitle: 'Why Customers Choose Us',
+    trustRating: '4.8/5.0',
+    trustRatingCount: 'Satisfaction',
+    trustSpeed: '30s',
+    trustSpeedDesc: 'Results',
+    trustRefund: '100%',
+    trustRefundDesc: 'Refund Guarantee',
+    trustAI: 'GPT + Gemini',
+    trustAIDesc: 'Latest AI Tech',
+    metaTitle: 'AI Personal Stylist | Hair & Fashion Recommendations',
+    metaDescription: 'Find your perfect style with one photo. Free first try! 5 AI hairstyle previews + luxury fashion outfit recommendations.',
     timerTitle: 'First Visit Special',
     timerDesc: ' left',
     unlockAllStyles: 'Unlock All Styles',
@@ -1231,6 +1287,24 @@ const translations: Record<Language, {
     afterLabel: 'AFTER',
     showcaseTitle: 'AIが作る驚きの変身',
     showcaseDesc: '写真1枚であなたに似合うスタイルを発見',
+    galleryTitle: '実際のAI変身結果',
+    gallerySubtitle: '写真1枚でこんなに変わります',
+    galleryBadgeHair: 'ヘア',
+    galleryBadgeOutfit: 'コーデ',
+    galleryBadgeDaily: 'デイリー',
+    galleryCta: '私も変身する',
+    galleryResultTime: '30秒で結果確認',
+    trustTitle: 'お客様が選ぶ理由',
+    trustRating: '4.8/5.0',
+    trustRatingCount: '満足度',
+    trustSpeed: '30秒',
+    trustSpeedDesc: '結果生成',
+    trustRefund: '100%',
+    trustRefundDesc: '返金保証',
+    trustAI: 'GPT + Gemini',
+    trustAIDesc: '最新AI技術',
+    metaTitle: 'AIパーソナルスタイリスト | ヘア＆ファッション提案',
+    metaDescription: '写真1枚であなたに似合うスタイルを発見。初回無料！ヘアスタイル5種プレビュー＋ファッションコーディネート提案。',
     timerTitle: '初回限定割引',
     timerDesc: 'で終了',
     unlockAllStyles: '全スタイルをロック解除',
@@ -1516,6 +1590,24 @@ const translations: Record<Language, {
     afterLabel: '变身后',
     showcaseTitle: 'AI打造惊艳变身',
     showcaseDesc: '一张照片发现最适合你的风格',
+    galleryTitle: '真实AI变身效果',
+    gallerySubtitle: '一张照片就能如此不同',
+    galleryBadgeHair: '发型',
+    galleryBadgeOutfit: '穿搭',
+    galleryBadgeDaily: '日常',
+    galleryCta: '我也要变身',
+    galleryResultTime: '30秒出结果',
+    trustTitle: '为什么客户选择我们？',
+    trustRating: '4.8/5.0',
+    trustRatingCount: '满意度',
+    trustSpeed: '30秒',
+    trustSpeedDesc: '生成结果',
+    trustRefund: '100%',
+    trustRefundDesc: '退款保障',
+    trustAI: 'GPT + Gemini',
+    trustAIDesc: '最新AI技术',
+    metaTitle: 'AI个人造型师 | 发型和时尚推荐',
+    metaDescription: '一张照片发现最适合你的风格。首次免费！5种发型预览 + 奢华时尚穿搭推荐。',
     timerTitle: '首次访问特惠',
     timerDesc: '后结束',
     unlockAllStyles: '解锁全部风格',
@@ -1801,6 +1893,24 @@ const translations: Record<Language, {
     afterLabel: 'DESPUÉS',
     showcaseTitle: 'Transformaciones increíbles con IA',
     showcaseDesc: 'Descubre tu estilo perfecto con solo una foto',
+    galleryTitle: 'Resultados reales de transformación IA',
+    gallerySubtitle: 'Mira cómo una foto lo cambia todo',
+    galleryBadgeHair: 'Cabello',
+    galleryBadgeOutfit: 'Outfit',
+    galleryBadgeDaily: 'Diario',
+    galleryCta: 'Quiero mi transformación',
+    galleryResultTime: 'Resultados en 30 segundos',
+    trustTitle: '¿Por qué nos eligen?',
+    trustRating: '4.8/5.0',
+    trustRatingCount: 'Satisfacción',
+    trustSpeed: '30s',
+    trustSpeedDesc: 'Resultados',
+    trustRefund: '100%',
+    trustRefundDesc: 'Garantía de reembolso',
+    trustAI: 'GPT + Gemini',
+    trustAIDesc: 'Última tecnología IA',
+    metaTitle: 'Estilista Personal IA | Recomendaciones de Cabello y Moda',
+    metaDescription: 'Encuentra tu estilo perfecto con una foto. ¡Primera vez gratis! Vista previa de 5 peinados + recomendaciones de moda de lujo.',
     timerTitle: 'Oferta de primera visita',
     timerDesc: ' restante',
     unlockAllStyles: 'Desbloquear todos los estilos',
@@ -2256,6 +2366,14 @@ function App() {
       }
     }
   }, [weightLbs, isImperial])
+
+  // Dynamic SEO meta tags — update on language change
+  useEffect(() => {
+    document.title = t.metaTitle
+    document.documentElement.lang = lang
+    const metaDesc = document.querySelector('meta[name="description"]')
+    if (metaDesc) metaDesc.setAttribute('content', t.metaDescription)
+  }, [lang, t.metaTitle, t.metaDescription])
 
   // Polar Checkout Configuration (Sandbox 환경)
   // Product ID: cca7d48e-6758-4e83-a375-807ab70615ea
@@ -5272,34 +5390,69 @@ function App() {
           </div>
         </section>
 
-        {/* Before/After Showcase — full-width visual strip */}
+        {/* Service Showcase — clean professional cards */}
         <section className="showcase-section">
-          <h2 className="showcase-title">{t.showcaseTitle}</h2>
-          <p className="showcase-desc">{t.showcaseDesc}</p>
-          <div className="showcase-strip">
+          <h2 className="showcase-title">{t.galleryTitle}</h2>
+          <p className="showcase-subtitle">{t.gallerySubtitle}</p>
+          <div className="showcase-grid">
             {[
-              { before: '/hairnew-800w.webp', label: 'Hair Styling', icon: '✂️' },
-              { before: '/full-800w.webp', label: 'Full Package', icon: '👗' },
-              { before: '/dailynew-800w.webp', label: 'Daily Style', icon: '☀️' },
+              { img: '/gallery/ba-1-hair-after.webp', fallback: '/hairnew-800w.webp', label: t.galleryBadgeHair, desc: lang === 'ko' ? '얼굴형 분석 기반 헤어스타일 5종' : 'Face-analyzed 5 hairstyle previews' },
+              { img: '/gallery/ba-2-hair-after.webp', fallback: '/hairnew-800w.webp', label: t.galleryBadgeOutfit, desc: lang === 'ko' ? '체형 맞춤 럭셔리 패션 코디 7종' : 'Body-tailored luxury fashion 7 looks' },
+              { img: '/gallery/ba-3-hair-after.webp', fallback: '/hairnew-800w.webp', label: t.galleryBadgeDaily, desc: lang === 'ko' ? '날씨 기반 매일 아침 스타일 추천' : 'Weather-based daily morning styling' },
             ].map((item, i) => (
-              <div key={i} className="showcase-card">
-                <div className="showcase-card-image">
-                  <img src={item.before} alt={item.label} loading="lazy" />
-                  <div className="showcase-card-overlay">
-                    <div className="showcase-ba-badge">
-                      <span>{t.beforeLabel}</span>
-                      <span className="showcase-arrow">→</span>
-                      <span>{t.afterLabel}</span>
-                    </div>
+              <div key={i} className="showcase-card" onClick={() => { trackEvent('showcase_card_click', { card: item.label }); setPage('hair-selection') }}>
+                <div className="showcase-img-wrap">
+                  <img
+                    src={item.img}
+                    alt={item.label}
+                    loading="lazy"
+                    onError={(e) => { (e.target as HTMLImageElement).src = item.fallback }}
+                  />
+                  <div className="showcase-overlay" />
+                  <div className="showcase-card-content">
+                    <span className="showcase-card-label">{item.label}</span>
+                    <span className="showcase-card-desc">{item.desc}</span>
                   </div>
-                  <div className="showcase-card-shine"></div>
-                </div>
-                <div className="showcase-card-info">
-                  <span className="showcase-card-icon">{item.icon}</span>
-                  <span className="showcase-card-label">{item.label}</span>
                 </div>
               </div>
             ))}
+          </div>
+          <button className="showcase-cta" onClick={() => { trackEvent('gallery_cta_click', { section: 'showcase' }); setPage('hair-selection') }}>
+            {t.galleryCta}
+          </button>
+        </section>
+
+        {/* Trust Signals */}
+        <section className="trust-section" ref={(el) => {
+          if (el) {
+            const observer = new IntersectionObserver(([entry]) => {
+              if (entry.isIntersecting) { trackEvent('trust_section_view'); observer.disconnect() }
+            }, { threshold: 0.3 })
+            observer.observe(el)
+          }
+        }}>
+          <h2 className="trust-title">{t.trustTitle}</h2>
+          <div className="trust-grid">
+            <div className="trust-item">
+              <span className="trust-icon">★</span>
+              <span className="trust-value">{t.trustRating}</span>
+              <span className="trust-desc">{t.trustRatingCount}</span>
+            </div>
+            <div className="trust-item">
+              <span className="trust-icon">⚡</span>
+              <span className="trust-value">{t.trustSpeed}</span>
+              <span className="trust-desc">{t.trustSpeedDesc}</span>
+            </div>
+            <div className="trust-item">
+              <span className="trust-icon">🛡️</span>
+              <span className="trust-value">{t.trustRefund}</span>
+              <span className="trust-desc">{t.trustRefundDesc}</span>
+            </div>
+            <div className="trust-item">
+              <span className="trust-icon">🤖</span>
+              <span className="trust-value">{t.trustAI}</span>
+              <span className="trust-desc">{t.trustAIDesc}</span>
+            </div>
           </div>
         </section>
 
