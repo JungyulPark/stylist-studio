@@ -44,17 +44,25 @@
 }
 
 .logo-icon {
-  width: 44px;
-  height: 44px;
-  color: var(--primary);
+  width: 56px;
+  height: 56px;
+  flex-shrink: 0;
+  filter: drop-shadow(0 1px 3px rgba(0, 0, 0, 0.12));
+  image-rendering: -webkit-optimize-contrast;
+  image-rendering: crisp-edges;
+}
+
+.logo-icon img {
+  border-radius: 8px;
 }
 
 .logo-text {
   font-family: var(--font-serif);
-  font-size: 1.25rem;
+  font-size: 1.35rem;
   font-weight: 700;
   font-style: italic;
   color: var(--charcoal);
+  letter-spacing: -0.01em;
 }
 
 .nav-links {
