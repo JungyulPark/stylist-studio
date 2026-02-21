@@ -2485,7 +2485,10 @@ function App() {
     const paymentSuccess = urlParams.get('payment')
 
     if (customerSessionToken || paymentSuccess === 'success') {
-      // 결제 성공
+      // 결제 성공 — URL 파라미터 즉시 제거 (새로고침 시 재트리거 방지)
+      const cleanUrl = window.location.pathname + (window.location.hash || '#landing')
+      window.history.replaceState({}, '', cleanUrl)
+
       trackEvent('checkout_return', { type: urlParams.get('type') || 'unknown' })
       localStorage.setItem('paidCustomer', 'true')
       const purchasedProductType = urlParams.get('type') || localStorage.getItem('productType') || 'full'
@@ -4471,9 +4474,7 @@ ${hairImgs.length > 0 ? `<div class="section"><h2>${hairSection}</h2><div class=
         <header className="app-header">
           <div className="logo" onClick={handleRestart} style={{ cursor: 'pointer' }}>
             <div className="logo-icon">
-              <svg viewBox="0 0 48 48" fill="currentColor">
-                <path d="M39.5563 34.1455V13.8546C39.5563 15.708 36.8773 17.3437 32.7927 18.3189C30.2914 18.916 27.263 19.2655 24 19.2655C20.737 19.2655 17.7086 18.916 15.2073 18.3189C11.1227 17.3437 8.44365 15.708 8.44365 13.8546V34.1455C8.44365 35.9988 11.1227 37.6346 15.2073 38.6098C17.7086 39.2069 20.737 39.5564 24 39.5564C27.1288 39.5564 30.2914 39.2069 32.7927 38.6098C36.8773 37.6346 39.5563 35.9988 39.5563 34.1455Z"/>
-              </svg>
+              <img src="/favicon.png" alt="K" style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
             </div>
             <span className="logo-text">{t.title}</span>
           </div>
@@ -4700,9 +4701,7 @@ ${hairImgs.length > 0 ? `<div class="section"><h2>${hairSection}</h2><div class=
         <header className="app-header">
           <div className="logo" onClick={() => setPage('landing')} style={{ cursor: 'pointer' }}>
             <div className="logo-icon">
-              <svg viewBox="0 0 48 48" fill="currentColor">
-                <path d="M39.5563 34.1455V13.8546C39.5563 15.708 36.8773 17.3437 32.7927 18.3189C30.2914 18.916 27.263 19.2655 24 19.2655C20.737 19.2655 17.7086 18.916 15.2073 18.3189C11.1227 17.3437 8.44365 15.708 8.44365 13.8546V34.1455C8.44365 35.9988 11.1227 37.6346 15.2073 38.6098C17.7086 39.2069 20.737 39.5564 24 39.5564C27.1288 39.5564 30.2914 39.2069 32.7927 38.6098C36.8773 37.6346 39.5563 35.9988 39.5563 34.1455Z"/>
-              </svg>
+              <img src="/favicon.png" alt="K" style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
             </div>
             <span className="logo-text">{t.title}</span>
           </div>
@@ -4830,9 +4829,7 @@ ${hairImgs.length > 0 ? `<div class="section"><h2>${hairSection}</h2><div class=
         <header className="app-header">
           <div className="logo" onClick={() => setPage('landing')} style={{ cursor: 'pointer' }}>
             <div className="logo-icon">
-              <svg viewBox="0 0 48 48" fill="currentColor">
-                <path d="M39.5563 34.1455V13.8546C39.5563 15.708 36.8773 17.3437 32.7927 18.3189C30.2914 18.916 27.263 19.2655 24 19.2655C20.737 19.2655 17.7086 18.916 15.2073 18.3189C11.1227 17.3437 8.44365 15.708 8.44365 13.8546V34.1455C8.44365 35.9988 11.1227 37.6346 15.2073 38.6098C17.7086 39.2069 20.737 39.5564 24 39.5564C27.1288 39.5564 30.2914 39.2069 32.7927 38.6098C36.8773 37.6346 39.5563 35.9988 39.5563 34.1455Z"/>
-              </svg>
+              <img src="/favicon.png" alt="K" style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
             </div>
             <span className="logo-text">{t.title}</span>
           </div>
@@ -5254,9 +5251,7 @@ ${hairImgs.length > 0 ? `<div class="section"><h2>${hairSection}</h2><div class=
         <header className="app-header">
           <div className="logo" onClick={() => setPage('landing')} style={{ cursor: 'pointer' }}>
             <div className="logo-icon">
-              <svg viewBox="0 0 48 48" fill="currentColor">
-                <path d="M39.5563 34.1455V13.8546C39.5563 15.708 36.8773 17.3437 32.7927 18.3189C30.2914 18.916 27.263 19.2655 24 19.2655C20.737 19.2655 17.7086 18.916 15.2073 18.3189C11.1227 17.3437 8.44365 15.708 8.44365 13.8546V34.1455C8.44365 35.9988 11.1227 37.6346 15.2073 38.6098C17.7086 39.2069 20.737 39.5564 24 39.5564C27.1288 39.5564 30.2914 39.2069 32.7927 38.6098C36.8773 37.6346 39.5563 35.9988 39.5563 34.1455Z"/>
-              </svg>
+              <img src="/favicon.png" alt="K" style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
             </div>
             <span className="logo-text">{t.title}</span>
           </div>
@@ -5423,9 +5418,7 @@ ${hairImgs.length > 0 ? `<div class="section"><h2>${hairSection}</h2><div class=
         <header className="landing-header">
           <div className="logo">
             <div className="logo-icon">
-              <svg viewBox="0 0 48 48" fill="currentColor">
-                <path d="M39.5563 34.1455V13.8546C39.5563 15.708 36.8773 17.3437 32.7927 18.3189C30.2914 18.916 27.263 19.2655 24 19.2655C20.737 19.2655 17.7086 18.916 15.2073 18.3189C11.1227 17.3437 8.44365 15.708 8.44365 13.8546V34.1455C8.44365 35.9988 11.1227 37.6346 15.2073 38.6098C17.7086 39.2069 20.737 39.5564 24 39.5564C27.1288 39.5564 30.2914 39.2069 32.7927 38.6098C36.8773 37.6346 39.5563 35.9988 39.5563 34.1455Z"/>
-              </svg>
+              <img src="/favicon.png" alt="K" style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
             </div>
             <span className="logo-text">{t.title}</span>
           </div>
@@ -5804,9 +5797,7 @@ ${hairImgs.length > 0 ? `<div class="section"><h2>${hairSection}</h2><div class=
         <header className="app-header">
           <div className="logo" onClick={handleRestart} style={{ cursor: 'pointer' }}>
             <div className="logo-icon">
-              <svg viewBox="0 0 48 48" fill="currentColor">
-                <path d="M39.5563 34.1455V13.8546C39.5563 15.708 36.8773 17.3437 32.7927 18.3189C30.2914 18.916 27.263 19.2655 24 19.2655C20.737 19.2655 17.7086 18.916 15.2073 18.3189C11.1227 17.3437 8.44365 15.708 8.44365 13.8546V34.1455C8.44365 35.9988 11.1227 37.6346 15.2073 38.6098C17.7086 39.2069 20.737 39.5564 24 39.5564C27.1288 39.5564 30.2914 39.2069 32.7927 38.6098C36.8773 37.6346 39.5563 35.9988 39.5563 34.1455Z"/>
-              </svg>
+              <img src="/favicon.png" alt="K" style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
             </div>
             <span className="logo-text">{t.title}</span>
           </div>
@@ -6349,9 +6340,7 @@ ${hairImgs.length > 0 ? `<div class="section"><h2>${hairSection}</h2><div class=
           </button>
           <div className="logo" onClick={handleRestart} style={{ cursor: 'pointer' }}>
             <div className="logo-icon">
-              <svg viewBox="0 0 48 48" fill="currentColor">
-                <path d="M39.5563 34.1455V13.8546C39.5563 15.708 36.8773 17.3437 32.7927 18.3189C30.2914 18.916 27.263 19.2655 24 19.2655C20.737 19.2655 17.7086 18.916 15.2073 18.3189C11.1227 17.3437 8.44365 15.708 8.44365 13.8546V34.1455C8.44365 35.9988 11.1227 37.6346 15.2073 38.6098C17.7086 39.2069 20.737 39.5564 24 39.5564C27.1288 39.5564 30.2914 39.2069 32.7927 38.6098C36.8773 37.6346 39.5563 35.9988 39.5563 34.1455Z"/>
-              </svg>
+              <img src="/favicon.png" alt="K" style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
             </div>
             <span className="logo-text">{t.title}</span>
           </div>
@@ -6486,9 +6475,7 @@ ${hairImgs.length > 0 ? `<div class="section"><h2>${hairSection}</h2><div class=
         <header className="app-header">
           <div className="logo" onClick={handleRestart} style={{ cursor: 'pointer' }}>
             <div className="logo-icon">
-              <svg viewBox="0 0 48 48" fill="currentColor">
-                <path d="M39.5563 34.1455V13.8546C39.5563 15.708 36.8773 17.3437 32.7927 18.3189C30.2914 18.916 27.263 19.2655 24 19.2655C20.737 19.2655 17.7086 18.916 15.2073 18.3189C11.1227 17.3437 8.44365 15.708 8.44365 13.8546V34.1455C8.44365 35.9988 11.1227 37.6346 15.2073 38.6098C17.7086 39.2069 20.737 39.5564 24 39.5564C27.1288 39.5564 30.2914 39.2069 32.7927 38.6098C36.8773 37.6346 39.5563 35.9988 39.5563 34.1455Z"/>
-              </svg>
+              <img src="/favicon.png" alt="K" style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
             </div>
             <span className="logo-text">{t.title}</span>
           </div>
@@ -6626,9 +6613,7 @@ ${hairImgs.length > 0 ? `<div class="section"><h2>${hairSection}</h2><div class=
         <header className="app-header">
           <div className="logo" onClick={handleRestart} style={{ cursor: 'pointer' }}>
             <div className="logo-icon">
-              <svg viewBox="0 0 48 48" fill="currentColor">
-                <path d="M39.5563 34.1455V13.8546C39.5563 15.708 36.8773 17.3437 32.7927 18.3189C30.2914 18.916 27.263 19.2655 24 19.2655C20.737 19.2655 17.7086 18.916 15.2073 18.3189C11.1227 17.3437 8.44365 15.708 8.44365 13.8546V34.1455C8.44365 35.9988 11.1227 37.6346 15.2073 38.6098C17.7086 39.2069 20.737 39.5564 24 39.5564C27.1288 39.5564 30.2914 39.2069 32.7927 38.6098C36.8773 37.6346 39.5563 35.9988 39.5563 34.1455Z"/>
-              </svg>
+              <img src="/favicon.png" alt="K" style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
             </div>
             <span className="logo-text">{t.title}</span>
           </div>
@@ -7002,9 +6987,7 @@ ${hairImgs.length > 0 ? `<div class="section"><h2>${hairSection}</h2><div class=
           </button>
           <div className="logo" onClick={handleRestart} style={{ cursor: 'pointer' }}>
             <div className="logo-icon">
-              <svg viewBox="0 0 48 48" fill="currentColor">
-                <path d="M39.5563 34.1455V13.8546C39.5563 15.708 36.8773 17.3437 32.7927 18.3189C30.2914 18.916 27.263 19.2655 24 19.2655C20.737 19.2655 17.7086 18.916 15.2073 18.3189C11.1227 17.3437 8.44365 15.708 8.44365 13.8546V34.1455C8.44365 35.9988 11.1227 37.6346 15.2073 38.6098C17.7086 39.2069 20.737 39.5564 24 39.5564C27.1288 39.5564 30.2914 39.2069 32.7927 38.6098C36.8773 37.6346 39.5563 35.9988 39.5563 34.1455Z"/>
-              </svg>
+              <img src="/favicon.png" alt="K" style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
             </div>
             <span className="logo-text">{t.title}</span>
           </div>
@@ -7211,9 +7194,7 @@ ${hairImgs.length > 0 ? `<div class="section"><h2>${hairSection}</h2><div class=
       <header className="app-header">
         <div className="logo" onClick={handleRestart} style={{ cursor: 'pointer' }}>
           <div className="logo-icon">
-            <svg viewBox="0 0 48 48" fill="currentColor">
-              <path d="M39.5563 34.1455V13.8546C39.5563 15.708 36.8773 17.3437 32.7927 18.3189C30.2914 18.916 27.263 19.2655 24 19.2655C20.737 19.2655 17.7086 18.916 15.2073 18.3189C11.1227 17.3437 8.44365 15.708 8.44365 13.8546V34.1455C8.44365 35.9988 11.1227 37.6346 15.2073 38.6098C17.7086 39.2069 20.737 39.5564 24 39.5564C27.1288 39.5564 30.2914 39.2069 32.7927 38.6098C36.8773 37.6346 39.5563 35.9988 39.5563 34.1455Z"/>
-            </svg>
+            <img src="/favicon.png" alt="K" style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
           </div>
           <span className="logo-text">{t.title}</span>
         </div>

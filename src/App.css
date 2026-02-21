@@ -1791,6 +1791,7 @@
   padding-bottom: 4rem;
   background: linear-gradient(180deg, #faf9f6 0%, #f5f3ef 100%);
   min-height: 100vh;
+  overflow-x: hidden;
 }
 
 .report-section {
@@ -1798,6 +1799,7 @@
   display: flex;
   flex-direction: column;
   gap: 2rem;
+  overflow: hidden;
 }
 
 .profile-summary {
@@ -1838,6 +1840,9 @@
   line-height: 1.8;
   box-shadow: 0 8px 40px rgba(0, 0, 0, 0.06);
   counter-reset: report-list;
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+  overflow: hidden;
 }
 
 .report-content h2 {
@@ -1931,6 +1936,65 @@
   border: none;
   border-top: 1px solid rgba(26, 26, 26, 0.2);
   margin: 1.5rem 0;
+}
+
+/* Result page mobile fixes */
+@media (max-width: 640px) {
+  .report-section {
+    padding: 1rem;
+    gap: 1rem;
+  }
+
+  .profile-summary {
+    padding: 1rem;
+    gap: 1rem;
+    flex-direction: row;
+    align-items: center;
+  }
+
+  .result-photo {
+    width: 70px;
+    height: 90px;
+  }
+
+  .report-content {
+    padding: 1.25rem;
+    border-radius: 16px;
+  }
+
+  .report-content h2 {
+    font-size: 1.1rem;
+    margin: 1.25rem 0 0.5rem;
+  }
+
+  .report-content h3 {
+    font-size: 0.95rem;
+  }
+
+  .report-content p,
+  .report-content li {
+    font-size: 0.875rem;
+  }
+
+  .style-gallery-section {
+    padding: 0 1rem;
+    margin-top: 2rem;
+    padding-top: 2rem;
+  }
+
+  .style-grid {
+    gap: 0.75rem;
+  }
+
+  .result-actions {
+    padding: 0 1rem;
+  }
+
+  .transform-section {
+    padding: 0 1rem;
+    margin-top: 2rem;
+    padding-top: 2rem;
+  }
 }
 
 /* Style Gallery Section */
