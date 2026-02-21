@@ -400,6 +400,16 @@ const translations: Record<Language, {
   timerDesc: string
   unlockAllStyles: string
   blurredRemaining: string
+  // Footer
+  footerLegal: string
+  footerTerms: string
+  footerPrivacy: string
+  footerRefund: string
+  footerCopyright: string
+  // Hero badges
+  badgeRunway: string
+  badgePersonalized: string
+  badgeWeather: string
 }> = {
   ko: {
     title: 'PERSONAL STYLIST',
@@ -486,9 +496,9 @@ const translations: Record<Language, {
     processingPayment: '결제 처리 중...',
     price: '$4.99',
     hairPrice: '$2.99',
-    hairstyleTransform: '💇 헤어스타일 변환',
+    hairstyleTransform: '헤어스타일 변환',
     hairstyleTransformDesc: '내 얼굴에 다양한 헤어스타일 적용',
-    fashionTransform: '👔 패션 변환',
+    fashionTransform: '패션 변환',
     fashionTransformDesc: '내 모습에 다양한 패션 스타일 적용',
     generateHairstyles: '헤어스타일 생성하기',
     generateFashion: '패션 스타일 생성하기',
@@ -508,7 +518,7 @@ const translations: Record<Language, {
     fashionReferenceTitle: '👗 패션 레퍼런스',
     fashionReferenceDesc: '럭셔리 디자이너 브랜드 스타일 참고',
     fashionBrands: ['Hermès', 'Loro Piana', 'The Row', 'Bottega Veneta', 'Brunello Cucinelli', 'Auralee', 'Lemaire', 'Max Mara', 'Louis Vuitton'],
-    hairReferenceTitle: '💇 헤어 스타일 분석',
+    hairReferenceTitle: '헤어 스타일 분석',
     hairReferenceDesc: '얼굴형·이목구비 기반 맞춤 추천',
     hairReferenceFemale: ['Zendaya', 'BLACKPINK Lisa', 'Jennifer Aniston', 'Halle Berry', 'Anne Hathaway'],
     hairReferenceMale: ['BTS V', 'Brad Pitt', 'Chris Hemsworth', 'Timothée Chalamet', 'Hyun Bin'],
@@ -551,7 +561,7 @@ const translations: Record<Language, {
     // Share modal
     shareModalTitle: '결과 공유하기',
     shareVia: '공유하기',
-    downloadForSocial: '📷 이미지 저장 (Instagram/TikTok용)',
+    downloadForSocial: '이미지 저장 (Instagram/TikTok용)',
     copyLink: '🔗 링크 복사',
     copiedToClipboard: '클립보드에 복사되었습니다!',
     // Auth
@@ -703,6 +713,14 @@ const translations: Record<Language, {
     timerDesc: '후 종료',
     unlockAllStyles: '모든 스타일 잠금 해제',
     blurredRemaining: '개 스타일 더 보기',
+    footerLegal: '법적 고지',
+    footerTerms: '이용약관',
+    footerPrivacy: '개인정보처리방침',
+    footerRefund: '환불 정책',
+    footerCopyright: '© 2026 PERSONAL STYLIST. ALL RIGHTS RESERVED.',
+    badgeRunway: '런웨이 영감',
+    badgePersonalized: '맞춤형',
+    badgeWeather: '날씨 연동',
   },
   en: {
     title: 'PERSONAL STYLIST',
@@ -789,9 +807,9 @@ const translations: Record<Language, {
     processingPayment: 'Processing payment...',
     price: '$4.99',
     hairPrice: '$2.99',
-    hairstyleTransform: '💇 Hairstyle Transform',
+    hairstyleTransform: 'Hairstyle Transform',
     hairstyleTransformDesc: 'Try different hairstyles on your photo',
-    fashionTransform: '👔 Fashion Transform',
+    fashionTransform: 'Fashion Transform',
     fashionTransformDesc: 'Try different fashion styles on your photo',
     generateHairstyles: 'Generate Hairstyles',
     generateFashion: 'Generate Fashion Styles',
@@ -811,7 +829,7 @@ const translations: Record<Language, {
     fashionReferenceTitle: '👗 Fashion References',
     fashionReferenceDesc: 'Inspired by luxury designer brands',
     fashionBrands: ['Hermès', 'Loro Piana', 'The Row', 'Bottega Veneta', 'Brunello Cucinelli', 'Auralee', 'Lemaire', 'Max Mara', 'Louis Vuitton'],
-    hairReferenceTitle: '💇 Hair Style Analysis',
+    hairReferenceTitle: 'Hair Style Analysis',
     hairReferenceDesc: 'Personalized by face shape & features',
     hairReferenceFemale: ['Zendaya', 'BLACKPINK Lisa', 'Jennifer Aniston', 'Halle Berry', 'Anne Hathaway'],
     hairReferenceMale: ['BTS V', 'Brad Pitt', 'Chris Hemsworth', 'Timothée Chalamet', 'Hyun Bin'],
@@ -854,7 +872,7 @@ const translations: Record<Language, {
     // Share modal
     shareModalTitle: 'Share Your Results',
     shareVia: 'Share via',
-    downloadForSocial: '📷 Save Image (for Instagram/TikTok)',
+    downloadForSocial: 'Save Image (for Instagram/TikTok)',
     copyLink: '🔗 Copy Link',
     copiedToClipboard: 'Copied to clipboard!',
     // Auth
@@ -1006,6 +1024,14 @@ const translations: Record<Language, {
     timerDesc: ' left',
     unlockAllStyles: 'Unlock All Styles',
     blurredRemaining: ' more styles',
+    footerLegal: 'LEGAL',
+    footerTerms: 'Terms of Service',
+    footerPrivacy: 'Privacy Policy',
+    footerRefund: 'Refund Policy',
+    footerCopyright: '© 2026 PERSONAL STYLIST. ALL RIGHTS RESERVED.',
+    badgeRunway: 'RUNWAY-INSPIRED',
+    badgePersonalized: 'PERSONALIZED',
+    badgeWeather: 'WEATHER-AWARE',
   },
   ja: {
     title: 'PERSONAL STYLIST',
@@ -1092,9 +1118,9 @@ const translations: Record<Language, {
     processingPayment: '支払い処理中...',
     price: '$4.99',
     hairPrice: '$2.99',
-    hairstyleTransform: '💇 ヘアスタイル変換',
+    hairstyleTransform: 'ヘアスタイル変換',
     hairstyleTransformDesc: '写真に様々なヘアスタイルを適用',
-    fashionTransform: '👔 ファッション変換',
+    fashionTransform: 'ファッション変換',
     fashionTransformDesc: '写真に様々なファッションスタイルを適用',
     generateHairstyles: 'ヘアスタイルを生成',
     generateFashion: 'ファッションスタイルを生成',
@@ -1114,7 +1140,7 @@ const translations: Record<Language, {
     fashionReferenceTitle: '👗 ファッションリファレンス',
     fashionReferenceDesc: 'ラグジュアリーデザイナーブランドを参考',
     fashionBrands: ['Hermès', 'Loro Piana', 'The Row', 'Bottega Veneta', 'Brunello Cucinelli', 'Auralee', 'Lemaire', 'Max Mara', 'Louis Vuitton'],
-    hairReferenceTitle: '💇 ヘアスタイル分析',
+    hairReferenceTitle: 'ヘアスタイル分析',
     hairReferenceDesc: '顔の形と特徴に基づくパーソナル提案',
     hairReferenceFemale: ['Zendaya', 'BLACKPINK Lisa', 'Jennifer Aniston', 'Halle Berry', 'Anne Hathaway'],
     hairReferenceMale: ['BTS V', 'Brad Pitt', 'Chris Hemsworth', 'Timothée Chalamet', 'Hyun Bin'],
@@ -1157,7 +1183,7 @@ const translations: Record<Language, {
     // Share modal
     shareModalTitle: '結果をシェア',
     shareVia: 'シェアする',
-    downloadForSocial: '📷 画像を保存 (Instagram/TikTok用)',
+    downloadForSocial: '画像を保存 (Instagram/TikTok用)',
     copyLink: '🔗 リンクをコピー',
     copiedToClipboard: 'クリップボードにコピーしました！',
     // Auth
@@ -1309,6 +1335,14 @@ const translations: Record<Language, {
     timerDesc: 'で終了',
     unlockAllStyles: '全スタイルをロック解除',
     blurredRemaining: 'つのスタイルをもっと見る',
+    footerLegal: '法的情報',
+    footerTerms: '利用規約',
+    footerPrivacy: 'プライバシーポリシー',
+    footerRefund: '返金ポリシー',
+    footerCopyright: '© 2026 PERSONAL STYLIST. ALL RIGHTS RESERVED.',
+    badgeRunway: 'ランウェイ発',
+    badgePersonalized: 'パーソナライズ',
+    badgeWeather: '天気連動',
   },
   zh: {
     title: 'PERSONAL STYLIST',
@@ -1395,9 +1429,9 @@ const translations: Record<Language, {
     processingPayment: '支付处理中...',
     price: '$4.99',
     hairPrice: '$2.99',
-    hairstyleTransform: '💇 发型变换',
+    hairstyleTransform: '发型变换',
     hairstyleTransformDesc: '在您的照片上尝试不同发型',
-    fashionTransform: '👔 时尚变换',
+    fashionTransform: '时尚变换',
     fashionTransformDesc: '在您的照片上尝试不同时尚风格',
     generateHairstyles: '生成发型',
     generateFashion: '生成时尚风格',
@@ -1417,7 +1451,7 @@ const translations: Record<Language, {
     fashionReferenceTitle: '👗 时尚参考',
     fashionReferenceDesc: '参考奢侈品牌设计风格',
     fashionBrands: ['Hermès', 'Loro Piana', 'The Row', 'Bottega Veneta', 'Brunello Cucinelli', 'Auralee', 'Lemaire', 'Max Mara', 'Louis Vuitton'],
-    hairReferenceTitle: '💇 发型风格分析',
+    hairReferenceTitle: '发型风格分析',
     hairReferenceDesc: '基于脸型和五官的个性化推荐',
     hairReferenceFemale: ['Zendaya', 'BLACKPINK Lisa', 'Jennifer Aniston', 'Halle Berry', 'Anne Hathaway'],
     hairReferenceMale: ['BTS V', 'Brad Pitt', 'Chris Hemsworth', 'Timothée Chalamet', 'Hyun Bin'],
@@ -1460,7 +1494,7 @@ const translations: Record<Language, {
     // Share modal
     shareModalTitle: '分享结果',
     shareVia: '分享到',
-    downloadForSocial: '📷 保存图片 (用于Instagram/TikTok)',
+    downloadForSocial: '保存图片 (用于Instagram/TikTok)',
     copyLink: '🔗 复制链接',
     copiedToClipboard: '已复制到剪贴板！',
     // Auth
@@ -1612,6 +1646,14 @@ const translations: Record<Language, {
     timerDesc: '后结束',
     unlockAllStyles: '解锁全部风格',
     blurredRemaining: '个风格等你解锁',
+    footerLegal: '法律信息',
+    footerTerms: '服务条款',
+    footerPrivacy: '隐私政策',
+    footerRefund: '退款政策',
+    footerCopyright: '© 2026 PERSONAL STYLIST. ALL RIGHTS RESERVED.',
+    badgeRunway: '秀场灵感',
+    badgePersonalized: '个性定制',
+    badgeWeather: '天气感知',
   },
   es: {
     title: 'PERSONAL STYLIST',
@@ -1698,9 +1740,9 @@ const translations: Record<Language, {
     processingPayment: 'Procesando pago...',
     price: '$4.99',
     hairPrice: '$2.99',
-    hairstyleTransform: '💇 Transformación de Peinado',
+    hairstyleTransform: 'Transformación de Peinado',
     hairstyleTransformDesc: 'Prueba diferentes peinados en tu foto',
-    fashionTransform: '👔 Transformación de Moda',
+    fashionTransform: 'Transformación de Moda',
     fashionTransformDesc: 'Prueba diferentes estilos de moda en tu foto',
     generateHairstyles: 'Generar Peinados',
     generateFashion: 'Generar Estilos de Moda',
@@ -1720,7 +1762,7 @@ const translations: Record<Language, {
     fashionReferenceTitle: '👗 Referencias de Moda',
     fashionReferenceDesc: 'Inspirado en marcas de diseñadores de lujo',
     fashionBrands: ['Hermès', 'Loro Piana', 'The Row', 'Bottega Veneta', 'Brunello Cucinelli', 'Auralee', 'Lemaire', 'Max Mara', 'Louis Vuitton'],
-    hairReferenceTitle: '💇 Análisis de Estilo Capilar',
+    hairReferenceTitle: 'Análisis de Estilo Capilar',
     hairReferenceDesc: 'Personalizado por forma facial y rasgos',
     hairReferenceFemale: ['Zendaya', 'BLACKPINK Lisa', 'Jennifer Aniston', 'Halle Berry', 'Anne Hathaway'],
     hairReferenceMale: ['BTS V', 'Brad Pitt', 'Chris Hemsworth', 'Timothée Chalamet', 'Hyun Bin'],
@@ -1763,7 +1805,7 @@ const translations: Record<Language, {
     // Share modal
     shareModalTitle: 'Compartir Resultados',
     shareVia: 'Compartir en',
-    downloadForSocial: '📷 Guardar Imagen (para Instagram/TikTok)',
+    downloadForSocial: 'Guardar Imagen (para Instagram/TikTok)',
     copyLink: '🔗 Copiar Enlace',
     copiedToClipboard: '¡Copiado al portapapeles!',
     // Auth
@@ -1915,6 +1957,14 @@ const translations: Record<Language, {
     timerDesc: ' restante',
     unlockAllStyles: 'Desbloquear todos los estilos',
     blurredRemaining: ' estilos más',
+    footerLegal: 'LEGAL',
+    footerTerms: 'Terminos de Servicio',
+    footerPrivacy: 'Politica de Privacidad',
+    footerRefund: 'Politica de Reembolso',
+    footerCopyright: '© 2026 PERSONAL STYLIST. ALL RIGHTS RESERVED.',
+    badgeRunway: 'PASARELA',
+    badgePersonalized: 'PERSONALIZADO',
+    badgeWeather: 'CLIMA-ADAPTADO',
   }
 }
 
@@ -5458,9 +5508,9 @@ ${hairImgs.length > 0 ? `<div class="section"><h2>${hairSection}</h2><div class=
               </button>
             </div>
             <div className="featured-in">
-              <span className="magazine">RUNWAY-INSPIRED</span>
-              <span className="magazine">PERSONALIZED</span>
-              <span className="magazine">WEATHER-AWARE</span>
+              <span className="magazine">{t.badgeRunway}</span>
+              <span className="magazine">{t.badgePersonalized}</span>
+              <span className="magazine">{t.badgeWeather}</span>
             </div>
           </div>
         </section>
@@ -5654,15 +5704,15 @@ ${hairImgs.length > 0 ? `<div class="section"><h2>${hairSection}</h2><div class=
             </div>
             <div className="footer-links">
               <div className="footer-col">
-                <h5>LEGAL</h5>
-                <a href="#" onClick={(e) => { e.preventDefault(); setPolicyModal('terms') }}>Terms of Service</a>
-                <a href="#" onClick={(e) => { e.preventDefault(); setPolicyModal('privacy') }}>Privacy Policy</a>
-                <a href="#" onClick={(e) => { e.preventDefault(); setPolicyModal('refund') }}>Refund Policy</a>
+                <h5>{t.footerLegal}</h5>
+                <a href="#" onClick={(e) => { e.preventDefault(); setPolicyModal('terms') }}>{t.footerTerms}</a>
+                <a href="#" onClick={(e) => { e.preventDefault(); setPolicyModal('privacy') }}>{t.footerPrivacy}</a>
+                <a href="#" onClick={(e) => { e.preventDefault(); setPolicyModal('refund') }}>{t.footerRefund}</a>
               </div>
             </div>
           </div>
           <div className="footer-bottom">
-            <span>© 2026 PERSONAL STYLIST. ALL RIGHTS RESERVED.</span>
+            <span>{t.footerCopyright}</span>
           </div>
         </footer>
 
@@ -5833,7 +5883,7 @@ ${hairImgs.length > 0 ? `<div class="section"><h2>${hairSection}</h2><div class=
                         </>
                       ) : (
                         <div className="style-placeholder">
-                          <span className="style-icon">👔</span>
+                          <span className="style-icon" aria-hidden="true">S</span>
                         </div>
                       )}
                     </div>
@@ -5850,7 +5900,7 @@ ${hairImgs.length > 0 ? `<div class="section"><h2>${hairSection}</h2><div class=
                   : 'Click below to generate fashion style images'}
               </p>
               <button className="btn-gold" onClick={generateStyleImages}>
-                {lang === 'ko' ? '🎨 스타일 이미지 생성' : '🎨 Generate Style Images'}
+                {lang === 'ko' ? '스타일 이미지 생성' : 'Generate Style Images'}
               </button>
             </div>
           )}
@@ -5884,7 +5934,7 @@ ${hairImgs.length > 0 ? `<div class="section"><h2>${hairSection}</h2><div class=
                         <img src={style.imageUrl} alt={style.label} className="transform-image" />
                       ) : (
                         <div className="transform-placeholder">
-                          <span className="transform-icon">💇</span>
+                          <span className="transform-icon" aria-hidden="true">H</span>
                         </div>
                       )}
                     </div>
@@ -6531,7 +6581,7 @@ ${hairImgs.length > 0 ? `<div class="section"><h2>${hairSection}</h2><div class=
                   <img src={hairPhoto} alt="My photo" className="mini-photo-preview" />
                 ) : (
                   <div className="mini-photo-placeholder">
-                    <span>📷</span>
+                    <span aria-hidden="true">P</span>
                     <span>{lang === 'ko' ? '클릭하여 업로드' : 'Click to upload'}</span>
                   </div>
                 )}
@@ -6696,7 +6746,7 @@ ${hairImgs.length > 0 ? `<div class="section"><h2>${hairSection}</h2><div class=
                           </div>
                         ) : (
                           <div className="generated-placeholder">
-                            <span>🎨</span>
+                            <span aria-hidden="true">S</span>
                             <span>{item.style}</span>
                           </div>
                         )}
@@ -7202,7 +7252,7 @@ ${hairImgs.length > 0 ? `<div class="section"><h2>${hairSection}</h2><div class=
                   <img src={profile.photo} alt="Profile" className="photo-preview" />
                 ) : (
                   <div className="photo-placeholder">
-                    <span className="camera-icon">{isDragging ? '📥' : '📷'}</span>
+                    <span className="camera-icon" aria-hidden="true">{isDragging ? '+' : 'P'}</span>
                     <span>{t.uploadPhoto}</span>
                   </div>
                 )}
