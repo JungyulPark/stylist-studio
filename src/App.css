@@ -3282,7 +3282,11 @@
   box-shadow: 0 4px 20px rgba(26, 26, 26, 0.08);
   border: 1px solid rgba(26, 26, 26, 0.12);
   margin-bottom: 1.5rem;
-  animation: fadeInUp 0.4s ease forwards;
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+  opacity: 1;
 }
 
 .section-header {
@@ -3306,10 +3310,12 @@
 
 .section-body {
   padding: 1.25rem;
+  display: block;
+  color: #1a1a1a;
 }
 
 .section-body p {
-  color: rgba(26, 26, 26, 0.8);
+  color: rgba(26, 26, 26, 0.8) !important;
   line-height: 1.7;
   margin: 0 0 0.75rem 0;
 }

@@ -5823,7 +5823,7 @@ ${hairImgs.length > 0 ? `<div class="section"><h2>${hairSection}</h2><div class=
           </div>
         </header>
 
-        <div className="report-section">
+        <div className="report-section" style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem', width: '100%', maxWidth: '100%', boxSizing: 'border-box' }}>
           <div className="profile-summary">
             {profile.photo && (
               <img src={profile.photo} alt="Profile" className="result-photo" />
@@ -5843,7 +5843,11 @@ ${hairImgs.length > 0 ? `<div class="section"><h2>${hairSection}</h2><div class=
             </div>
           </div>
 
-          <div className="report-content" dangerouslySetInnerHTML={{ __html: renderMarkdownToHtml(report) }} />
+          {report && (
+            <div style={{ padding: '1.5rem', background: '#ffffff', borderRadius: '16px', border: '1px solid #e0e0e0', color: '#1a1a1a', fontSize: '0.95rem', lineHeight: '1.8', whiteSpace: 'pre-wrap', wordBreak: 'break-word', width: '100%', maxWidth: '100%', boxSizing: 'border-box' }}>
+              {report}
+            </div>
+          )}
         </div>
 
         <div className="style-gallery-section">
