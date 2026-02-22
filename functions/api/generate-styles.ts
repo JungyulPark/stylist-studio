@@ -61,37 +61,37 @@ function getVariedScenarios(diversitySeed: number): StyleScenario[] {
       id: 'best-match',
       labelKo: '베스트 매치', labelEn: 'Best Match', labelJa: 'ベストマッチ', labelZh: '最佳搭配', labelEs: 'Mejor Combinación',
       promptMale: (() => { const p = mp(scenarioOffsets[0]); return `modern clean outfit: well-fitted crewneck knit in ${p.colors.split(', ')[2]}, straight-leg tailored trousers in ${p.colors.split(', ')[1]}, clean minimal sneakers, ${p.accent} leather belt — quiet luxury aesthetic, COS or Zara editorial look, natural relaxed fit` })(),
-      promptFemale: (() => { const p = fp(scenarioOffsets[0]); return `modern effortless outfit: relaxed blazer in ${p.colors.split(', ')[0]} over simple crew-neck tee in ${p.colors.split(', ')[3]}, high-waisted straight-leg trousers in ${p.colors.split(', ')[2]}, clean loafers, minimal ${p.accent} jewelry — quiet luxury aesthetic, modern editorial look` })(),
+      promptFemale: (() => { const p = fp(scenarioOffsets[0]); return `stunning feminine outfit: elegantly draped wrap dress in ${p.colors.split(', ')[0]} with a cinched waist and flowing midi-length hem, or a fitted ribbed knit top tucked into a high-waisted pleated midi skirt in ${p.colors.split(', ')[2]}, strappy heeled sandals or pointed-toe mules, delicate layered ${p.accent} necklace — think ZARA or Reformation editorial: effortlessly chic, figure-flattering, modern feminine` })(),
     },
     {
       id: 'interview',
       labelKo: '인터뷰룩', labelEn: 'Interview', labelJa: 'インタビュー', labelZh: '面试装', labelEs: 'Entrevista',
       promptMale: (() => { const p = mp(scenarioOffsets[1]); return `sharp professional outfit: structured blazer in ${p.colors.split(', ')[0]} with relaxed shoulders, clean button-down shirt in ${p.colors.split(', ')[2]}, tailored straight trousers, polished leather shoes — modern business editorial, not stiff or corporate` })(),
-      promptFemale: (() => { const p = fp(scenarioOffsets[1]); return `polished professional outfit: tailored blazer in ${p.colors.split(', ')[3]}, silk shirt in ${p.colors.split(', ')[1]}, high-waisted wide-leg trousers in ${p.colors.split(', ')[0]}, pointed-toe flats or low heels — modern professional editorial, clean and confident` })(),
+      promptFemale: (() => { const p = fp(scenarioOffsets[1]); return `polished feminine professional outfit: tailored fitted blazer in ${p.colors.split(', ')[3]} with nipped waist, silk blouse with subtle drape in ${p.colors.split(', ')[1]}, high-waisted pencil skirt or tailored A-line midi skirt in ${p.colors.split(', ')[0]}, pointed-toe kitten heels, ${p.accent} stud earrings — confident, sophisticated, magazine-cover professional woman` })(),
     },
     {
       id: 'date',
       labelKo: '데이트룩', labelEn: 'Date Night', labelJa: 'デートルック', labelZh: '约会装', labelEs: 'Cita',
       promptMale: (() => { const p = mp(scenarioOffsets[2]); return `stylish evening outfit: unstructured soft blazer in ${p.colors.split(', ')[3] || p.colors.split(', ')[0]}, fitted knit polo or mock-neck in ${p.colors.split(', ')[2]}, slim straight trousers, suede loafers — refined date look, effortlessly stylish` })(),
-      promptFemale: (() => { const p = fp(scenarioOffsets[2]); return `elegant evening outfit: fitted knit midi dress in ${p.colors.split(', ')[1]} or silk cami top with tailored wide-leg trousers in ${p.colors.split(', ')[0]}, delicate ${p.accent} jewelry, heeled mules — sophisticated and feminine, not overdressed` })(),
+      promptFemale: (() => { const p = fp(scenarioOffsets[2]); return `alluring date night outfit: fitted satin slip midi dress in ${p.colors.split(', ')[1]} with delicate spaghetti straps and a subtle V-neckline, or a body-skimming knit top in ${p.colors.split(', ')[0]} with elegant high-waisted satin midi skirt, strappy heeled sandals, dainty ${p.accent} layered bracelets — romantic, sensual yet tasteful, candlelight-ready` })(),
     },
     {
       id: 'luxury',
       labelKo: '럭셔리', labelEn: 'Luxury', labelJa: 'ラグジュアリー', labelZh: '奢华', labelEs: 'Lujo',
       promptMale: (() => { const p = mp(scenarioOffsets[3]); return `premium outfit: cashmere overcoat in ${p.colors.split(', ')[1]}, fine-gauge turtleneck in ${p.colors.split(', ')[2]}, well-cut trousers in ${p.colors.split(', ')[0]}, leather Chelsea boots — The Row menswear aesthetic, understated luxury` })(),
-      promptFemale: (() => { const p = fp(scenarioOffsets[3]); return `luxurious outfit: long tailored coat in ${p.colors.split(', ')[2]}, cashmere crewneck in ${p.colors.split(', ')[0]}, tailored column midi skirt in ${p.colors.split(', ')[3]}, quality leather bag, pointed-toe boots — quiet luxury, Toteme editorial aesthetic` })(),
+      promptFemale: (() => { const p = fp(scenarioOffsets[3]); return `luxurious feminine outfit: elegant long cashmere coat in ${p.colors.split(', ')[2]} draped over shoulders, fine-gauge cashmere turtleneck dress or fitted knit top with fluid silk midi skirt in ${p.colors.split(', ')[0]}, structured leather handbag in ${p.colors.split(', ')[3]}, pointed-toe leather boots, delicate ${p.accent} earrings — Toteme or The Row editorial: understated opulence, head-turning elegance` })(),
     },
     {
       id: 'casual',
       labelKo: '캐주얼', labelEn: 'Casual', labelJa: 'カジュアル', labelZh: '休闲', labelEs: 'Casual',
       promptMale: (() => { const p = mp(scenarioOffsets[4]); return `relaxed weekend outfit: oversized cotton sweatshirt or clean hoodie in ${p.colors.split(', ')[2]}, comfortable straight-leg jeans or cargo pants in ${p.colors.split(', ')[3] || 'washed denim'}, clean white sneakers — effortless off-duty style, modern and comfortable` })(),
-      promptFemale: (() => { const p = fp(scenarioOffsets[4]); return `chic casual outfit: oversized knit sweater in ${p.colors.split(', ')[0]}, high-waisted straight-leg jeans, clean sneakers or ${p.colors.split(', ')[3] || 'tan'} leather loafers, simple tote bag — elevated weekend style, comfortable yet polished` })(),
+      promptFemale: (() => { const p = fp(scenarioOffsets[4]); return `effortlessly chic weekend outfit: soft oversized cotton shirt dress in ${p.colors.split(', ')[0]} belted at the waist, or a fitted striped Breton top tucked into a relaxed linen midi skirt in ${p.colors.split(', ')[2]}, clean white sneakers or woven flat sandals, canvas tote, ${p.accent} pendant necklace — French-girl weekend style: relaxed, feminine, never frumpy` })(),
     },
     {
       id: 'daily',
       labelKo: '데일리', labelEn: 'Daily', labelJa: 'デイリー', labelZh: '日常', labelEs: 'Diario',
       promptMale: (() => { const p = mp(scenarioOffsets[5]); return `smart daily outfit: clean t-shirt or lightweight knit in ${p.colors.split(', ')[0]}, well-fitted chinos or relaxed trousers in ${p.colors.split(', ')[2]}, minimal leather watch, clean sneakers — modern daily wear, simple and put-together` })(),
-      promptFemale: (() => { const p = fp(scenarioOffsets[5]); return `easy daily outfit: cotton or linen shirt in ${p.colors.split(', ')[1]}, comfortable wide-leg trousers or straight-leg jeans in ${p.colors.split(', ')[2]}, simple flat sandals or sneakers, minimal ${p.accent} necklace — effortless everyday style, clean and modern` })(),
+      promptFemale: (() => { const p = fp(scenarioOffsets[5]); return `polished daily outfit: lightweight knit cardigan in ${p.colors.split(', ')[1]} over a fitted camisole, flowing midi skirt with subtle print or high-waisted tailored trousers in ${p.colors.split(', ')[2]}, ballet flats or low block-heel mules, minimal ${p.accent} jewelry — everyday elegance, the kind of outfit that gets compliments at a coffee shop` })(),
     }
   ]
 }
@@ -174,7 +174,7 @@ STYLING APPROACH — PERSONAL COLOR ANALYSIS:
 - Think modern minimalist brands: COS, Zara, Uniqlo, Massimo Dutti — NOT costume or runway-only styles
 - Colors should be muted and wearable — NO bright red, pumpkin orange, hot pink, or neon tones
 - Prioritize neutral-based outfits with ONE subtle color accent at most
-${gender === 'female' ? '- Use soft, feminine clothing — dresses, blouses, cardigans, skirts' : '- Relaxed, comfortable silhouette — NOT tight, NOT skinny fit\n- Trousers with comfortable straight-leg or slightly wide drape, jackets with soft natural shoulders\n- Mix of relaxed tailored fit and easy casual fit — modern men prefer comfort over constriction'}${silhouetteGuide}
+${gender === 'female' ? '- STRONGLY prefer dresses, skirts, and feminine silhouettes over pants\n- Use wrap dresses, midi skirts, pleated skirts, A-line skirts, slip dresses, knit dresses\n- Emphasize waist definition, flowing fabrics, elegant draping\n- Think Reformation, Rouje, Sezane, Realisation Par — modern feminine, NOT corporate\n- Avoid basic jeans+sweater combos — every outfit should feel special and put-together\n- Include heels, mules, or strappy sandals when appropriate (not just sneakers and loafers)' : '- Relaxed, comfortable silhouette — NOT tight, NOT skinny fit\n- Trousers with comfortable straight-leg or slightly wide drape, jackets with soft natural shoulders\n- Mix of relaxed tailored fit and easy casual fit — modern men prefer comfort over constriction'}${silhouetteGuide}
 
 ${beautyRetouch}
 

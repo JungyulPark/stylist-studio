@@ -5844,9 +5844,11 @@ ${hairImgs.length > 0 ? `<div class="section"><h2>${hairSection}</h2><div class=
           </div>
 
           {report && (
-            <div style={{ padding: '1.5rem', background: '#ffffff', borderRadius: '16px', border: '1px solid #e0e0e0', color: '#1a1a1a', fontSize: '0.95rem', lineHeight: '1.8', whiteSpace: 'pre-wrap', wordBreak: 'break-word', width: '100%', maxWidth: '100%', boxSizing: 'border-box' }}>
-              {report}
-            </div>
+            <div
+              className="report-content"
+              style={{ display: 'block', width: '100%', maxWidth: '100%', boxSizing: 'border-box' }}
+              dangerouslySetInnerHTML={{ __html: renderMarkdownToHtml(report) }}
+            />
           )}
         </div>
 
