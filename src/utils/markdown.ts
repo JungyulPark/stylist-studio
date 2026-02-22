@@ -10,6 +10,8 @@
 export function renderMarkdownToHtml(markdown: string): string {
   if (!markdown) return ''
 
+  let insideLookCard = false
+
   let html = markdown
     .split('\n')
     .map(line => {
@@ -17,12 +19,15 @@ export function renderMarkdownToHtml(markdown: string): string {
       if (line.startsWith('## ')) {
         const content = line.slice(3)
         const emojiMatch = content.match(/^([\u{1F300}-\u{1F9FF}]|[\u{2600}-\u{26FF}]|[\u{2700}-\u{27BF}]|💎|🎨|👔|🛍️|✨|💡|🎯|💪|👗|💇|🌟)\s*/u)
+        // Close any open look-card before starting new section
+        const closeLook = insideLookCard ? '</div></div>' : ''
+        insideLookCard = false
         if (emojiMatch) {
           const emoji = emojiMatch[1]
           const title = content.slice(emojiMatch[0].length)
-          return `</div></div><div class="report-section-card"><div class="section-header"><span class="section-icon">${emoji}</span><h3>${title}</h3></div><div class="section-body">`
+          return `${closeLook}</div></div><div class="report-section-card"><div class="section-header"><span class="section-icon">${emoji}</span><h3>${title}</h3></div><div class="section-body">`
         }
-        return `</div></div><div class="report-section-card"><div class="section-header"><span class="section-icon">✦</span><h3>${content}</h3></div><div class="section-body">`
+        return `${closeLook}</div></div><div class="report-section-card"><div class="section-header"><span class="section-icon">✦</span><h3>${content}</h3></div><div class="section-body">`
       }
       // Subheader
       if (line.startsWith('### ')) {
@@ -31,7 +36,10 @@ export function renderMarkdownToHtml(markdown: string): string {
       // Look card header (**1) Boardroom Modern**)
       const lookMatch = line.match(/^\*\*(\d+)\)\s*(.+)\*\*$/)
       if (lookMatch) {
-        return `<div class="look-card"><h4 class="look-title"><span class="look-number">${lookMatch[1]}</span>${lookMatch[2]}</h4><div class="look-items">`
+        // Close previous look-card if open
+        const closePrev = insideLookCard ? '</div></div>' : ''
+        insideLookCard = true
+        return `${closePrev}<div class="look-card"><h4 class="look-title"><span class="look-number">${lookMatch[1]}</span>${lookMatch[2]}</h4><div class="look-items">`
       }
       // Look item (- **Top:** white shirt)
       const lookItemMatch = line.match(/^-\s*\*\*([^*:]+)\*\*:\s*(.+)$/)
@@ -66,6 +74,11 @@ export function renderMarkdownToHtml(markdown: string): string {
     .replace(/\*\*(.+?)\*\*/g, '<strong class="accent-text">$1</strong>')
     // Italic
     .replace(/\*(.+?)\*/g, '<em>$1</em>')
+
+  // Close any remaining open look-card
+  if (insideLookCard) {
+    html += '</div></div>'
+  }
 
   // Wrap with opening tags
   html = '<div class="report-section-card"><div class="section-body">' + html + '</div></div>'

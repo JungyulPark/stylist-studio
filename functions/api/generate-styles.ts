@@ -182,7 +182,14 @@ FOCUS ON MAIN SUBJECT ONLY:
 - Only edit the MAIN person in the center/foreground of the photo
 - If there are OTHER PEOPLE in the background, LEAVE THEM COMPLETELY UNCHANGED
 - Do NOT modify, remove, or add any other people
-- Keep all background elements exactly as they are
+
+BACKGROUND ENHANCEMENT:
+- If the background is dark, dingy, cluttered, or unflattering, SUBTLY brighten and clean it up
+- Increase brightness and warmth slightly to create a more editorial, lifestyle-magazine feel
+- Keep the background structure the same (same location/setting) — just improve lighting and tone
+- Think "professional photo lighting" — soft, even, flattering ambient light
+- Do NOT replace the background entirely — only enhance what is already there
+- The person themselves must remain IDENTICAL — only the surrounding environment gets improved
 
 INPAINTING RULES - THIS IS AN INPAINTING TASK:
 1. ONLY replace the clothing/fabric within the MAIN PERSON's body silhouette
@@ -204,7 +211,7 @@ ABSOLUTE REQUIREMENTS - VIOLATION IS FAILURE:
 3. Face position, size, and features MUST be PIXEL-PERFECT identical
 4. Keep EXACTLY what is visible in the original - do not extend or add content
 5. Hairstyle, hair color, skin tone base - ZERO changes allowed
-6. Background and OTHER PEOPLE - ZERO changes allowed
+6. OTHER PEOPLE in the photo - ZERO changes allowed (background lighting may be subtly enhanced)
 7. Output resolution MUST match input resolution exactly
 8. Legs must be BEHIND/INSIDE pants or skirt - NEVER on top of clothing
 9. Arms must be THROUGH sleeves - NEVER floating above clothes

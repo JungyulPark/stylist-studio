@@ -2972,13 +2972,14 @@ function App() {
       trackEvent('funnel_step', { step_name: 'result_view', step_number: 6 })
       setPage('result')
 
-      // Step 2: Generate style images AND hairstyles AFTER showing result page
+      // Step 2: Generate style images first, then hairstyles using best-match outfit
       setIsGeneratingStyles(true)
       setIsTransformingHair(true)
 
-      // Generate fashion styles and hairstyles in parallel
-      const [stylesResult, hairResult] = await Promise.allSettled([
-        fetch('/api/generate-styles', {
+      // First: Generate fashion styles
+      let bestMatchPhoto = profileData.photo // fallback to original
+      try {
+        const stylesResponse = await fetch('/api/generate-styles', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
@@ -2988,44 +2989,47 @@ function App() {
             photo: profileData.photo,
             language: lang
           })
-        }),
-        fetch('/api/transform-batch', {
+        })
+        if (stylesResponse.ok) {
+          const stylesData = await stylesResponse.json()
+          console.log('[Fashion] Success:', stylesData)
+          const styles = stylesData.results || stylesData.styles || []
+          setStyleImages(styles)
+          // Use best-match outfit image as base for hairstyle generation
+          const bestMatch = styles.find((s: { id: string; imageUrl?: string | null }) => s.id === 'best-match' && s.imageUrl)
+          if (bestMatch?.imageUrl) {
+            bestMatchPhoto = bestMatch.imageUrl
+            console.log('[Hair] Using best-match outfit image as base for hairstyles')
+          }
+        } else {
+          console.error('[Fashion] API error:', stylesResponse.status)
+        }
+      } catch (err) {
+        console.error('[Fashion] Fetch failed:', err)
+      }
+      setIsGeneratingStyles(false)
+
+      // Second: Generate hairstyles using best-match outfit photo
+      try {
+        const hairResponse = await fetch('/api/transform-batch', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
-            photo: profileData.photo,
+            photo: bestMatchPhoto,
             type: 'hairstyle',
             gender: profileData.gender,
             language: lang
           })
         })
-      ])
-
-      // Handle fashion styles
-      if (stylesResult.status === 'fulfilled') {
-        if (stylesResult.value.ok) {
-          const stylesData = await stylesResult.value.json()
-          console.log('[Fashion] Success:', stylesData)
-          setStyleImages(stylesData.results || stylesData.styles || [])
-        } else {
-          console.error('[Fashion] API error:', stylesResult.value.status, await stylesResult.value.text())
-        }
-      } else {
-        console.error('[Fashion] Fetch failed:', stylesResult.reason)
-      }
-      setIsGeneratingStyles(false)
-
-      // Handle hairstyles
-      if (hairResult.status === 'fulfilled') {
-        if (hairResult.value.ok) {
-          const hairData = await hairResult.value.json()
+        if (hairResponse.ok) {
+          const hairData = await hairResponse.json()
           console.log('[Hair] Success:', hairData)
           setTransformedHairstyles(hairData.results || [])
         } else {
-          console.error('[Hair] API error:', hairResult.value.status, await hairResult.value.text())
+          console.error('[Hair] API error:', hairResponse.status)
         }
-      } else {
-        console.error('[Hair] Fetch failed:', hairResult.reason)
+      } catch (err) {
+        console.error('[Hair] Fetch failed:', err)
       }
       setIsTransformingHair(false)
 
@@ -3750,11 +3754,16 @@ function App() {
     }
     setIsTransformingHair(true)
     try {
+      // Use best-match outfit image if available, otherwise use original photo
+      const bestMatch = styleImages.find(s => s.id === 'best-match' && s.imageUrl)
+      const photoForHair = bestMatch?.imageUrl || profile.photo
+      console.log('[Hair] Using', bestMatch ? 'best-match outfit' : 'original', 'photo for hairstyles')
+
       const response = await fetch('/api/transform-batch', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          photo: profile.photo,
+          photo: photoForHair,
           type: 'hairstyle',
           gender: profile.gender,
           language: lang
