@@ -3006,8 +3006,62 @@
   }
 
   .report-content {
+    background: rgba(26, 26, 26, 0.4);
+    border-color: rgba(255, 255, 255, 0.08);
+  }
+
+  .report-content .report-section-card {
+    background: rgba(26, 26, 26, 0.6);
+    border-color: rgba(255, 255, 255, 0.1);
+  }
+
+  .report-content .section-header {
+    background: rgba(255, 255, 255, 0.06);
+    border-bottom-color: rgba(255, 255, 255, 0.08);
+  }
+
+  .report-content .section-header h3 {
+    color: rgba(255, 255, 255, 0.95);
+  }
+
+  .report-content .section-body p,
+  .report-content .section-body span,
+  .report-content .list-item,
+  .report-content .item-text,
+  .report-content .item-value,
+  .report-content .look-title {
+    color: rgba(255, 255, 255, 0.85);
+  }
+
+  .report-content .item-label {
+    color: rgba(255, 255, 255, 0.5);
+  }
+
+  .report-content .list-bullet {
+    color: rgba(255, 255, 255, 0.4);
+  }
+
+  .report-content .look-card {
     background: rgba(255, 255, 255, 0.05);
-    border-color: rgba(255, 255, 255, 0.05);
+    border-color: rgba(255, 255, 255, 0.08);
+  }
+
+  .report-content .look-number {
+    background: rgba(255, 255, 255, 0.15);
+    color: rgba(255, 255, 255, 0.9);
+  }
+
+  .report-content .look-item {
+    border-bottom-color: rgba(255, 255, 255, 0.05);
+  }
+
+  .report-content .numbered-item {
+    background: rgba(255, 255, 255, 0.05);
+    border-color: rgba(255, 255, 255, 0.08);
+  }
+
+  .report-content .accent-text {
+    color: rgba(255, 255, 255, 0.95);
   }
 
   .report-content h2,
