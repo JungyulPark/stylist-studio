@@ -2,6 +2,7 @@ import { getCorsHeaders, createCorsPreflightResponse } from '../lib/cors'
 import { validateTransformBatchRequest, createValidationErrorResponse } from '../lib/validation'
 import { errors } from '../lib/errors'
 import { editPhotoWithOpenAI } from '../lib/openai-image'
+import { buildBrandEditPrompt } from '../lib/stylist-prompts'
 
 interface Env {
   GEMINI_API_KEY: string
@@ -34,22 +35,64 @@ const hairstyles: Record<string, StyleOption[]> = {
 
 const fashionStyles: Record<string, StyleOption[]> = {
   male: [
-    { id: 'hermes-exec', ko: '에르메스 비즈니스', en: 'Executive', prompt: 'Hermès-inspired executive outfit: unstructured navy wool gabardine blazer with soft natural shoulders and horn buttons, crisp white spread-collar dress shirt, charcoal pressed wool trousers with straight-leg drape, polished black leather derby shoes, minimal gold-dial watch — quiet authority with artisanal precision' },
-    { id: 'cucinelli-smart', ko: '쿠치넬리 스마트', en: 'Smart Casual', prompt: 'Brunello Cucinelli-inspired smart casual: oatmeal fine-gauge cashmere crewneck sweater over pale blue oxford shirt with collar and cuffs visible, straight-leg tan cotton chinos with single pleat, tan suede loafers worn without socks, brown woven leather belt — warm relaxed elegance' },
-    { id: 'auralee-minimal', ko: '아우라리 미니멀', en: 'Minimal', prompt: 'Auralee-inspired minimal outfit: garment-washed oversized cotton poplin shirt in pale stone with dropped shoulder seams, relaxed straight-leg dark wool trousers with clean hem, simple leather sneakers in off-white, matte silver watch — Japanese quiet luxury where fabric speaks' },
-    { id: 'loro-piana', ko: '로로피아나 럭셔리', en: 'Quiet Luxury', prompt: 'Loro Piana-inspired quiet luxury: camel cashmere zip-front bomber jacket over cream merino turtleneck, perfectly tailored charcoal wool flannel trousers with natural drape, polished dark brown leather chelsea boots, brushed gold cufflinks — extraordinary fabric with razor-clean silhouette' },
-    { id: 'lv-heritage', ko: 'LV 헤리티지', en: 'Heritage Modern', prompt: 'Louis Vuitton-inspired heritage modern: herringbone tweed sport coat in warm brown tones over fine-knit charcoal turtleneck, dark navy straight-leg wool trousers, polished burgundy leather boots, bold brushed-metal watch — classic patterns reimagined with modern proportion' },
-    { id: 'bottega-modern', ko: '보테가 모던', en: 'Urban Modern', prompt: 'Bottega Veneta-inspired urban modern: forest green double-breasted wool overcoat with soft shoulders, black merino half-zip sweater underneath, charcoal wool straight-leg trousers with subtle texture, polished black leather ankle boots with lug sole, matte black watch — bold yet refined contemporary edge' },
-    { id: 'weekend', ko: '위켄드 캐주얼', en: 'Weekend', prompt: 'elevated weekend casual: premium cotton French-terry crewneck sweatshirt in heather grey, straight-leg dark indigo selvedge jeans with comfortable relaxed fit, clean white leather sneakers, minimal black dial watch with NATO strap — effortless off-duty refinement' }
+    { id: 'hermes-exec', ko: '에르메스 비즈니스', en: 'Executive', prompt: `Channel Hermes executive elegance. ANALYZE this man's build and coloring, then create the perfect power-meets-craftsmanship look.
+The DNA: precision with equestrian ease — unstructured shoulders, sharp trouser lines, extraordinary fabrics (wool gabardine, fine cashmere), horn buttons, glove-stitched edges.
+Choose his most flattering combination from: navy blazer + dress shirt + pressed trousers, cashmere sport coat + fine knit + tailored pants, or structured coat + spread-collar shirt.
+Polished leather derbies or chelsea boots. Muted sophisticated palette adapted to his skin tone.` },
+    { id: 'cucinelli-smart', ko: '쿠치넬리 스마트', en: 'Smart Casual', prompt: `Channel Brunello Cucinelli smart casual. ANALYZE this man's proportions and coloring, then create the ideal warm relaxed elegance.
+The DNA: layered fine-gauge knits over spread-collar shirts with collar and cuffs visible, cashmere-blend pieces, single-pleat trousers.
+Choose the most flattering layered look from: crewneck sweater over oxford shirt, V-neck cashmere over crisp white shirt, or gilet + polo + trousers.
+Suede loafers worn without socks. Earth and warm neutral tones adapted to his coloring. Minimal leather watch.` },
+    { id: 'auralee-minimal', ko: '아우라리 미니멀', en: 'Minimal', prompt: `Channel Auralee Japanese minimalism. ANALYZE this man's frame, then create quiet impact through material quality.
+The DNA: fabric takes the lead — garment-washed cotton poplin, boiled wool, baby cashmere. Dropped-shoulder seams, relaxed body with clean hems.
+Choose from: oversized cotton shirt + dark wool trousers, cashmere crewneck + relaxed pants, or band-collar pullover + straight-leg trousers.
+Simple leather sneakers or suede shoes. Matte textures, muted palette. Let the fabric speak.` },
+    { id: 'loro-piana', ko: '로로피아나 럭셔리', en: 'Quiet Luxury', prompt: `Channel Loro Piana quiet luxury. ANALYZE this man's build, then create an outfit where extraordinary fabric speaks.
+The DNA: razor-clean silhouette, tonal dressing in a single color family across textures. Storm System cashmere or fine merino.
+Choose from: cashmere zip-front jacket + merino turtleneck + tailored trousers, unlined cashmere blazer + silk knit + pressed pants, or tonal coat + sweater + slim trousers.
+Clean leather shoes. The outfit should whisper wealth through material quality alone.` },
+    { id: 'lv-heritage', ko: 'LV 헤리티지', en: 'Heritage Modern', prompt: `Channel Louis Vuitton heritage modern. ANALYZE this man's frame, then reimagine classic patterns for his build.
+The DNA: heritage patterns in updated proportions — tweed, herringbone, houndstooth with modern cut.
+Choose from: herringbone sport coat + fine knit turtleneck + dark trousers, textured blazer + patterned shirt + pressed pants, or check overcoat + clean knitwear.
+Polished boots, bold watch or ring. Classic fabrics, modern proportion.` },
+    { id: 'bottega-modern', ko: '보테가 모던', en: 'Urban Modern', prompt: `Channel Bottega Veneta urban modern. ANALYZE this man's build, then create bold contemporary edge.
+The DNA: deep colors, architectural shoulders, textured surfaces. Woven intrecciato-inspired details.
+Choose from: forest green double-breasted overcoat + black knit + textured trousers, structured leather-accent jacket + dark separates, or architectural coat + half-zip sweater.
+Deep palette with one statement accent. Lug-sole boots, matte black accessories.` },
+    { id: 'weekend', ko: '위켄드 캐주얼', en: 'Weekend', prompt: `Create elevated weekend casual. ANALYZE this man's style potential, then design off-duty refinement.
+The DNA: premium fabrics in relaxed silhouettes — quality over logos.
+Choose from: French-terry crewneck + selvedge jeans, cashmere hoodie + relaxed chinos, or cotton overshirt + comfortable trousers.
+Clean white leather sneakers. Simple watch with NATO strap. Effortless but never sloppy.` }
   ],
   female: [
-    { id: 'hermes-chic', ko: '에르메스 시크', en: 'Polished Chic', prompt: 'Hermès-inspired polished femininity: fitted double-breasted blazer in warm ivory with nipped waist over a silk camisole in champagne, elegant knee-length pencil skirt in charcoal with subtle slit, pointed-toe leather ankle boots, delicate gold layered necklace — sharp yet sensual, power-feminine editorial' },
-    { id: 'auralee-soft', ko: '아우라리 소프트', en: 'Soft Minimal', prompt: 'Auralee-inspired soft femininity: delicate baby-cashmere V-neck sweater in dusty rose with relaxed drape, flowing pleated midi skirt in cream that moves beautifully, simple tan suede mules, delicate rose gold pendant — fabric-first Japanese elegance, soft and touchable textures' },
-    { id: 'row-modern', ko: '더로우 모던', en: 'Modern Elegant', prompt: 'The Row-inspired modern elegance: sleeveless ribbed knit column dress in warm ivory that skims the body to mid-calf, or fluid silk blouse tucked into a high-waisted tailored midi skirt in camel, pointed ballet flats in nude leather, single gold cuff bracelet — pared-back perfection, every line intentional' },
-    { id: 'lv-comfort', ko: 'LV 컴포트', en: 'Comfort Luxe', prompt: 'Louis Vuitton-inspired comfort luxury: flowing champagne silk wrap dress with waist tie and soft billowing sleeves hitting below the knee, strappy flat leather sandals in natural tan, antique gold pendant necklace — plush approachable femininity that moves gracefully with every step' },
-    { id: 'lemaire-natural', ko: '르메르 내추럴', en: 'Natural', prompt: 'Lemaire-inspired natural femininity: softly structured linen blazer in warm sand over a fitted ribbed tank dress in cream that falls to mid-calf, woven leather flat sandals, amber drop earrings — Mediterranean warmth, the kind of outfit that looks effortless on a terrace in the south of France' },
-    { id: 'maxmara-classic', ko: '막스마라 클래식', en: 'Timeless', prompt: 'Max Mara-inspired timeless elegance: beautiful camel cashmere coat draped over shoulders, cream silk blouse with soft bow neckline, high-waisted chocolate brown A-line midi skirt in wool-crepe, nude pointed-toe pumps, cognac leather structured handbag — Italian sophistication that never ages' },
-    { id: 'weekend', ko: '위켄드 캐주얼', en: 'Weekend', prompt: 'elevated French-girl weekend: luxurious oversized cashmere cardigan in soft grey draped open over fitted white cotton tee, flowing floral or solid midi skirt with sneakers, or relaxed shirt dress belted at the waist, delicate gold hoop earrings, woven basket bag — chic and carefree, never sloppy' }
+    { id: 'hermes-chic', ko: '에르메스 시크', en: 'Polished Chic', prompt: `Channel Hermes polished femininity. ANALYZE this woman's body and coloring, then create the perfect power-meets-elegance look.
+The DNA: fitted precision meets feminine power — nipped waist, defined lines, contrasting textures (ribbed knits with quilted leather, wool with shearling).
+Choose her most flattering silhouette from: fitted blazer + silk camisole + pencil skirt, structured coat-dress with belt, or tailored blazer + flowing midi skirt.
+Pointed-toe leather ankle boots, delicate gold layered necklace. Sharp yet sensual, power-feminine editorial.` },
+    { id: 'auralee-soft', ko: '아우라리 소프트', en: 'Soft Minimal', prompt: `Channel Auralee soft femininity. ANALYZE this woman's proportions, then create fabric-first beauty.
+The DNA: delicate baby-cashmere, flowing textures with touchable quality. One fitted piece for balance, otherwise soft drape.
+Choose from: V-neck cashmere sweater + flowing pleated midi skirt, knit dress with gentle drape, or soft blouse + relaxed wide-leg trousers.
+Simple tan suede mules or elegant flats. Delicate rose gold pendant. Muted natural palette.` },
+    { id: 'row-modern', ko: '더로우 모던', en: 'Modern Elegant', prompt: `Channel The Row modern elegance. ANALYZE this woman's body, then create pared-back perfection.
+The DNA: every seam intentional. Structured simplicity, minimal jewelry, extraordinary fit.
+Choose from: sleeveless ribbed knit column dress, fluid silk blouse + high-waisted tailored midi skirt, or structured blazer + wide-leg trousers in tonal palette.
+Pointed ballet flats or block-heel boots. Single gold cuff bracelet. Less is more.` },
+    { id: 'lv-comfort', ko: 'LV 컴포트', en: 'Comfort Luxe', prompt: `Channel Louis Vuitton comfort luxury. ANALYZE this woman's figure, then create plush approachable femininity.
+The DNA: flowing draperies, billowing silhouettes evoking comfort and femininity. Silky textures, graceful movement.
+Choose from: champagne silk wrap dress with waist tie, flowing blouse + wide satin trousers, or elegant knit ensemble with soft drape.
+Strappy flat leather sandals. Antique gold pendant necklace. Soft, serene, moves gracefully.` },
+    { id: 'lemaire-natural', ko: '르메르 내추럴', en: 'Natural', prompt: `Channel Lemaire natural femininity. ANALYZE this woman's proportions, then create Mediterranean warmth.
+The DNA: structured naturals — linen, woven textures, south-of-France effortlessness.
+Choose from: soft linen blazer + fitted ribbed tank dress, structured cotton separates in warm tones, or belted linen dress with natural drape.
+Woven leather flat sandals. Amber drop earrings. The kind of outfit that looks effortless on a terrace.` },
+    { id: 'maxmara-classic', ko: '막스마라 클래식', en: 'Timeless', prompt: `Channel Max Mara timeless elegance. ANALYZE this woman's body, then create Italian sophistication that never ages.
+The DNA: enduring craft — camel coats, silk blouses, wool-crepe construction. Warm earth tones.
+Choose from: cashmere coat draped over shoulders + silk blouse + A-line midi skirt, structured coat-dress in warm neutral, or blazer + cream blouse + tailored trousers.
+Nude pointed-toe pumps, cognac leather structured handbag. Timeless, never trendy.` },
+    { id: 'weekend', ko: '위켄드 캐주얼', en: 'Weekend', prompt: `Create elevated French-girl weekend style. ANALYZE this woman's figure, then design effortlessly chic casual.
+The DNA: carefree femininity — midi skirts with sneakers, oversized knits, woven bags. Never sloppy.
+Choose from: oversized cashmere cardigan + fitted tee + midi skirt, relaxed shirt dress belted at waist, or Breton stripe + flowing skirt + sandals.
+Clean sneakers or woven sandals. Delicate gold hoop earrings, basket or canvas bag. Chic and carefree.` }
   ]
 }
 
@@ -73,22 +116,6 @@ async function transformWithGemini(
     const genderGuideHair = gender === 'female'
       ? 'This is a WOMAN. Style should be feminine and suit women.'
       : 'This is a MAN. The hairstyle should suit a man naturally. Perms, soft waves, textured styles are fine. Just avoid overly feminine or women\'s hairstyles.'
-
-    const genderGuideFashion = gender === 'female'
-      ? 'This is a WOMAN. The outfit MUST be soft and feminine - use dresses, blouses, cardigans, skirts in soft/pastel colors. NO masculine suits, NO blazers, NO formal business wear.'
-      : 'This is a MAN. The outfit MUST be masculine and designed for men. Use suits, shirts, masculine jackets, pants - NOT women\'s clothing.'
-
-    const beautyRetouch = gender === 'female'
-      ? `BEAUTY ENHANCEMENT for the face:
-- Apply soft, natural skin smoothing (reduce wrinkles and blemishes subtly)
-- Add gentle soft-focus glow effect on the face
-- Even out skin tone with warm, healthy glow
-- Keep the face looking NATURAL - not overly edited`
-      : `SUBTLE BEAUTY ENHANCEMENT for the face:
-- Apply light natural skin smoothing (reduce blemishes subtly)
-- Add subtle soft-focus glow effect on the face
-- Even out skin tone slightly for a clean, fresh look
-- Keep the face looking NATURAL and masculine - not overly edited`
 
     const editPrompt = type === 'hairstyle'
       ? `You are a world-class hair designer at a top salon. Analyze this person's face shape, skin tone, and features, then show them the perfect hairstyle — beautiful, stylish, and practical for everyday life.
@@ -122,72 +149,7 @@ CRITICAL - DO NOT CHANGE:
 Apply subtle beauty retouching: smooth clear skin, even skin tone, soft studio lighting.
 
 Generate the edited photo.`
-      : `You are the world's top personal stylist. Your job is to dress this person in the PERFECT outfit that complements their unique skin tone, face shape, and body proportions.
-
-EDIT this photo - ONLY change the OUTFIT of the MAIN PERSON to: ${style.prompt}
-
-STYLING APPROACH — PERSONAL COLOR ANALYSIS:
-- Examine skin undertone from the photo:
-  * WARM (golden, peachy, yellow): Best in terracotta, olive, camel, mustard, coral, cream. Avoid stark cool tones.
-  * COOL (pink, rosy, bluish): Best in navy, lavender, ice blue, emerald, burgundy, pearl white. Avoid warm yellows/oranges.
-- Dark skin + warm tones = striking harmony; light skin + cool tones = refined elegance
-- The specified color palette is a SUGGESTION — shift shades warmer or cooler to suit this person's undertone
-- Quality fabrics with natural texture and drape, not stiff or costume-like
-- Avoid overly theatrical, costume-like, or neon outfits — keep it realistic and tasteful
-${gender === 'male' ? '- Relaxed, comfortable silhouette — NOT tight, NOT skinny fit\n- Trousers with comfortable straight-leg or slightly wide drape, jackets with soft natural shoulders\n- Mix of relaxed tailored fit and easy casual fit — modern men prefer comfort over constriction' : '- STRONGLY prefer dresses, skirts, and feminine silhouettes over pants\n- Use wrap dresses, midi skirts, pleated skirts, A-line skirts, slip dresses, knit dresses\n- Emphasize waist definition, flowing fabrics, elegant draping\n- Think Reformation, Rouje, Sezane — modern feminine, NOT corporate or frumpy\n- Include heels, mules, or strappy sandals when appropriate'}
-
-BODY PROPORTION STYLING:
-- Observe body proportions and select silhouettes that FLATTER this build
-- For shorter torsos: visual waistline higher for longer leg line
-- Use vertical lines and monochromatic color flow for elongation
-
-CRITICAL: ${genderGuideFashion}
-
-${beautyRetouch}
-
-FOCUS ON MAIN SUBJECT ONLY:
-- Only edit the MAIN person in the center/foreground of the photo
-- If there are OTHER PEOPLE in the background, LEAVE THEM COMPLETELY UNCHANGED
-- Do NOT modify, remove, or add any other people
-
-BACKGROUND ENHANCEMENT:
-- If the background is dark, dingy, cluttered, or unflattering, SUBTLY brighten and clean it up
-- Increase brightness and warmth slightly to create a more editorial, lifestyle-magazine feel
-- Keep the background structure the same (same location/setting) — just improve lighting and tone
-- The person themselves must remain IDENTICAL — only the surrounding environment gets improved
-
-INPAINTING RULES - THIS IS AN INPAINTING TASK:
-1. ONLY replace the clothing/fabric within the MAIN PERSON's body silhouette
-2. DO NOT generate a new person or body - use the EXACT existing body outline
-3. The new clothes must fit WITHIN the original body boundaries
-4. Body parts (arms, legs, torso) stay in EXACT same position
-5. Clothing layers: body underneath, clothes on top - NEVER overlap incorrectly
-6. DO NOT extend the image or add new body parts that weren't visible
-
-BODY PROPORTION PRESERVATION (CRITICAL):
-- The person's BODY PROPORTIONS must stay EXACTLY the same as the original photo
-- LEG LENGTH must be IDENTICAL to the original — do NOT shorten or compress legs
-- TORSO-to-LEG ratio must match the original exactly
-- Waistline position must stay at the SAME height as in the original photo
-
-ABSOLUTE REQUIREMENTS - VIOLATION IS FAILURE:
-1. NEVER CROP OR ZOOM - output must have IDENTICAL framing as input
-2. NEVER change aspect ratio - if input is portrait, output is portrait
-3. Face position, size, and features MUST be PIXEL-PERFECT identical
-4. Keep EXACTLY what is visible in the original - do not extend or add content
-5. Hairstyle, hair color, skin tone base - ZERO changes allowed
-6. OTHER PEOPLE in the photo - ZERO changes allowed (background lighting may be subtly enhanced)
-7. Output resolution MUST match input resolution exactly
-8. Legs must be BEHIND/INSIDE pants or skirt - NEVER on top of clothing
-9. Arms must be THROUGH sleeves - NEVER floating above clothes
-10. Body proportions (especially leg length) - ZERO distortion allowed
-
-This is a clothing REPLACEMENT task for the MAIN ${genderWord} only.
-Keep the person's HEAD and FACE at the EXACT same position.
-The ${genderWord}'s clothes should naturally fit the existing body shape.
-DO NOT generate full body if original only shows partial body.
-
-Generate the edited photo with IDENTICAL composition to the input.`
+      : buildBrandEditPrompt({ brandDirective: style.prompt, gender })
 
     // Try OpenAI gpt-image-1.5 first
     if (openaiKey) {
