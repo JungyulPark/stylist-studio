@@ -7,16 +7,18 @@ interface Env {
   POLAR_PRODUCT_HAIR?: string
   POLAR_PRODUCT_FULL?: string
   POLAR_PRODUCT_DAILY_STYLE?: string
+  POLAR_PRODUCT_CHAT_TOKENS?: string
 }
 
 // Product 타입 정의
-type ProductType = 'hair' | 'full' | 'daily_style'
+type ProductType = 'hair' | 'full' | 'daily_style' | 'chat_tokens'
 
 // Production Product IDs
 const DEFAULT_PRODUCTS: Record<ProductType, string> = {
   hair: '3df2c89e-ce52-4792-b735-3eaa164c3927',
   full: '533aed39-303f-4746-afb0-d150aa294f64',
   daily_style: '2c761310-373e-4017-8141-8532748713c0',
+  chat_tokens: '32416265-c924-4176-be02-cbe49bf1294c',  // TODO: Polar에서 $0.99 일회성 상품 생성 후 교체
 }
 
 // 가격 정보 (표시용)
@@ -24,6 +26,7 @@ const PRICES: Record<ProductType, { amount: number; currency: string; display: s
   hair: { amount: 499, currency: 'USD', display: '$4.99' },  // Hair만
   full: { amount: 999, currency: 'USD', display: '$9.99' },  // Full 패키지
   daily_style: { amount: 699, currency: 'USD', display: '$6.99/mo', recurring: true },  // 월 구독
+  chat_tokens: { amount: 99, currency: 'USD', display: '$0.99' },  // 10회 채팅 토큰 (일회성)
 }
 
 // 재구매 할인 코드
@@ -43,8 +46,8 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
 
     // Product 타입 검증
     const productType = body.productType || 'full'
-    if (!['hair', 'full', 'daily_style'].includes(productType)) {
-      return errors.validation('Invalid product type. Use "hair", "full", or "daily_style"', corsHeaders)
+    if (!['hair', 'full', 'daily_style', 'chat_tokens'].includes(productType)) {
+      return errors.validation('Invalid product type. Use "hair", "full", "daily_style", or "chat_tokens"', corsHeaders)
     }
 
     // Product ID 결정 (환경변수 > 요청 파라미터 > 기본값)
@@ -52,6 +55,7 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
       hair: context.env.POLAR_PRODUCT_HAIR,
       full: context.env.POLAR_PRODUCT_FULL,
       daily_style: context.env.POLAR_PRODUCT_DAILY_STYLE,
+      chat_tokens: context.env.POLAR_PRODUCT_CHAT_TOKENS,
     }
 
     const productId = envProductIds[productType] || body.productId || DEFAULT_PRODUCTS[productType]
@@ -152,6 +156,17 @@ export const onRequestGet: PagesFunction<Env> = async (context) => {
             'Daily outfit recommendations',
             'Weather-based styling',
             'Cancel anytime'
+          ]
+        },
+        chat_tokens: {
+          name: 'Style Advisor Chat',
+          description: 'Chat with an AI stylist — 10 messages per purchase',
+          price: PRICES.chat_tokens,
+          features: [
+            '10 chat messages',
+            'Expert styling advice',
+            'Outfit & hair recommendations',
+            'One-time purchase'
           ]
         },
       }

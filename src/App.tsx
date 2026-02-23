@@ -57,7 +57,7 @@ const clearIndexedDB = async (): Promise<void> => {
 
 type Language = 'ko' | 'en' | 'ja' | 'zh' | 'es'
 type Gender = 'male' | 'female' | 'other' | null
-type Page = 'landing' | 'input' | 'loading' | 'result' | 'hair-selection' | 'hair-result' | 'how-to-use' | 'preview' | 'hair-preview' | 'login' | 'signup' | 'profile' | 'subscription-dashboard'
+type Page = 'landing' | 'input' | 'loading' | 'result' | 'hair-selection' | 'hair-result' | 'how-to-use' | 'preview' | 'hair-preview' | 'login' | 'signup' | 'profile' | 'subscription-dashboard' | 'style-chat'
 
 // 헤어스타일 상황 옵션
 interface HairOccasion {
@@ -414,6 +414,19 @@ const translations: Record<Language, {
   badgeRunway: string
   badgePersonalized: string
   badgeWeather: string
+  // Style Chat
+  chatTitle: string
+  chatPlaceholder: string
+  chatSend: string
+  chatBuyTokens: string
+  chatTokensLeft: string
+  chatWelcome: string
+  chatExample1: string
+  chatExample2: string
+  chatExample3: string
+  chatNoTokens: string
+  chatCardTitle: string
+  chatCardDesc: string
 }> = {
   ko: {
     title: 'PERSONAL STYLIST',
@@ -728,6 +741,18 @@ const translations: Record<Language, {
     badgeRunway: '런웨이 영감',
     badgePersonalized: '맞춤형',
     badgeWeather: '날씨 연동',
+    chatTitle: 'Style Advisor',
+    chatPlaceholder: '스타일 질문을 입력하세요...',
+    chatSend: '전송',
+    chatBuyTokens: '$0.99로 10회 충전',
+    chatTokensLeft: '회 남음',
+    chatWelcome: '안녕하세요! 저는 Tom Ford, Grace Coddington 등 세계 최고 스타일리스트들의 전문성을 결합한 AI 스타일 어드바이저입니다. 무엇이든 물어보세요.',
+    chatExample1: '오늘 뭐 입지?',
+    chatExample2: '이 옷에 어울리는 신발은?',
+    chatExample3: '직장 면접 코디 추천해줘',
+    chatNoTokens: '메시지 토큰이 없습니다. 충전 후 이용해주세요.',
+    chatCardTitle: 'Style Advisor',
+    chatCardDesc: 'AI 스타일리스트와 실시간 대화로 맞춤 패션 조언을 받아보세요',
   },
   en: {
     title: 'PERSONAL STYLIST',
@@ -1042,6 +1067,18 @@ const translations: Record<Language, {
     badgeRunway: 'RUNWAY-INSPIRED',
     badgePersonalized: 'PERSONALIZED',
     badgeWeather: 'WEATHER-AWARE',
+    chatTitle: 'Style Advisor',
+    chatPlaceholder: 'Ask your style question...',
+    chatSend: 'Send',
+    chatBuyTokens: 'Get 10 messages for $0.99',
+    chatTokensLeft: ' left',
+    chatWelcome: 'Hello! I\'m an AI style advisor combining the expertise of Tom Ford, Grace Coddington, and the world\'s top stylists. Ask me anything about fashion, outfits, or styling.',
+    chatExample1: 'What should I wear today?',
+    chatExample2: 'What shoes go with this outfit?',
+    chatExample3: 'Style me for a job interview',
+    chatNoTokens: 'No messages remaining. Purchase tokens to continue.',
+    chatCardTitle: 'Style Advisor',
+    chatCardDesc: 'Chat with an AI stylist for personalized fashion advice in real time',
   },
   ja: {
     title: 'PERSONAL STYLIST',
@@ -1356,6 +1393,18 @@ const translations: Record<Language, {
     badgeRunway: 'ランウェイ発',
     badgePersonalized: 'パーソナライズ',
     badgeWeather: '天気連動',
+    chatTitle: 'Style Advisor',
+    chatPlaceholder: 'スタイルの質問を入力...',
+    chatSend: '送信',
+    chatBuyTokens: '$0.99で10回チャージ',
+    chatTokensLeft: '回残り',
+    chatWelcome: 'こんにちは！トム・フォード、グレース・コディントンなど世界最高のスタイリストの専門知識を融合したAIスタイルアドバイザーです。何でもお気軽にどうぞ。',
+    chatExample1: '今日何を着ればいい？',
+    chatExample2: 'この服に合う靴は？',
+    chatExample3: '面接のコーデを提案して',
+    chatNoTokens: 'メッセージトークンがありません。チャージしてください。',
+    chatCardTitle: 'Style Advisor',
+    chatCardDesc: 'AIスタイリストとリアルタイムチャットでパーソナルファッションアドバイス',
   },
   zh: {
     title: 'PERSONAL STYLIST',
@@ -1670,6 +1719,18 @@ const translations: Record<Language, {
     badgeRunway: '秀场灵感',
     badgePersonalized: '个性定制',
     badgeWeather: '天气感知',
+    chatTitle: 'Style Advisor',
+    chatPlaceholder: '输入你的穿搭问题...',
+    chatSend: '发送',
+    chatBuyTokens: '$0.99充值10次',
+    chatTokensLeft: '次剩余',
+    chatWelcome: '你好！我是融合了Tom Ford、Grace Coddington等世界顶级造型师专业知识的AI风格顾问。随时提问吧。',
+    chatExample1: '今天穿什么好？',
+    chatExample2: '这件衣服配什么鞋？',
+    chatExample3: '推荐面试穿搭',
+    chatNoTokens: '消息次数已用完，请充值后继续。',
+    chatCardTitle: 'Style Advisor',
+    chatCardDesc: '与AI造型师实时对话，获取个性化时尚建议',
   },
   es: {
     title: 'PERSONAL STYLIST',
@@ -1984,6 +2045,18 @@ const translations: Record<Language, {
     badgeRunway: 'PASARELA',
     badgePersonalized: 'PERSONALIZADO',
     badgeWeather: 'CLIMA-ADAPTADO',
+    chatTitle: 'Style Advisor',
+    chatPlaceholder: 'Escribe tu pregunta de estilo...',
+    chatSend: 'Enviar',
+    chatBuyTokens: '10 mensajes por $0.99',
+    chatTokensLeft: ' restantes',
+    chatWelcome: 'Hola! Soy un asesor de estilo AI que combina la experiencia de Tom Ford, Grace Coddington y los mejores estilistas del mundo. Pregunta lo que quieras.',
+    chatExample1: 'Que me pongo hoy?',
+    chatExample2: 'Que zapatos van con este outfit?',
+    chatExample3: 'Look para entrevista de trabajo',
+    chatNoTokens: 'No quedan mensajes. Compra tokens para continuar.',
+    chatCardTitle: 'Style Advisor',
+    chatCardDesc: 'Chatea con un estilista AI para consejos de moda personalizados en tiempo real',
   }
 }
 
@@ -2415,6 +2488,16 @@ function App() {
   // Fullscreen image viewer
   const [fullscreenImage, setFullscreenImage] = useState<string | null>(null)
 
+  // Style Chat state
+  const [chatMessages, setChatMessages] = useState<{role: 'user' | 'assistant', content: string}[]>([])
+  const [chatInput, setChatInput] = useState('')
+  const [chatTokens, setChatTokens] = useState(() => {
+    const stored = localStorage.getItem('stylist_chat_tokens')
+    return stored ? parseInt(stored, 10) || 0 : 0
+  })
+  const [chatLoading, setChatLoading] = useState(false)
+  const chatMessagesEndRef = useRef<HTMLDivElement>(null)
+
   const feetInchesToCm = (feet: string, inches: string): string => {
     const ft = parseFloat(feet) || 0
     const inch = parseFloat(inches) || 0
@@ -2467,6 +2550,11 @@ function App() {
     trackPageView(newPage)
     if (newPage === 'landing') trackEvent('funnel_step', { step_name: 'landing_view', step_number: 1 })
   }, [])
+
+  // Chat auto-scroll
+  useEffect(() => {
+    chatMessagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
+  }, [chatMessages, chatLoading])
 
   // 브라우저 뒤로가기 이벤트 처리
   useEffect(() => {
@@ -2567,6 +2655,17 @@ function App() {
             console.error('Failed to record referral:', e)
           }
         })()
+      }
+
+      // 챗 토큰 결제 성공 처리
+      if (purchasedProductType === 'chat_tokens') {
+        trackEvent('purchase', { product: 'chat_tokens', currency: 'USD', value: 0.99 })
+        const newTokens = chatTokens + 10
+        setChatTokens(newTokens)
+        localStorage.setItem('stylist_chat_tokens', String(newTokens))
+        window.history.replaceState({ page: 'style-chat' }, '', '#style-chat')
+        setPageState('style-chat')
+        return
       }
 
       // 구독 결제 성공 처리
@@ -3249,6 +3348,64 @@ function App() {
     trackEvent('result_view', { type: 'hair', paid: true })
     trackEvent('funnel_step', { step_name: 'result_view', step_number: 6 })
     setPage('hair-result')
+  }
+
+  // Style Chat — 메시지 전송
+  const handleChatSend = async () => {
+    const msg = chatInput.trim()
+    if (!msg || chatLoading) return
+    if (chatTokens <= 0) return
+
+    const newUserMessage = { role: 'user' as const, content: msg }
+    const updatedMessages = [...chatMessages, newUserMessage]
+    setChatMessages(updatedMessages)
+    setChatInput('')
+    setChatLoading(true)
+
+    // 토큰 차감
+    const newTokens = chatTokens - 1
+    setChatTokens(newTokens)
+    localStorage.setItem('stylist_chat_tokens', String(newTokens))
+
+    try {
+      const res = await fetch('/api/style-chat', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          message: msg,
+          history: updatedMessages.slice(-10),
+          language: lang,
+        })
+      })
+
+      if (!res.ok) throw new Error(`API error: ${res.status}`)
+      const data = await res.json() as { reply: string }
+      setChatMessages(prev => [...prev, { role: 'assistant', content: data.reply }])
+    } catch {
+      setChatMessages(prev => [...prev, { role: 'assistant', content: lang === 'ko' ? '죄송합니다. 일시적인 오류가 발생했습니다. 다시 시도해주세요.' : 'Sorry, something went wrong. Please try again.' }])
+      // 오류 시 토큰 복구
+      const restoredTokens = newTokens + 1
+      setChatTokens(restoredTokens)
+      localStorage.setItem('stylist_chat_tokens', String(restoredTokens))
+    } finally {
+      setChatLoading(false)
+    }
+  }
+
+  const handleChatBuyTokens = async () => {
+    try {
+      localStorage.setItem('productType', 'chat_tokens')
+      const res = await fetch('/api/create-checkout', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ productType: 'chat_tokens' })
+      })
+      if (!res.ok) throw new Error('Checkout failed')
+      const data = await res.json() as { url: string }
+      if (data.url) window.location.href = data.url
+    } catch {
+      setError('Payment service temporarily unavailable')
+    }
   }
 
   // 구독 폼 열기
@@ -5684,6 +5841,22 @@ ${hairImgs.length > 0 ? `<div class="section"><h2>${hairSection}</h2><div class=
                 </div>
               </div>
             </div>
+
+            {/* Row 3: Style Chat Advisor */}
+            <div className="path-row-bottom">
+              <div className="path-card-v2 chat-card" onClick={() => { trackEvent('select_item', { item_category: 'style_chat' }); setPage('style-chat') }}>
+                <div className="chat-card-gradient"></div>
+                <div className="path-content-v2">
+                  <div className="path-header-v2">
+                    <span className="path-module-v2">STYLE CHAT</span>
+                    {chatTokens > 0 && <span className="trial-badge">{chatTokens}{t.chatTokensLeft}</span>}
+                  </div>
+                  <h3 className="path-title-v2">{t.chatCardTitle}</h3>
+                  <p className="path-desc-v2">{t.chatCardDesc}</p>
+                  <div className="path-cta-v2 gold">{t.chatBuyTokens}</div>
+                </div>
+              </div>
+            </div>
           </div>
         </section>
 
@@ -7073,6 +7246,92 @@ ${hairImgs.length > 0 ? `<div class="section"><h2>${hairSection}</h2><div class=
         {favoriteToast && (
           <div className="favorite-toast">{favoriteToast}</div>
         )}
+        </div>
+      </div>
+    )
+  }
+
+  // Style Chat Page
+  if (page === 'style-chat') {
+    return (
+      <div className="chat-page">
+        <header className="chat-header">
+          <button className="back-btn" onClick={() => setPage('landing')}>
+            ← {t.backToHome}
+          </button>
+          <h1 className="chat-title">{t.chatTitle}</h1>
+          <div className="chat-token-badge">
+            {chatTokens > 0 ? `${chatTokens}${t.chatTokensLeft}` : '0'}
+          </div>
+        </header>
+
+        <div className="chat-container">
+          <div className="chat-messages">
+            {/* Welcome message */}
+            {chatMessages.length === 0 && (
+              <div className="chat-welcome">
+                <div className="chat-bubble-assistant">
+                  <p>{t.chatWelcome}</p>
+                </div>
+                <div className="chat-examples">
+                  <button className="chat-example-btn" onClick={() => { setChatInput(t.chatExample1) }}>
+                    {t.chatExample1}
+                  </button>
+                  <button className="chat-example-btn" onClick={() => { setChatInput(t.chatExample2) }}>
+                    {t.chatExample2}
+                  </button>
+                  <button className="chat-example-btn" onClick={() => { setChatInput(t.chatExample3) }}>
+                    {t.chatExample3}
+                  </button>
+                </div>
+              </div>
+            )}
+
+            {/* Chat messages */}
+            {chatMessages.map((msg, i) => (
+              <div key={i} className={`chat-bubble-${msg.role}`}>
+                <p>{msg.content}</p>
+              </div>
+            ))}
+
+            {/* Loading indicator */}
+            {chatLoading && (
+              <div className="chat-bubble-assistant chat-typing">
+                <span></span><span></span><span></span>
+              </div>
+            )}
+            <div ref={chatMessagesEndRef} />
+          </div>
+
+          {/* Input bar */}
+          {chatTokens > 0 ? (
+            <div className="chat-input-bar">
+              <input
+                type="text"
+                className="chat-input"
+                placeholder={t.chatPlaceholder}
+                value={chatInput}
+                onChange={(e) => setChatInput(e.target.value)}
+                onKeyDown={(e) => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); handleChatSend() } }}
+                disabled={chatLoading}
+                maxLength={1000}
+              />
+              <button
+                className="chat-send-btn"
+                onClick={handleChatSend}
+                disabled={!chatInput.trim() || chatLoading}
+              >
+                {t.chatSend}
+              </button>
+            </div>
+          ) : (
+            <div className="chat-input-bar chat-no-tokens">
+              <p className="chat-no-tokens-text">{t.chatNoTokens}</p>
+              <button className="btn-gold chat-buy-btn" onClick={handleChatBuyTokens}>
+                {t.chatBuyTokens}
+              </button>
+            </div>
+          )}
         </div>
       </div>
     )
