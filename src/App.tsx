@@ -5842,18 +5842,23 @@ ${hairImgs.length > 0 ? `<div class="section"><h2>${hairSection}</h2><div class=
               </div>
             </div>
 
-            {/* Row 3: Style Chat Advisor */}
-            <div className="path-row-bottom">
-              <div className="path-card-v2 chat-card" onClick={() => { trackEvent('select_item', { item_category: 'style_chat' }); setPage('style-chat') }}>
-                <div className="chat-card-gradient"></div>
-                <div className="path-content-v2">
-                  <div className="path-header-v2">
-                    <span className="path-module-v2">STYLE CHAT</span>
-                    {chatTokens > 0 && <span className="trial-badge">{chatTokens}{t.chatTokensLeft}</span>}
-                  </div>
-                  <h3 className="path-title-v2">{t.chatCardTitle}</h3>
-                  <p className="path-desc-v2">{t.chatCardDesc}</p>
-                  <div className="path-cta-v2 gold">{t.chatBuyTokens}</div>
+            {/* Row 3: Style Chat Advisor — editorial card */}
+            <div className="chat-promo-card" onClick={() => { trackEvent('select_item', { item_category: 'style_chat' }); setPage('style-chat') }}>
+              <div className="chat-promo-left">
+                <span className="chat-promo-tag">STYLE CHAT</span>
+                <h3 className="chat-promo-title">{t.chatCardTitle}</h3>
+                <p className="chat-promo-desc">{t.chatCardDesc}</p>
+                <div className="chat-promo-cta">
+                  <span className="btn-gold chat-promo-btn">{t.chatBuyTokens}</span>
+                  {chatTokens > 0 && <span className="chat-promo-tokens">{chatTokens}{t.chatTokensLeft}</span>}
+                </div>
+              </div>
+              <div className="chat-promo-right">
+                <div className="chat-promo-preview">
+                  <div className="chat-preview-bubble user">{t.chatExample1}</div>
+                  <div className="chat-preview-bubble assistant">{lang === 'ko' ? '오늘 같은 날씨엔 라이트 베이지 트렌치코트에 화이트 니트, 스트레이트 데님을 추천드려요. 깔끔하면서도 세련된 느낌을 줍니다.' : 'I\'d suggest a light beige trench with a white knit and straight-leg denim. Clean, effortless, and refined.'}</div>
+                  <div className="chat-preview-bubble user">{t.chatExample2}</div>
+                  <div className="chat-preview-typing"><span></span><span></span><span></span></div>
                 </div>
               </div>
             </div>
