@@ -384,10 +384,48 @@ function getCasualPrompt(gender: string, temp: number): string {
   return `clean everyday casual outfit (${p.tone}): ${p.c3} cotton sweatshirt or crewneck knit, ${m.bottom} in ${p.c1}, clean sneakers, simple ${p.accent} watch. ${arch}`
 }
 
+// ─── Expert Stylist ANALYZE Directive ────────────────────────────
+// Wraps weather-based outfit prompts with body analysis directives
+// for dramatically better personalization (matching generate-styles quality)
+function wrapWithExpertDirective(basePrompt: string, gender: string, scenarioType: 'dressy' | 'casual'): string {
+  const analyzeBlock = gender === 'female'
+    ? `FIRST, ANALYZE this woman's body type, skin tone, face shape, and proportions from the photo.
+Then ADAPT the outfit below to be MOST FLATTERING for HER specific body:
+- Long legs → show with the right hemline and silhouette
+- Defined waist → emphasize with belts, fitted mid-sections, or wrap elements
+- Broad shoulders → balance with V-necklines, A-line shapes, or wide-leg bottoms
+- Petite frame → elongate with high waist, monochromatic palette, pointed-toe shoes
+- Curvy figure → highlight with X-silhouette, defined waist, vertical lines
+STRONGLY prefer dresses, skirts, and feminine silhouettes when possible.
+Emphasize waist definition, flowing fabrics, elegant draping.`
+    : `FIRST, ANALYZE this man's body type, skin tone, face shape, and proportions from the photo.
+Then ADAPT the outfit below to be MOST FLATTERING for HIS specific body:
+- Broad shoulders → lean into structured pieces, clean lines
+- Slim build → add visual presence with layered textures, structured shoulders
+- Athletic build → showcase with fitted knits, well-proportioned trousers
+- Fuller build → elongate with vertical lines, V-necks, dark monochromatic tones
+Relaxed comfortable silhouette — NOT tight, NOT skinny fit.
+Trousers with straight-leg or slightly wide drape, soft natural shoulders.`
+
+  const emotionBlock = scenarioType === 'dressy'
+    ? 'This should be their BEST polished look — think editorial magazine cover.'
+    : 'This should feel effortlessly chic — styled but not trying too hard.'
+
+  return `${analyzeBlock}
+
+OUTFIT DIRECTION (adapt colors/fabrics to this person's skin undertone):
+${basePrompt}
+
+${emotionBlock}
+The specified colors are SUGGESTIONS — shift warmer or cooler to match this person's undertone.
+WARM skin (golden, peachy) → terracotta, camel, olive, cream work best.
+COOL skin (pink, rosy) → navy, lavender, emerald, pearl white work best.`
+}
+
 export function getDailyScenarios(weather: WeatherInfo, gender: string): ImageScenario[] {
   return [
-    { id: 'dressy', prompt: getTodaysPickPrompt(weather, gender) },
-    { id: 'casual', prompt: getCasualPrompt(gender, weather.temp) },
+    { id: 'dressy', prompt: wrapWithExpertDirective(getTodaysPickPrompt(weather, gender), gender, 'dressy') },
+    { id: 'casual', prompt: wrapWithExpertDirective(getCasualPrompt(gender, weather.temp), gender, 'casual') },
   ]
 }
 

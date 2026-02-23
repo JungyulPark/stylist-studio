@@ -291,20 +291,33 @@ ${languagePrompts[language] || languagePrompts.en}
 
 Provide a detailed, personalized style report with general recommendations based on body type and proportions.`
 
-    // OpenAI Chat Completions API 호출 (with model fallback)
+    // 사진 크기 로깅 (디버그)
+    if (hasPhoto) {
+      const photoSizeKB = Math.round(photo.length / 1024)
+      console.log(`[analyze] Photo size: ${photoSizeKB}KB (base64), detail: ${photoSizeKB > 500 ? 'low' : 'high'}`)
+    }
+
+    // 대용량 사진은 detail: low로 전환 (500KB+ base64 = 약 375KB 원본)
+    const imageDetail = (hasPhoto && photo.length > 512_000) ? 'low' : 'high'
+
+    // OpenAI Chat Completions API 호출 (with model fallback + per-model timeout)
     const userContent = hasPhoto
       ? [
           { type: 'text', text: userMessage },
-          { type: 'image_url', image_url: { url: photo, detail: 'high' } }
+          { type: 'image_url', image_url: { url: photo, detail: imageDetail } }
         ]
       : userMessage
 
     let report = ''
     let lastError = ''
+    const MODEL_TIMEOUT_MS = 25_000 // 25초 per model (Cloudflare 30s CPU limit 고려)
 
     for (const model of MODELS) {
       try {
         console.log(`[analyze] Trying model: ${model}`)
+        const controller = new AbortController()
+        const timeoutId = setTimeout(() => controller.abort(), MODEL_TIMEOUT_MS)
+
         const response = await fetch('https://api.openai.com/v1/chat/completions', {
           method: 'POST',
           headers: {
@@ -322,8 +335,11 @@ Provide a detailed, personalized style report with general recommendations based
             ],
             max_completion_tokens: 1500,
             temperature: 0.7
-          })
+          }),
+          signal: controller.signal
         })
+
+        clearTimeout(timeoutId)
 
         if (!response.ok) {
           const errorData = await response.text()
@@ -342,7 +358,8 @@ Provide a detailed, personalized style report with general recommendations based
           break
         }
       } catch (e) {
-        lastError = `${model}: ${e}`
+        const isTimeout = e instanceof DOMException && e.name === 'AbortError'
+        lastError = `${model}: ${isTimeout ? 'TIMEOUT after 25s' : e}`
         console.error(`[analyze] ${lastError}`)
       }
     }

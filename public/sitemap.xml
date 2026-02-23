@@ -57,6 +57,28 @@
       <image:caption>사진 한 장으로 나만의 퍼스널 스타일을 발견하세요. 5가지 헤어스타일과 7가지 럭셔리 패션을 추천합니다.</image:caption>
       <image:geo_location>Seoul, South Korea</image:geo_location>
     </image:image>
+
+    <!-- Gallery Before/After images -->
+    <image:image>
+      <image:loc>https://kstylist.cc/gallery/ba-hair-f1-after.webp</image:loc>
+      <image:title>AI Hair Transformation - Women Style 1</image:title>
+      <image:caption>AI-powered hair transformation: elegant layered bob from plain straight hair</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://kstylist.cc/gallery/ba-hair-f2-after.webp</image:loc>
+      <image:title>AI Hair Transformation - Women Style 2</image:title>
+      <image:caption>AI-powered hair transformation: trendy curtain bangs with soft waves</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://kstylist.cc/gallery/ba-hair-m1-after.webp</image:loc>
+      <image:title>AI Hair Transformation - Men Style 1</image:title>
+      <image:caption>AI-powered hair transformation: trendy two-block haircut for men</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://kstylist.cc/gallery/ba-outfit-1-after.webp</image:loc>
+      <image:title>AI Outfit Transformation</image:title>
+      <image:caption>AI-powered outfit styling: luxury brand inspired coordination</image:caption>
+    </image:image>
   </url>
 
 </urlset>

@@ -289,6 +289,7 @@ const translations: Record<Language, {
   freeTrialBadge: string
   freeTrialCta: string
   freeTrialDesc: string
+  freeTrialRemaining: string
   upsellTitle: string
   upsellSubtitle: string
   upsellHairAgain: string
@@ -362,6 +363,9 @@ const translations: Record<Language, {
   favoritesEmpty: string
   favoritesGallery: string
   saveImage: string
+  // Before/After Gallery
+  galleryBefore: string
+  galleryAfter: string
   // Referral
   referralTitle: string
   referralDesc: string
@@ -611,7 +615,8 @@ const translations: Record<Language, {
     cancel: '취소',
     freeTrialBadge: 'FREE',
     freeTrialCta: '무료 헤어 분석 체험',
-    freeTrialDesc: '첫 방문 특별 혜택 - 무료 1회 헤어 분석',
+    freeTrialDesc: '특별 혜택 - 무료 3회 헤어 분석',
+    freeTrialRemaining: '무료 {n}회 남음',
     upsellTitle: '결과가 마음에 드셨나요?',
     upsellSubtitle: '더 많은 스타일을 만나보세요',
     upsellHairAgain: '헤어 분석 추가',
@@ -679,6 +684,8 @@ const translations: Record<Language, {
     favoritesEmpty: '아직 즐겨찾기가 없습니다',
     favoritesGallery: '즐겨찾기',
     saveImage: '이미지 저장',
+    galleryBefore: 'Before',
+    galleryAfter: 'After',
     referralTitle: '친구 초대하고 무료 스타일 받기',
     referralDesc: '친구가 결제하면 무료 헤어 스타일링 크레딧을 받아요',
     referralInvited: '명 초대 완료',
@@ -922,7 +929,8 @@ const translations: Record<Language, {
     cancel: 'Cancel',
     freeTrialBadge: 'FREE',
     freeTrialCta: 'Try Free Hair Analysis',
-    freeTrialDesc: 'First visit special - 1 free hair analysis',
+    freeTrialDesc: 'Special offer - 3 free hair analyses',
+    freeTrialRemaining: '{n} free left',
     upsellTitle: 'Love your results?',
     upsellSubtitle: 'Discover even more styles',
     upsellHairAgain: 'Get Another Hair Analysis',
@@ -990,6 +998,8 @@ const translations: Record<Language, {
     favoritesEmpty: 'No favorites yet',
     favoritesGallery: 'Favorites',
     saveImage: 'Save Image',
+    galleryBefore: 'Before',
+    galleryAfter: 'After',
     referralTitle: 'Invite Friends, Get Free Styles',
     referralDesc: 'Earn a free hair styling credit when your friend makes a purchase',
     referralInvited: ' friends invited',
@@ -1233,7 +1243,8 @@ const translations: Record<Language, {
     cancel: 'キャンセル',
     freeTrialBadge: 'FREE',
     freeTrialCta: '無料ヘア分析を体験',
-    freeTrialDesc: '初回限定 - 無料ヘア分析1回',
+    freeTrialDesc: '特別特典 - 無料ヘア分析3回',
+    freeTrialRemaining: '残り{n}回無料',
     upsellTitle: '結果はいかがでしたか？',
     upsellSubtitle: 'もっと多くのスタイルを発見',
     upsellHairAgain: 'ヘア分析をもう一度',
@@ -1301,6 +1312,8 @@ const translations: Record<Language, {
     favoritesEmpty: 'まだお気に入りがありません',
     favoritesGallery: 'お気に入り',
     saveImage: '画像を保存',
+    galleryBefore: 'Before',
+    galleryAfter: 'After',
     referralTitle: '友達を招待して無料スタイルをゲット',
     referralDesc: '友達が購入すると無料ヘアスタイリングクレジットがもらえます',
     referralInvited: '人招待済み',
@@ -1544,7 +1557,8 @@ const translations: Record<Language, {
     cancel: '取消',
     freeTrialBadge: 'FREE',
     freeTrialCta: '免费体验发型分析',
-    freeTrialDesc: '首次访问特惠 - 免费1次发型分析',
+    freeTrialDesc: '特别优惠 - 免费3次发型分析',
+    freeTrialRemaining: '剩余{n}次免费',
     upsellTitle: '对结果满意吗？',
     upsellSubtitle: '发现更多风格',
     upsellHairAgain: '再来一次发型分析',
@@ -1612,6 +1626,8 @@ const translations: Record<Language, {
     favoritesEmpty: '暂无收藏',
     favoritesGallery: '收藏',
     saveImage: '保存图片',
+    galleryBefore: 'Before',
+    galleryAfter: 'After',
     referralTitle: '邀请好友，获得免费造型',
     referralDesc: '好友购买后您将获得免费发型设计积分',
     referralInvited: '位好友已邀请',
@@ -1855,7 +1871,8 @@ const translations: Record<Language, {
     cancel: 'Cancelar',
     freeTrialBadge: 'FREE',
     freeTrialCta: 'Prueba Análisis Capilar Gratis',
-    freeTrialDesc: 'Especial primera visita - 1 análisis capilar gratis',
+    freeTrialDesc: 'Oferta especial - 3 análisis capilares gratis',
+    freeTrialRemaining: '{n} gratis restantes',
     upsellTitle: '¿Te gustan los resultados?',
     upsellSubtitle: 'Descubre aún más estilos',
     upsellHairAgain: 'Otro Análisis Capilar',
@@ -1923,6 +1940,8 @@ const translations: Record<Language, {
     favoritesEmpty: 'Aún no hay favoritos',
     favoritesGallery: 'Favoritos',
     saveImage: 'Guardar Imagen',
+    galleryBefore: 'Before',
+    galleryAfter: 'After',
     referralTitle: 'Invita amigos y obtén estilos gratis',
     referralDesc: 'Gana un crédito de peinado gratis cuando tu amigo realice una compra',
     referralInvited: ' amigos invitados',
@@ -2330,8 +2349,20 @@ function App() {
   const [useMetric, setUseMetric] = useState(() => lang !== 'en')
   const isImperial = !useMetric
 
-  // Free Trial state
-  const [hasUsedFreeTrial, setHasUsedFreeTrial] = useState(() => localStorage.getItem('stylist_free_trial_used') === 'true')
+  // Free Trial state (3회 무료)
+  const [freeTrialCount, setFreeTrialCount] = useState(() => {
+    // 기존 사용자 마이그레이션: boolean → number
+    const oldFlag = localStorage.getItem('stylist_free_trial_used')
+    const stored = localStorage.getItem('stylist_free_trial_count')
+    if (stored !== null) return Math.min(parseInt(stored, 10) || 0, 3)
+    if (oldFlag === 'true') {
+      localStorage.setItem('stylist_free_trial_count', '1')
+      return 1
+    }
+    return 0
+  })
+  const hasFreeTrial = freeTrialCount < 3
+  const freeTrialRemaining = 3 - freeTrialCount
   const [isFreeTrial, setIsFreeTrial] = useState(false)
 
   // Subscription state
@@ -2474,8 +2505,10 @@ function App() {
           const result = data as { valid?: boolean }
           if (result.valid) {
             localStorage.setItem('stylist_referral_code', refCode)
+            // 리퍼럴 코드 사용 시 무료 체험 카운터 리셋
+            localStorage.setItem('stylist_free_trial_count', '0')
             localStorage.removeItem('stylist_free_trial_used')
-            setHasUsedFreeTrial(false)
+            setFreeTrialCount(0)
           }
         })
         .catch(() => { /* 검증 실패 시 무시 — 리셋 안 함 */ })
@@ -3154,10 +3187,11 @@ function App() {
 
   // 무료 체험 헤어 생성 (결제 없음)
   const startFreeTrialHairGeneration = async () => {
-    trackEvent('free_trial_start', { type: 'hair' })
-    // 즉시 localStorage에 저장 (악용 방지)
-    localStorage.setItem('stylist_free_trial_used', 'true')
-    setHasUsedFreeTrial(true)
+    trackEvent('free_trial_start', { type: 'hair', trial_number: freeTrialCount + 1 })
+    // 즉시 카운터 증가 + localStorage 저장 (악용 방지)
+    const newCount = freeTrialCount + 1
+    localStorage.setItem('stylist_free_trial_count', String(newCount))
+    setFreeTrialCount(newCount)
     setIsFreeTrial(true)
 
     setPage('loading')
@@ -4183,8 +4217,8 @@ ${hairImgs.length > 0 ? `<div class="section"><h2>${hairSection}</h2><div class=
       return
     }
 
-    // 사진이 있고 결제 안됨 + 무료 체험 미사용 → 무료 체험 실행
-    if (hairPhoto && !isHairPaid && !hasUsedFreeTrial) {
+    // 사진이 있고 결제 안됨 + 무료 체험 남아있음 → 무료 체험 실행
+    if (hairPhoto && !isHairPaid && hasFreeTrial) {
       startFreeTrialHairGeneration()
       return
     }
@@ -4596,7 +4630,7 @@ ${hairImgs.length > 0 ? `<div class="section"><h2>${hairSection}</h2><div class=
   const handleLogout = () => {
     console.log('Logout button clicked!')
     // Clear user-specific localStorage data on logout
-    // Note: Do NOT remove stylist_free_trial_used — free trial is per-browser, not per-session
+    // Note: Do NOT remove stylist_free_trial_count — free trial is per-browser, not per-session
     localStorage.removeItem('stylist_subscription_active')
     localStorage.removeItem('stylist_subscription_checkout_id')
     localStorage.removeItem('paidCustomer')
@@ -4604,7 +4638,7 @@ ${hairImgs.length > 0 ? `<div class="section"><h2>${hairSection}</h2><div class=
     localStorage.removeItem('pendingAnalysisFlag')
     localStorage.removeItem('productType')
     localStorage.removeItem('pending_subscription_data')
-    // Reset state (hasUsedFreeTrial is intentionally NOT reset — free trial is per-browser)
+    // Reset state (freeTrialCount is intentionally NOT reset — free trial is per-browser)
     setIsSubscribed(false)
     setStyleImages([])
     setGeneratedHairImages([])
@@ -5496,7 +5530,7 @@ ${hairImgs.length > 0 ? `<div class="section"><h2>${hairSection}</h2><div class=
             </h1>
             <p className="hero-desc">{t.heroDesc}</p>
             <div className="hero-buttons">
-              {!hasUsedFreeTrial ? (
+              {hasFreeTrial ? (
                 <button className="free-cta-pulse" onClick={() => { trackEvent('hero_cta_click', { type: 'free_trial' }); setPage('hair-selection') }}>
                   {t.freeTrialCta}
                 </button>
@@ -5637,10 +5671,10 @@ ${hairImgs.length > 0 ? `<div class="section"><h2>${hairSection}</h2><div class=
                 <div className="path-content-v2">
                   <div className="path-header-v2">
                     <span className="path-module-v2">HAIR STYLING</span>
-                    {!hasUsedFreeTrial && <span className="free-badge">{t.freeTrialBadge}</span>}
+                    {hasFreeTrial && <span className="free-badge">{t.freeTrialBadge} {freeTrialRemaining}/3</span>}
                   </div>
                   <h3 className="path-title-v2">{t.module1Title}</h3>
-                  <p className="path-desc-v2">{!hasUsedFreeTrial ? t.freeTrialDesc : t.module1Desc}</p>
+                  <p className="path-desc-v2">{hasFreeTrial ? t.freeTrialDesc : t.module1Desc}</p>
                   <ul className="path-features-v2">
                     {t.module1Features.map((feature, i) => (
                       <li key={i}>{feature}</li>
@@ -5669,6 +5703,69 @@ ${hairImgs.length > 0 ? `<div class="section"><h2>${hairSection}</h2><div class=
             <div className="how-strip-step">
               <span className="how-strip-num">3</span>
               <span>{t.serviceStep3}</span>
+            </div>
+          </div>
+        </section>
+
+        {/* Before/After Gallery */}
+        <section className="gallery-section">
+          <div className="gallery-header">
+            <span className="gallery-tag">BEFORE & AFTER</span>
+            <h2 className="gallery-title">{t.galleryTitle}</h2>
+            <p className="gallery-subtitle">{t.gallerySubtitle}</p>
+          </div>
+          <div className="gallery-grid">
+            <div className="gallery-item">
+              <div className="gallery-pair">
+                <div className="gallery-before">
+                  <span className="gallery-label">{t.galleryBefore}</span>
+                  <img src="/gallery/before-female.png" alt="Before - Female" loading="lazy" />
+                </div>
+                <div className="gallery-after">
+                  <span className="gallery-label gallery-label-after">{t.galleryAfter}</span>
+                  <img src="/gallery/after-female-best.png" alt="After - Best Match" loading="lazy" />
+                </div>
+              </div>
+              <span className="gallery-occasion">Best Match</span>
+            </div>
+            <div className="gallery-item">
+              <div className="gallery-pair">
+                <div className="gallery-before">
+                  <span className="gallery-label">{t.galleryBefore}</span>
+                  <img src="/gallery/before-female.png" alt="Before - Female" loading="lazy" />
+                </div>
+                <div className="gallery-after">
+                  <span className="gallery-label gallery-label-after">{t.galleryAfter}</span>
+                  <img src="/gallery/after-female-date.png" alt="After - Date" loading="lazy" />
+                </div>
+              </div>
+              <span className="gallery-occasion">Date Night</span>
+            </div>
+            <div className="gallery-item">
+              <div className="gallery-pair">
+                <div className="gallery-before">
+                  <span className="gallery-label">{t.galleryBefore}</span>
+                  <img src="/gallery/before-male.png" alt="Before - Male" loading="lazy" />
+                </div>
+                <div className="gallery-after">
+                  <span className="gallery-label gallery-label-after">{t.galleryAfter}</span>
+                  <img src="/gallery/after-male-best.png" alt="After - Best Match" loading="lazy" />
+                </div>
+              </div>
+              <span className="gallery-occasion">Best Match</span>
+            </div>
+            <div className="gallery-item">
+              <div className="gallery-pair">
+                <div className="gallery-before">
+                  <span className="gallery-label">{t.galleryBefore}</span>
+                  <img src="/gallery/before-male.png" alt="Before - Male" loading="lazy" />
+                </div>
+                <div className="gallery-after">
+                  <span className="gallery-label gallery-label-after">{t.galleryAfter}</span>
+                  <img src="/gallery/after-male-casual.png" alt="After - Casual" loading="lazy" />
+                </div>
+              </div>
+              <span className="gallery-occasion">Casual</span>
             </div>
           </div>
         </section>
@@ -6568,7 +6665,7 @@ ${hairImgs.length > 0 ? `<div class="section"><h2>${hairSection}</h2><div class=
 
             <div className="photo-upload-section">
               <h3 className="selection-title">
-                {!hasUsedFreeTrial ? t.freeUploadText : (lang === 'ko' ? '내 사진 업로드 (선택)' : 'Upload My Photo (Optional)')}
+                {hasFreeTrial ? t.freeUploadText : (lang === 'ko' ? '내 사진 업로드 (선택)' : 'Upload My Photo (Optional)')}
               </h3>
               <p className="photo-upload-desc">
                 {lang === 'ko'
@@ -6597,7 +6694,7 @@ ${hairImgs.length > 0 ? `<div class="section"><h2>${hairSection}</h2><div class=
               />
             </div>
 
-            {user && referralStats.credits > 0 && hasUsedFreeTrial && (
+            {user && referralStats.credits > 0 && !hasFreeTrial && (
               <div className="referral-credit-badge">
                 {referralStats.credits}x {t.referralCreditAvailable}
               </div>
