@@ -440,27 +440,41 @@ export function getWorkScenarios(jobType: string): ScenarioConfig[] {
   return [
     {
       id: 'work-signature',
-      labelKo: '시그니처 디자이너', labelEn: 'Signature Designer', labelJa: 'シグネチャー', labelZh: '设计师签名款', labelEs: 'Firma del Diseñador',
-      directiveMale: `${job.male}\n\nSTYLE: SIGNATURE DESIGNER — The hero look. Analyze this person's face shape, skin tone, and body proportions, then choose THE single best color and fit for them. This is the #1 recommendation — the color and cut that makes them look their absolute best in this uniform.`,
-      directiveFemale: `${job.female}\n\nSTYLE: SIGNATURE DESIGNER — The hero look. Analyze this person's face shape, skin tone, and body proportions, then choose THE single best color and fit for them. This is the #1 recommendation — the color and cut that makes them look their absolute best in this uniform.`,
+      labelKo: '베스트 컬러', labelEn: 'Best Color', labelJa: 'ベストカラー', labelZh: '最佳色彩', labelEs: 'Mejor Color',
+      directiveMale: `${job.male}\n\nCOLOR STRATEGY: Analyze this person's ACTUAL skin undertone, hair color, and eye color from the photo. Then choose the ONE scrub color that makes their face look the most vibrant and healthy. Do NOT default to grey or green — consider deep navy, rich burgundy, warm teal, classic ceil blue, or even white if it suits them. The goal is: when this person looks in the mirror, they think "this color makes me look GOOD."`,
+      directiveFemale: `${job.female}\n\nCOLOR STRATEGY: Analyze this person's ACTUAL skin undertone, hair color, and eye color from the photo. Then choose the ONE scrub color that makes their face look the most vibrant and healthy. Do NOT default to grey or green — consider deep navy, rich burgundy, warm teal, dusty rose, classic ceil blue, or even white if it suits them. The goal is: when this person looks in the mirror, they think "this color makes me look GOOD."`,
     },
     {
-      id: 'work-warm-tone',
-      labelKo: '웜톤 매치', labelEn: 'Warm Tone Match', labelJa: 'ウォームトーン', labelZh: '暖色调搭配', labelEs: 'Tono Cálido',
-      directiveMale: `${job.male}\n\nSTYLE: WARM TONE — Choose a warm-toned color palette for this uniform based on the person's skin undertone. Earthy, warm colors: burgundy, warm navy, forest green, terracotta, camel, olive. Pick the warmest color that flatters THIS specific person's complexion.`,
-      directiveFemale: `${job.female}\n\nSTYLE: WARM TONE — Choose a warm-toned color palette for this uniform based on the person's skin undertone. Earthy, warm colors: burgundy, warm wine, sage, dusty rose, warm camel, olive. Pick the warmest color that flatters THIS specific person's complexion.`,
+      id: 'work-classic',
+      labelKo: '클래식 네이비', labelEn: 'Classic Navy', labelJa: 'クラシックネイビー', labelZh: '经典海军蓝', labelEs: 'Azul Marino Clásico',
+      directiveMale: `${job.male}\n\nCOLOR: Deep navy blue scrubs — the most universally flattering and authoritative color in medicine. Rich, dark navy that looks professional on every skin tone. This is the "safe but always excellent" choice.`,
+      directiveFemale: `${job.female}\n\nCOLOR: Deep navy blue scrubs — the most universally flattering and authoritative color in medicine. Rich, dark navy that looks professional on every skin tone. This is the "safe but always excellent" choice.`,
     },
     {
-      id: 'work-cool-tone',
-      labelKo: '쿨톤 매치', labelEn: 'Cool Tone Match', labelJa: 'クールトーン', labelZh: '冷色调搭配', labelEs: 'Tono Frío',
-      directiveMale: `${job.male}\n\nSTYLE: COOL TONE — Choose a cool-toned color palette for this uniform based on the person's skin undertone. Cool, refined colors: steel blue, charcoal, slate grey, cool navy, ice blue, deep teal. Pick the coolest color that flatters THIS specific person's complexion.`,
-      directiveFemale: `${job.female}\n\nSTYLE: COOL TONE — Choose a cool-toned color palette for this uniform based on the person's skin undertone. Cool, refined colors: lavender grey, ceil blue, cool navy, slate, soft teal, charcoal. Pick the coolest color that flatters THIS specific person's complexion.`,
+      id: 'work-modern',
+      labelKo: '모던 버건디', labelEn: 'Modern Burgundy', labelJa: 'モダンバーガンディ', labelZh: '现代酒红', labelEs: 'Borgoña Moderno',
+      directiveMale: `${job.male}\n\nCOLOR: Deep burgundy/wine-colored scrubs — a modern, sophisticated alternative to standard colors. Rich dark red-brown tone. This color adds warmth to the face and looks stylish while remaining professional. NOT bright red — deep, muted, elegant wine color.`,
+      directiveFemale: `${job.female}\n\nCOLOR: Deep burgundy/wine-colored scrubs — a modern, sophisticated alternative to standard colors. Rich dark red-brown tone. This color adds warmth to the face and looks stylish while remaining professional. NOT bright red — deep, muted, elegant wine color.`,
     },
     {
       id: 'work-offduty',
       labelKo: '출퇴근 룩', labelEn: 'Off-Duty Commute', labelJa: '通勤スタイル', labelZh: '通勤穿搭', labelEs: 'Look de Ida al Trabajo',
-      directiveMale: `${job.male}\n\nSTYLE: OFF-DUTY COMMUTE — What this professional looks like heading to work. Stylish layering over or instead of the uniform — a designer jacket, clean sneakers, premium bag. The kind of commute outfit that makes people think "that person has great taste AND an important job."`,
-      directiveFemale: `${job.female}\n\nSTYLE: OFF-DUTY COMMUTE — What this professional looks like heading to work. Stylish layering over or instead of the uniform — a chic coat, designer bag, elevated sneakers or heels. The kind of commute outfit that makes people think "she has incredible taste AND an important job."`,
+      directiveMale: `STYLING BRIEF — OFF-DUTY COMMUTE LOOK
+This is NOT a uniform. This is what this professional wears COMMUTING to work — stylish casual clothes, NOT scrubs.
+
+OUTFIT: Smart casual outfit for commuting — tailored coat or bomber jacket over a clean crew-neck sweater or shirt, well-fitted chinos or dark jeans, clean white sneakers or leather boots. A premium backpack or messenger bag. Earphones around neck optional.
+
+COLOR MUST BE CHOSEN based on this person's skin tone. Pick colors that make their face glow — could be earth tones, navy, cream, or muted pastels. Avoid dull grey.
+
+MOOD: Walking to the hospital/clinic looking like they could be heading to a café in Gangnam or Brooklyn. Stylish, effortless, put-together.`,
+      directiveFemale: `STYLING BRIEF — OFF-DUTY COMMUTE LOOK
+This is NOT a uniform. This is what this professional wears COMMUTING to work — stylish casual clothes, NOT scrubs.
+
+OUTFIT: Chic commute outfit — a tailored trench coat or oversized blazer, well-fitted jeans or tailored pants, a cashmere sweater or silk blouse, clean sneakers or ankle boots. A designer tote or structured bag. Coffee cup optional.
+
+COLOR MUST BE CHOSEN based on this person's skin tone. Pick colors that make their face glow — could be camel, cream, soft pink, navy, or warm neutrals. Avoid dull grey.
+
+MOOD: Walking to work looking like a street style photo. She could be heading to a fashion office, not a hospital. Effortlessly chic.`,
     },
   ]
 }
