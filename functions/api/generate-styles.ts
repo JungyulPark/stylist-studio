@@ -186,9 +186,8 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
 
     console.log(`[API Styles] Generating ${styleScenarios.length} styles (seed: ${diversitySeed}), hasPhoto: ${hasPhoto}`)
 
-    // Stagger requests to avoid rate limiting (500ms between each start)
     const results = await Promise.all(
-      styleScenarios.map(async (scenario) => {
+      styleScenarios.map(async (scenario, index) => {
 
         let imageUrl: string | null = null
 

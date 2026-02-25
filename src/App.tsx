@@ -6107,7 +6107,7 @@ ${hairImgs.length > 0 ? `<div class="section"><h2>${hairSection}</h2><div class=
                 </div>
               </div>
 
-              <div className="path-card-v2 trend-card" onClick={() => { trackEvent('select_item', { item_category: 'trend_style' }); setPage('trend-selection') }}>
+              <div className="path-card-v2 trend-card coming-soon-disabled" style={{ pointerEvents: 'none', opacity: 0.7 }}>
                 <picture className="path-image">
                   <source type="image/webp" srcSet="/trend-hq.webp" />
                   <img src="/Street.png" alt="Trend Style" className="path-image-img" loading="lazy" width="1456" height="816" />

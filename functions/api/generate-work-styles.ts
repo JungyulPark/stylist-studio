@@ -177,7 +177,7 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
     console.log(`[API Work] Generating ${workScenarios.length} work styles for ${jobType} (seed: ${diversitySeed})`)
 
     const results = await Promise.all(
-      workScenarios.map(async (scenario) => {
+      workScenarios.map(async (scenario, index) => {
 
         let imageUrl: string | null = null
 

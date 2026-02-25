@@ -177,7 +177,7 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
     console.log(`[API Trend] Generating ${trendScenarios.length} trend styles for ${trendType} (seed: ${diversitySeed})`)
 
     const results = await Promise.all(
-      trendScenarios.map(async (scenario) => {
+      trendScenarios.map(async (scenario, index) => {
 
         let imageUrl: string | null = null
 
