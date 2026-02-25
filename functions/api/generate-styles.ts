@@ -188,11 +188,7 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
 
     // Stagger requests to avoid rate limiting (500ms between each start)
     const results = await Promise.all(
-      styleScenarios.map(async (scenario, index) => {
-        // Stagger start times to avoid overwhelming the API
-        if (index > 0) {
-          await sleep(index * 500)
-        }
+      styleScenarios.map(async (scenario) => {
 
         let imageUrl: string | null = null
 
