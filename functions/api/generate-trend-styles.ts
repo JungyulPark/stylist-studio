@@ -1,5 +1,6 @@
 import { getCorsHeaders, createCorsPreflightResponse } from '../lib/cors'
 import { errors } from '../lib/errors'
+import { editPhotoWithOpenAI } from '../lib/openai-image'
 import {
   getTrendScenarios,
   buildFashionEditPrompt,
@@ -17,10 +18,7 @@ interface Env {
   OPENAI_API_KEY?: string
 }
 
-const GEMINI_MODELS = ['gemini-2.0-flash-exp', 'gemini-2.0-flash']
-const MAX_RETRIES = 1
-
-function sleep(ms: number) {
+async function sleep(ms: number): Promise<void> {
   return new Promise(resolve => setTimeout(resolve, ms))
 }
 
@@ -30,58 +28,40 @@ async function editPhotoWithModel(
   editPrompt: string,
   apiKey: string,
   openaiKey?: string,
-  retryCount = 0
+  retryCount: number = 0
 ): Promise<string | null> {
-  if (openaiKey) {
-    try {
-      const base64Match = photo.match(/^data:image\/(\w+);base64,(.+)/)
-      if (base64Match) {
-        const imageBytes = base64Match[2]
-        const mimeType = `image/${base64Match[1]}`
-
-        const boundary = '----FormBoundary' + Math.random().toString(36).slice(2)
-        const parts = [
-          `--${boundary}\r\nContent-Disposition: form-data; name="model"\r\n\r\ngpt-image-1.5`,
-          `--${boundary}\r\nContent-Disposition: form-data; name="prompt"\r\n\r\n${editPrompt}`,
-          `--${boundary}\r\nContent-Disposition: form-data; name="size"\r\n\r\nauto`,
-          `--${boundary}\r\nContent-Disposition: form-data; name="quality"\r\n\r\nmedium`,
-          `--${boundary}\r\nContent-Disposition: form-data; name="image"; filename="photo.jpg"\r\nContent-Type: ${mimeType}\r\nContent-Transfer-Encoding: base64\r\n\r\n${imageBytes}`,
-          `--${boundary}--\r\n`
-        ]
-
-        const resp = await fetch('https://api.openai.com/v1/images/edits', {
-          method: 'POST',
-          headers: {
-            'Authorization': `Bearer ${openaiKey}`,
-            'Content-Type': `multipart/form-data; boundary=${boundary}`,
-          },
-          body: parts.join('\r\n'),
-        })
-
-        if (resp.ok) {
-          const data = await resp.json() as { data?: Array<{ b64_json?: string }> }
-          const b64 = data.data?.[0]?.b64_json
-          if (b64) {
-            console.log(`[OpenAI] Success for trend-${scenarioId}`)
-            return `data:image/png;base64,${b64}`
-          }
-        }
-        console.warn(`[OpenAI] Failed for trend-${scenarioId}: ${resp.status}`)
-      }
-    } catch (e) {
-      console.warn(`[OpenAI] Exception for trend-${scenarioId}:`, e)
-    }
-  }
+  const MAX_RETRIES = 2
 
   try {
-    const base64Match = photo.match(/^data:image\/(\w+);base64,(.+)/)
+    const base64Match = photo.match(/^data:image\/(\w+);base64,(.+)$/)
     if (!base64Match) return null
 
-    let response: Response | null = null
-    let lastError = ''
+    const mimeType = `image/${base64Match[1]}`
+    const base64Data = base64Match[2]
 
-    for (const model of GEMINI_MODELS) {
+    // Try OpenAI gpt-image-1.5 first
+    if (openaiKey) {
+      console.log(`[OpenAI] Trying gpt-image-1.5 for trend-${scenarioId}`)
+      const openaiResult = await editPhotoWithOpenAI(base64Data, mimeType, editPrompt, openaiKey)
+      if (openaiResult) {
+        console.log(`[OpenAI] Success for trend-${scenarioId}`)
+        return openaiResult
+      }
+      console.log(`[OpenAI] Failed for trend-${scenarioId}, falling back to Gemini`)
+    }
+
+    // Fallback to Gemini
+    const geminiModels = [
+      'gemini-3-pro-image-preview',
+      'gemini-2.5-flash-image'
+    ]
+
+    let response: Response | null = null
+    let lastError: string = ''
+
+    for (const model of geminiModels) {
       try {
+        console.log(`[Gemini] Trying model: ${model} for trend-${scenarioId}`)
         response = await fetch(
           `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`,
           {
@@ -91,22 +71,25 @@ async function editPhotoWithModel(
               contents: [{
                 role: 'user',
                 parts: [
-                  { inlineData: { mimeType: `image/${base64Match[1]}`, data: base64Match[2] } },
-                  { text: editPrompt },
-                ],
+                  { inlineData: { mimeType, data: base64Data } },
+                  { text: editPrompt }
+                ]
               }],
               generationConfig: {
                 responseModalities: ['IMAGE', 'TEXT'],
-                temperature: 0.4,
-              },
-            }),
+                imageConfig: {
+                  imageSize: '1K'
+                }
+              }
+            })
           }
         )
         if (response.ok) {
           console.log(`[Gemini] ${model} succeeded for trend-${scenarioId}`)
           break
         }
-        lastError = `${model} failed (${response.status})`
+        const errorBody = await response.text()
+        lastError = `${model} failed (${response.status}): ${errorBody.substring(0, 500)}`
         console.error(`[Gemini] ${lastError}`)
         response = null
       } catch (e) {
@@ -116,8 +99,11 @@ async function editPhotoWithModel(
     }
 
     if (!response || !response.ok) {
+      console.error(`[Gemini] All models failed for trend-${scenarioId}. Last error: ${lastError}`)
       if (retryCount < MAX_RETRIES) {
-        await sleep((retryCount + 1) * 2000)
+        const delay = (retryCount + 1) * 2000
+        console.log(`[Gemini] Retrying trend-${scenarioId} in ${delay}ms (attempt ${retryCount + 2}/${MAX_RETRIES + 1})`)
+        await sleep(delay)
         return editPhotoWithModel(photo, scenarioId, editPrompt, apiKey, openaiKey, retryCount + 1)
       }
       return null
@@ -125,7 +111,9 @@ async function editPhotoWithModel(
 
     const data = await response.json() as {
       candidates?: Array<{
-        content?: { parts?: Array<{ inlineData?: { mimeType: string; data: string } }> }
+        content?: {
+          parts?: Array<{ inlineData?: { mimeType: string; data: string } }>
+        }
       }>
     }
 
@@ -136,14 +124,17 @@ async function editPhotoWithModel(
     }
 
     if (retryCount < MAX_RETRIES) {
-      await sleep((retryCount + 1) * 2000)
+      const delay = (retryCount + 1) * 2000
+      console.log(`[Gemini] No image returned for trend-${scenarioId}, retrying in ${delay}ms`)
+      await sleep(delay)
       return editPhotoWithModel(photo, scenarioId, editPrompt, apiKey, openaiKey, retryCount + 1)
     }
     return null
   } catch (error) {
     console.error(`Error for trend-${scenarioId}:`, error)
     if (retryCount < MAX_RETRIES) {
-      await sleep((retryCount + 1) * 2000)
+      const delay = (retryCount + 1) * 2000
+      await sleep(delay)
       return editPhotoWithModel(photo, scenarioId, editPrompt, apiKey, openaiKey, retryCount + 1)
     }
     return null

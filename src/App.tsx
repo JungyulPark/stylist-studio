@@ -6088,7 +6088,7 @@ ${hairImgs.length > 0 ? `<div class="section"><h2>${hairSection}</h2><div class=
               <div className="path-card-v2 work-card" onClick={() => { trackEvent('select_item', { item_category: 'work_style' }); setPage('work-selection') }}>
                 <picture className="path-image">
                   <source type="image/webp" srcSet="/work-800w.webp" />
-                  <img src="/uniform.png" alt="Work Style" className="path-image-img" loading="lazy" width="800" height="600" />
+                  <img src="/uniform.png" alt="Work Style" className="path-image-img" loading="lazy" width="1456" height="816" />
                 </picture>
                 <div className="path-overlay work-overlay"></div>
                 <div className="path-content-v2">
@@ -6110,7 +6110,7 @@ ${hairImgs.length > 0 ? `<div class="section"><h2>${hairSection}</h2><div class=
               <div className="path-card-v2 trend-card" onClick={() => { trackEvent('select_item', { item_category: 'trend_style' }); setPage('trend-selection') }}>
                 <picture className="path-image">
                   <source type="image/webp" srcSet="/trend-800w.webp" />
-                  <img src="/Street.png" alt="Trend Style" className="path-image-img" loading="lazy" width="800" height="600" />
+                  <img src="/Street.png" alt="Trend Style" className="path-image-img" loading="lazy" width="1456" height="816" />
                 </picture>
                 <div className="path-overlay trend-overlay"></div>
                 <div className="path-content-v2">
