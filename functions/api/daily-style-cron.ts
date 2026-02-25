@@ -81,7 +81,71 @@ function getLocalDate(timezone: string): string {
   }
 }
 
-async function getWeather(lat: number, lon: number, apiKey: string): Promise<WeatherData | null> {
+async function getWeather(lat: number, lon: number, apiKey: string, timezone: string): Promise<WeatherData | null> {
+  try {
+    // Use forecast API to get DAYTIME temperature (12-15h local) instead of current (7AM) temp.
+    // At 7AM the temperature is often much lower than actual activity hours.
+    const res = await fetch(
+      `https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&units=metric&cnt=8&appid=${apiKey}`
+    )
+    if (!res.ok) {
+      // Fallback to current weather API if forecast fails
+      return getWeatherCurrent(lat, lon, apiKey)
+    }
+    const data = await res.json() as {
+      list: Array<{
+        dt: number
+        main: { temp: number; feels_like: number; humidity: number }
+        weather: Array<{ main: string; description: string; icon: string }>
+        wind: { speed: number }
+      }>
+    }
+
+    if (!data.list || data.list.length === 0) {
+      return getWeatherCurrent(lat, lon, apiKey)
+    }
+
+    // Find the forecast entry closest to midday (12-15h) in the subscriber's local timezone
+    let bestEntry = data.list[0]
+    let bestDiff = Infinity
+
+    for (const entry of data.list) {
+      const entryDate = new Date(entry.dt * 1000)
+      let localHour: number
+      try {
+        const formatter = new Intl.DateTimeFormat('en-US', {
+          timeZone: timezone,
+          hour: 'numeric',
+          hour12: false,
+        })
+        localHour = parseInt(formatter.format(entryDate), 10)
+      } catch {
+        localHour = entryDate.getUTCHours()
+      }
+      // Target 13h (1PM) — peak activity time
+      const diff = Math.abs(localHour - 13)
+      if (diff < bestDiff) {
+        bestDiff = diff
+        bestEntry = entry
+      }
+    }
+
+    return {
+      temp: Math.round(bestEntry.main.temp),
+      feels_like: Math.round(bestEntry.main.feels_like),
+      humidity: bestEntry.main.humidity,
+      condition: bestEntry.weather[0]?.main || 'Clear',
+      description: bestEntry.weather[0]?.description || '',
+      icon: bestEntry.weather[0]?.icon || '01d',
+      wind_speed: bestEntry.wind.speed,
+    }
+  } catch {
+    return getWeatherCurrent(lat, lon, apiKey)
+  }
+}
+
+// Fallback: current weather (used if forecast API fails)
+async function getWeatherCurrent(lat: number, lon: number, apiKey: string): Promise<WeatherData | null> {
   try {
     const res = await fetch(
       `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&units=metric&appid=${apiKey}`
@@ -592,10 +656,10 @@ export const onRequestGet: PagesFunction<Env> = async (context) => {
           }
         }
 
-        // Fetch weather
+        // Fetch weather — uses forecast API to get DAYTIME (midday) temperature
         let weather: WeatherData | null = null
         if (sub.latitude && sub.longitude && context.env.OPENWEATHER_API_KEY) {
-          weather = await getWeather(sub.latitude, sub.longitude, context.env.OPENWEATHER_API_KEY)
+          weather = await getWeather(sub.latitude, sub.longitude, context.env.OPENWEATHER_API_KEY, sub.timezone)
         }
         if (!weather) {
           weather = {
