@@ -58,6 +58,13 @@ export async function editPhotoWithGemini(
 
     const editPrompt = `You are the world's top personal stylist. Your job is to dress this person in the PERFECT outfit that complements their unique skin tone, face shape, and body proportions.
 
+⚠️ FACE IDENTITY LOCK — HIGHEST PRIORITY ⚠️
+This is NOT a generation task. This is a CLOTHING SWAP on an EXISTING photo.
+- The person's FACE must remain 100% IDENTICAL to the input — same eyes, nose, mouth, jawline, skin texture, facial hair, makeup, expression
+- Do NOT regenerate, redraw, or reinterpret the face in ANY way
+- The face must be a PIXEL-LEVEL COPY from the original photo
+- If you cannot preserve the face exactly, return the original photo unchanged rather than altering the face
+
 EDIT this photo - ONLY change the OUTFIT of the MAIN PERSON to: ${scenario.prompt}
 
 CRITICAL: This is a ${genderWord}. The outfit MUST be appropriate for a ${genderWord}.
@@ -101,11 +108,11 @@ BODY PROPORTION PRESERVATION (CRITICAL):
 - If the person's legs are visible, they must remain the SAME length and shape
 
 ABSOLUTE REQUIREMENTS - VIOLATION IS FAILURE:
-1. NEVER CROP OR ZOOM - output must have IDENTICAL framing as input
-2. NEVER change aspect ratio - if input is portrait, output is portrait
-3. Face position, size, and features MUST be PIXEL-PERFECT identical
-4. Keep EXACTLY what is visible in the original - do not extend or add content
-5. Hairstyle, hair color, skin tone base - ZERO changes allowed
+1. FACE IDENTITY: The face must be an EXACT COPY of the input — same person, same features, same expression. If the output face looks like a DIFFERENT PERSON, the result is FAILED
+2. NEVER CROP OR ZOOM - output must have IDENTICAL framing as input
+3. NEVER change aspect ratio - if input is portrait, output is portrait
+4. Hairstyle, hair color, skin tone base - ZERO changes allowed
+5. Keep EXACTLY what is visible in the original - do not extend or add content
 6. Background and OTHER PEOPLE - ZERO changes allowed
 7. Output resolution MUST match input resolution exactly
 8. Legs must be BEHIND/INSIDE pants or skirt - NEVER on top of clothing

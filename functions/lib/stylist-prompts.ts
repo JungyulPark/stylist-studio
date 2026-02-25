@@ -38,11 +38,11 @@ const BODY_PRESERVATION = `BODY PROPORTION PRESERVATION (CRITICAL):
 - Waistline position must stay at the SAME height as in the original photo`
 
 const ABSOLUTE_REQUIREMENTS = `ABSOLUTE REQUIREMENTS - VIOLATION IS FAILURE:
-1. NEVER CROP OR ZOOM - output must have IDENTICAL framing as input
-2. NEVER change aspect ratio - if input is portrait, output is portrait
-3. Face position, size, and features MUST be PIXEL-PERFECT identical
-4. Keep EXACTLY what is visible in the original - do not extend or add content
-5. Hairstyle, hair color, skin tone base - ZERO changes allowed
+1. FACE IDENTITY: The face must be an EXACT COPY of the input — same person, same features, same expression. If the output face looks like a DIFFERENT PERSON, the result is FAILED
+2. NEVER CROP OR ZOOM - output must have IDENTICAL framing as input
+3. NEVER change aspect ratio - if input is portrait, output is portrait
+4. Hairstyle, hair color, skin tone base - ZERO changes allowed
+5. Keep EXACTLY what is visible in the original - do not extend or add content
 6. OTHER PEOPLE in the photo - ZERO changes allowed (background lighting may be subtly enhanced)
 7. Output resolution MUST match input resolution exactly
 8. Legs must be BEHIND/INSIDE pants or skirt - NEVER on top of clothing
@@ -749,7 +749,15 @@ export function buildFashionEditPrompt(opts: {
 
   return `You are the world's top personal stylist with 20 years of experience dressing celebrities, executives, and everyday people. Your superpower: you can look at ANY person and instantly see their most flattering silhouette, colors, and style.
 
-YOUR TASK: ANALYZE this person's photo — their body type, skin tone, face shape, and proportions — then dress them in the PERFECT outfit.
+⚠️ FACE IDENTITY LOCK — HIGHEST PRIORITY ⚠️
+This is NOT a generation task. This is a CLOTHING SWAP on an EXISTING photo.
+- The person's FACE must remain 100% IDENTICAL to the input — same eyes, nose, mouth, jawline, skin texture, facial hair, makeup, expression
+- Do NOT regenerate, redraw, or reinterpret the face in ANY way
+- The face must be a PIXEL-LEVEL COPY from the original photo
+- If you cannot preserve the face exactly, return the original photo unchanged rather than altering the face
+- ZERO tolerance for face changes: even subtle smoothing, reshaping, or aging/de-aging is FORBIDDEN unless specified in beauty retouch below
+
+YOUR TASK: ONLY change the CLOTHING on this person. Analyze their body type, skin tone, and proportions, then dress them in the PERFECT outfit.
 
 SCENARIO DIRECTIVE:
 ${directive}
