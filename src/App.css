@@ -6673,6 +6673,21 @@
   gap: 1.5rem;
 }
 
+.loading-spinner {
+  width: 48px;
+  height: 48px;
+  border: 3px solid rgba(26, 26, 26, 0.12);
+  border-top-color: #c9a962;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+.loading-spinner.small {
+  width: 28px;
+  height: 28px;
+  border-width: 2px;
+}
+
 .loading-text {
   font-family: var(--font-display);
   color: var(--primary-light);
