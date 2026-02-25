@@ -273,160 +273,160 @@ export const workJobTypes: WorkJobType[] = [
 
 const workDirectives: Record<string, { male: string; female: string }> = {
   doctor: {
-    male: `STYLING BRIEF — MALE DOCTOR
-You are styling a doctor for a premium hospital brand photoshoot.
+    male: `STYLING BRIEF — MALE DOCTOR, LUXURY EDITION
+You are styling a doctor for a Loro Piana x premium hospital collaboration campaign. This is NOT standard scrubs — this is what a doctor looks like when the uniform is designed by a luxury house.
 
 OUTFIT SPEC:
-- TOP: Short-sleeve V-neck scrub top. The fabric has a subtle 4-way stretch with matte sheen — like lululemon meets medical wear. Slim athletic cut that follows the torso without being tight. Clean topstitching details at shoulder seams.
-- BOTTOM: Scrub jogger pants with tapered ankle and elastic cuff. Sits at the hip. The drape is clean — not a wrinkle, not a bunch. Think tailored sweatpant.
-- SHOES: Pristine white minimalist leather sneakers with a clean sole (no chunky platform). Immaculate.
-- ACCESSORIES: Stethoscope draped naturally around the neck. One simple watch.
+- TOP: Short-sleeve medical top in premium Italian jersey — the fabric has a soft cashmere-like hand and a subtle matte luster. Tailored slim fit with invisible darts. Clean mandarin collar or refined V-neck with bound edges. The stitching is invisible, the fabric drapes like knitwear.
+- BOTTOM: Slim straight-leg medical trousers — ankle-length, clean pressed front crease, no elastic cuff. The silhouette is like Jil Sander tailored trousers but in performance medical fabric. Sits cleanly at the waist with a hidden drawstring.
+- SHOES: Premium white leather slip-on loafers or clean Italian leather sneakers with a thin sole. Effortlessly elegant.
+- ACCESSORIES: Stethoscope in brushed steel around the neck. One quality watch — Nomos or Junghans style.
 
-COLOR DIRECTION: Read this person's skin undertone carefully. For warm undertones → deep teal, burgundy-wine, or warm charcoal. For cool undertones → slate blue, steel grey, or deep navy. The scrub color should make their face GLOW.
+COLOR: Read this person's skin undertone. Warm → deep forest green, rich burgundy, warm stone grey. Cool → midnight navy, slate blue, cool pewter. The color should look like it was dyed in a Florentine workshop — rich, deep, never flat.
 
-MOOD: He looks like the doctor you'd request by name. Quietly confident. The uniform fits like it was custom-made. Magazine-quality.`,
-    female: `STYLING BRIEF — FEMALE DOCTOR
-You are styling a female doctor for a premium hospital brand photoshoot.
+MOOD: He looks like a surgeon who also collects contemporary art. The uniform is so well-made you'd wear it to dinner. Quiet wealth. Effortless authority. People assume his scrubs are custom — they're right.`,
+    female: `STYLING BRIEF — FEMALE DOCTOR, LUXURY EDITION
+You are styling a female doctor for a Brunello Cucinelli x premium hospital collaboration campaign.
 
 OUTFIT SPEC:
-- TOP: Short-sleeve V-neck or mandarin-collar scrub top. Feminine darted fit that defines the waist without being tight. Premium 4-way stretch fabric with soft matte finish. Subtle princess seaming for shape.
-- BOTTOM: Scrub jogger pants — tapered ankle, mid-rise, with a clean drape that flatters the leg line. OR slim straight-leg scrub pants.
-- SHOES: Clean white leather sneakers or white slip-on mules. Spotless.
-- ACCESSORIES: Stethoscope draped naturally. Minimal jewelry — small studs or thin bracelet only.
+- TOP: Short-sleeve medical top in luxury Italian stretch jersey — soft, matte, with beautiful drape. Princess seaming defines the waist subtly. The neckline is a refined V or a clean boat neck that frames the collarbones. Every edge is bound, every seam is flat-felled. This is couture construction in a medical garment.
+- BOTTOM: Tailored ankle-length straight trousers with a single front crease — the kind that looks like they were pressed five minutes ago. Clean flat front, hidden waistband, no elastic visible. The hem breaks cleanly above the ankle.
+- SHOES: White Italian leather loafers, clean suede mules, or minimal leather sneakers. Pristine.
+- ACCESSORIES: Stethoscope. Small gold studs. One thin gold bracelet.
 
-COLOR DIRECTION: Read this person's skin tone, undertone, and hair color. For warm skin → dusty rose, sage green, warm wine, or caramel-toned khaki. For cool skin → ceil blue, soft lavender-grey, cool navy, or icy mint. The color should illuminate her complexion.
+COLOR: Warm skin → dusty rose, sage, warm camel-grey, muted wine. Cool skin → powder blue, lavender-grey, icy sage, cool stone. The color should look expensive — not bright, not primary, but deep and nuanced like a watercolor.
 
-MOOD: She walks into the ward and everyone notices. Not because she's trying — because the fit, the color, and the confidence are perfect. She looks like she belongs on the cover of a medical fashion editorial.`
+MOOD: She looks like the chief of surgery at a private hospital in Milan. The fabric moves like water. The fit is so precise it looks effortless. Other doctors ask where she got her scrubs. The answer is: they don't make them anymore.`
   },
   dentist: {
-    male: `STYLING BRIEF — MALE DENTIST
-You are styling a dentist for a high-end aesthetic dental clinic's brand imagery.
+    male: `STYLING BRIEF — MALE DENTIST, LUXURY EDITION
+You are styling a dentist for a premium aesthetic clinic — the kind where the interiors were designed by an architect and the uniforms match.
 
 OUTFIT SPEC:
-- TOP: Clean-line short-sleeve scrub top with a modern crew or henley neckline. No V-neck — dentists need a higher neckline for close-contact work. Slim tailored fit, premium performance fabric with subtle texture.
-- BOTTOM: Slim tapered scrub pants. Clean front, no cargo. Jogger cuff OR clean straight hem. Sharp crease optional.
-- SHOES: White minimalist sneakers — leather upper, thin sole. Clinical-clean aesthetic.
+- TOP: Clean short-sleeve medical top with a refined crew neck or subtle mandarin collar. The fabric is matte technical jersey with the weight of luxury knitwear — structured but soft. Slim tailored fit, flat-felled seams, no visible topstitching. The collar sits perfectly flat.
+- BOTTOM: Slim straight ankle-length trousers — pressed crease, clean flat front, tapered gently to the ankle. No cuffs, no elastic. Like Theory or COS tailored pants in medical-grade fabric.
+- SHOES: White Italian leather minimal sneakers or clean white leather slip-ons. The shoe says "I care about details."
 
-COLOR DIRECTION: Dental clinics are white-on-white environments, so the scrubs need to stand out with quiet sophistication. Read this person's skin tone: warm → charcoal, deep olive, muted terracotta. Cool → steel blue, slate, cool grey. Pure white scrubs also work if the person has high-contrast coloring (dark hair + light skin or vice versa).
+COLOR: Warm skin → charcoal, deep olive, warm taupe. Cool skin → steel blue, slate grey, cool white. All-white is powerful if the person has strong features and contrast.
 
-MOOD: A premium Gangnam or Beverly Hills aesthetic dentist. Everything is precise, intentional, immaculate. The patient trusts him the moment he walks in.`,
-    female: `STYLING BRIEF — FEMALE DENTIST
-You are styling a female dentist for a high-end aesthetic dental clinic's brand imagery.
+MOOD: His clinic has a two-month waitlist. Not because of marketing — because patients feel the difference the moment they walk in. Everything, including him, looks considered. Precise. Immaculate. The uniform costs more than most suits.`,
+    female: `STYLING BRIEF — FEMALE DENTIST, LUXURY EDITION
+You are styling a female dentist for a premium aesthetic clinic campaign.
 
 OUTFIT SPEC:
-- TOP: Modern fitted scrub top — crew neck or subtle wrap-front. Clean feminine tailoring with flattering bust darts. Premium matte fabric. Short sleeve with a slightly cropped proportion that sits at the hip.
-- BOTTOM: Tapered scrub jogger or slim ankle-length pants. High enough waist to look polished when bending.
-- SHOES: Clean white leather slip-ons or minimal sneakers. Pristine.
+- TOP: Fitted short-sleeve medical top — crew neck or subtle wrap detail. Luxury technical jersey with matte sheen. The fit follows her body beautifully — darted at the waist, skimming the torso without clinging. Every seam is invisible.
+- BOTTOM: Tailored ankle-length slim trousers — clean pressed crease, flat front, the kind of trouser that makes everything look intentional. Mid-rise, elegant.
+- SHOES: White leather pointed-toe mules or clean minimal sneakers. Pristine, polished.
 
-COLOR DIRECTION: She works in a white-on-white clinic, so the color must complement her face at close range (patients stare at her all day). Warm skin → soft sage, muted blush, warm sand. Cool skin → powder blue, lavender-grey, cool white. Avoid anything too dark or heavy — dental setting demands lightness.
+COLOR: Warm → soft sage, muted blush, warm sand, rose-tinted grey. Cool → powder blue, cool white, lavender-grey, icy mint. Dental clinics are bright — the color should be soft and flattering under clinic lighting.
 
-MOOD: Patients choose this clinic partly because she makes them feel at ease. Polished, precise, effortlessly chic. Think the dentist that beauty editors recommend.`
+MOOD: She looks like she was styled by The Row's creative director for her clinic photoshoot. Every surface in the clinic is white, and she is the most elegant thing in the room. Patients relax the moment they see her. Everything whispers quality.`
   },
   nurse: {
-    male: `STYLING BRIEF — MALE NURSE
-You are styling a nurse for a modern hospital's recruitment campaign — the kind that makes young people say "I want to work there."
+    male: `STYLING BRIEF — MALE NURSE, LUXURY EDITION
+You are styling a nurse for a luxury hospital group's brand film — this hospital is where heads of state and CEOs go.
 
 OUTFIT SPEC:
-- TOP: Short-sleeve scrub top with a sporty, athletic cut. Raglan sleeve seaming or contrast topstitching. Performance 4-way stretch fabric that shows the shoulders well. NOT boxy — fitted through the torso with room to move.
-- BOTTOM: Jogger-style scrub pants — elastic ankle cuff, tapered fit, functional side pockets. Modern and sporty, like premium workout pants.
-- SHOES: Performance running sneakers in a fresh colorway — Nike, Hoka, or On Cloud. Clean but with personality.
+- TOP: Short-sleeve medical top with refined athletic construction — the fit is clean through the shoulders and torso, showing his build without being tight. Premium Italian performance jersey with a subtle sheen that catches light. Contrast binding at the neckline and sleeves — one tone-on-tone detail that elevates everything.
+- BOTTOM: Slim straight medical trousers — ankle-length, pressed crease, clean drape. Not joggers. These are tailored trousers in technical fabric. The leg line is clean and modern.
+- SHOES: Premium white sneakers with a leather upper and minimal design. Or clean white leather slip-ons. Box-fresh.
 
-COLOR DIRECTION: Nurses often have limited color choices. Find the BEST color for this person: warm skin → hunter green, warm grey, burgundy. Cool skin → ceil blue, navy, cool charcoal. Choose the one that makes him look most alive and healthy — nurses need to radiate energy.
+COLOR: Warm skin → hunter green, warm grey, deep wine. Cool skin → midnight navy, cool steel, ceil blue. The color is rich, saturated, never washed-out.
 
-MOOD: The nurse that new patients feel instantly safe with. Athletic, capable, modern. He looks like he runs half-marathons on his days off. The scrubs fit like athleisure, not like a uniform.`,
-    female: `STYLING BRIEF — FEMALE NURSE
-You are styling a nurse for a modern hospital's recruitment campaign.
+MOOD: The nurse at a hospital where rooms cost $3,000 a night. His uniform looks like it was tailored at Savile Row. He carries himself like an officer. Patients feel they're in the best hands in the world — and they are.`,
+    female: `STYLING BRIEF — FEMALE NURSE, LUXURY EDITION
+You are styling a nurse for a luxury hospital group's brand film.
 
 OUTFIT SPEC:
-- TOP: Fitted scrub top — either a modern mock-wrap or a clean V-neck with feminine darting. The fit skims the body, shows her shape without being tight. Performance fabric with soft hand-feel.
-- BOTTOM: Jogger scrub pants — tapered, mid-rise, with elastic ankle and a flattering leg line. OR straight slim scrub pants.
-- SHOES: Fresh performance sneakers — white Nike, pastel New Balance, or clean Hoka. Not beaten up — box-fresh.
+- TOP: Fitted short-sleeve medical top with elegant construction — modern V-neck or mock-wrap with clean draping. The fabric is premium Italian jersey, soft and fluid. The fit defines her waist and skims beautifully. Invisible zipper or snap closure.
+- BOTTOM: Tailored slim straight trousers to the ankle — pressed crease, clean front, flattering through the hip and thigh. The silhouette is polished, like tailored dress pants in medical fabric.
+- SHOES: White leather loafers, clean white sneakers, or elegant white mules. Immaculate.
 
-COLOR DIRECTION: Match the scrub color to illuminate her face. Warm skin → soft wine, warm teal, sage. Cool skin → ceil blue, lavender, cool grey. Avoid colors that wash her out — if she's fair, go for richer tones; if she has deeper skin, jewel tones or warm earth.
+COLOR: Warm → soft wine, warm teal, sage. Cool → ceil blue, cool lavender, silver-grey. The tone should be rich enough to look intentional but soft enough to feel approachable.
 
-MOOD: She makes the entire ward feel better just by walking in. Composed, stylish, warm. The scrubs look like they were designed specifically for her body. Not a "uniform" — a look.`
+MOOD: She looks like she stepped out of a Massimo Dutti campaign and into the ward. The fabric moves like silk. The fit is impeccable. She makes every other nurse wonder who makes her scrubs. This is medical wear reimagined as luxury.`
   },
   vet: {
-    male: `STYLING BRIEF — MALE VETERINARIAN
-You are styling a vet for a premium pet care brand's social media — approachable but professional, outdoor-ready but polished.
+    male: `STYLING BRIEF — MALE VETERINARIAN, LUXURY EDITION
+You are styling a vet for an Hermès "artisan of life" campaign — where the love of animals meets refined taste.
 
 OUTFIT SPEC:
-- TOP: Short-sleeve scrub top in a relaxed athletic fit. Slightly more casual than hospital scrubs — think outdoor-brand meets medical. Durable fabric with subtle ripstop or canvas texture. Chest pocket with pen.
-- BOTTOM: Scrub cargo joggers — functional thigh pockets, elastic ankle, room to kneel and move. Utilitarian but modern, like Patagonia workwear.
-- SHOES: Rugged but clean sneakers — Salomon trail runners, New Balance Fresh Foam, or clean Vans in earth tones. Shoes that can handle a muddy backyard.
-- OPTIONAL: Stethoscope around neck, rolled sleeves showing forearms.
+- TOP: Short-sleeve medical top in heavyweight premium cotton jersey — the kind with a beautiful hand-feel and subtle texture. Relaxed but tailored fit. Clean collar, chest pocket. The fabric is durable but looks luxurious — think Brunello Cucinelli casual.
+- BOTTOM: Slim straight chino-style medical pants — durable cotton-blend, flat front, ankle-length with a clean hem. Like premium workwear trousers. No jogger cuffs.
+- SHOES: Clean leather Chelsea boots in tan or clean white leather sneakers. Rugged-luxe.
+- OPTIONAL: Stethoscope. Rolled sleeves showing forearms.
 
-COLOR DIRECTION: Vet scrubs should feel connected to nature. Warm skin → forest green, warm khaki, earthy olive. Cool skin → deep teal, ocean blue, cool moss. Earth tones always work — avoid clinical white or stark blue that feels too "hospital."
+COLOR: Earth and nature tones — warm skin → forest green, olive, warm sand, tobacco. Cool skin → ocean teal, cool moss, slate blue, stone grey. The palette should feel like a walk through the English countryside.
 
-MOOD: The vet that dogs run toward, not away from. Warm, grounded, capable. He looks like he rescues animals on weekends. The outfit says "I'm a professional who gets my hands dirty."`,
-    female: `STYLING BRIEF — FEMALE VETERINARIAN
-You are styling a female vet for a premium pet care brand's social media.
+MOOD: He's the vet that horse-farm owners fly in from another country. He looks like he could be at a country estate in Cotswolds or a clinic in Manhattan. Rugged but refined. His hands are gentle and his clothes are impeccable.`,
+    female: `STYLING BRIEF — FEMALE VETERINARIAN, LUXURY EDITION
+You are styling a female vet for a premium veterinary brand campaign.
 
 OUTFIT SPEC:
-- TOP: Fitted short-sleeve scrub top in soft, durable performance fabric. Feminine but practical — she needs to pick up large dogs and kneel on exam room floors. Clean seaming, well-proportioned.
-- BOTTOM: Jogger scrub pants or slim straight pants with functional pockets. Durable, washable, but figure-flattering. Mid-rise.
-- SHOES: Clean but rugged sneakers — Veja, New Balance, or white leather sneakers that still look good after a long day.
-- OPTIONAL: Stethoscope, hair tied back neatly.
+- TOP: Fitted short-sleeve medical top in soft premium cotton jersey — beautiful drape, subtle texture. Feminine but practical cut, well-proportioned for movement.
+- BOTTOM: Slim straight ankle-length trousers — flat front, durable premium fabric. Practical but polished, like tailored chinos.
+- SHOES: Clean white leather sneakers or tan leather ankle boots. Beautiful but practical.
+- OPTIONAL: Stethoscope around neck.
 
-COLOR DIRECTION: Natural, living tones that animals and their owners respond to warmly. Warm skin → sage green, warm sand, dusty olive. Cool skin → soft teal, ocean grey, muted denim blue. The color should feel like being outdoors.
+COLOR: Nature-inspired luxury — warm skin → sage, warm olive, dusty clay, sand. Cool skin → soft teal, ocean grey, cool moss, blue-stone. Colors that belong in a garden, not a hospital.
 
-MOOD: The vet you trust completely with your pet. Gentle hands, bright eyes, quiet competence. She looks like she could be on a nature documentary AND a fashion blog.`
+MOOD: She runs a boutique veterinary practice where the waiting room has Diptyque candles. She looks like she rides horses on weekends and reads Kinfolk magazine. The scrubs look like they belong in a lifestyle editorial — because they do.`
   },
   chef: {
-    male: `STYLING BRIEF — MALE CHEF
-You are styling a head chef for a Michelin-guide restaurant feature. This is where culinary art meets personal style.
+    male: `STYLING BRIEF — MALE CHEF, LUXURY EDITION
+You are styling a head chef for a W Magazine culinary feature. This is where Michelin stars meet personal style.
 
 OUTFIT SPEC:
-- TOP: Modern chef jacket — single-breasted with hidden snap buttons, mandarin collar, short sleeves showing the forearms. Slim-fit through the torso. Premium heavyweight cotton or cotton-linen. NOT the baggy double-breasted grandpa jacket.
-- APRON: A statement apron — crossback style in waxed canvas, raw denim, or full-grain leather. This is the signature piece. Worn with intention, tied with precision.
-- BOTTOM: Slim black or deep charcoal chef pants. Modern straight leg, clean drape. NOT checkered, NOT baggy. Think Acne Studios black trousers.
-- SHOES: Black leather clogs (Birkenstock Professional or Swedish Hasbeens) or clean black ankle boots. Utilitarian but premium.
-- OPTIONAL: Black cotton beanie or clean headband. Rolled sleeves. Visible forearm tattoos are fine — adds character.
+- TOP: Modern chef jacket — single-breasted, mandarin collar, short sleeves. The fit is SLIM through the torso — tailored, not baggy. Premium heavyweight Japanese cotton with a subtle texture. Hidden snap buttons, flat-felled seams. This jacket was made by a tailor, not a uniform company.
+- APRON: Signature crossback apron in full-grain vegetable-tanned leather OR heavy raw selvedge denim. The leather has patina. The straps cross at the back cleanly. This apron is a piece of craft.
+- BOTTOM: Slim straight black trousers — clean modern cut, no pattern, no checkering. Like Saint Laurent black jeans in a chef-appropriate fabric. Clean break at the ankle.
+- SHOES: Black leather Birkenstock Boston clogs (oiled leather) or clean black Chelsea boots. Worn-in but cared for.
+- OPTIONAL: Black merino beanie. Sleeves pushed to forearms.
 
-COLOR: Jacket in crisp bright white (most impactful) or charcoal grey for a moodier look. The apron provides contrast.
+COLOR: Bright white jacket (the classic — nothing is more powerful) or charcoal grey for moodier look. The apron in raw natural leather, black, or indigo provides the contrast.
 
-MOOD: This is the chef you see on Netflix. Sharp jawline of focus. The jacket fits like Tom Ford tailored it. Every element — from the knife roll to the apron tie — is intentional. He doesn't just cook food. He creates.`,
-    female: `STYLING BRIEF — FEMALE CHEF
-You are styling a head chef for a Michelin-guide restaurant feature.
+MOOD: This chef has two Michelin stars and a Netflix series. The jacket fits like Hedi Slimane cut it. The apron tells a story. He moves through the kitchen like a conductor. Every detail — the knife roll, the towel placement, the way the apron is tied — is a deliberate act of style.`,
+    female: `STYLING BRIEF — FEMALE CHEF, LUXURY EDITION
+You are styling a head chef for a W Magazine culinary feature.
 
 OUTFIT SPEC:
-- TOP: Modern chef jacket — slim feminine cut, short sleeves, mandarin collar or clean crew neck. Darted at the waist for shape. Premium cotton or cotton-linen, crisp but not stiff.
-- APRON: Crossback linen or canvas apron — elegant and functional. Tied at the waist to define her silhouette.
-- BOTTOM: Slim black chef pants — straight leg or tapered, clean and modern. Think Isabel Marant trousers in black.
-- SHOES: Black leather clogs or clean minimal ankle boots. Comfortable but chic.
-- OPTIONAL: Hair tied in a sleek low bun or under a clean bandana. Minimal jewelry — just a watch.
+- TOP: Modern chef jacket — feminine tailored cut, mandarin collar, short sleeves. Darted at the waist for shape. Premium Japanese cotton, crisp but with beautiful drape. The collar stands perfectly.
+- APRON: Crossback apron in washed linen or supple leather — elegant, defining the waist. Tied simply.
+- BOTTOM: Slim straight black trousers — clean, modern, tailored. Like The Row trousers but kitchen-ready. Ankle-length.
+- SHOES: Black leather clogs or clean minimal black ankle boots. Timeless.
+- OPTIONAL: Hair in a sleek low bun. One thin gold chain.
 
-COLOR: Bright white jacket (classic authority) or off-white/cream for warmth. The apron in raw indigo, black, or natural linen provides contrast.
+COLOR: White jacket (power, purity, authority) or off-white/cream for warmth. Charcoal for edge. The apron in natural linen, indigo, or black adds depth.
 
-MOOD: The chef who got the James Beard Award AND the Vogue feature. Every plate is art, and so is she. The kitchen whites fit like they were cut for her. Elegant power in a working kitchen.`
+MOOD: She got the James Beard AND the Vogue Italia feature in the same year. The kitchen whites are couture-level. She plates food like she composes art. The apron has stories in its creases. This is a woman who turned craft into elegance.`
   },
   lawyer: {
-    male: `STYLING BRIEF — MALE LAWYER
-You are styling a senior attorney for a corporate portrait that will appear in Forbes or The Economist. Power dressing at its finest.
+    male: `STYLING BRIEF — MALE LAWYER, LUXURY EDITION
+You are styling a senior attorney for a portrait in The Rake or Monocle. This is power dressing elevated to an art form.
 
 OUTFIT SPEC:
-- SUIT: Two-piece suit with natural shoulder, clean chest, and a modern slim-but-not-skinny silhouette. The fabric is premium super 130s wool — it has a subtle luster and drapes beautifully. Single-breasted, two-button. The lapel width is current (not too narrow, not too wide).
-- SHIRT: Crisp cotton poplin in white or very pale blue. Spread collar. French cuffs optional.
-- TIE: Silk tie in a tasteful pattern — subtle diagonal stripe, micro dot, or solid textured knit. NOT a power red — something more sophisticated.
-- SHOES: Polished cap-toe oxford or clean penny loafer. Dark leather matching the belt.
-- ACCESSORIES: Quality watch (understated, not flashy), leather portfolio or slim briefcase.
+- SUIT: Two-piece in super 150s Italian wool — the fabric has a buttery hand and subtle luster that photographs beautifully. Single-breasted, two-button, natural shoulder. The lapels are perfectly proportioned to his frame. Full-canvas construction. The suit MOVES with him.
+- SHIRT: Crisp Egyptian cotton poplin in white or palest blue. Spread collar. Perfectly pressed. French cuffs with understated cufflinks.
+- TIE: Italian silk — subtle diagonal stripe, grenadine texture, or rich solid. Deep tones that complement the suit. Tied in a perfect four-in-hand.
+- SHOES: Mirror-polished cap-toe oxford or sleek penny loafer. The leather is museum-quality.
+- ACCESSORIES: Dress watch — Jaeger-LeCoultre or Cartier Tank level of taste. Slim leather portfolio.
 
-COLOR: Read this person's skin tone carefully. Warm undertone → rich navy, deep brown, warm charcoal. Cool undertone → cool grey, blue-black, steel blue. The suit color should make his face the focal point.
+COLOR: Warm skin → midnight navy, rich chocolate, warm charcoal with brown undertones. Cool skin → cool charcoal, blue-grey, steel navy. The suit color makes his face the masterpiece.
 
-MOOD: The attorney opposing counsel does NOT want to face. Every seam is precision. The suit moves with him like a second skin. He looks like he bills $1,500/hour — and is worth every cent.`,
-    female: `STYLING BRIEF — FEMALE LAWYER
-You are styling a senior attorney for a corporate portrait that will appear in Forbes.
+MOOD: The attorney who makes opposing counsel nervous before opening statements. The suit is Brioni-level but worn like it's nothing. He looks like old money even if he isn't. Every crease is intentional. Every button is considered. He doesn't wear the suit — the suit is part of him.`,
+    female: `STYLING BRIEF — FEMALE LAWYER, LUXURY EDITION
+You are styling a senior attorney for a portrait in Harper's Bazaar.
 
 OUTFIT SPEC:
-- SUIT: Power suit — fitted single-breasted blazer with defined waist and clean shoulders. Premium wool crepe or tropical wool. The proportions are modern — slightly cropped blazer with high-waist trousers, OR longer blazer with a midi pencil skirt.
-- TOP: Silk blouse in a complementary tone, or a structured camisole. Sophisticated neckline — not too high, not too low.
-- TROUSERS: Wide-leg or straight-leg, full length, with a clean pressed crease. OR midi pencil skirt with a back slit.
-- SHOES: Pointed-toe pumps (70-90mm heel), refined slingbacks, or elegant loafers. Polished leather.
-- ACCESSORIES: Quality watch or thin bracelet. Structured leather bag. Minimal earrings — gold studs or small hoops.
+- SUIT: Power suit — fitted single-breasted blazer with defined waist, clean shoulder, and modern proportion. Premium wool gabardine or silk-wool blend that photographs like liquid. Slightly cropped blazer with high-waist wide trousers, OR longer blazer with a midi pencil skirt with back slit.
+- TOP: Silk charmeuse blouse in a tonal complement, or a structured silk camisole that shows at the neckline. The fabric catches light beautifully.
+- TROUSERS: Wide-leg or straight, full-length with clean pressed crease. OR midi pencil skirt — the kind that requires precision tailoring.
+- SHOES: Pointed-toe pumps in polished leather (80mm), elegant slingbacks, or refined suede loafers.
+- ACCESSORIES: Quality timepiece or thin gold bangle. Structured leather document bag. Small gold earrings — studs or delicate hoops.
 
-COLOR: Read this person's skin carefully. Warm → rich navy, deep camel, chocolate brown. Cool → charcoal, blue-grey, deep burgundy. Black is always an option but the RIGHT color is more powerful than default black.
+COLOR: Warm skin → rich navy, deep camel, chocolate, warm tobacco. Cool skin → charcoal, cool navy, blue-grey, deep wine. The right color makes black look lazy.
 
-MOOD: She walks into the courtroom and the room shifts. Not because she's loud — because every detail is flawless. The suit is power. The blouse is confidence. The shoes are authority. She looks like she just won a landmark case and has three more before lunch.`
+MOOD: She walks into the courtroom and the temperature changes. Not loud — devastating. The suit fits like it was built on her body. The silk catches the light when she gestures. The shoes click with authority. She argues constitutional law in the morning and attends gallery openings at night. This is a woman for whom power is not performed — it's inherent.`
   },
 }
 
