@@ -273,104 +273,114 @@ export const workJobTypes: WorkJobType[] = [
 
 const workDirectives: Record<string, { male: string; female: string }> = {
   doctor: {
-    male: `PROFESSION: MALE DOCTOR / PHYSICIAN — ACTUAL WORKING ATTIRE
-This man is a doctor actively working in a hospital or clinic.
-- Short-sleeve V-neck scrub top in navy, ceil blue, or dark green — fitted but comfortable
-- Matching scrub pants with drawstring — clean, not baggy
-- Clean white sneakers or comfortable clogs (Dansko, Crocs professional)
-- Stethoscope around the neck or clipped to pocket
-- ID badge clipped to scrub pocket
-- MUST look like a real working doctor on duty — approachable, competent, ready to move`,
-    female: `PROFESSION: FEMALE DOCTOR / PHYSICIAN — ACTUAL WORKING ATTIRE
-This woman is a doctor actively working in a hospital or clinic.
-- Short-sleeve V-neck or fitted scrub top in ceil blue, navy, or wine — flattering modern cut
-- Matching scrub pants — jogger-style or straight fit
-- Clean white sneakers or comfortable professional clogs
+    male: `PROFESSION: MALE DOCTOR — DESIGNER SCRUBS
+This man is a doctor. Dress him in elevated, designer-level medical scrubs that look stylish while being fully functional.
+- Short-sleeve V-neck scrub top — slim athletic fit, premium stretch fabric with subtle texture
+- Matching scrub jogger pants — tapered ankle, modern silhouette (think FIGS, Jaanuu designer scrubs)
+- Premium sneakers — clean minimalist white (Common Projects style) or On Running
 - Stethoscope around the neck
-- ID badge clipped to scrub pocket
-- MUST look like a real working doctor on duty — competent, professional, comfortable`
+- COLOR MUST BE CHOSEN based on this person's skin tone and undertone from the photo
+- MUST look like the best-dressed doctor in the hospital — stylish, modern, head-turning but still professional`,
+    female: `PROFESSION: FEMALE DOCTOR — DESIGNER SCRUBS
+This woman is a doctor. Dress her in elevated, designer-level medical scrubs that look chic while being fully functional.
+- Short-sleeve or cap-sleeve scrub top — feminine fitted cut, premium stretch fabric with subtle texture
+- Matching scrub jogger pants — tapered, flattering silhouette (think FIGS, Jaanuu, Healing Hands)
+- Premium sneakers — clean white or stylish neutral (Veja, On Running)
+- Stethoscope around the neck
+- COLOR MUST BE CHOSEN based on this person's skin tone, undertone, and hair color from the photo
+- MUST look like the most stylish doctor in the hospital — chic, confident, head-turning but professional`
   },
   dentist: {
-    male: `PROFESSION: MALE DENTIST — ACTUAL WORKING ATTIRE
-This man is a dentist working in a dental clinic.
-- Short-sleeve scrub top — fitted modern cut in teal, navy, or charcoal
-- Matching scrub pants — clean straight or jogger fit
-- Clean white sneakers or minimalist professional shoes
-- Optional: disposable or reusable dental mask hanging around neck
-- MUST look like a real working dentist — clean, precise, approachable, hygienic`,
-    female: `PROFESSION: FEMALE DENTIST — ACTUAL WORKING ATTIRE
-This woman is a dentist working in a dental clinic.
-- Short-sleeve fitted scrub top in soft teal, navy, or white — modern feminine cut
-- Matching scrub pants — jogger-style or tapered fit
-- Clean white sneakers or elegant professional shoes
-- Optional: dental mask around neck
-- MUST look like a real working dentist — clean, precise, approachable, hygienic`
+    male: `PROFESSION: MALE DENTIST — DESIGNER DENTAL WEAR
+This man is a dentist. Dress him in elevated, designer-level dental scrubs that are sleek and modern.
+- Short-sleeve scrub top — slim tailored fit with clean lines, premium fabric
+- Matching scrub pants — jogger or slim tapered fit, modern proportions
+- Premium minimalist sneakers — white or tonal neutral
+- Optional: designer dental loupe around neck
+- COLOR MUST BE CHOSEN based on this person's skin tone and undertone from the photo
+- MUST look like a dentist at a premium boutique clinic — polished, precise, fashionable yet hygienic`,
+    female: `PROFESSION: FEMALE DENTIST — DESIGNER DENTAL WEAR
+This woman is a dentist. Dress her in elevated, designer-level dental scrubs that are sleek and feminine.
+- Short-sleeve fitted scrub top — modern feminine cut with flattering seaming, premium fabric
+- Matching scrub pants — jogger or tapered fit with ankle detail
+- Premium minimalist sneakers — white or soft neutral
+- Optional: dental mask casually around neck
+- COLOR MUST BE CHOSEN based on this person's skin tone, hair color, and undertone from the photo
+- MUST look like a dentist at a high-end aesthetic clinic — chic, clean, effortlessly stylish`
   },
   nurse: {
-    male: `PROFESSION: MALE NURSE — ACTUAL WORKING ATTIRE
-This man is a nurse working on a hospital ward.
-- Short-sleeve scrub set — well-fitted, not baggy, modern athletic cut
-- Colors: ceil blue, navy, charcoal, or hunter green
-- Comfortable shoes — clean nursing clogs, Nike or New Balance nursing sneakers
-- ID badge, pen in pocket, maybe a watch with second hand
-- MUST look like a real working nurse on shift — competent, caring, ready to help`,
-    female: `PROFESSION: FEMALE NURSE — ACTUAL WORKING ATTIRE
-This woman is a nurse working on a hospital ward.
-- Short-sleeve fitted scrub set in flattering modern cut
-- Colors: ceil blue, wine, teal, navy, or soft grey
-- Comfortable shoes — clean nursing sneakers or professional clogs
-- ID badge, pen in pocket
-- MUST look like a real working nurse on shift — competent, caring, ready to help`
+    male: `PROFESSION: MALE NURSE — DESIGNER NURSING SCRUBS
+This man is a nurse. Dress him in elevated, designer-level nursing scrubs with athletic styling.
+- Short-sleeve scrub top — athletic fit with raglan or contrast seaming, performance fabric
+- Matching scrub jogger pants — tapered with elastic cuffs, modern sporty look
+- Premium nursing sneakers — Nike, Hoka, or On Running in clean colorway
+- Functional details: multiple pockets, pen slot, ID clip
+- COLOR MUST BE CHOSEN based on this person's skin tone and undertone from the photo
+- MUST look like the coolest nurse on the ward — fit, modern, approachable yet professional`,
+    female: `PROFESSION: FEMALE NURSE — DESIGNER NURSING SCRUBS
+This woman is a nurse. Dress her in elevated, designer-level nursing scrubs with a feminine athletic edge.
+- Short-sleeve or mock-wrap scrub top — fitted feminine cut, performance fabric, flattering neckline
+- Matching scrub jogger pants — tapered, figure-flattering with ankle detail
+- Premium nursing sneakers — Nike, New Balance, or Hoka in fresh colorway
+- Functional details: pockets, pen slot
+- COLOR MUST BE CHOSEN based on this person's skin tone, hair color, and undertone from the photo
+- MUST look like a nurse everyone admires — stylish, caring, put-together`
   },
   vet: {
-    male: `PROFESSION: MALE VETERINARIAN — ACTUAL WORKING ATTIRE
-This man is a vet working in an animal clinic.
-- Short-sleeve scrub top in hunter green, teal, or navy — practical for hands-on work
-- Matching scrub pants — durable, comfortable, room to move
-- Sturdy comfortable shoes — clean sneakers or practical clogs that can handle messes
-- Optional: light disposable apron or stethoscope
-- MUST look like a real working vet — warm, capable, hands-on, animal-friendly`,
-    female: `PROFESSION: FEMALE VETERINARIAN — ACTUAL WORKING ATTIRE
-This woman is a vet working in an animal clinic.
-- Short-sleeve fitted scrub top in sage green, teal, or navy — practical and flattering
-- Matching scrub pants — jogger or straight fit, durable
-- Comfortable sneakers or practical clogs
+    male: `PROFESSION: MALE VETERINARIAN — DESIGNER VET SCRUBS
+This man is a vet. Dress him in elevated, designer-level veterinary scrubs that are rugged yet stylish.
+- Short-sleeve scrub top — relaxed athletic fit, durable premium fabric with subtle outdoor-inspired details
+- Matching scrub cargo or jogger pants — functional pockets, comfortable
+- Clean rugged sneakers — New Balance, Salomon style in earth tones
 - Optional: stethoscope around neck
-- MUST look like a real working vet — warm, capable, hands-on, animal-friendly`
+- COLOR MUST BE CHOSEN based on this person's skin tone — earth tones, sage, forest, or teal recommended
+- MUST look like a vet at a premium animal hospital — warm, capable, stylish but hands-on ready`,
+    female: `PROFESSION: FEMALE VETERINARIAN — DESIGNER VET SCRUBS
+This woman is a vet. Dress her in elevated, designer-level veterinary scrubs that are practical yet chic.
+- Short-sleeve fitted scrub top — flattering cut, durable premium fabric
+- Matching scrub jogger or straight pants — functional and figure-flattering
+- Clean stylish sneakers — Veja, New Balance in natural tones
+- Optional: stethoscope around neck
+- COLOR MUST BE CHOSEN based on this person's skin tone and hair — sage, teal, warm earth, or navy recommended
+- MUST look like a vet at a boutique animal clinic — warm, stylish, effortlessly put-together`
   },
   chef: {
-    male: `PROFESSION: MALE CHEF — ACTUAL WORKING ATTIRE
-This man is a chef working in a professional kitchen.
-- Classic double-breasted chef jacket in white OR modern single-breasted short-sleeve chef coat
-- Professional kitchen apron — tied at waist, black or grey
-- Black or dark checkered chef pants — loose and practical for kitchen movement
-- Non-slip kitchen shoes or clogs — black, practical
-- Chef's toque or modern kitchen beanie/bandana
-- MUST look like a real working chef in a busy kitchen — passionate, skilled, in action`,
-    female: `PROFESSION: FEMALE CHEF — ACTUAL WORKING ATTIRE
-This woman is a chef working in a professional kitchen.
-- Modern fitted chef jacket in white OR short-sleeve chef coat — practical feminine cut
-- Professional kitchen apron — tied at waist
-- Black or dark chef pants — comfortable, practical fit
-- Non-slip kitchen shoes — black, comfortable
-- Chef's toque or modern kitchen bandana
-- MUST look like a real working chef in a busy kitchen — passionate, skilled, in action`
+    male: `PROFESSION: MALE CHEF — DESIGNER CHEF COAT
+This man is a chef. Dress him in a modern designer chef jacket that belongs in a Michelin-star kitchen.
+- Modern chef jacket — single-breasted, short-sleeve, mandarin collar, slim fit in premium cotton
+- Designer kitchen apron — waxed canvas or premium leather, tied at waist
+- Dark slim chef pants — black or charcoal, clean modern fit (NOT checkered)
+- Premium kitchen shoes — minimal black leather clogs or clean ankle boots
+- Optional: modern black kitchen beanie
+- COLOR MUST BE CHOSEN for the jacket based on skin tone — crisp white, charcoal, or warm grey
+- MUST look like a head chef at a design-forward restaurant — creative, sharp, commanding`,
+    female: `PROFESSION: FEMALE CHEF — DESIGNER CHEF COAT
+This woman is a chef. Dress her in a modern designer chef jacket that belongs in a Michelin-star kitchen.
+- Modern chef jacket — fitted feminine cut, short-sleeve, clean lines, premium cotton
+- Designer kitchen apron — waxed canvas or linen, elegant tie
+- Dark slim chef pants — black, flattering straight or tapered fit
+- Premium kitchen shoes — minimal black clogs or clean ankle boots
+- Optional: modern kitchen bandana or headband
+- COLOR MUST BE CHOSEN for the jacket based on skin tone — white, off-white, warm grey, or charcoal
+- MUST look like a head chef at a design-forward restaurant — creative, elegant, confident`
   },
   lawyer: {
-    male: `PROFESSION: MALE LAWYER / ATTORNEY — WORKING ATTIRE
-This man is a lawyer at work in an office or court.
-- Well-fitted suit — navy, charcoal, or dark grey — clean professional silhouette
-- Crisp dress shirt — white or light blue — with a tie
-- Polished leather oxford shoes or cap-toe derbies
-- Professional accessories: quality watch, leather briefcase or portfolio
-- MUST look like a working attorney — authoritative, sharp, confident`,
-    female: `PROFESSION: FEMALE LAWYER / ATTORNEY — WORKING ATTIRE
-This woman is a lawyer at work in an office or court.
-- Tailored suit — fitted blazer in navy, charcoal, or black
-- Silk blouse or structured top — professional neckline
-- Tailored trousers or pencil skirt — clean fit
-- Professional shoes — pointed-toe pumps, kitten heels, or refined flats
-- MUST look like a working attorney — authoritative, sharp, confident`
+    male: `PROFESSION: MALE LAWYER — DESIGNER SUIT
+This man is a lawyer. Dress him in an impeccably tailored designer suit that commands the courtroom.
+- Slim, modern-fit suit — precision tailoring, premium wool or wool-blend fabric
+- Crisp dress shirt — white or pale blue, with a tasteful silk tie
+- Polished leather oxford shoes or loafers
+- Quality accessories: watch, leather portfolio
+- SUIT COLOR MUST BE CHOSEN based on this person's skin tone and undertone from the photo
+- MUST look like a top attorney at an elite firm — sharp, powerful, effortlessly stylish`,
+    female: `PROFESSION: FEMALE LAWYER — DESIGNER SUIT
+This woman is a lawyer. Dress her in an impeccably tailored designer suit that commands the courtroom.
+- Modern power suit — fitted blazer with defined waist, premium wool or crepe fabric
+- Silk blouse or structured camisole — sophisticated
+- Tailored trousers or midi pencil skirt — precise fit
+- Elegant shoes — pointed-toe pumps or refined mules
+- SUIT COLOR MUST BE CHOSEN based on this person's skin tone and undertone from the photo
+- MUST look like a top attorney at an elite firm — powerful, polished, unmistakably stylish`
   },
 }
 
@@ -380,28 +390,28 @@ export function getWorkScenarios(jobType: string): ScenarioConfig[] {
 
   return [
     {
-      id: 'work-standard',
-      labelKo: '기본 근무복', labelEn: 'Standard On-Duty', labelJa: '標準勤務服', labelZh: '标准工作服', labelEs: 'Uniforme Estándar',
-      directiveMale: `${job.male}\n\nSTYLE: STANDARD ON-DUTY — The everyday working uniform. Clean, practical, exactly what this professional wears during a normal shift. Nothing fancy, just a well-fitted, well-maintained version of the real uniform.`,
-      directiveFemale: `${job.female}\n\nSTYLE: STANDARD ON-DUTY — The everyday working uniform. Clean, practical, exactly what this professional wears during a normal shift. Nothing fancy, just a well-fitted, well-maintained version of the real uniform.`,
+      id: 'work-signature',
+      labelKo: '시그니처 디자이너', labelEn: 'Signature Designer', labelJa: 'シグネチャー', labelZh: '设计师签名款', labelEs: 'Firma del Diseñador',
+      directiveMale: `${job.male}\n\nSTYLE: SIGNATURE DESIGNER — The hero look. Analyze this person's face shape, skin tone, and body proportions, then choose THE single best color and fit for them. This is the #1 recommendation — the color and cut that makes them look their absolute best in this uniform.`,
+      directiveFemale: `${job.female}\n\nSTYLE: SIGNATURE DESIGNER — The hero look. Analyze this person's face shape, skin tone, and body proportions, then choose THE single best color and fit for them. This is the #1 recommendation — the color and cut that makes them look their absolute best in this uniform.`,
     },
     {
-      id: 'work-modern',
-      labelKo: '모던 핏', labelEn: 'Modern Fit', labelJa: 'モダンフィット', labelZh: '现代版型', labelEs: 'Corte Moderno',
-      directiveMale: `${job.male}\n\nSTYLE: MODERN FIT — Same working uniform but with a contemporary athletic cut. Slimmer, tapered, jogger-style pants, modern fabric that looks fresh. Like the trendy young professional everyone notices.`,
-      directiveFemale: `${job.female}\n\nSTYLE: MODERN FIT — Same working uniform but with a contemporary athletic cut. Fitted, tapered, flattering proportions, modern fabric. Like the stylish young professional everyone admires.`,
+      id: 'work-warm-tone',
+      labelKo: '웜톤 매치', labelEn: 'Warm Tone Match', labelJa: 'ウォームトーン', labelZh: '暖色调搭配', labelEs: 'Tono Cálido',
+      directiveMale: `${job.male}\n\nSTYLE: WARM TONE — Choose a warm-toned color palette for this uniform based on the person's skin undertone. Earthy, warm colors: burgundy, warm navy, forest green, terracotta, camel, olive. Pick the warmest color that flatters THIS specific person's complexion.`,
+      directiveFemale: `${job.female}\n\nSTYLE: WARM TONE — Choose a warm-toned color palette for this uniform based on the person's skin undertone. Earthy, warm colors: burgundy, warm wine, sage, dusty rose, warm camel, olive. Pick the warmest color that flatters THIS specific person's complexion.`,
     },
     {
-      id: 'work-color',
-      labelKo: '컬러 코디', labelEn: 'Color Coordinated', labelJa: 'カラーコーデ', labelZh: '色彩搭配', labelEs: 'Color Coordinado',
-      directiveMale: `${job.male}\n\nSTYLE: COLOR COORDINATED — Same working uniform but in a distinctive color choice. Try a different professional color that stands out while staying appropriate — wine, forest green, charcoal, or navy. Well-coordinated from head to toe.`,
-      directiveFemale: `${job.female}\n\nSTYLE: COLOR COORDINATED — Same working uniform but in a distinctive color choice. Try a different professional color that stands out while staying appropriate — wine, soft sage, dusty rose, or navy. Well-coordinated from head to toe.`,
+      id: 'work-cool-tone',
+      labelKo: '쿨톤 매치', labelEn: 'Cool Tone Match', labelJa: 'クールトーン', labelZh: '冷色调搭配', labelEs: 'Tono Frío',
+      directiveMale: `${job.male}\n\nSTYLE: COOL TONE — Choose a cool-toned color palette for this uniform based on the person's skin undertone. Cool, refined colors: steel blue, charcoal, slate grey, cool navy, ice blue, deep teal. Pick the coolest color that flatters THIS specific person's complexion.`,
+      directiveFemale: `${job.female}\n\nSTYLE: COOL TONE — Choose a cool-toned color palette for this uniform based on the person's skin undertone. Cool, refined colors: lavender grey, ceil blue, cool navy, slate, soft teal, charcoal. Pick the coolest color that flatters THIS specific person's complexion.`,
     },
     {
       id: 'work-offduty',
       labelKo: '출퇴근 룩', labelEn: 'Off-Duty Commute', labelJa: '通勤スタイル', labelZh: '通勤穿搭', labelEs: 'Look de Ida al Trabajo',
-      directiveMale: `${job.male}\n\nSTYLE: OFF-DUTY COMMUTE — What this professional looks like commuting to work. Smart casual clothes that hint at their profession — like throwing on a nice jacket over scrubs, or the casual outfit before changing into uniform. Professional but relaxed.`,
-      directiveFemale: `${job.female}\n\nSTYLE: OFF-DUTY COMMUTE — What this professional looks like commuting to work. Smart casual clothes that hint at their profession — like a stylish layer over scrubs, or the chic outfit before changing into uniform. Professional but relaxed.`,
+      directiveMale: `${job.male}\n\nSTYLE: OFF-DUTY COMMUTE — What this professional looks like heading to work. Stylish layering over or instead of the uniform — a designer jacket, clean sneakers, premium bag. The kind of commute outfit that makes people think "that person has great taste AND an important job."`,
+      directiveFemale: `${job.female}\n\nSTYLE: OFF-DUTY COMMUTE — What this professional looks like heading to work. Stylish layering over or instead of the uniform — a chic coat, designer bag, elevated sneakers or heels. The kind of commute outfit that makes people think "she has incredible taste AND an important job."`,
     },
   ]
 }
