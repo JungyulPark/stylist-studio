@@ -273,104 +273,107 @@ export const workJobTypes: WorkJobType[] = [
 
 const workDirectives: Record<string, { male: string; female: string }> = {
   doctor: {
-    male: `STYLING BRIEF — MALE DOCTOR, LUXURY EDITION
-You are styling a doctor for a Loro Piana x premium hospital collaboration campaign. This is NOT standard scrubs — this is what a doctor looks like when the uniform is designed by a luxury house.
+    male: `STYLING BRIEF — MALE DOCTOR, PREMIUM MEDICAL SCRUBS
+You are styling a doctor in realistic, high-quality medical scrubs — the kind from FIGS, Jaanuu, or Grey's Anatomy brand. NOT pajamas, NOT loungewear, NOT a tracksuit. These are REAL medical scrubs.
 
 OUTFIT SPEC:
-- TOP: Short-sleeve medical top in premium Italian jersey — the fabric has a soft cashmere-like hand and a subtle matte luster. Tailored slim fit with invisible darts. Clean mandarin collar or refined V-neck with bound edges. The stitching is invisible, the fabric drapes like knitwear.
-- BOTTOM: Slim straight-leg medical trousers — ankle-length, clean pressed front crease, no elastic cuff. The silhouette is like Jil Sander tailored trousers but in performance medical fabric. Sits cleanly at the waist with a hidden drawstring.
-- SHOES: Premium white leather slip-on loafers or clean Italian leather sneakers with a thin sole. Effortlessly elegant.
-- ACCESSORIES: Stethoscope in brushed steel around the neck. One quality watch — Nomos or Junghans style.
+- TOP: Classic V-neck short-sleeve scrub top — the V-neck is distinctive (NOT crew neck, NOT mandarin collar). It must look like an actual medical scrub top. Slightly relaxed fit that shows a good physique without being tight. LEFT CHEST POCKET with visible pen clip and name embroidery area. The fabric is structured medical-grade polyester-rayon blend — it holds its shape, NOT soft/drapey like a T-shirt.
+- BOTTOM: Straight-leg scrub pants with a comfortable but NOT baggy fit — tapered slightly toward the ankle. Drawstring waist (can be partially visible). Side cargo pocket on the thigh. The pants should look like medical scrub pants, NOT dress trousers and NOT joggers.
+- SHOES: Clean white or grey athletic nursing shoes (like New Balance, Hoka, or Dansko clogs). Practical, clean, medical-appropriate.
+- ACCESSORIES: Stethoscope draped around the neck. Hospital ID badge clipped to the pocket. Simple watch.
 
-COLOR: Read this person's skin undertone. Warm → deep forest green, rich burgundy, warm stone grey. Cool → midnight navy, slate blue, cool pewter. The color should look like it was dyed in a Florentine workshop — rich, deep, never flat.
+COLOR MUST BE CHOSEN based on this person's skin tone and undertone from the photo. Warm → deep teal, hunter green, burgundy, warm grey. Cool → ceil blue (classic hospital blue), navy, slate, pewter. The color should be a REAL scrub color — matte, solid, no patterns.
 
-MOOD: He looks like a surgeon who also collects contemporary art. The uniform is so well-made you'd wear it to dinner. Quiet wealth. Effortless authority. People assume his scrubs are custom — they're right.`,
-    female: `STYLING BRIEF — FEMALE DOCTOR, LUXURY EDITION
-You are styling a female doctor for a Brunello Cucinelli x premium hospital collaboration campaign.
+CRITICAL: The fabric must look like MEDICAL SCRUBS FABRIC — structured, slightly stiff, matte finish. NOT like cotton jersey, NOT like silk, NOT like knitwear. Think of what you see in a hospital.`,
+    female: `STYLING BRIEF — FEMALE DOCTOR, PREMIUM MEDICAL SCRUBS
+You are styling a female doctor in realistic, high-quality medical scrubs — like FIGS Zamora jogger set or Jaanuu scrubs. NOT pajamas, NOT loungewear.
 
 OUTFIT SPEC:
-- TOP: Short-sleeve medical top in luxury Italian stretch jersey — soft, matte, with beautiful drape. Princess seaming defines the waist subtly. The neckline is a refined V or a clean boat neck that frames the collarbones. Every edge is bound, every seam is flat-felled. This is couture construction in a medical garment.
-- BOTTOM: Tailored ankle-length straight trousers with a single front crease — the kind that looks like they were pressed five minutes ago. Clean flat front, hidden waistband, no elastic visible. The hem breaks cleanly above the ankle.
-- SHOES: White Italian leather loafers, clean suede mules, or minimal leather sneakers. Pristine.
-- ACCESSORIES: Stethoscope. Small gold studs. One thin gold bracelet.
+- TOP: Fitted V-neck short-sleeve scrub top — the classic medical V-neck shape. Fitted through the waist (not boxy) to show a flattering silhouette, but professional. LEFT CHEST POCKET with pen clip area. Optional: one additional pocket at the hip. Structured medical fabric — holds its shape, not drapey.
+- BOTTOM: Slim straight or slightly tapered scrub pants — NOT skin-tight, but shaped and modern. Mid-rise with drawstring waist. Side cargo pocket on the thigh. The silhouette is clean and professional. NOT jogger cuffs — clean straight hem at the ankle.
+- SHOES: Clean white athletic nursing shoes or white clogs. Medical-appropriate, practical.
+- ACCESSORIES: Stethoscope around neck. Hospital ID badge. Small stud earrings only.
 
-COLOR: Warm skin → dusty rose, sage, warm camel-grey, muted wine. Cool skin → powder blue, lavender-grey, icy sage, cool stone. The color should look expensive — not bright, not primary, but deep and nuanced like a watercolor.
+COLOR MUST BE CHOSEN based on this person's skin tone and undertone from the photo. Warm → deep teal, sage green, burgundy, dusty rose. Cool → ceil blue, navy, lavender, cool grey. Classic medical scrub colors — matte, solid.
 
-MOOD: She looks like the chief of surgery at a private hospital in Milan. The fabric moves like water. The fit is so precise it looks effortless. Other doctors ask where she got her scrubs. The answer is: they don't make them anymore.`
+CRITICAL: Must look like ACTUAL medical scrubs, not fashion knitwear. The fabric is structured polyester-blend with a matte finish. A doctor would actually wear this to work.`
   },
   dentist: {
-    male: `STYLING BRIEF — MALE DENTIST, LUXURY EDITION
-You are styling a dentist for a premium aesthetic clinic — the kind where the interiors were designed by an architect and the uniforms match.
+    male: `STYLING BRIEF — MALE DENTIST, PREMIUM DENTAL SCRUBS
+You are styling a dentist in clean, modern dental clinic scrubs. NOT pajamas, NOT loungewear.
 
 OUTFIT SPEC:
-- TOP: Clean short-sleeve medical top with a refined crew neck or subtle mandarin collar. The fabric is matte technical jersey with the weight of luxury knitwear — structured but soft. Slim tailored fit, flat-felled seams, no visible topstitching. The collar sits perfectly flat.
-- BOTTOM: Slim straight ankle-length trousers — pressed crease, clean flat front, tapered gently to the ankle. No cuffs, no elastic. Like Theory or COS tailored pants in medical-grade fabric.
-- SHOES: White Italian leather minimal sneakers or clean white leather slip-ons. The shoe says "I care about details."
+- TOP: Short-sleeve scrub top — clean V-neck or mock-neck (dental professionals often prefer mock-neck to prevent debris). Slim but comfortable fit. LEFT CHEST POCKET with pen. Structured medical fabric, matte finish. Can be slightly more fitted than standard scrubs for a modern clinic aesthetic.
+- BOTTOM: Straight-leg scrub pants — comfortable, not baggy, with drawstring waist. Clean straight hem. Side pocket. Professional medical pants silhouette.
+- SHOES: Clean white nursing shoes or white clogs. Pristine and practical.
+- OPTIONAL: Dental loupes pushed up on forehead or hanging around neck.
 
-COLOR: Warm skin → charcoal, deep olive, warm taupe. Cool skin → steel blue, slate grey, cool white. All-white is powerful if the person has strong features and contrast.
+COLOR MUST BE CHOSEN based on this person's skin tone. Warm → charcoal, deep olive, warm taupe. Cool → steel blue, slate grey, cool white. All-white is classic for dental clinics. Colors should be solid, matte — real scrub colors.
 
-MOOD: His clinic has a two-month waitlist. Not because of marketing — because patients feel the difference the moment they walk in. Everything, including him, looks considered. Precise. Immaculate. The uniform costs more than most suits.`,
-    female: `STYLING BRIEF — FEMALE DENTIST, LUXURY EDITION
-You are styling a female dentist for a premium aesthetic clinic campaign.
+CRITICAL: Fabric must look like structured medical scrubs — NOT soft knitwear, NOT silk, NOT cotton jersey.`,
+    female: `STYLING BRIEF — FEMALE DENTIST, PREMIUM DENTAL SCRUBS
+You are styling a female dentist in modern dental clinic scrubs.
 
 OUTFIT SPEC:
-- TOP: Fitted short-sleeve medical top — crew neck or subtle wrap detail. Luxury technical jersey with matte sheen. The fit follows her body beautifully — darted at the waist, skimming the torso without clinging. Every seam is invisible.
-- BOTTOM: Tailored ankle-length slim trousers — clean pressed crease, flat front, the kind of trouser that makes everything look intentional. Mid-rise, elegant.
-- SHOES: White leather pointed-toe mules or clean minimal sneakers. Pristine, polished.
+- TOP: Fitted short-sleeve scrub top — mock-neck or clean V-neck. Fitted at the waist for a flattering but professional shape. LEFT CHEST POCKET. Structured medical fabric, matte.
+- BOTTOM: Slim straight scrub pants — mid-rise, drawstring waist, clean straight hem at ankle. Not tight but shaped. Professional.
+- SHOES: White nursing shoes or white clogs. Clean and practical.
 
-COLOR: Warm → soft sage, muted blush, warm sand, rose-tinted grey. Cool → powder blue, cool white, lavender-grey, icy mint. Dental clinics are bright — the color should be soft and flattering under clinic lighting.
+COLOR MUST BE CHOSEN based on skin tone. Warm → soft sage, warm sand, muted blush. Cool → powder blue, cool white, lavender-grey. Dental clinic colors — clean, bright, professional.
 
-MOOD: She looks like she was styled by The Row's creative director for her clinic photoshoot. Every surface in the clinic is white, and she is the most elegant thing in the room. Patients relax the moment they see her. Everything whispers quality.`
+CRITICAL: Must look like actual dental scrubs, not fashion wear.`
   },
   nurse: {
-    male: `STYLING BRIEF — MALE NURSE, LUXURY EDITION
-You are styling a nurse for a luxury hospital group's brand film — this hospital is where heads of state and CEOs go.
+    male: `STYLING BRIEF — MALE NURSE, PREMIUM MEDICAL SCRUBS
+You are styling a male nurse in professional hospital scrubs. NOT pajamas, NOT athletic wear.
 
 OUTFIT SPEC:
-- TOP: Short-sleeve medical top with refined athletic construction — the fit is clean through the shoulders and torso, showing his build without being tight. Premium Italian performance jersey with a subtle sheen that catches light. Contrast binding at the neckline and sleeves — one tone-on-tone detail that elevates everything.
-- BOTTOM: Slim straight medical trousers — ankle-length, pressed crease, clean drape. Not joggers. These are tailored trousers in technical fabric. The leg line is clean and modern.
-- SHOES: Premium white sneakers with a leather upper and minimal design. Or clean white leather slip-ons. Box-fresh.
+- TOP: V-neck short-sleeve scrub top — classic medical V-neck shape. Comfortable fit through the shoulders and torso, not tight but showing a clean silhouette. LEFT CHEST POCKET with pen. Optional second pocket at the hip. Structured medical polyester-blend fabric with matte finish.
+- BOTTOM: Straight-leg scrub pants — comfortable fit, not baggy, with drawstring waist. Cargo pocket on the side thigh. Clean straight hem. These are standard medical scrub pants — functional and professional.
+- SHOES: Clean white athletic nursing shoes or white Crocs/Dansko clogs. Hospital-appropriate.
+- ACCESSORIES: Stethoscope around neck. Hospital ID badge on pocket. Simple digital or analog watch.
 
-COLOR: Warm skin → hunter green, warm grey, deep wine. Cool skin → midnight navy, cool steel, ceil blue. The color is rich, saturated, never washed-out.
+COLOR MUST BE CHOSEN based on skin tone. Warm → hunter green, warm grey, deep wine, teal. Cool → ceil blue, navy, cool steel, pewter. Standard hospital scrub colors — solid, matte.
 
-MOOD: The nurse at a hospital where rooms cost $3,000 a night. His uniform looks like it was tailored at Savile Row. He carries himself like an officer. Patients feel they're in the best hands in the world — and they are.`,
-    female: `STYLING BRIEF — FEMALE NURSE, LUXURY EDITION
-You are styling a nurse for a luxury hospital group's brand film.
+CRITICAL: These must look like REAL hospital scrubs — structured fabric, medical-grade appearance. NOT soft cotton T-shirts, NOT athleisure.`,
+    female: `STYLING BRIEF — FEMALE NURSE, PREMIUM MEDICAL SCRUBS
+You are styling a female nurse in professional hospital scrubs.
 
 OUTFIT SPEC:
-- TOP: Fitted short-sleeve medical top with elegant construction — modern V-neck or mock-wrap with clean draping. The fabric is premium Italian jersey, soft and fluid. The fit defines her waist and skims beautifully. Invisible zipper or snap closure.
-- BOTTOM: Tailored slim straight trousers to the ankle — pressed crease, clean front, flattering through the hip and thigh. The silhouette is polished, like tailored dress pants in medical fabric.
-- SHOES: White leather loafers, clean white sneakers, or elegant white mules. Immaculate.
+- TOP: V-neck or mock-wrap short-sleeve scrub top — fitted at the waist for a feminine but professional silhouette. LEFT CHEST POCKET. The fabric is structured medical-grade polyester blend, matte finish — holds its shape.
+- BOTTOM: Slim straight scrub pants — comfortable through the hip, clean straight leg to the ankle. Drawstring waist. Side cargo pocket. Professional medical pants.
+- SHOES: Clean white nursing shoes, white clogs, or white athletic shoes. Practical and clean.
+- ACCESSORIES: Stethoscope. ID badge. Small stud earrings only.
 
-COLOR: Warm → soft wine, warm teal, sage. Cool → ceil blue, cool lavender, silver-grey. The tone should be rich enough to look intentional but soft enough to feel approachable.
+COLOR MUST BE CHOSEN based on skin tone. Warm → wine, warm teal, sage. Cool → ceil blue, lavender, silver-grey. Real hospital scrub colors — solid, matte.
 
-MOOD: She looks like she stepped out of a Massimo Dutti campaign and into the ward. The fabric moves like silk. The fit is impeccable. She makes every other nurse wonder who makes her scrubs. This is medical wear reimagined as luxury.`
+CRITICAL: Must look like actual nursing scrubs. Structured fabric, professional fit. Not loungewear.`
   },
   vet: {
-    male: `STYLING BRIEF — MALE VETERINARIAN, LUXURY EDITION
-You are styling a vet for an Hermès "artisan of life" campaign — where the love of animals meets refined taste.
+    male: `STYLING BRIEF — MALE VETERINARIAN, PRACTICAL VET SCRUBS
+You are styling a veterinarian in practical, durable vet clinic scrubs. NOT pajamas.
 
 OUTFIT SPEC:
-- TOP: Short-sleeve medical top in heavyweight premium cotton jersey — the kind with a beautiful hand-feel and subtle texture. Relaxed but tailored fit. Clean collar, chest pocket. The fabric is durable but looks luxurious — think Brunello Cucinelli casual.
-- BOTTOM: Slim straight chino-style medical pants — durable cotton-blend, flat front, ankle-length with a clean hem. Like premium workwear trousers. No jogger cuffs.
-- SHOES: Clean leather Chelsea boots in tan or clean white leather sneakers. Rugged-luxe.
-- OPTIONAL: Stethoscope. Rolled sleeves showing forearms.
+- TOP: V-neck short-sleeve scrub top — relaxed but not baggy. Chest pocket with pen. Durable cotton-polyester blend fabric, thicker than hospital scrubs for durability. Practical for animal handling.
+- BOTTOM: Straight-leg scrub pants or cargo-style work pants — roomy enough for movement, with cargo pockets for tools. Drawstring waist. Durable, stain-resistant fabric. NOT dress pants.
+- SHOES: Clean leather Chelsea boots in brown/tan, or sturdy white athletic shoes. Practical for standing all day.
+- ACCESSORIES: Stethoscope around neck. Rolled sleeves showing forearms. ID badge optional.
 
-COLOR: Earth and nature tones — warm skin → forest green, olive, warm sand, tobacco. Cool skin → ocean teal, cool moss, slate blue, stone grey. The palette should feel like a walk through the English countryside.
+COLOR MUST BE CHOSEN based on skin tone. Earth tones work best — warm skin → forest green, olive, warm sand, tobacco. Cool skin → teal, cool moss, slate blue, stone grey. Darker colors practical for vet work.
 
-MOOD: He's the vet that horse-farm owners fly in from another country. He looks like he could be at a country estate in Cotswolds or a clinic in Manhattan. Rugged but refined. His hands are gentle and his clothes are impeccable.`,
-    female: `STYLING BRIEF — FEMALE VETERINARIAN, LUXURY EDITION
-You are styling a female vet for a premium veterinary brand campaign.
+CRITICAL: Must look like actual veterinary scrubs — durable, practical, workwear feel. NOT luxury knitwear.`,
+    female: `STYLING BRIEF — FEMALE VETERINARIAN, PRACTICAL VET SCRUBS
+You are styling a female vet in practical vet clinic scrubs.
 
 OUTFIT SPEC:
-- TOP: Fitted short-sleeve medical top in soft premium cotton jersey — beautiful drape, subtle texture. Feminine but practical cut, well-proportioned for movement.
-- BOTTOM: Slim straight ankle-length trousers — flat front, durable premium fabric. Practical but polished, like tailored chinos.
-- SHOES: Clean white leather sneakers or tan leather ankle boots. Beautiful but practical.
-- OPTIONAL: Stethoscope around neck.
+- TOP: V-neck short-sleeve scrub top — fitted at waist, practical for movement. Chest pocket with pen. Durable cotton-poly blend fabric.
+- BOTTOM: Straight-leg scrub pants — comfortable, with cargo pockets. Drawstring waist. Practical and durable.
+- SHOES: White athletic shoes or clean ankle boots. Practical for all-day standing.
+- ACCESSORIES: Stethoscope around neck.
 
-COLOR: Nature-inspired luxury — warm skin → sage, warm olive, dusty clay, sand. Cool skin → soft teal, ocean grey, cool moss, blue-stone. Colors that belong in a garden, not a hospital.
+COLOR MUST BE CHOSEN based on skin tone. Warm → sage, olive, dusty clay, sand. Cool → teal, cool moss, ocean grey, blue-stone. Earth and nature tones — practical for vet work.
 
-MOOD: She runs a boutique veterinary practice where the waiting room has Diptyque candles. She looks like she rides horses on weekends and reads Kinfolk magazine. The scrubs look like they belong in a lifestyle editorial — because they do.`
+CRITICAL: Must look like actual vet scrubs — durable, practical, not fashion wear.`
   },
   chef: {
     male: `STYLING BRIEF — MALE CHEF, LUXURY EDITION

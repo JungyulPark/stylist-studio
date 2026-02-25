@@ -6433,15 +6433,51 @@
 /* ===== WORK STYLE & TREND STYLE CARDS ===== */
 .path-card-v2.work-card,
 .path-card-v2.trend-card {
-  min-height: 280px;
+  aspect-ratio: 4/3;
+  min-height: auto;
+}
+
+.path-card-v2.work-card .path-image-img,
+.path-card-v2.trend-card .path-image-img {
+  object-position: center 20%;
+}
+
+.path-card-v2.work-card .path-content-v2,
+.path-card-v2.trend-card .path-content-v2 {
+  padding: 1rem 1.2rem;
+}
+
+.path-card-v2.work-card .path-title-v2,
+.path-card-v2.trend-card .path-title-v2 {
+  font-size: 1.2rem;
+  margin-bottom: 0.3rem;
+}
+
+.path-card-v2.work-card .path-desc-v2,
+.path-card-v2.trend-card .path-desc-v2 {
+  font-size: 0.75rem;
+  margin-bottom: 0.4rem;
+}
+
+.path-card-v2.work-card .path-features-v2,
+.path-card-v2.trend-card .path-features-v2 {
+  font-size: 0.7rem;
+  margin-bottom: 0.3rem;
+}
+
+@media (max-width: 640px) {
+  .path-card-v2.work-card,
+  .path-card-v2.trend-card {
+    aspect-ratio: 16/10;
+  }
 }
 
 .work-overlay {
-  background: linear-gradient(to top, rgba(26,26,26,0.85) 0%, rgba(26,26,26,0.5) 50%, rgba(26,26,26,0.2) 100%) !important;
+  background: linear-gradient(to top, rgba(10,10,10,0.95) 0%, rgba(10,10,10,0.7) 45%, rgba(10,10,10,0.1) 100%) !important;
 }
 
 .trend-overlay {
-  background: linear-gradient(to top, rgba(26,26,26,0.85) 0%, rgba(26,26,26,0.5) 50%, rgba(26,26,26,0.2) 100%) !important;
+  background: linear-gradient(to top, rgba(10,10,10,0.95) 0%, rgba(10,10,10,0.7) 45%, rgba(10,10,10,0.1) 100%) !important;
 }
 
 .new-badge {
