@@ -6085,7 +6085,7 @@ ${hairImgs.length > 0 ? `<div class="section"><h2>${hairSection}</h2><div class=
 
             {/* Row 4: Work Style + Trend Style (2 promo cards) */}
             <div className="path-row-top">
-              <div className="path-card-v2 work-card coming-soon-card">
+              <div className="path-card-v2 work-card" onClick={() => { trackEvent('select_item', { item_category: 'work_style' }); setPage('work-selection') }}>
                 <picture className="path-image">
                   <source type="image/webp" srcSet="/work-hq.webp" />
                   <img src="/uniform.png" alt="Work Style" className="path-image-img" loading="lazy" width="1456" height="816" />
@@ -6103,10 +6103,11 @@ ${hairImgs.length > 0 ? `<div class="section"><h2>${hairSection}</h2><div class=
                     <li>{t.workJobNurse} / {t.workJobVet}</li>
                     <li>{t.workJobChef} / {t.workJobLawyer}</li>
                   </ul>
+                  <div className="path-cta-v2">{t.explore} →</div>
                 </div>
               </div>
 
-              <div className="path-card-v2 trend-card coming-soon-card">
+              <div className="path-card-v2 trend-card" onClick={() => { trackEvent('select_item', { item_category: 'trend_style' }); setPage('trend-selection') }}>
                 <picture className="path-image">
                   <source type="image/webp" srcSet="/trend-hq.webp" />
                   <img src="/Street.png" alt="Trend Style" className="path-image-img" loading="lazy" width="1456" height="816" />
@@ -6124,6 +6125,7 @@ ${hairImgs.length > 0 ? `<div class="section"><h2>${hairSection}</h2><div class=
                     <li>{t.trendMinimalMZ} / {t.trendSporty}</li>
                     <li>{t.trendRetro} / {t.trendAvantGarde}</li>
                   </ul>
+                  <div className="path-cta-v2">{t.explore} →</div>
                 </div>
               </div>
             </div>
