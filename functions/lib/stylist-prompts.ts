@@ -466,172 +466,172 @@ export function getWorkScenarios(jobType: string): ScenarioConfig[] {
 
 const trendDirectives: Record<string, { male: string; female: string }> = {
   street: {
-    male: `STYLING BRIEF — MALE STREET FASHION
-You are styling this man for a Seoul/Tokyo street-snap photographer. The look should make people screenshot it on Instagram.
+    male: `STYLING BRIEF — MALE STREET FASHION, 2026
+You are styling this man for a street-snap by a Dazed or i-D photographer. He should look like the most screenshotted person on Instagram today.
 
 OUTFIT BUILD:
-- LAYER 1: Oversized washed cotton tee OR heavyweight boxy hoodie. The print (if any) is vintage-feel, faded, NOT corporate graphic. Fits wide at the body, drops past the hip.
-- LAYER 2 (optional): Open flannel, workwear chore coat, or unzipped coach jacket — adds depth and movement.
-- BOTTOM: Wide-leg carpenter jeans (raw or light wash) OR nylon cargo pants with velcro pockets. NOT skinny. The silhouette is relaxed and intentional.
-- SHOES: Nike Dunk Low, New Balance 550, Jordan 1 Low, or Asics Gel-Kayano — always clean, laced loosely.
-- ACCESSORIES: Crossbody sling bag (small), layered silver chain, snapback or 5-panel cap optional.
+- LAYER 1: Heavyweight oversized washed cotton tee in faded tone OR boxy cut-and-sewn hoodie with raw seams. If printed, the graphic is vintage-feel, sun-bleached, NOT corporate. Drops past the hip. The cotton has WEIGHT — not flimsy.
+- LAYER 2: Open workwear chore coat in washed canvas, unzipped nylon coach jacket, OR oversized flannel in faded plaid. Creates depth and shoulder width.
+- BOTTOM: Wide-leg carpenter jeans (raw indigo or sun-bleached wash) OR military-surplus cargo pants with faded patches. The leg is WIDE — 22"+ opening. NOT skinny, NOT tapered.
+- SHOES: Nike Dunk Low (vintage colorway), New Balance 550 (white/green), Asics Gel-Kayano 14, or Jordan 1 Low. Laced loosely, worn-in but clean.
+- ACCESSORIES: Nylon crossbody micro bag, layered thin silver chains, washed 5-panel cap worn backwards. Nothing precious.
 
-COLOR: Muted and textural — washed black, faded olive, cream, stone grey, deep burgundy. NOT neon. NOT all-black-everything. At least two tones in the outfit.
+COLOR: Washed, sun-faded tones — stone grey, olive drab, cream, faded burgundy, washed-out navy. NEVER neon, never all-black. The palette looks like thrift-store gold.
 
-MOOD: He looks like he just walked out of a vintage shop in Harajuku with perfect taste. Nothing is "trying" — it all just works. The proportions are what make it special: oversized top, wide bottom, clean shoe.`,
-    female: `STYLING BRIEF — FEMALE STREET FASHION
-You are styling this woman for a Seoul/Tokyo street-snap photographer.
+MOOD: Harajuku meets Williamsburg meets Hongdae. He didn't "style" this — he grabbed it from a pile of perfectly curated pieces and it fell together. The proportions are the flex: huge top, wide leg, clean shoe. People cross the street to ask where he got the jacket.`,
+    female: `STYLING BRIEF — FEMALE STREET FASHION, 2026
+You are styling this woman for a street-snap by a Dazed or i-D photographer.
 
 OUTFIT BUILD:
-- LAYER 1: Cropped boxy tee, vintage band tee (tucked or knotted), OR oversized hoodie worn as a mini dress.
-- LAYER 2 (optional): Oversized denim jacket (worn off-shoulder), cropped bomber, or utility vest.
-- BOTTOM: Wide-leg cargo pants, baggy boyfriend jeans with rolled cuff, OR mini skirt + knee-high socks combo.
-- SHOES: Nike Dunk, New Balance 530, chunky platform boots, or Converse high-tops. Clean or intentionally beat-up.
-- ACCESSORIES: Micro bag or crossbody, layered necklaces, bucket hat or baseball cap, small hoop earrings.
+- LAYER 1: Cropped baby tee (tight, worn, vintage band logo) OR boxy graphic hoodie as a dress with bike shorts underneath. The top is either TINY or HUGE — no in-between.
+- LAYER 2: Oversized washed denim trucker jacket (worn off one shoulder) OR cropped MA-1 bomber OR utility vest over the tee.
+- BOTTOM: Super-wide cargo pants with zip pockets and belt detail OR baggy boyfriend jeans with raw hem rolled once OR pleated mini skirt + chunky knee-high socks.
+- SHOES: Nike Dunk Low, New Balance 530 in silver, platform Dr. Martens, or Converse Chuck 70 hi-tops. Scuffed or pristine — both work.
+- ACCESSORIES: Tiny crossbody bag or shoulder pouch, layered mismatched necklaces, baseball cap or bucket hat, small hoop earrings.
 
-COLOR: Washed, lived-in tones — faded denim blue, dusty pink, cream, olive, washed black. Pops of color through accessories only.
+COLOR: Lived-in tones — faded indigo, dusty pink, cream, olive, washed black, sun-bleached white. One unexpected pop through a hat or bag.
 
-MOOD: She looks like the cool girl that fashion editors follow on Instagram. Effortless but every piece was chosen carefully. The proportions play big-and-small: oversized jacket + tight bottom, or fitted top + wide pants.`,
+MOOD: The girl every fashion blog wants to shoot. She makes $20 thrift finds look like runway. The proportions are everything: oversized top + tiny bottom, or fitted tee + massive pants. She doesn't care what you think — and that's why you can't stop looking.`,
   },
   hype: {
-    male: `STYLING BRIEF — MALE HYPE / DESIGNER STREETWEAR
-You are styling this man for a Highsnobiety or HYPEBEAST editorial. The look whispers money — it doesn't scream.
+    male: `STYLING BRIEF — MALE HYPE / QUIET LUXURY STREETWEAR, 2026
+You are styling this man for a Highsnobiety "Taste" editorial. 2026 hype is post-logo: the flex is in fabric weight, proportion, and knowing. No one can name the brand from across the room — but up close, everything costs $500+.
 
 OUTFIT BUILD:
-- TOP: Heavyweight oversized hoodie in washed earth tone (Essentials-level quality) OR boxy double-layer tee with raw hem. The fabric is thick, expensive-looking, with visible weight and drape. No loud logos — tone-on-tone branding at most.
-- BOTTOM: Wide-leg pleated trousers in technical wool OR premium cotton sweatpants with clean seaming. The drape is everything — fabric falls straight with weight.
-- SHOES: Designer sneakers that know their place — Sacai x Nike Vaporwaffle, Fear of God Athletics, Rick Owens DRKSHDW runners, or clean suede New Balance 2002R.
-- OUTER (optional): Oversized padded vest or deconstructed overcoat thrown over shoulders.
-- ACCESSORIES: Matte black crossbody, simple silver ring, quality beanie.
+- TOP: Heavyweight boxy hoodie in garment-dyed earth tone — the cotton is 450gsm, the seams are flatlock, the drape is architectural. OR double-layered oversized tee with raw-cut hem. Zero logos. Tone-on-tone embroidery at most.
+- BOTTOM: Wide-leg pleated wool trousers with deep drape (Lemaire or Auralee proportion) OR heavy French terry wide sweatpants with clean flat seaming. The fabric FALLS — with weight, with intention.
+- SHOES: Bottega Veneta orbit sneaker, Sacai x Nike Cortez, Fear of God California, or Maison Margiela replica GAT in cream. Designer DNA, zero screaming.
+- OUTER (optional): Oversized unlined cashmere topcoat thrown over shoulders OR quilted nylon vest.
+- ACCESSORIES: Bottega-green intrecciato crossbody OR matte black sling, single silver ring, cashmere beanie.
 
-COLOR: Muted luxury tones — cement grey, washed mocha, fog white, deep espresso, muted olive. Monochromatic or tonal — never more than 2 colors. The "richness" comes from fabric weight and texture contrast, not color.
+COLOR: Rich muted tones — cement, washed espresso, bone white, fog grey, deep moss. STRICTLY monochromatic or tonal. The richness comes from fabric weight contrast: heavy cotton against light wool against smooth leather.
 
-MOOD: You can't name the brand from across the room but up close everything costs $400+. He's the kind of guy who buys Bottega and wears it like it's Uniqlo. Effortless wealth. Quiet hype.`,
-    female: `STYLING BRIEF — FEMALE HYPE / DESIGNER STREETWEAR
-You are styling this woman for a Highsnobiety editorial. Understated luxury meets street edge.
+MOOD: Quiet wealth. He buys Rick Owens at retail and wears it like it's nothing. Every piece is "$400 basics" — the kind where you can feel the money in the hand-feel. He's not trying to impress anyone. That's what makes it devastating.`,
+    female: `STYLING BRIEF — FEMALE HYPE / QUIET LUXURY STREETWEAR, 2026
+You are styling this woman for a Highsnobiety editorial. The 2026 flex: no logos, immaculate fabric, devastating proportion.
 
 OUTFIT BUILD:
-- TOP: Oversized structured hoodie (cream/grey/black) OR fitted mock-neck long-sleeve with designer-level fabric weight. Minimal to zero visible branding.
-- BOTTOM: Wide-leg tailored trousers OR leather-look straight pants OR technical cargo skirt. Premium drape and construction.
-- SHOES: Chunky designer sneakers (Sacai, Maison Margiela) OR sleek knee-high boots over the pants. Statement but monochrome.
-- OUTER (optional): Oversized shearling, leather bomber, or quilted long vest.
-- ACCESSORIES: Structured mini bag (Bottega-style), thin gold chain, simple sunglasses.
+- TOP: Oversized cashmere-blend hoodie in cream or charcoal (the kind you can feel across the room) OR fitted ribbed mock-neck in heavy-gauge knit. Zero branding. The quality speaks.
+- BOTTOM: Wide-leg tailored wool trousers with center crease (Toteme proportion) OR straight-leg leather pants with matte finish OR structured midi cargo skirt in technical fabric.
+- SHOES: Bottega Veneta lug-sole boots, Sacai platform hybrid, or Maison Margiela Replica in cream. Architectural but not costume.
+- OUTER (optional): Oversized shearling in reversed lamb, oversized leather blazer, or long quilted coat.
+- ACCESSORIES: Structured soft-leather mini bag (Bottega or Row), thin gold chain, slim sunglasses (Gentle Monster or Celine).
 
-COLOR: Tonal luxury — all cream, all grey, all black, or espresso-to-camel gradient. Let texture and proportion do the talking.
+COLOR: All-cream, all-charcoal, all-black, or espresso-to-sand gradient. One texture story — suede next to cashmere next to leather. Never more than two tones.
 
-MOOD: She looks expensive. Not flashy-expensive — quietly, devastatingly expensive. The kind of woman who walks into Dover Street Market and the staff brings her coffee.`,
+MOOD: She looks like she owns the gallery, not visits it. Every piece costs more than most people's rent — and she wears it like pajamas. Quiet devastation. The Dover Street Market staff knows her by name.`,
   },
   'minimal-mz': {
-    male: `STYLING BRIEF — MALE MINIMAL / MZ GEN Z
-You are styling this man for a COS or Lemaire lookbook. The beauty is in the proportions and the silence of the outfit.
+    male: `STYLING BRIEF — MALE MINIMAL MZ / CLEAN GEN-Z, 2026
+You are styling this man for a COS or Lemaire campaign. The concept: when you remove everything unnecessary, what remains is perfect.
 
 OUTFIT BUILD:
-- TOP: Oversized cotton or wool-blend crew top with dropped shoulders. OR clean mock-neck in ribbed knit. The fit is relaxed but structured — the shoulder seam sits 3cm past the natural shoulder.
-- BOTTOM: Wide straight-leg trousers — pressed crease, full length, clean break at the shoe. Wool, cotton-twill, or heavy linen.
-- SHOES: Clean white leather sneakers (Margiela GAT or Common Projects style), suede loafers, or minimal Chelsea boots.
-- OUTER (optional): Unstructured overcoat in wool or oversized single-button blazer. Worn open, never buttoned.
-- ACCESSORIES: Almost nothing. A simple leather tote or canvas bag. One ring maximum.
+- TOP: Oversized crew-neck in boiled wool or heavy cotton jersey — the shoulder seam drops 4cm past the natural shoulder. Clean, no detail, no logo. OR ribbed half-zip mock-neck in fine merino. The fabric is matte, dense, beautiful.
+- BOTTOM: Wide straight-leg trousers — pressed center crease, full length, clean break at the shoe. Premium wool-blend or heavy cotton drill. The leg opening is wide enough to create a column silhouette.
+- SHOES: Maison Margiela German Army Trainer (white), Common Projects Original Achilles, suede Lemaire loafers, or square-toe Chelsea boots. Clean, architectural.
+- OUTER (optional): Unstructured wool overcoat (below knee, no padding, collarless or minimal lapel) OR oversized single-button blazer in matching tone. Always open, never buttoned.
+- ACCESSORIES: Nothing. Maybe a leather tote. Maximum one thin ring. The outfit IS the accessory.
 
-COLOR: Tonal — head-to-toe in ONE color family. Oatmeal + cream + white. OR charcoal + black + slate. OR camel + sand + tan. Maximum 2 tones across the whole outfit. Zero patterns.
+COLOR: HEAD-TO-TOE TONAL. Oatmeal + cream + warm white. OR charcoal + black + slate. OR camel + sand + biscuit. NEVER more than one color family. Zero prints, zero patterns. Texture difference is the only variation: knit vs woven, matte vs subtle sheen.
 
-MOOD: He looks like he lives in a Tadao Ando building and only owns 30 items of clothing, all of which are perfect. Every seam is intentional. The silhouette is a poem. This is what "less is more" actually looks like when executed flawlessly.`,
-    female: `STYLING BRIEF — FEMALE MINIMAL / MZ GEN Z
-You are styling this woman for a Toteme or The Row lookbook.
+MOOD: A Tadao Ando building in human form. He owns 25 pieces of clothing and each one was selected over six months. The silhouette is a single unbroken line from shoulder to shoe. Architects stop him on the street. This is minimalism practiced as a religion.`,
+    female: `STYLING BRIEF — FEMALE MINIMAL MZ / CLEAN GEN-Z, 2026
+You are styling this woman for a Toteme or The Row lookbook. Silence is the loudest statement.
 
 OUTFIT BUILD:
-- TOP: Oversized wool blazer (sleeves slightly too long, worn pushed up) OR clean fitted turtleneck in fine-gauge knit. OR structured crop top in heavy cotton.
-- BOTTOM: Wide-leg high-waist trousers — full length, clean pressed crease, beautiful drape. The width is dramatic but controlled.
-- SHOES: Pointed-toe kitten mules, clean white sneakers, or square-toe ankle boots.
-- OUTER (optional): Long tailored coat in camel, grey, or cream. Worn draped over shoulders.
-- ACCESSORIES: Structured bag (The Row style), delicate gold chain, small hoop earrings. Nothing more.
+- TOP: Oversized blazer in premium wool (sleeves pushed up to show wrists) OR fine-gauge fitted turtleneck that traces the collarbones. OR structured square-shoulder crop top in dense cotton. Every edge is clean, every seam vanishes.
+- BOTTOM: Ultra-wide high-waist trousers — pressed crease, full length, dramatic drape. The width is bold but the fabric controls it — heavy wool or stiff cotton that holds its shape. OR tailored midi skirt with a single back slit.
+- SHOES: Square-toe kitten-heel mules, white leather sneakers, or minimal ankle boots in smooth leather.
+- OUTER (optional): Floor-length tailored coat in camel, pale grey, or cream. Worn draped over shoulders like a cape.
+- ACCESSORIES: One structured leather bag (The Row Margaux style). Delicate gold chain, barely visible. Small gold hoops. That's all.
 
-COLOR: Monochrome or tonal. Cream-on-cream-on-white. Black-on-charcoal-on-grey. Camel-on-sand. One color story, told through different textures — knit against woven, matte against sheen.
+COLOR: MONOCHROME TONAL. Cream + ivory + white in different textures. Black + charcoal + slate in different weights. Camel + sand + oat. One color, three textures: knit against woven against leather. The sophistication is in what you DON'T add.
 
-MOOD: She is the human embodiment of a clean-lined apartment in Copenhagen. Serene, precise, devastatingly chic. People stare not because the outfit is loud — but because the proportions are so perfect it looks like art.`,
+MOOD: She is a Copenhagen apartment in human form — light, space, intention. People stare because the proportions are so quiet they're loud. The blazer oversized, the trouser wide, the shoe pointed — three clean lines that form a perfect composition. She doesn't follow trends. She makes them feel unnecessary.`,
   },
   sporty: {
-    male: `STYLING BRIEF — MALE SPORTY / GORPCORE
-You are styling this man for a premium athleisure or outdoor-fashion editorial. Athletic DNA, fashion execution.
+    male: `STYLING BRIEF — MALE SPORTY / GORPCORE LUXE, 2026
+You are styling this man for an Arc'teryx x Zegna collaboration lookbook. The concept: technical performance elevated to luxury. He summits AND brunches.
 
 OUTFIT BUILD:
-- TOP: Technical mock-neck half-zip in performance fabric OR clean tech-fleece hoodie with minimal branding. The fabric has visible technical quality — moisture-wicking sheen, bonded seams.
-- BOTTOM: Tapered technical joggers with zip pockets and clean seaming (Nike Tech Fleece level) OR slim hiking-inspired pants (Arc'teryx or Salomon aesthetic).
-- SHOES: Performance runners — On Cloudmonster, Nike Vomero, Salomon XT-6, or New Balance Fresh Foam. The shoe is the statement piece. Clean, current colorway.
-- OUTER (optional): Lightweight running vest or shell jacket, packed-shoulder style.
-- ACCESSORIES: Sports watch (Garmin or Apple Watch with sport band), running cap, minimal backpack or sling.
+- TOP: Technical half-zip mock-neck in bonded performance fabric with a visible water-repellent sheen — the kind with heat-sealed seams and laser-cut ventilation. OR a clean tech-wool hoodie with flatlock stitching. The fabric screams engineering.
+- BOTTOM: Slim tapered technical pants with hidden zip pockets, articulated knees, and DWR coating. NOT joggers — these are hiking-inspired trousers with a clean silhouette. Think Veilance or Acronym.
+- SHOES: Salomon XT-6 Expanse (earth tone), On Cloudventure Peak, Nike ACG Mountain Fly, or New Balance XRCT. The shoe is the centerpiece — technical, sculptural, current.
+- OUTER (optional): Ultralight packable down vest, Gore-Tex shell in matte finish, or fleece-lined softshell.
+- ACCESSORIES: Garmin or Suunto sport watch, merino running buff around neck, minimal technical sling pack.
 
-COLOR: Technical palette — black + volt accent, charcoal + reflective, navy + orange detail. OR all-neutral earth gorpcore: stone, olive, sand. The outfit should look like it performs, not like it's costume.
+COLOR: Earth-tech palette — stone + olive + sand (gorpcore) OR black + charcoal + one reflective accent (urban tech) OR navy + burnt orange detail (trail running). The palette belongs in both the mountains and the city.
 
-MOOD: He just finished a 10K and is grabbing coffee before a meeting. The outfit works for both. It's not "gym clothes" — it's a lifestyle. He moves fast and dresses like it.`,
-    female: `STYLING BRIEF — FEMALE SPORTY / ATHLEISURE
-You are styling this woman for a premium athleisure editorial. The line between gym and street disappears.
+MOOD: He runs trail races on weekends and closes deals on Monday. The half-zip cost more than some suits. The shoes have never seen a gym — they've seen summits, city streets, and the best coffee shop in the neighborhood. Performance is his aesthetic, not his costume.`,
+    female: `STYLING BRIEF — FEMALE SPORTY / ATHLEISURE LUXE, 2026
+You are styling this woman for an On Running x Loewe collaboration editorial. Premium athleisure that belongs in a gallery.
 
 OUTFIT BUILD:
-- TOP: Fitted half-zip running top OR cropped tech jacket over a clean sports bra/tank. Premium performance fabric with visible quality.
-- BOTTOM: High-waist sculpt leggings in dark color OR wide-leg track pants with side-stripe detail. OR tennis skirt with built-in shorts.
-- SHOES: Fashion-forward runners — On Running, Hoka Bondi, Nike V2K, or New Balance 9060. Fresh, current silhouette.
-- OUTER (optional): Oversized puffer vest, light windbreaker, or sheer running jacket.
-- ACCESSORIES: Sleek sports watch, mini belt bag, clean sunglasses, hair in effortless ponytail or bun.
+- TOP: Cropped performance zip-through jacket in sculpted stretch fabric (clean, not shiny) OR a fitted long-sleeve mock-neck in technical merino. Premium details: bonded seams, hidden thumb holes, invisible zip.
+- BOTTOM: High-waist sculpt leggings in matte dark tone with minimal seaming (NOT glossy, not see-through) OR wide-leg technical track pants with a pressed crease and side-snap detail.
+- SHOES: On Cloudmonster (current color), Nike V2K Run in cream/silver, Hoka Bondi 8 in tonal neutral, or New Balance 9060 in earth tone. FRESH — box-new energy.
+- OUTER (optional): Oversized cropped puffer in matte nylon, lightweight shell jacket rolled at sleeves, or cashmere zip vest.
+- ACCESSORIES: Slim sport watch with interchangeable band, titanium sunglasses, micro belt bag in tech fabric, hair in effortless high bun or slicked pony.
 
-COLOR: Clean sport palette — black + white + one pop (sage, dusty rose, or soft orange). OR monochrome tech: all charcoal, all navy, all cream. Cohesive and intentional.
+COLOR: Elevated sport — all-black with one sage accent, cream + tan monochrome, charcoal + soft blush detail, or navy + white. NEVER loud gym colors. The palette is fashion, not fitness.
 
-MOOD: She runs marathons, does pilates, and makes it to brunch looking like this. The outfit is technically functional but fashion-magazine ready. Fit, fresh, in motion.`,
+MOOD: She just finished a 5AM Pilates reformer class and she's heading to a branding meeting without changing. The leggings cost $180 and look like $180. The jacket is an object of desire. She moves through the city like she owns the sidewalk — because in those shoes, she does.`,
   },
   retro: {
-    male: `STYLING BRIEF — MALE RETRO / VINTAGE REVIVAL
-You are styling this man for a "new vintage" editorial — 70s warmth, 80s structure, 90s ease, all filtered through a 2026 lens.
+    male: `STYLING BRIEF — MALE RETRO / NEO-VINTAGE, 2026
+You are styling this man for a "Golden Era Redux" editorial. NOT costume — this is 70s soul, 80s swagger, and 90s nonchalance filtered through the eye of a 2026 stylist who studied at Central Saint Martins.
 
 OUTFIT BUILD:
-- TOP: Washed vintage-feel tee with retro graphic (sports team, old brand, faded photo print) OR fitted polo with contrast collar OR open corduroy overshirt layered over a tank.
-- BOTTOM: Straight-leg vintage-wash jeans (not skinny, not baggy — '90s cut) OR high-waist pleated chinos OR corduroy wide-legs.
-- SHOES: Retro runners — New Balance 574, Onitsuka Tiger Mexico 66, Adidas Samba, or Vans Old Skool. Worn-in and authentic. OR clean leather boots.
-- OUTER (optional): Cropped varsity jacket, suede trucker jacket, or washed denim jacket with shearling collar.
-- ACCESSORIES: Aviator or wayfarer sunglasses, woven leather belt, analog watch with leather strap.
+- TOP: Sun-faded vintage tee (retro sports logo, old-school band, or 70s typeface) tucked lazily into high-waist pants. OR a fitted knit polo with contrast tipping. OR a washed corduroy overshirt, unbuttoned, sleeves rolled, over a ribbed tank.
+- BOTTOM: High-waist straight-leg jeans in vintage wash with slight flare at the ankle (70s) OR pressed wide-leg pleated chinos in tobacco or cream (80s) OR relaxed corduroy trousers (90s). The rise is HIGH — belly button, not hip.
+- SHOES: Adidas Samba OG (gum sole), New Balance 574 (classic grey), Onitsuka Tiger Mexico 66, or polished penny loafers. Worn-in but loved.
+- OUTER (optional): Cropped wool varsity jacket with leather sleeves, washed suede trucker, or oversized vintage leather bomber.
+- ACCESSORIES: Aviator sunglasses with amber lenses, woven leather belt, analog dive watch on NATO strap, vintage-look canvas tote.
 
-COLOR: Warm retro tones — burnt orange, mustard, faded burgundy, tobacco brown, cream, washed denim blue. The palette should feel like a Kodachrome photograph — warm, golden, slightly faded.
+COLOR: Kodachrome warmth — burnt sienna, mustard gold, tobacco brown, faded burgundy, cream, washed indigo. Everything looks like it's been loved for 30 years. No sharp colors — everything soft, warm, golden.
 
-MOOD: He looks like he stepped out of a Wes Anderson film but lives in 2026. Nostalgic without being costume-y. Every piece could be genuine vintage or a perfect modern remake — you can't tell, and that's the point.`,
-    female: `STYLING BRIEF — FEMALE RETRO / VINTAGE REVIVAL
-You are styling this woman for a "new vintage" editorial — 70s romance, 90s edge, Y2K fun, all through a modern lens.
+MOOD: He's the guy your favorite director would cast as "the cool one." Part Paul Newman, part young Tarantino, part indie record store owner. Every piece tells a story. Nothing is new — but everything is chosen. He drinks coffee from a ceramic mug and doesn't own a smartwatch.`,
+    female: `STYLING BRIEF — FEMALE RETRO / NEO-VINTAGE, 2026
+You are styling this woman for a "Golden Era Redux" editorial — Jane Birkin's ease, 90s Kate Moss edge, Y2K Chloe Sevigny fun.
 
 OUTFIT BUILD:
-- TOP: Fitted vintage band tee (cropped or tucked) OR wrap blouse with retro print OR slim cardigan buttoned up as a top.
-- BOTTOM: High-waist flared jeans (70s) OR pleated wide-leg trousers (80s) OR mini skirt with knee-high boots (Y2K).
-- SHOES: Platform sandals, retro Adidas Samba, Converse Chuck 70, or knee-high leather boots. Era-appropriate.
-- OUTER (optional): Oversized vintage leather jacket, cropped faux-fur, or patchwork denim jacket.
-- ACCESSORIES: Retro sunglasses (cat-eye or oversized round), silk scarf in hair, vintage-style jewelry (chunky gold hoops, layered chains), small structured bag.
+- TOP: Cropped vintage band tee knotted at the ribs OR 70s wrap blouse in muted floral/paisley OR fitted ribbed cardigan buttoned all the way up as a top (the Audrey Hepburn move).
+- BOTTOM: High-waist flared jeans in warm vintage wash with raw hem (70s icon) OR pressed wide-leg pleated trousers in cream or tobacco (80s power) OR micro mini skirt + knee-high suede boots (Y2K revival).
+- SHOES: Platform leather sandals, Adidas Samba, Converse Chuck 70 hi-tops, or knee-high tan suede boots. Each shoe references a specific decade.
+- OUTER (optional): Oversized vintage leather moto jacket (broken in), cropped faux-shearling, or a 70s-cut suede fringe jacket.
+- ACCESSORIES: Cat-eye tortoiseshell sunglasses, silk scarf tied in hair or at neck, chunky gold hoops, vintage chain belt, small structured bag (YSL sac de jour energy).
 
-COLOR: Warm nostalgic palette — terracotta, mustard gold, vintage pink, faded denim, cream, burgundy. Nothing too crisp or modern — everything should feel sun-faded and lived-in.
+COLOR: Golden nostalgia — terracotta, mustard, vintage rose, faded chocolate, warm cream, washed indigo. The palette should feel like afternoon sunlight through a Polaroid. Warm, golden, never cool.
 
-MOOD: She raided the best vintage store in the city and styled it better than anyone on the rack could imagine. Each decade is referenced but nothing is costume. She looks like the cool protagonist of an indie film set in summer.`,
+MOOD: She's the muse that fashion photographers chase across continents. Part Bardot, part PJ Harvey, part the girl at the record fair who knows more about Bowie than you do. Every piece could be genuine 1978 deadstock or a perfect 2026 remake. The magic is you can't tell.`,
   },
   'avant-garde': {
-    male: `STYLING BRIEF — MALE AVANT-GARDE / DARK FASHION
-You are styling this man for an editorial inspired by Rick Owens, Yohji Yamamoto, and Ann Demeulemeester. This is fashion as architecture.
+    male: `STYLING BRIEF — MALE AVANT-GARDE / DARK ARCHITECTURE, 2026
+You are styling this man for an AnOther Magazine editorial. The brief: Rick Owens, Yohji Yamamoto, and Ann Demeulemeester had a child, and he dresses himself.
 
 OUTFIT BUILD:
-- TOP: Asymmetric draped top OR deconstructed oversized shirt with raw edges and unfinished hems. OR a structured high-neck layer under a looser outer piece. The fabric is heavyweight — jersey, boiled wool, or waxed cotton.
-- BOTTOM: Extra-wide draped trousers that puddle at the shoe (Yohji-style) OR drop-crotch pants in heavy black cotton OR layered skirt-over-pants.
-- SHOES: Rick Owens-style angular boots, chunky platform leather boots, or Maison Margiela Tabi. The shoe is sculptural, not decorative.
-- OUTER: Oversized deconstructed overcoat with asymmetric closure OR long draped cardigan-coat. Unstructured shoulders, dramatic length.
-- ACCESSORIES: Almost nothing — maybe one architectural silver ring or a leather harness detail.
+- TOP: Asymmetric draped jersey top with one seam that spirals around the torso. OR deconstructed oversized shirt — one placket removed, raw edges, buttons half-undone. OR structured high-neck base layer in ribbed black wool under a looser sheer outer layer. Fabric is HEAVY — boiled wool, waxed cotton, or thick jersey that holds a shape.
+- BOTTOM: Ultra-wide trousers that pool at the shoe — Yohji-width, 30"+ leg opening, in heavy black wool or stiff cotton drill. OR drop-crotch trousers in coated denim. The fabric has BODY — it doesn't cling, it DRAPES.
+- SHOES: Rick Owens Geobasket boots, Margiela Tabi boots (split toe), or angular platform combat boots. The shoe is a sculpture. Black leather, aggressive sole.
+- OUTER: Floor-length deconstructed overcoat — asymmetric closure, no buttons, wraps like a robe. OR oversized biker jacket with exposed hardware. OR draped blanket-cape in heavy wool.
+- ACCESSORIES: One silver ring with geometric form. A leather wrist cuff. Nothing else. The silhouette IS the accessory.
 
-COLOR: Near-total black — but with TEXTURE variation. Matte black wool next to shiny black leather next to washed black cotton. If not all-black: black + ash grey, or black + off-white for stark contrast. Never colorful.
+COLOR: BLACK — but seven different blacks. Matte charcoal-black wool against high-shine leather against washed faded-black cotton against sheer black mesh. If not all-black: black + bone white for violent contrast, or black + ash grey for depth. NEVER color.
 
-MOOD: He looks like a character from a dystopian art film who also happens to be brilliantly stylish. The silhouette is dramatic — wide, flowing, architectural. Nothing is "normal." Every proportion is pushed, every hem is intentional. This is not fashion for approval — it's fashion as self-expression.`,
-    female: `STYLING BRIEF — FEMALE AVANT-GARDE / DARK FASHION
-You are styling this woman for an editorial inspired by Rei Kawakubo, Yohji Yamamoto, and Rick Owens.
+MOOD: He walks into a gallery and people think he's the installation. The silhouette is inhuman — wide, flowing, dark, moving. Fabric catches air when he turns corners. Every proportion challenges what "clothing" means. This isn't dressing — it's architecture worn on the body. He doesn't follow fashion. Fashion observes him and takes notes.`,
+    female: `STYLING BRIEF — FEMALE AVANT-GARDE / DARK ARCHITECTURE, 2026
+You are styling this woman for an AnOther Magazine editorial. Rei Kawakubo's discipline, Yohji's romance, Rick Owens' aggression.
 
 OUTFIT BUILD:
-- TOP: Asymmetric deconstructed top OR sculptural draped blouse with unexpected volume — one shoulder exaggerated, or a wrapped construction. OR a fitted base layer under an oversized architectural piece.
-- BOTTOM: Ultra-wide palazzo trousers that sweep the floor OR a dramatic pleated skirt with unexpected volume OR layered asymmetric skirt.
-- SHOES: Sculptural ankle boots, Rick Owens wedge platforms, or Margiela Tabi boots. The shoe completes the architecture.
-- OUTER: Cocoon-shaped coat, deconstructed trench with raw edges, or oversized draped cape-jacket.
-- ACCESSORIES: One statement piece — an architectural cuff, or oversized geometric earring. Never multiple accessories.
+- TOP: Sculptural asymmetric top with one exaggerated shoulder or a wrapped construction that defies gravity. OR a fitted second-skin base layer under an oversized deconstructed piece. The fabric is dramatic — heavy crepe, boiled wool, stiff organza, or crinkled taffeta.
+- BOTTOM: Floor-sweeping wide palazzo trousers in heavy black wool OR a sculptural pleated skirt with dramatic volume that moves independently of the body OR layered asymmetric panels — skirt over trousers.
+- SHOES: Rick Owens wedge platforms, Margiela Tabi boot (the heel version), or sculptural ankle boots with an architectural heel. The shoe is the foundation of the silhouette.
+- OUTER: Cocoon-shaped coat with no visible closure OR deconstructed trench with raw-cut edges and missing collar OR a cape-like draped piece that could be a blanket or a coat — you genuinely can't tell.
+- ACCESSORIES: One single statement — an oversized oxidized silver cuff, or one dramatic earring on one ear. Asymmetry in everything, including accessories.
 
-COLOR: Black is the foundation. Layer textures: matte black, glossy black, sheer black, crushed black velvet. For contrast: stark white, raw ecru, or deep blood-red as a single accent. Never prints, never patterns.
+COLOR: Seven blacks. Crushed velvet black, matte wool black, high-shine patent black, sheer organza black, washed cotton black, coated denim black. If not black: bone white as a slash of contrast, or blood-red as a single liner visible only when she moves. NEVER prints. NEVER patterns.
 
-MOOD: She is a walking installation. People don't just look — they study the construction, the movement of fabric as she walks. This is Comme des Garcons made human. Every fold is a decision. Every asymmetry is a statement. She doesn't follow trends — trends study her.`,
+MOOD: She doesn't enter rooms — she alters them. People study her the way they study Brutalist buildings: with awe and slight unease. Every fold is a thesis statement. Every asymmetric hem is a philosophical position. When she walks, the fabric catches air and creates shapes that didn't exist a moment ago. This is Comme des Garcons made flesh. She doesn't follow trends — trends file restraining orders against her.`,
   },
 }
 

@@ -6436,11 +6436,11 @@
 }
 
 .work-overlay {
-  background: linear-gradient(135deg, rgba(26,26,26,0.92), rgba(40,55,70,0.88)) !important;
+  background: linear-gradient(to top, rgba(26,26,26,0.85) 0%, rgba(26,26,26,0.5) 50%, rgba(26,26,26,0.2) 100%) !important;
 }
 
 .trend-overlay {
-  background: linear-gradient(135deg, rgba(26,26,26,0.92), rgba(60,30,60,0.88)) !important;
+  background: linear-gradient(to top, rgba(26,26,26,0.85) 0%, rgba(26,26,26,0.5) 50%, rgba(26,26,26,0.2) 100%) !important;
 }
 
 .new-badge {
