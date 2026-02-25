@@ -660,8 +660,7 @@
   height: 100%;
   object-fit: cover;
   object-position: center 15%;
-  image-rendering: -webkit-optimize-contrast;
-  image-rendering: crisp-edges;
+  image-rendering: auto;
 }
 
 .path-card-v2 .path-overlay {
