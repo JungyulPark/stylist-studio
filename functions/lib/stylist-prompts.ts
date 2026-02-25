@@ -437,44 +437,51 @@ export function getWorkScenarios(jobType: string): ScenarioConfig[] {
   const job = workDirectives[jobType]
   if (!job) return getWorkScenarios('doctor') // fallback
 
+  // FRAMING rule injected into every work scenario to prevent head cropping
+  const FRAMING = `\n\nFRAMING RULE (CRITICAL): The output image MUST have the EXACT same framing and composition as the input photo. Do NOT zoom in on the torso. Do NOT crop the head. The person's head must have the same amount of space above it as the original. If the input shows full body, output shows full body. If input shows head-to-waist, output shows head-to-waist. ZERO framing changes allowed.`
+
   return [
     {
       id: 'work-signature',
       labelKo: '베스트 컬러', labelEn: 'Best Color', labelJa: 'ベストカラー', labelZh: '最佳色彩', labelEs: 'Mejor Color',
-      directiveMale: `${job.male}\n\nCOLOR STRATEGY: Analyze this person's ACTUAL skin undertone, hair color, and eye color from the photo. Then choose the ONE scrub color that makes their face look the most vibrant and healthy. Do NOT default to grey or green — consider deep navy, rich burgundy, warm teal, classic ceil blue, or even white if it suits them. The goal is: when this person looks in the mirror, they think "this color makes me look GOOD."`,
-      directiveFemale: `${job.female}\n\nCOLOR STRATEGY: Analyze this person's ACTUAL skin undertone, hair color, and eye color from the photo. Then choose the ONE scrub color that makes their face look the most vibrant and healthy. Do NOT default to grey or green — consider deep navy, rich burgundy, warm teal, dusty rose, classic ceil blue, or even white if it suits them. The goal is: when this person looks in the mirror, they think "this color makes me look GOOD."`,
+      directiveMale: `${job.male}${FRAMING}\n\nCOLOR STRATEGY: Analyze this person's ACTUAL skin undertone, hair color, and eye color from the photo. Then choose the ONE color that makes their face look the most vibrant and healthy. Consider the full spectrum of real work-appropriate colors. The goal is: when this person looks in the mirror, they think "this color makes me look GOOD." You have COMPLETE freedom to pick ANY color — trust your analysis.`,
+      directiveFemale: `${job.female}${FRAMING}\n\nCOLOR STRATEGY: Analyze this person's ACTUAL skin undertone, hair color, and eye color from the photo. Then choose the ONE color that makes their face look the most vibrant and healthy. Consider the full spectrum of real work-appropriate colors. The goal is: when this person looks in the mirror, they think "this color makes me look GOOD." You have COMPLETE freedom to pick ANY color — trust your analysis.`,
     },
     {
-      id: 'work-classic',
-      labelKo: '클래식 네이비', labelEn: 'Classic Navy', labelJa: 'クラシックネイビー', labelZh: '经典海军蓝', labelEs: 'Azul Marino Clásico',
-      directiveMale: `${job.male}\n\nCOLOR: Deep navy blue scrubs — the most universally flattering and authoritative color in medicine. Rich, dark navy that looks professional on every skin tone. This is the "safe but always excellent" choice.`,
-      directiveFemale: `${job.female}\n\nCOLOR: Deep navy blue scrubs — the most universally flattering and authoritative color in medicine. Rich, dark navy that looks professional on every skin tone. This is the "safe but always excellent" choice.`,
+      id: 'work-contrast',
+      labelKo: '컨트라스트 컬러', labelEn: 'Contrast Color', labelJa: 'コントラストカラー', labelZh: '对比色', labelEs: 'Color Contraste',
+      directiveMale: `${job.male}${FRAMING}\n\nCOLOR STRATEGY: Analyze this person's skin undertone, then choose a CONTRASTING color that makes their features pop. If their skin is warm-toned, try a cool-toned color. If cool-toned, try a warm-toned color. The contrast should be FLATTERING, not jarring. Pick a color that creates visual interest and makes this person stand out in a good way. You have COMPLETE freedom — do NOT default to any specific color.`,
+      directiveFemale: `${job.female}${FRAMING}\n\nCOLOR STRATEGY: Analyze this person's skin undertone, then choose a CONTRASTING color that makes their features pop. If their skin is warm-toned, try a cool-toned color. If cool-toned, try a warm-toned color. The contrast should be FLATTERING, not jarring. Pick a color that creates visual interest and makes this person stand out in a good way. You have COMPLETE freedom — do NOT default to any specific color.`,
     },
     {
-      id: 'work-modern',
-      labelKo: '모던 버건디', labelEn: 'Modern Burgundy', labelJa: 'モダンバーガンディ', labelZh: '现代酒红', labelEs: 'Borgoña Moderno',
-      directiveMale: `${job.male}\n\nCOLOR: Deep burgundy/wine-colored scrubs — a modern, sophisticated alternative to standard colors. Rich dark red-brown tone. This color adds warmth to the face and looks stylish while remaining professional. NOT bright red — deep, muted, elegant wine color.`,
-      directiveFemale: `${job.female}\n\nCOLOR: Deep burgundy/wine-colored scrubs — a modern, sophisticated alternative to standard colors. Rich dark red-brown tone. This color adds warmth to the face and looks stylish while remaining professional. NOT bright red — deep, muted, elegant wine color.`,
+      id: 'work-harmony',
+      labelKo: '하모니 컬러', labelEn: 'Harmony Color', labelJa: 'ハーモニーカラー', labelZh: '和谐色', labelEs: 'Color Armonía',
+      directiveMale: `${job.male}${FRAMING}\n\nCOLOR STRATEGY: Analyze this person's skin tone and hair color, then choose a color that creates a HARMONIOUS, tonal look — a color from the SAME color family as their natural coloring. If they have warm golden skin, pick a warm earthy tone. If they have cool pink undertones, pick a cool muted tone. The result should look natural and effortlessly cohesive — like the uniform color was custom-made for their complexion. You have COMPLETE freedom — do NOT default to any specific color.`,
+      directiveFemale: `${job.female}${FRAMING}\n\nCOLOR STRATEGY: Analyze this person's skin tone and hair color, then choose a color that creates a HARMONIOUS, tonal look — a color from the SAME color family as their natural coloring. If they have warm golden skin, pick a warm earthy tone. If they have cool pink undertones, pick a cool muted tone. The result should look natural and effortlessly cohesive — like the uniform color was custom-made for their complexion. You have COMPLETE freedom — do NOT default to any specific color.`,
     },
     {
       id: 'work-offduty',
       labelKo: '출퇴근 룩', labelEn: 'Off-Duty Commute', labelJa: '通勤スタイル', labelZh: '通勤穿搭', labelEs: 'Look de Ida al Trabajo',
       directiveMale: `STYLING BRIEF — OFF-DUTY COMMUTE LOOK
-This is NOT a uniform. This is what this professional wears COMMUTING to work — stylish casual clothes, NOT scrubs.
+This is a COMPLETELY DIFFERENT outfit — stylish everyday casual clothes. NOT a uniform, NOT scrubs, NOT work clothes.
 
-OUTFIT: Smart casual outfit for commuting — tailored coat or bomber jacket over a clean crew-neck sweater or shirt, well-fitted chinos or dark jeans, clean white sneakers or leather boots. A premium backpack or messenger bag. Earphones around neck optional.
+OUTFIT: Smart casual outfit — tailored coat or bomber jacket over a clean crew-neck sweater or shirt, well-fitted chinos or dark jeans, clean white sneakers or leather boots. A premium backpack or messenger bag.
 
-COLOR MUST BE CHOSEN based on this person's skin tone. Pick colors that make their face glow — could be earth tones, navy, cream, or muted pastels. Avoid dull grey.
+REMOVE ALL work-related items: NO stethoscope, NO ID badge, NO medical accessories, NO work tools of any kind. This person is dressed in PURE civilian fashion.
 
-MOOD: Walking to the hospital/clinic looking like they could be heading to a café in Gangnam or Brooklyn. Stylish, effortless, put-together.`,
+COLOR MUST BE CHOSEN based on this person's skin tone. Pick colors that make their face glow. You have COMPLETE freedom.
+
+MOOD: A stylish man walking down a city street, heading to a café. He looks like he could be a creative director or architect. Zero connection to any workplace.${FRAMING}`,
       directiveFemale: `STYLING BRIEF — OFF-DUTY COMMUTE LOOK
-This is NOT a uniform. This is what this professional wears COMMUTING to work — stylish casual clothes, NOT scrubs.
+This is a COMPLETELY DIFFERENT outfit — stylish everyday casual clothes. NOT a uniform, NOT scrubs, NOT work clothes.
 
-OUTFIT: Chic commute outfit — a tailored trench coat or oversized blazer, well-fitted jeans or tailored pants, a cashmere sweater or silk blouse, clean sneakers or ankle boots. A designer tote or structured bag. Coffee cup optional.
+OUTFIT: Chic casual outfit — a tailored trench coat or oversized blazer, well-fitted jeans or tailored pants, a cashmere sweater or silk blouse, clean sneakers or ankle boots. A designer tote or structured bag.
 
-COLOR MUST BE CHOSEN based on this person's skin tone. Pick colors that make their face glow — could be camel, cream, soft pink, navy, or warm neutrals. Avoid dull grey.
+REMOVE ALL work-related items: NO stethoscope, NO ID badge, NO medical accessories, NO work tools of any kind. This person is dressed in PURE civilian fashion.
 
-MOOD: Walking to work looking like a street style photo. She could be heading to a fashion office, not a hospital. Effortlessly chic.`,
+COLOR MUST BE CHOSEN based on this person's skin tone. Pick colors that make their face glow. You have COMPLETE freedom.
+
+MOOD: A stylish woman walking down a city street, heading to brunch. She looks like she could be a fashion editor or gallery owner. Zero connection to any workplace.${FRAMING}`,
     },
   ]
 }
@@ -794,6 +801,62 @@ STYLING APPROACH — PERSONAL COLOR ANALYSIS:
 - Colors should be muted and wearable — NO bright red, pumpkin orange, hot pink, or neon tones
 - Prioritize neutral-based outfits with ONE subtle color accent at most
 ${getGenderStyleRules(gender)}${silhouetteGuide}
+
+${getBeautyRetouch(gender)}
+
+${FOCUS_RULES}
+
+${BACKGROUND_ENHANCEMENT}
+
+${INPAINTING_RULES}
+
+${BODY_PRESERVATION}
+
+${ABSOLUTE_REQUIREMENTS}
+
+This is a clothing REPLACEMENT task for the MAIN PERSON only.
+Keep the person's HEAD and FACE at the EXACT same position.
+The clothes should naturally fit the existing body shape.
+DO NOT generate full body if original only shows partial body.
+
+Generate the edited photo with IDENTICAL composition to the input.`
+}
+
+/**
+ * Build edit prompt specifically for work uniform/scrub generation.
+ * Stripped of fashion-brand rules and color restrictions that don't apply to uniforms.
+ * Used by generate-work-styles.ts.
+ */
+export function buildWorkEditPrompt(opts: {
+  directive: string
+  gender: string
+  silhouetteGuide: string
+}): string {
+  const { directive, gender, silhouetteGuide } = opts
+  const genderWord = gender === 'female' ? 'woman' : 'man'
+
+  return `You are a professional photographer specializing in editorial portraits for medical and professional publications.
+
+⚠️ FACE IDENTITY LOCK — HIGHEST PRIORITY ⚠️
+This is NOT a generation task. This is a CLOTHING SWAP on an EXISTING photo.
+- The person's FACE must remain 100% IDENTICAL to the input — same eyes, nose, mouth, jawline, skin texture, facial hair, makeup, expression
+- Do NOT regenerate, redraw, or reinterpret the face in ANY way
+- The face must be a PIXEL-LEVEL COPY from the original photo
+- ZERO tolerance for face changes
+
+YOUR TASK: ONLY change the CLOTHING on this person. Keep everything else identical.
+
+SCENARIO DIRECTIVE:
+${directive}
+
+CRITICAL: This is a ${genderWord}. The outfit MUST be appropriate for a ${genderWord}.
+
+PERSONAL COLOR ANALYSIS — USE THE PHOTO:
+- Study this person's ACTUAL skin undertone, hair color, and eye color from the input photo
+- Choose the uniform/outfit color that creates the most FLATTERING effect on THIS specific person
+- The right color should make their skin look healthy and vibrant, NOT washed out
+- Trust your analysis — there is no "default" color. Every person has different ideal colors.
+${silhouetteGuide}
 
 ${getBeautyRetouch(gender)}
 

@@ -3,8 +3,7 @@ import { errors } from '../lib/errors'
 import { editPhotoWithOpenAI } from '../lib/openai-image'
 import {
   getWorkScenarios,
-  buildFashionEditPrompt,
-  getColorInspiration,
+  buildWorkEditPrompt,
   getSilhouetteGuide,
   type ScenarioConfig,
 } from '../lib/stylist-prompts'
@@ -172,22 +171,19 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
     }
 
     const silhouetteGuide = getSilhouetteGuide(gender, height, weight)
-    const diversitySeed = (parseInt(height || '170') + parseInt(weight || '70') + Date.now()) % 10
 
-    console.log(`[API Work] Generating ${workScenarios.length} work styles for ${jobType} (seed: ${diversitySeed})`)
+    console.log(`[API Work] Generating ${workScenarios.length} work styles for ${jobType}`)
 
     const results = await Promise.all(
-      workScenarios.map(async (scenario, index) => {
+      workScenarios.map(async (scenario) => {
 
         let imageUrl: string | null = null
 
         if (hasPhoto) {
           const directive = gender === 'female' ? scenario.directiveFemale : scenario.directiveMale
-          const colorInspiration = getColorInspiration(gender, diversitySeed + index)
-          const editPrompt = buildFashionEditPrompt({
+          const editPrompt = buildWorkEditPrompt({
             directive,
             gender,
-            colorInspiration,
             silhouetteGuide,
           })
           imageUrl = await editPhotoWithModel(photo!, scenario.id, editPrompt, geminiKey, openaiKey)

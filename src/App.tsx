@@ -2526,6 +2526,8 @@ function App() {
   const [isDragging, setIsDragging] = useState(false)
   const [styleImages, setStyleImages] = useState<StyleImage[]>([])
   const [isGeneratingStyles, setIsGeneratingStyles] = useState(false)
+  const [styleGenProgress, setStyleGenProgress] = useState(0)
+  const [styleGenStep, setStyleGenStep] = useState('')
   const [selectedOccasion, setSelectedOccasion] = useState<string | null>(null)
   const [selectedVibe, setSelectedVibe] = useState<string | null>(null)
   const [hairRecommendations, setHairRecommendations] = useState<string[]>([])
@@ -2534,6 +2536,8 @@ function App() {
   const [isGeneratingHair, setIsGeneratingHair] = useState(false)
   const [transformedHairstyles, setTransformedHairstyles] = useState<{id: string, label: string, imageUrl: string | null}[]>([])
   const [isTransformingHair, setIsTransformingHair] = useState(false)
+  const [hairGenProgress, setHairGenProgress] = useState(0)
+  const [hairGenStep, setHairGenStep] = useState('')
   const [loadingProgress, setLoadingProgress] = useState(0)
   const [loadingStep, setLoadingStep] = useState('')
   const [isFullPaid, setIsFullPaid] = useState(false)
@@ -2650,6 +2654,8 @@ function App() {
   const [selectedJob, setSelectedJob] = useState<string>('')
   const [workStyles, setWorkStyles] = useState<StyleImage[]>([])
   const [workLoading, setWorkLoading] = useState(false)
+  const [workGenProgress, setWorkGenProgress] = useState(0)
+  const [workGenStep, setWorkGenStep] = useState('')
 
   // Trend Style state
   const [selectedTrend, setSelectedTrend] = useState<string>('')
@@ -3090,6 +3096,108 @@ function App() {
     return () => clearInterval(interval)
   }, [page, lang])
 
+  // 패션 스타일 생성 프로그레스 타이머
+  useEffect(() => {
+    if (!isGeneratingStyles) {
+      setStyleGenProgress(0)
+      setStyleGenStep('')
+      return
+    }
+
+    const steps = lang === 'ko'
+      ? ['스타일 분석 중...', '컬러 팔레트 선정 중...', '코디 이미지 생성 중...', '실루엣 최적화 중...', '마무리 중...']
+      : ['Analyzing style...', 'Selecting color palette...', 'Generating outfit images...', 'Optimizing silhouettes...', 'Finalizing...']
+
+    let progress = 0
+    let stepIdx = 0
+    setStyleGenStep(steps[0])
+
+    const interval = setInterval(() => {
+      const increment = progress < 20 ? Math.random() * 5 + 2
+        : progress < 50 ? Math.random() * 3 + 1.5
+        : progress < 75 ? Math.random() * 2 + 0.8
+        : Math.random() * 0.4 + 0.2
+      progress = Math.min(progress + increment, 95)
+      setStyleGenProgress(Math.round(progress))
+
+      const newStepIdx = Math.min(Math.floor(progress / 20), steps.length - 1)
+      if (newStepIdx !== stepIdx) {
+        stepIdx = newStepIdx
+        setStyleGenStep(steps[stepIdx])
+      }
+    }, 800)
+
+    return () => clearInterval(interval)
+  }, [isGeneratingStyles, lang])
+
+  // 헤어스타일 생성 프로그레스 타이머
+  useEffect(() => {
+    if (!isTransformingHair) {
+      setHairGenProgress(0)
+      setHairGenStep('')
+      return
+    }
+
+    const steps = lang === 'ko'
+      ? ['얼굴형 분석 중...', '헤어스타일 매칭 중...', '이미지 생성 중...', '마무리 중...']
+      : ['Analyzing face shape...', 'Matching hairstyles...', 'Generating images...', 'Finalizing...']
+
+    let progress = 0
+    let stepIdx = 0
+    setHairGenStep(steps[0])
+
+    const interval = setInterval(() => {
+      const increment = progress < 25 ? Math.random() * 5 + 2
+        : progress < 55 ? Math.random() * 3 + 1.5
+        : progress < 80 ? Math.random() * 2 + 0.8
+        : Math.random() * 0.4 + 0.2
+      progress = Math.min(progress + increment, 95)
+      setHairGenProgress(Math.round(progress))
+
+      const newStepIdx = Math.min(Math.floor(progress / 25), steps.length - 1)
+      if (newStepIdx !== stepIdx) {
+        stepIdx = newStepIdx
+        setHairGenStep(steps[stepIdx])
+      }
+    }, 700)
+
+    return () => clearInterval(interval)
+  }, [isTransformingHair, lang])
+
+  // 작업복 스타일 생성 프로그레스 타이머
+  useEffect(() => {
+    if (!workLoading) {
+      setWorkGenProgress(0)
+      setWorkGenStep('')
+      return
+    }
+
+    const steps = lang === 'ko'
+      ? ['피부톤 분석 중...', '최적 컬러 매칭 중...', '유니폼 이미지 생성 중...', '마무리 중...']
+      : ['Analyzing skin tone...', 'Matching optimal colors...', 'Generating uniform images...', 'Finalizing...']
+
+    let progress = 0
+    let stepIdx = 0
+    setWorkGenStep(steps[0])
+
+    const interval = setInterval(() => {
+      const increment = progress < 25 ? Math.random() * 5 + 2
+        : progress < 55 ? Math.random() * 3 + 1.5
+        : progress < 80 ? Math.random() * 2 + 0.8
+        : Math.random() * 0.4 + 0.2
+      progress = Math.min(progress + increment, 95)
+      setWorkGenProgress(Math.round(progress))
+
+      const newStepIdx = Math.min(Math.floor(progress / 25), steps.length - 1)
+      if (newStepIdx !== stepIdx) {
+        stepIdx = newStepIdx
+        setWorkGenStep(steps[stepIdx])
+      }
+    }, 800)
+
+    return () => clearInterval(interval)
+  }, [workLoading, lang])
+
   const processFile = (file: File) => {
     if (file && file.type.startsWith('image/')) {
       const reader = new FileReader()
@@ -3297,6 +3405,9 @@ function App() {
       } catch (err) {
         console.error('[Fashion] Fetch failed:', err)
       }
+      setStyleGenProgress(100)
+      setStyleGenStep(lang === 'ko' ? '완료!' : 'Complete!')
+      await new Promise(resolve => setTimeout(resolve, 300))
       setIsGeneratingStyles(false)
 
       // Second: Generate hairstyles using best-match outfit photo
@@ -3321,6 +3432,9 @@ function App() {
       } catch (err) {
         console.error('[Hair] Fetch failed:', err)
       }
+      setHairGenProgress(100)
+      setHairGenStep(lang === 'ko' ? '완료!' : 'Complete!')
+      await new Promise(resolve => setTimeout(resolve, 300))
       setIsTransformingHair(false)
 
       // 리포트 성공 후 checkout ID 정리 (환불 불가 상태)
@@ -4088,6 +4202,8 @@ function App() {
       } else {
         console.error('[Fashion] Fetch failed:', stylesResult.reason)
       }
+      setStyleGenProgress(100)
+      setStyleGenStep(lang === 'ko' ? '완료!' : 'Complete!')
       setIsGeneratingStyles(false)
 
       // Handle hairstyles
@@ -4102,6 +4218,8 @@ function App() {
       } else {
         console.error('[Hair] Fetch failed:', hairResult.reason)
       }
+      setHairGenProgress(100)
+      setHairGenStep(lang === 'ko' ? '완료!' : 'Complete!')
       setIsTransformingHair(false)
 
       setLoadingProgress(100)
@@ -4153,6 +4271,9 @@ function App() {
     } catch (err) {
       console.error('Error generating styles:', err)
     } finally {
+      setStyleGenProgress(100)
+      setStyleGenStep(lang === 'ko' ? '완료!' : 'Complete!')
+      await new Promise(resolve => setTimeout(resolve, 300))
       setIsGeneratingStyles(false)
     }
   }
@@ -4187,6 +4308,9 @@ function App() {
     } catch (err) {
       console.error('Error transforming hairstyles:', err)
     } finally {
+      setHairGenProgress(100)
+      setHairGenStep(lang === 'ko' ? '완료!' : 'Complete!')
+      await new Promise(resolve => setTimeout(resolve, 300))
       setIsTransformingHair(false)
     }
   }
@@ -6404,11 +6528,12 @@ ${hairImgs.length > 0 ? `<div class="section"><h2>${hairSection}</h2><div class=
             <div className="style-loading">
               <div className="spinner small"></div>
               <span>{t.generatingStyles}</span>
-              <div className="progress-bar-container small" style={{ marginTop: '0.75rem', width: '200px' }}>
-                <div className="progress-bar animated" style={{ animationDuration: '25s' }}></div>
+              <div className="progress-bar-container small" style={{ marginTop: '0.75rem', width: '240px' }}>
+                <div className="progress-bar" style={{ width: `${styleGenProgress}%`, transition: 'width 0.5s ease-out' }}></div>
               </div>
-              <span style={{ fontSize: '0.75rem', opacity: 0.6, marginTop: '0.5rem' }}>
-                {lang === 'ko' ? '6개 스타일 생성 중 (약 20-30초)' : 'Generating 6 styles (~20-30 seconds)'}
+              <span className="progress-text" style={{ fontSize: '0.85rem', marginTop: '0.25rem' }}>{styleGenProgress}%</span>
+              <span style={{ fontSize: '0.75rem', opacity: 0.6, marginTop: '0.25rem' }}>
+                {styleGenStep}
               </span>
             </div>
           ) : styleImages.length > 0 && styleImages.some(s => s.imageUrl) ? (
@@ -6466,11 +6591,12 @@ ${hairImgs.length > 0 ? `<div class="section"><h2>${hairSection}</h2><div class=
               <div className="style-loading">
                 <div className="spinner small"></div>
                 <span>{t.generatingHairstyles}</span>
-                <div className="progress-bar-container small" style={{ marginTop: '0.75rem', width: '200px' }}>
-                  <div className="progress-bar animated" style={{ animationDuration: '20s' }}></div>
+                <div className="progress-bar-container small" style={{ marginTop: '0.75rem', width: '240px' }}>
+                  <div className="progress-bar" style={{ width: `${hairGenProgress}%`, transition: 'width 0.5s ease-out' }}></div>
                 </div>
-                <span style={{ fontSize: '0.75rem', opacity: 0.6, marginTop: '0.5rem' }}>
-                  {lang === 'ko' ? '5개 헤어스타일 생성 중 (약 15-20초)' : 'Generating 5 hairstyles (~15-20 seconds)'}
+                <span className="progress-text" style={{ fontSize: '0.85rem', marginTop: '0.25rem' }}>{hairGenProgress}%</span>
+                <span style={{ fontSize: '0.75rem', opacity: 0.6, marginTop: '0.25rem' }}>
+                  {hairGenStep}
                 </span>
               </div>
             ) : transformedHairstyles.length > 0 ? (
@@ -7714,9 +7840,16 @@ ${hairImgs.length > 0 ? `<div class="section"><h2>${hairSection}</h2><div class=
         </header>
 
         {workLoading ? (
-          <div className="loading-container">
-            <div className="loading-spinner"></div>
-            <p className="loading-text">{t.workGenerating}</p>
+          <div className="style-loading" style={{ padding: '3rem 1rem' }}>
+            <div className="spinner small"></div>
+            <span>{t.workGenerating}</span>
+            <div className="progress-bar-container small" style={{ marginTop: '0.75rem', width: '240px' }}>
+              <div className="progress-bar" style={{ width: `${workGenProgress}%`, transition: 'width 0.5s ease-out' }}></div>
+            </div>
+            <span className="progress-text" style={{ fontSize: '0.85rem', marginTop: '0.25rem' }}>{workGenProgress}%</span>
+            <span style={{ fontSize: '0.75rem', opacity: 0.6, marginTop: '0.25rem' }}>
+              {workGenStep}
+            </span>
           </div>
         ) : (
           <div className="style-grid">
