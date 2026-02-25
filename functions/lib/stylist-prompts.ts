@@ -248,6 +248,288 @@ Think everyday elegance — the woman who always looks polished without visible 
   ]
 }
 
+// ─── Work Style Job Types ────────────────────────────────────────
+
+export interface WorkJobType {
+  id: string
+  labelKo: string
+  labelEn: string
+  labelJa: string
+  labelZh: string
+  labelEs: string
+  icon: string
+}
+
+export const workJobTypes: WorkJobType[] = [
+  { id: 'doctor', labelKo: '의사', labelEn: 'Doctor', labelJa: '医師', labelZh: '医生', labelEs: 'Médico', icon: '🩺' },
+  { id: 'dentist', labelKo: '치과의사', labelEn: 'Dentist', labelJa: '歯科医', labelZh: '牙医', labelEs: 'Dentista', icon: '🦷' },
+  { id: 'nurse', labelKo: '간호사', labelEn: 'Nurse', labelJa: '看護師', labelZh: '护士', labelEs: 'Enfermero/a', icon: '💉' },
+  { id: 'vet', labelKo: '수의사', labelEn: 'Veterinarian', labelJa: '獣医', labelZh: '兽医', labelEs: 'Veterinario/a', icon: '🐾' },
+  { id: 'chef', labelKo: '셰프', labelEn: 'Chef', labelJa: 'シェフ', labelZh: '厨师', labelEs: 'Chef', icon: '👨‍🍳' },
+  { id: 'lawyer', labelKo: '변호사', labelEn: 'Lawyer', labelJa: '弁護士', labelZh: '律师', labelEs: 'Abogado/a', icon: '⚖️' },
+]
+
+// ─── Work Style Scenario Directives ──────────────────────────────
+
+const workDirectives: Record<string, { male: string; female: string }> = {
+  doctor: {
+    male: `PROFESSION: MALE DOCTOR / PHYSICIAN
+This man is a doctor. Dress him in the most professional and authoritative medical attire.
+- Clean, well-fitted white lab coat over a crisp dress shirt and tie
+- Pressed dark trousers with clean break
+- Polished leather oxford shoes or clean professional shoes
+- Stethoscope around the neck
+- MUST look like a real doctor in a premium hospital — authoritative, trustworthy, well-groomed`,
+    female: `PROFESSION: FEMALE DOCTOR / PHYSICIAN
+This woman is a doctor. Dress her in the most professional and elegant medical attire.
+- Tailored white lab coat, fitted at the waist for a flattering silhouette
+- Blouse or professional top underneath with appropriate neckline
+- Tailored trousers or a pencil skirt in dark neutral tones
+- Elegant professional shoes — pointed-toe flats, low heels, or clean loafers
+- Stethoscope around the neck
+- MUST look like a real doctor — authoritative, polished, modern`
+  },
+  dentist: {
+    male: `PROFESSION: MALE DENTIST
+This man is a dentist. Dress him in clean, modern dental professional attire.
+- Modern dental scrub top OR clean white dental coat — slim, contemporary fit
+- Coordinated scrub set in muted professional colors (navy, teal, charcoal, or white)
+- Clean professional shoes or minimalist white sneakers
+- MUST look like a real dentist in a premium dental clinic — clean, precise, approachable`,
+    female: `PROFESSION: FEMALE DENTIST
+This woman is a dentist. Dress her in clean, modern dental professional attire.
+- Modern fitted dental scrub top OR tailored white dental coat
+- Coordinated scrub set in flattering professional colors (soft teal, navy, or white)
+- Clean professional shoes or elegant white sneakers
+- MUST look like a real dentist in a premium dental clinic — clean, precise, approachable`
+  },
+  nurse: {
+    male: `PROFESSION: MALE NURSE
+This man is a nurse. Dress him in modern, professional nursing attire.
+- Contemporary scrub set — well-fitted, not baggy, in professional colors
+- Colors: navy, charcoal, hunter green, or ceil blue
+- Comfortable professional shoes — clean nursing clogs or athletic-style nursing shoes
+- MUST look like a real nurse — competent, caring, professional`,
+    female: `PROFESSION: FEMALE NURSE
+This woman is a nurse. Dress her in modern, professional nursing attire.
+- Contemporary fitted scrub set in flattering professional colors
+- Colors: navy, ceil blue, wine, teal, or soft grey
+- Comfortable yet stylish shoes — clean nursing shoes or white sneakers
+- MUST look like a real nurse — competent, caring, professional`
+  },
+  vet: {
+    male: `PROFESSION: MALE VETERINARIAN
+This man is a veterinarian. Dress him in practical, professional veterinary attire.
+- Veterinary scrub set or practical lab coat
+- Colors: hunter green, navy, teal, or earth tones — practical for working with animals
+- Durable comfortable shoes — clean work boots or sturdy sneakers
+- MUST look like a real vet — warm, capable, approachable, animal-friendly`,
+    female: `PROFESSION: FEMALE VETERINARIAN
+This woman is a veterinarian. Dress her in practical, professional veterinary attire.
+- Fitted veterinary scrub set or tailored lab coat
+- Colors: sage green, teal, navy, or warm earth tones — practical and flattering
+- Comfortable durable shoes — clean sneakers or practical boots
+- MUST look like a real vet — warm, capable, approachable, animal-friendly`
+  },
+  chef: {
+    male: `PROFESSION: MALE CHEF
+This man is a chef. Dress him in sharp, professional kitchen attire.
+- Classic double-breasted chef's jacket in pristine white OR modern single-breasted chef coat
+- Clean professional apron — leather or heavy cotton
+- Dark professional pants — black or charcoal, clean fit
+- Professional kitchen shoes — clean, non-slip
+- MUST look like a real executive chef — commanding, skilled, passionate about food`,
+    female: `PROFESSION: FEMALE CHEF
+This woman is a chef. Dress her in sharp, professional kitchen attire.
+- Modern fitted chef's jacket in white OR contemporary chef coat with feminine tailoring
+- Clean professional apron — leather or heavy cotton
+- Dark professional pants or skirt — clean, practical fit
+- Professional kitchen shoes — comfortable and clean
+- MUST look like a real executive chef — commanding, skilled, passionate about food`
+  },
+  lawyer: {
+    male: `PROFESSION: MALE LAWYER / ATTORNEY
+This man is a lawyer. Dress him in a powerful, authoritative professional suit.
+- Impeccably tailored suit — navy, charcoal, or dark grey — structured shoulders, clean lines
+- Crisp dress shirt — white or light blue — with a silk tie
+- Polished leather oxford shoes or cap-toe derbies
+- Professional accessories: quality watch, leather briefcase
+- MUST look like a senior partner at a top law firm — authoritative, intelligent, polished`,
+    female: `PROFESSION: FEMALE LAWYER / ATTORNEY
+This woman is a lawyer. Dress her in a powerful, authoritative professional ensemble.
+- Tailored suit — fitted blazer with nipped waist in navy, charcoal, or black
+- Silk blouse or structured top — sophisticated neckline
+- Tailored trousers or pencil skirt — impeccable fit
+- Elegant professional shoes — pointed-toe pumps, kitten heels, or refined flats
+- MUST look like a senior partner at a top law firm — authoritative, intelligent, polished`
+  },
+}
+
+export function getWorkScenarios(jobType: string): ScenarioConfig[] {
+  const job = workDirectives[jobType]
+  if (!job) return getWorkScenarios('doctor') // fallback
+
+  return [
+    {
+      id: 'work-professional',
+      labelKo: '정통 전문복', labelEn: 'Classic Professional', labelJa: 'クラシック', labelZh: '经典专业', labelEs: 'Clásico Profesional',
+      directiveMale: `${job.male}\n\nSTYLE: CLASSIC PROFESSIONAL — Traditional, authoritative, the textbook-perfect professional look. Formal and established.`,
+      directiveFemale: `${job.female}\n\nSTYLE: CLASSIC PROFESSIONAL — Traditional, authoritative, the textbook-perfect professional look. Formal and established.`,
+    },
+    {
+      id: 'work-modern',
+      labelKo: '모던 프로페셔널', labelEn: 'Modern Professional', labelJa: 'モダン', labelZh: '现代专业', labelEs: 'Moderno Profesional',
+      directiveMale: `${job.male}\n\nSTYLE: MODERN PROFESSIONAL — Contemporary, updated take on the classic uniform. Slimmer fit, current proportions, fresh details while maintaining professional authority.`,
+      directiveFemale: `${job.female}\n\nSTYLE: MODERN PROFESSIONAL — Contemporary, updated take on the classic uniform. Slimmer fit, current proportions, fresh details while maintaining professional authority.`,
+    },
+    {
+      id: 'work-smart-casual',
+      labelKo: '스마트 캐주얼', labelEn: 'Smart Casual', labelJa: 'スマートカジュアル', labelZh: '商务休闲', labelEs: 'Smart Casual',
+      directiveMale: `${job.male}\n\nSTYLE: SMART CASUAL WORK — Relaxed professional for casual office days or non-patient-facing work. Professional but approachable. Less formal than full uniform but still clearly a professional.`,
+      directiveFemale: `${job.female}\n\nSTYLE: SMART CASUAL WORK — Relaxed professional for casual office days or non-patient-facing work. Professional but approachable. Less formal than full uniform but still clearly a professional.`,
+    },
+    {
+      id: 'work-premium',
+      labelKo: '프리미엄 에디션', labelEn: 'Premium Edition', labelJa: 'プレミアム', labelZh: '高端版', labelEs: 'Edición Premium',
+      directiveMale: `${job.male}\n\nSTYLE: PREMIUM EXECUTIVE — The luxury version of this professional's attire. Think department head, private practice owner. Premium fabrics, impeccable tailoring, subtle prestige details. The best-dressed professional in the building.`,
+      directiveFemale: `${job.female}\n\nSTYLE: PREMIUM EXECUTIVE — The luxury version of this professional's attire. Think department head, private practice owner. Premium fabrics, impeccable tailoring, subtle prestige details. The best-dressed professional in the building.`,
+    },
+  ]
+}
+
+// ─── Trend Style Types ───────────────────────────────────────────
+
+const trendDirectives: Record<string, { male: string; female: string }> = {
+  street: {
+    male: `STREET FASHION for this man. Think Stussy, Supreme, Palace, Nike ACG, WTAPS.
+- Oversized graphic tee or hoodie with bold but tasteful print
+- Wide-leg cargo pants, baggy jeans, or technical joggers
+- Chunky sneakers (Jordan, New Balance 550, Nike Dunk) or boots
+- Layering: flannel shirt, coach jacket, or windbreaker
+- Accessories: snapback cap, crossbody bag, layered necklaces
+- Relaxed, confident, urban aesthetic — NOT preppy, NOT formal`,
+    female: `STREET FASHION for this woman. Think Stussy, Nike, Ader Error, Ambush.
+- Oversized graphic tee or cropped hoodie, or vintage band tee
+- Wide-leg cargo pants, baggy jeans, or biker shorts + oversized top
+- Chunky sneakers (Jordan, New Balance, Nike Dunk) or platform boots
+- Layering: oversized denim jacket, bomber, or windbreaker
+- Accessories: bucket hat, mini bag, layered jewelry
+- Cool, effortless street style — confident and bold`,
+  },
+  hype: {
+    male: `HYPEBEAST FASHION for this man. Think Fear of God, Off-White, visvim, Sacai.
+- Premium streetwear with designer edge — elevated basics
+- Fear of God Essentials-style relaxed hoodie or boxy tee in muted tones
+- Wide-leg trousers or premium sweatpants with correct drape
+- High-end sneakers (Travis Scott collabs, Sacai Nike, Fear of God shoes)
+- Accessories: designer crossbody, statement watch, subtle branding
+- Understated hype — NOT loud logos, but clearly premium`,
+    female: `HYPEBEAST FASHION for this woman. Think Off-White, Ambush, Sacai, Marine Serre.
+- Premium streetwear with designer edge — elevated basics
+- Oversized designer hoodie or structured crop top
+- Wide-leg trousers, cargo skirt, or technical pants
+- High-end sneakers or chunky boots
+- Accessories: designer mini bag, layered chains, statement sunglasses
+- Understated hype — NOT loud logos, but clearly premium`,
+  },
+  'minimal-mz': {
+    male: `MINIMAL MZ (Gen Z) FASHION for this man. Think COS, Lemaire, Our Legacy, Auralee.
+- Clean minimalist with subtle fashion-forward details
+- Oversized but intentional silhouette — dropped shoulders, relaxed body
+- Monochromatic or tonal dressing in muted colors (beige, grey, black, cream)
+- Clean sneakers, leather loafers, or simple boots
+- Minimal accessories: simple watch, clean bag
+- Instagram-worthy minimal aesthetic — effortlessly stylish`,
+    female: `MINIMAL MZ (Gen Z) FASHION for this woman. Think COS, Toteme, Lemaire, Acne Studios.
+- Clean minimalist with subtle fashion-forward details
+- Oversized blazer or structured crop + wide-leg combination
+- Monochromatic or tonal dressing in muted colors (beige, grey, black, cream)
+- Clean sneakers, pointed mules, or simple boots
+- Minimal accessories: delicate jewelry, structured bag
+- Instagram-worthy minimal aesthetic — effortlessly stylish`,
+  },
+  sporty: {
+    male: `SPORTY FASHION for this man. Think Nike Tech, Adidas Y-3, On Running, Arc'teryx.
+- Premium athleisure with technical fabrics
+- Tech fleece hoodie or zip-up, performance tee or mock-neck
+- Tapered joggers, technical pants, or sport-cut trousers
+- Performance sneakers (Nike, On, New Balance) in clean colorway
+- Accessories: sport watch, running cap, gym bag
+- Athletic but polished — NOT gym clothes, but sport-inspired fashion`,
+    female: `SPORTY FASHION for this woman. Think Nike, Adidas by Stella McCartney, Lululemon, Alo Yoga.
+- Premium athleisure with fashion edge
+- Cropped tech jacket or fitted zip-up, sports bra + oversized layer
+- High-waist leggings, track pants, or sport skirt
+- Performance sneakers in clean colorway or chunky platform trainers
+- Accessories: sport watch, mini belt bag, sunglasses
+- Athletic but polished — gym-to-street ready`,
+  },
+  retro: {
+    male: `RETRO VINTAGE FASHION for this man. Think 70s-90s revival, vintage Americana, retro sportswear.
+- Vintage-wash denim jacket or retro varsity jacket
+- Graphic vintage tee, polo shirt, or corduroy shirt
+- Straight-leg vintage jeans, corduroy pants, or pleated trousers
+- Retro sneakers (Vans, Converse, New Balance 574) or leather boots
+- Accessories: vintage sunglasses, leather belt, retro watch
+- Nostalgic but fresh — vintage pieces styled in a modern way`,
+    female: `RETRO VINTAGE FASHION for this woman. Think 70s boho, 90s grunge, Y2K, vintage Americana.
+- Vintage-wash denim jacket, retro cardigan, or varsity jacket
+- Graphic vintage tee, wrap top, or floral blouse
+- High-waist mom jeans, corduroy skirt, or vintage flared pants
+- Retro sneakers (Converse, Vans), platform shoes, or vintage boots
+- Accessories: vintage sunglasses, bandana, retro jewelry
+- Nostalgic but fresh — vintage pieces styled in a modern way`,
+  },
+  'avant-garde': {
+    male: `AVANT-GARDE FASHION for this man. Think Rick Owens, Yohji Yamamoto, Comme des Garcons, Julius.
+- Architectural silhouettes with dramatic proportions
+- Oversized deconstructed coat or asymmetric jacket
+- Drop-crotch pants, wide draped trousers, or layered bottoms
+- Statement boots (Rick Owens, Maison Margiela Tabis) or platform shoes
+- All-black palette or stark monochrome with texture contrast
+- Dark, artistic, fashion-forward — wearable art`,
+    female: `AVANT-GARDE FASHION for this woman. Think Rei Kawakubo, Yohji Yamamoto, Rick Owens, Issey Miyake.
+- Architectural silhouettes with dramatic proportions
+- Oversized deconstructed coat, asymmetric dress, or sculptural top
+- Wide draped trousers, pleated experimental skirt, or layered pieces
+- Statement boots or architectural heels
+- All-black palette or stark monochrome with texture contrast
+- Dark, artistic, fashion-forward — wearable art`,
+  },
+}
+
+export function getTrendScenarios(trendType: string): ScenarioConfig[] {
+  const trend = trendDirectives[trendType]
+  if (!trend) return getTrendScenarios('street')
+
+  return [
+    {
+      id: 'trend-signature',
+      labelKo: '시그니처 룩', labelEn: 'Signature Look', labelJa: 'シグネチャー', labelZh: '标志性造型', labelEs: 'Look Signature',
+      directiveMale: `${trend.male}\n\nSTYLE: SIGNATURE — The definitive version of this trend. The most recognizable, iconic look that captures the essence of this style.`,
+      directiveFemale: `${trend.female}\n\nSTYLE: SIGNATURE — The definitive version of this trend. The most recognizable, iconic look that captures the essence of this style.`,
+    },
+    {
+      id: 'trend-elevated',
+      labelKo: '엘리베이티드', labelEn: 'Elevated', labelJa: 'エレベーテッド', labelZh: '高级版', labelEs: 'Elevado',
+      directiveMale: `${trend.male}\n\nSTYLE: ELEVATED — The premium, grown-up version. Higher quality pieces, more refined proportions, subtle luxury touches while keeping the trend DNA.`,
+      directiveFemale: `${trend.female}\n\nSTYLE: ELEVATED — The premium, grown-up version. Higher quality pieces, more refined proportions, subtle luxury touches while keeping the trend DNA.`,
+    },
+    {
+      id: 'trend-everyday',
+      labelKo: '데일리 버전', labelEn: 'Everyday', labelJa: 'エブリデイ', labelZh: '日常版', labelEs: 'Cotidiano',
+      directiveMale: `${trend.male}\n\nSTYLE: EVERYDAY WEARABLE — The toned-down daily version. Accessible and comfortable, keeping the spirit of the trend without going all-in. Something you'd actually wear to work or school.`,
+      directiveFemale: `${trend.female}\n\nSTYLE: EVERYDAY WEARABLE — The toned-down daily version. Accessible and comfortable, keeping the spirit of the trend without going all-in. Something you'd actually wear to work or school.`,
+    },
+    {
+      id: 'trend-bold',
+      labelKo: '볼드 에디션', labelEn: 'Bold Edition', labelJa: 'ボールド', labelZh: '大胆版', labelEs: 'Edición Audaz',
+      directiveMale: `${trend.male}\n\nSTYLE: BOLD STATEMENT — The maximum expression. Push the boundaries of this trend. More daring combinations, statement pieces, head-turning proportions. For someone who wants to stand out.`,
+      directiveFemale: `${trend.female}\n\nSTYLE: BOLD STATEMENT — The maximum expression. Push the boundaries of this trend. More daring combinations, statement pieces, head-turning proportions. For someone who wants to stand out.`,
+    },
+  ]
+}
+
 // ─── Color Inspiration ──────────────────────────────────────────
 
 export function getColorInspiration(gender: string, seed: number): string {

@@ -310,6 +310,108 @@ export function validateTransformStyleRequest(body: unknown): ValidationResult<T
   }
 }
 
+export const VALID_TREND_TYPES = ['street', 'hype', 'minimal-mz', 'sporty', 'retro', 'avant-garde'] as const
+export type TrendType = typeof VALID_TREND_TYPES[number]
+
+export interface GenerateTrendStylesRequestBody {
+  photo?: string
+  height: string
+  weight: string
+  gender: Gender
+  language: Language
+  trendType: TrendType
+}
+
+export function validateGenerateTrendStylesRequest(body: unknown): ValidationResult<GenerateTrendStylesRequestBody> {
+  const errors: ValidationError[] = []
+
+  if (typeof body !== 'object' || body === null) {
+    return { valid: false, errors: [{ field: 'body', message: 'Invalid request body' }] }
+  }
+
+  const { photo, height, weight, gender, language, trendType } = body as Record<string, unknown>
+
+  if (!height) errors.push({ field: 'height', message: 'Height is required' })
+  else if (!isValidHeight(height)) errors.push({ field: 'height', message: `Height must be between ${HEIGHT_MIN} and ${HEIGHT_MAX} cm` })
+
+  if (!weight) errors.push({ field: 'weight', message: 'Weight is required' })
+  else if (!isValidWeight(weight)) errors.push({ field: 'weight', message: `Weight must be between ${WEIGHT_MIN} and ${WEIGHT_MAX} kg` })
+
+  if (!gender) errors.push({ field: 'gender', message: 'Gender is required' })
+  else if (!isValidGender(gender)) errors.push({ field: 'gender', message: 'Invalid gender value' })
+
+  if (!trendType) errors.push({ field: 'trendType', message: 'Trend type is required' })
+  else if (!VALID_TREND_TYPES.includes(trendType as TrendType)) errors.push({ field: 'trendType', message: 'Invalid trend type' })
+
+  if (language && !isValidLanguage(language)) errors.push({ field: 'language', message: 'Invalid language value' })
+  if (photo && !isValidPhoto(photo)) errors.push({ field: 'photo', message: 'Invalid photo format or size' })
+
+  if (errors.length > 0) return { valid: false, errors }
+
+  return {
+    valid: true,
+    data: {
+      photo: photo as string | undefined,
+      height: String(height),
+      weight: String(weight),
+      gender: gender as Gender,
+      language: (language as Language) || 'en',
+      trendType: trendType as TrendType,
+    },
+  }
+}
+
+export const VALID_JOB_TYPES = ['doctor', 'dentist', 'nurse', 'vet', 'chef', 'lawyer'] as const
+export type JobType = typeof VALID_JOB_TYPES[number]
+
+export interface GenerateWorkStylesRequestBody {
+  photo?: string
+  height: string
+  weight: string
+  gender: Gender
+  language: Language
+  jobType: JobType
+}
+
+export function validateGenerateWorkStylesRequest(body: unknown): ValidationResult<GenerateWorkStylesRequestBody> {
+  const errors: ValidationError[] = []
+
+  if (typeof body !== 'object' || body === null) {
+    return { valid: false, errors: [{ field: 'body', message: 'Invalid request body' }] }
+  }
+
+  const { photo, height, weight, gender, language, jobType } = body as Record<string, unknown>
+
+  if (!height) errors.push({ field: 'height', message: 'Height is required' })
+  else if (!isValidHeight(height)) errors.push({ field: 'height', message: `Height must be between ${HEIGHT_MIN} and ${HEIGHT_MAX} cm` })
+
+  if (!weight) errors.push({ field: 'weight', message: 'Weight is required' })
+  else if (!isValidWeight(weight)) errors.push({ field: 'weight', message: `Weight must be between ${WEIGHT_MIN} and ${WEIGHT_MAX} kg` })
+
+  if (!gender) errors.push({ field: 'gender', message: 'Gender is required' })
+  else if (!isValidGender(gender)) errors.push({ field: 'gender', message: 'Invalid gender value' })
+
+  if (!jobType) errors.push({ field: 'jobType', message: 'Job type is required' })
+  else if (!VALID_JOB_TYPES.includes(jobType as JobType)) errors.push({ field: 'jobType', message: 'Invalid job type' })
+
+  if (language && !isValidLanguage(language)) errors.push({ field: 'language', message: 'Invalid language value' })
+  if (photo && !isValidPhoto(photo)) errors.push({ field: 'photo', message: 'Invalid photo format or size' })
+
+  if (errors.length > 0) return { valid: false, errors }
+
+  return {
+    valid: true,
+    data: {
+      photo: photo as string | undefined,
+      height: String(height),
+      weight: String(weight),
+      gender: gender as Gender,
+      language: (language as Language) || 'en',
+      jobType: jobType as JobType,
+    },
+  }
+}
+
 export interface GenerateStylesRequestBody {
   photo?: string
   height: string
