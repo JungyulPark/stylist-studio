@@ -273,114 +273,160 @@ export const workJobTypes: WorkJobType[] = [
 
 const workDirectives: Record<string, { male: string; female: string }> = {
   doctor: {
-    male: `PROFESSION: MALE DOCTOR — DESIGNER SCRUBS
-This man is a doctor. Dress him in elevated, designer-level medical scrubs that look stylish while being fully functional.
-- Short-sleeve V-neck scrub top — slim athletic fit, premium stretch fabric with subtle texture
-- Matching scrub jogger pants — tapered ankle, modern silhouette (think FIGS, Jaanuu designer scrubs)
-- Premium sneakers — clean minimalist white (Common Projects style) or On Running
-- Stethoscope around the neck
-- COLOR MUST BE CHOSEN based on this person's skin tone and undertone from the photo
-- MUST look like the best-dressed doctor in the hospital — stylish, modern, head-turning but still professional`,
-    female: `PROFESSION: FEMALE DOCTOR — DESIGNER SCRUBS
-This woman is a doctor. Dress her in elevated, designer-level medical scrubs that look chic while being fully functional.
-- Short-sleeve or cap-sleeve scrub top — feminine fitted cut, premium stretch fabric with subtle texture
-- Matching scrub jogger pants — tapered, flattering silhouette (think FIGS, Jaanuu, Healing Hands)
-- Premium sneakers — clean white or stylish neutral (Veja, On Running)
-- Stethoscope around the neck
-- COLOR MUST BE CHOSEN based on this person's skin tone, undertone, and hair color from the photo
-- MUST look like the most stylish doctor in the hospital — chic, confident, head-turning but professional`
+    male: `STYLING BRIEF — MALE DOCTOR
+You are styling a doctor for a premium hospital brand photoshoot.
+
+OUTFIT SPEC:
+- TOP: Short-sleeve V-neck scrub top. The fabric has a subtle 4-way stretch with matte sheen — like lululemon meets medical wear. Slim athletic cut that follows the torso without being tight. Clean topstitching details at shoulder seams.
+- BOTTOM: Scrub jogger pants with tapered ankle and elastic cuff. Sits at the hip. The drape is clean — not a wrinkle, not a bunch. Think tailored sweatpant.
+- SHOES: Pristine white minimalist leather sneakers with a clean sole (no chunky platform). Immaculate.
+- ACCESSORIES: Stethoscope draped naturally around the neck. One simple watch.
+
+COLOR DIRECTION: Read this person's skin undertone carefully. For warm undertones → deep teal, burgundy-wine, or warm charcoal. For cool undertones → slate blue, steel grey, or deep navy. The scrub color should make their face GLOW.
+
+MOOD: He looks like the doctor you'd request by name. Quietly confident. The uniform fits like it was custom-made. Magazine-quality.`,
+    female: `STYLING BRIEF — FEMALE DOCTOR
+You are styling a female doctor for a premium hospital brand photoshoot.
+
+OUTFIT SPEC:
+- TOP: Short-sleeve V-neck or mandarin-collar scrub top. Feminine darted fit that defines the waist without being tight. Premium 4-way stretch fabric with soft matte finish. Subtle princess seaming for shape.
+- BOTTOM: Scrub jogger pants — tapered ankle, mid-rise, with a clean drape that flatters the leg line. OR slim straight-leg scrub pants.
+- SHOES: Clean white leather sneakers or white slip-on mules. Spotless.
+- ACCESSORIES: Stethoscope draped naturally. Minimal jewelry — small studs or thin bracelet only.
+
+COLOR DIRECTION: Read this person's skin tone, undertone, and hair color. For warm skin → dusty rose, sage green, warm wine, or caramel-toned khaki. For cool skin → ceil blue, soft lavender-grey, cool navy, or icy mint. The color should illuminate her complexion.
+
+MOOD: She walks into the ward and everyone notices. Not because she's trying — because the fit, the color, and the confidence are perfect. She looks like she belongs on the cover of a medical fashion editorial.`
   },
   dentist: {
-    male: `PROFESSION: MALE DENTIST — DESIGNER DENTAL WEAR
-This man is a dentist. Dress him in elevated, designer-level dental scrubs that are sleek and modern.
-- Short-sleeve scrub top — slim tailored fit with clean lines, premium fabric
-- Matching scrub pants — jogger or slim tapered fit, modern proportions
-- Premium minimalist sneakers — white or tonal neutral
-- Optional: designer dental loupe around neck
-- COLOR MUST BE CHOSEN based on this person's skin tone and undertone from the photo
-- MUST look like a dentist at a premium boutique clinic — polished, precise, fashionable yet hygienic`,
-    female: `PROFESSION: FEMALE DENTIST — DESIGNER DENTAL WEAR
-This woman is a dentist. Dress her in elevated, designer-level dental scrubs that are sleek and feminine.
-- Short-sleeve fitted scrub top — modern feminine cut with flattering seaming, premium fabric
-- Matching scrub pants — jogger or tapered fit with ankle detail
-- Premium minimalist sneakers — white or soft neutral
-- Optional: dental mask casually around neck
-- COLOR MUST BE CHOSEN based on this person's skin tone, hair color, and undertone from the photo
-- MUST look like a dentist at a high-end aesthetic clinic — chic, clean, effortlessly stylish`
+    male: `STYLING BRIEF — MALE DENTIST
+You are styling a dentist for a high-end aesthetic dental clinic's brand imagery.
+
+OUTFIT SPEC:
+- TOP: Clean-line short-sleeve scrub top with a modern crew or henley neckline. No V-neck — dentists need a higher neckline for close-contact work. Slim tailored fit, premium performance fabric with subtle texture.
+- BOTTOM: Slim tapered scrub pants. Clean front, no cargo. Jogger cuff OR clean straight hem. Sharp crease optional.
+- SHOES: White minimalist sneakers — leather upper, thin sole. Clinical-clean aesthetic.
+
+COLOR DIRECTION: Dental clinics are white-on-white environments, so the scrubs need to stand out with quiet sophistication. Read this person's skin tone: warm → charcoal, deep olive, muted terracotta. Cool → steel blue, slate, cool grey. Pure white scrubs also work if the person has high-contrast coloring (dark hair + light skin or vice versa).
+
+MOOD: A premium Gangnam or Beverly Hills aesthetic dentist. Everything is precise, intentional, immaculate. The patient trusts him the moment he walks in.`,
+    female: `STYLING BRIEF — FEMALE DENTIST
+You are styling a female dentist for a high-end aesthetic dental clinic's brand imagery.
+
+OUTFIT SPEC:
+- TOP: Modern fitted scrub top — crew neck or subtle wrap-front. Clean feminine tailoring with flattering bust darts. Premium matte fabric. Short sleeve with a slightly cropped proportion that sits at the hip.
+- BOTTOM: Tapered scrub jogger or slim ankle-length pants. High enough waist to look polished when bending.
+- SHOES: Clean white leather slip-ons or minimal sneakers. Pristine.
+
+COLOR DIRECTION: She works in a white-on-white clinic, so the color must complement her face at close range (patients stare at her all day). Warm skin → soft sage, muted blush, warm sand. Cool skin → powder blue, lavender-grey, cool white. Avoid anything too dark or heavy — dental setting demands lightness.
+
+MOOD: Patients choose this clinic partly because she makes them feel at ease. Polished, precise, effortlessly chic. Think the dentist that beauty editors recommend.`
   },
   nurse: {
-    male: `PROFESSION: MALE NURSE — DESIGNER NURSING SCRUBS
-This man is a nurse. Dress him in elevated, designer-level nursing scrubs with athletic styling.
-- Short-sleeve scrub top — athletic fit with raglan or contrast seaming, performance fabric
-- Matching scrub jogger pants — tapered with elastic cuffs, modern sporty look
-- Premium nursing sneakers — Nike, Hoka, or On Running in clean colorway
-- Functional details: multiple pockets, pen slot, ID clip
-- COLOR MUST BE CHOSEN based on this person's skin tone and undertone from the photo
-- MUST look like the coolest nurse on the ward — fit, modern, approachable yet professional`,
-    female: `PROFESSION: FEMALE NURSE — DESIGNER NURSING SCRUBS
-This woman is a nurse. Dress her in elevated, designer-level nursing scrubs with a feminine athletic edge.
-- Short-sleeve or mock-wrap scrub top — fitted feminine cut, performance fabric, flattering neckline
-- Matching scrub jogger pants — tapered, figure-flattering with ankle detail
-- Premium nursing sneakers — Nike, New Balance, or Hoka in fresh colorway
-- Functional details: pockets, pen slot
-- COLOR MUST BE CHOSEN based on this person's skin tone, hair color, and undertone from the photo
-- MUST look like a nurse everyone admires — stylish, caring, put-together`
+    male: `STYLING BRIEF — MALE NURSE
+You are styling a nurse for a modern hospital's recruitment campaign — the kind that makes young people say "I want to work there."
+
+OUTFIT SPEC:
+- TOP: Short-sleeve scrub top with a sporty, athletic cut. Raglan sleeve seaming or contrast topstitching. Performance 4-way stretch fabric that shows the shoulders well. NOT boxy — fitted through the torso with room to move.
+- BOTTOM: Jogger-style scrub pants — elastic ankle cuff, tapered fit, functional side pockets. Modern and sporty, like premium workout pants.
+- SHOES: Performance running sneakers in a fresh colorway — Nike, Hoka, or On Cloud. Clean but with personality.
+
+COLOR DIRECTION: Nurses often have limited color choices. Find the BEST color for this person: warm skin → hunter green, warm grey, burgundy. Cool skin → ceil blue, navy, cool charcoal. Choose the one that makes him look most alive and healthy — nurses need to radiate energy.
+
+MOOD: The nurse that new patients feel instantly safe with. Athletic, capable, modern. He looks like he runs half-marathons on his days off. The scrubs fit like athleisure, not like a uniform.`,
+    female: `STYLING BRIEF — FEMALE NURSE
+You are styling a nurse for a modern hospital's recruitment campaign.
+
+OUTFIT SPEC:
+- TOP: Fitted scrub top — either a modern mock-wrap or a clean V-neck with feminine darting. The fit skims the body, shows her shape without being tight. Performance fabric with soft hand-feel.
+- BOTTOM: Jogger scrub pants — tapered, mid-rise, with elastic ankle and a flattering leg line. OR straight slim scrub pants.
+- SHOES: Fresh performance sneakers — white Nike, pastel New Balance, or clean Hoka. Not beaten up — box-fresh.
+
+COLOR DIRECTION: Match the scrub color to illuminate her face. Warm skin → soft wine, warm teal, sage. Cool skin → ceil blue, lavender, cool grey. Avoid colors that wash her out — if she's fair, go for richer tones; if she has deeper skin, jewel tones or warm earth.
+
+MOOD: She makes the entire ward feel better just by walking in. Composed, stylish, warm. The scrubs look like they were designed specifically for her body. Not a "uniform" — a look.`
   },
   vet: {
-    male: `PROFESSION: MALE VETERINARIAN — DESIGNER VET SCRUBS
-This man is a vet. Dress him in elevated, designer-level veterinary scrubs that are rugged yet stylish.
-- Short-sleeve scrub top — relaxed athletic fit, durable premium fabric with subtle outdoor-inspired details
-- Matching scrub cargo or jogger pants — functional pockets, comfortable
-- Clean rugged sneakers — New Balance, Salomon style in earth tones
-- Optional: stethoscope around neck
-- COLOR MUST BE CHOSEN based on this person's skin tone — earth tones, sage, forest, or teal recommended
-- MUST look like a vet at a premium animal hospital — warm, capable, stylish but hands-on ready`,
-    female: `PROFESSION: FEMALE VETERINARIAN — DESIGNER VET SCRUBS
-This woman is a vet. Dress her in elevated, designer-level veterinary scrubs that are practical yet chic.
-- Short-sleeve fitted scrub top — flattering cut, durable premium fabric
-- Matching scrub jogger or straight pants — functional and figure-flattering
-- Clean stylish sneakers — Veja, New Balance in natural tones
-- Optional: stethoscope around neck
-- COLOR MUST BE CHOSEN based on this person's skin tone and hair — sage, teal, warm earth, or navy recommended
-- MUST look like a vet at a boutique animal clinic — warm, stylish, effortlessly put-together`
+    male: `STYLING BRIEF — MALE VETERINARIAN
+You are styling a vet for a premium pet care brand's social media — approachable but professional, outdoor-ready but polished.
+
+OUTFIT SPEC:
+- TOP: Short-sleeve scrub top in a relaxed athletic fit. Slightly more casual than hospital scrubs — think outdoor-brand meets medical. Durable fabric with subtle ripstop or canvas texture. Chest pocket with pen.
+- BOTTOM: Scrub cargo joggers — functional thigh pockets, elastic ankle, room to kneel and move. Utilitarian but modern, like Patagonia workwear.
+- SHOES: Rugged but clean sneakers — Salomon trail runners, New Balance Fresh Foam, or clean Vans in earth tones. Shoes that can handle a muddy backyard.
+- OPTIONAL: Stethoscope around neck, rolled sleeves showing forearms.
+
+COLOR DIRECTION: Vet scrubs should feel connected to nature. Warm skin → forest green, warm khaki, earthy olive. Cool skin → deep teal, ocean blue, cool moss. Earth tones always work — avoid clinical white or stark blue that feels too "hospital."
+
+MOOD: The vet that dogs run toward, not away from. Warm, grounded, capable. He looks like he rescues animals on weekends. The outfit says "I'm a professional who gets my hands dirty."`,
+    female: `STYLING BRIEF — FEMALE VETERINARIAN
+You are styling a female vet for a premium pet care brand's social media.
+
+OUTFIT SPEC:
+- TOP: Fitted short-sleeve scrub top in soft, durable performance fabric. Feminine but practical — she needs to pick up large dogs and kneel on exam room floors. Clean seaming, well-proportioned.
+- BOTTOM: Jogger scrub pants or slim straight pants with functional pockets. Durable, washable, but figure-flattering. Mid-rise.
+- SHOES: Clean but rugged sneakers — Veja, New Balance, or white leather sneakers that still look good after a long day.
+- OPTIONAL: Stethoscope, hair tied back neatly.
+
+COLOR DIRECTION: Natural, living tones that animals and their owners respond to warmly. Warm skin → sage green, warm sand, dusty olive. Cool skin → soft teal, ocean grey, muted denim blue. The color should feel like being outdoors.
+
+MOOD: The vet you trust completely with your pet. Gentle hands, bright eyes, quiet competence. She looks like she could be on a nature documentary AND a fashion blog.`
   },
   chef: {
-    male: `PROFESSION: MALE CHEF — DESIGNER CHEF COAT
-This man is a chef. Dress him in a modern designer chef jacket that belongs in a Michelin-star kitchen.
-- Modern chef jacket — single-breasted, short-sleeve, mandarin collar, slim fit in premium cotton
-- Designer kitchen apron — waxed canvas or premium leather, tied at waist
-- Dark slim chef pants — black or charcoal, clean modern fit (NOT checkered)
-- Premium kitchen shoes — minimal black leather clogs or clean ankle boots
-- Optional: modern black kitchen beanie
-- COLOR MUST BE CHOSEN for the jacket based on skin tone — crisp white, charcoal, or warm grey
-- MUST look like a head chef at a design-forward restaurant — creative, sharp, commanding`,
-    female: `PROFESSION: FEMALE CHEF — DESIGNER CHEF COAT
-This woman is a chef. Dress her in a modern designer chef jacket that belongs in a Michelin-star kitchen.
-- Modern chef jacket — fitted feminine cut, short-sleeve, clean lines, premium cotton
-- Designer kitchen apron — waxed canvas or linen, elegant tie
-- Dark slim chef pants — black, flattering straight or tapered fit
-- Premium kitchen shoes — minimal black clogs or clean ankle boots
-- Optional: modern kitchen bandana or headband
-- COLOR MUST BE CHOSEN for the jacket based on skin tone — white, off-white, warm grey, or charcoal
-- MUST look like a head chef at a design-forward restaurant — creative, elegant, confident`
+    male: `STYLING BRIEF — MALE CHEF
+You are styling a head chef for a Michelin-guide restaurant feature. This is where culinary art meets personal style.
+
+OUTFIT SPEC:
+- TOP: Modern chef jacket — single-breasted with hidden snap buttons, mandarin collar, short sleeves showing the forearms. Slim-fit through the torso. Premium heavyweight cotton or cotton-linen. NOT the baggy double-breasted grandpa jacket.
+- APRON: A statement apron — crossback style in waxed canvas, raw denim, or full-grain leather. This is the signature piece. Worn with intention, tied with precision.
+- BOTTOM: Slim black or deep charcoal chef pants. Modern straight leg, clean drape. NOT checkered, NOT baggy. Think Acne Studios black trousers.
+- SHOES: Black leather clogs (Birkenstock Professional or Swedish Hasbeens) or clean black ankle boots. Utilitarian but premium.
+- OPTIONAL: Black cotton beanie or clean headband. Rolled sleeves. Visible forearm tattoos are fine — adds character.
+
+COLOR: Jacket in crisp bright white (most impactful) or charcoal grey for a moodier look. The apron provides contrast.
+
+MOOD: This is the chef you see on Netflix. Sharp jawline of focus. The jacket fits like Tom Ford tailored it. Every element — from the knife roll to the apron tie — is intentional. He doesn't just cook food. He creates.`,
+    female: `STYLING BRIEF — FEMALE CHEF
+You are styling a head chef for a Michelin-guide restaurant feature.
+
+OUTFIT SPEC:
+- TOP: Modern chef jacket — slim feminine cut, short sleeves, mandarin collar or clean crew neck. Darted at the waist for shape. Premium cotton or cotton-linen, crisp but not stiff.
+- APRON: Crossback linen or canvas apron — elegant and functional. Tied at the waist to define her silhouette.
+- BOTTOM: Slim black chef pants — straight leg or tapered, clean and modern. Think Isabel Marant trousers in black.
+- SHOES: Black leather clogs or clean minimal ankle boots. Comfortable but chic.
+- OPTIONAL: Hair tied in a sleek low bun or under a clean bandana. Minimal jewelry — just a watch.
+
+COLOR: Bright white jacket (classic authority) or off-white/cream for warmth. The apron in raw indigo, black, or natural linen provides contrast.
+
+MOOD: The chef who got the James Beard Award AND the Vogue feature. Every plate is art, and so is she. The kitchen whites fit like they were cut for her. Elegant power in a working kitchen.`
   },
   lawyer: {
-    male: `PROFESSION: MALE LAWYER — DESIGNER SUIT
-This man is a lawyer. Dress him in an impeccably tailored designer suit that commands the courtroom.
-- Slim, modern-fit suit — precision tailoring, premium wool or wool-blend fabric
-- Crisp dress shirt — white or pale blue, with a tasteful silk tie
-- Polished leather oxford shoes or loafers
-- Quality accessories: watch, leather portfolio
-- SUIT COLOR MUST BE CHOSEN based on this person's skin tone and undertone from the photo
-- MUST look like a top attorney at an elite firm — sharp, powerful, effortlessly stylish`,
-    female: `PROFESSION: FEMALE LAWYER — DESIGNER SUIT
-This woman is a lawyer. Dress her in an impeccably tailored designer suit that commands the courtroom.
-- Modern power suit — fitted blazer with defined waist, premium wool or crepe fabric
-- Silk blouse or structured camisole — sophisticated
-- Tailored trousers or midi pencil skirt — precise fit
-- Elegant shoes — pointed-toe pumps or refined mules
-- SUIT COLOR MUST BE CHOSEN based on this person's skin tone and undertone from the photo
-- MUST look like a top attorney at an elite firm — powerful, polished, unmistakably stylish`
+    male: `STYLING BRIEF — MALE LAWYER
+You are styling a senior attorney for a corporate portrait that will appear in Forbes or The Economist. Power dressing at its finest.
+
+OUTFIT SPEC:
+- SUIT: Two-piece suit with natural shoulder, clean chest, and a modern slim-but-not-skinny silhouette. The fabric is premium super 130s wool — it has a subtle luster and drapes beautifully. Single-breasted, two-button. The lapel width is current (not too narrow, not too wide).
+- SHIRT: Crisp cotton poplin in white or very pale blue. Spread collar. French cuffs optional.
+- TIE: Silk tie in a tasteful pattern — subtle diagonal stripe, micro dot, or solid textured knit. NOT a power red — something more sophisticated.
+- SHOES: Polished cap-toe oxford or clean penny loafer. Dark leather matching the belt.
+- ACCESSORIES: Quality watch (understated, not flashy), leather portfolio or slim briefcase.
+
+COLOR: Read this person's skin tone carefully. Warm undertone → rich navy, deep brown, warm charcoal. Cool undertone → cool grey, blue-black, steel blue. The suit color should make his face the focal point.
+
+MOOD: The attorney opposing counsel does NOT want to face. Every seam is precision. The suit moves with him like a second skin. He looks like he bills $1,500/hour — and is worth every cent.`,
+    female: `STYLING BRIEF — FEMALE LAWYER
+You are styling a senior attorney for a corporate portrait that will appear in Forbes.
+
+OUTFIT SPEC:
+- SUIT: Power suit — fitted single-breasted blazer with defined waist and clean shoulders. Premium wool crepe or tropical wool. The proportions are modern — slightly cropped blazer with high-waist trousers, OR longer blazer with a midi pencil skirt.
+- TOP: Silk blouse in a complementary tone, or a structured camisole. Sophisticated neckline — not too high, not too low.
+- TROUSERS: Wide-leg or straight-leg, full length, with a clean pressed crease. OR midi pencil skirt with a back slit.
+- SHOES: Pointed-toe pumps (70-90mm heel), refined slingbacks, or elegant loafers. Polished leather.
+- ACCESSORIES: Quality watch or thin bracelet. Structured leather bag. Minimal earrings — gold studs or small hoops.
+
+COLOR: Read this person's skin carefully. Warm → rich navy, deep camel, chocolate brown. Cool → charcoal, blue-grey, deep burgundy. Black is always an option but the RIGHT color is more powerful than default black.
+
+MOOD: She walks into the courtroom and the room shifts. Not because she's loud — because every detail is flawless. The suit is power. The blouse is confidence. The shoes are authority. She looks like she just won a landmark case and has three more before lunch.`
   },
 }
 
@@ -420,100 +466,172 @@ export function getWorkScenarios(jobType: string): ScenarioConfig[] {
 
 const trendDirectives: Record<string, { male: string; female: string }> = {
   street: {
-    male: `STREET FASHION for this man. Think Stussy, Supreme, Palace, Nike ACG, WTAPS.
-- Oversized graphic tee or hoodie with bold but tasteful print
-- Wide-leg cargo pants, baggy jeans, or technical joggers
-- Chunky sneakers (Jordan, New Balance 550, Nike Dunk) or boots
-- Layering: flannel shirt, coach jacket, or windbreaker
-- Accessories: snapback cap, crossbody bag, layered necklaces
-- Relaxed, confident, urban aesthetic — NOT preppy, NOT formal`,
-    female: `STREET FASHION for this woman. Think Stussy, Nike, Ader Error, Ambush.
-- Oversized graphic tee or cropped hoodie, or vintage band tee
-- Wide-leg cargo pants, baggy jeans, or biker shorts + oversized top
-- Chunky sneakers (Jordan, New Balance, Nike Dunk) or platform boots
-- Layering: oversized denim jacket, bomber, or windbreaker
-- Accessories: bucket hat, mini bag, layered jewelry
-- Cool, effortless street style — confident and bold`,
+    male: `STYLING BRIEF — MALE STREET FASHION
+You are styling this man for a Seoul/Tokyo street-snap photographer. The look should make people screenshot it on Instagram.
+
+OUTFIT BUILD:
+- LAYER 1: Oversized washed cotton tee OR heavyweight boxy hoodie. The print (if any) is vintage-feel, faded, NOT corporate graphic. Fits wide at the body, drops past the hip.
+- LAYER 2 (optional): Open flannel, workwear chore coat, or unzipped coach jacket — adds depth and movement.
+- BOTTOM: Wide-leg carpenter jeans (raw or light wash) OR nylon cargo pants with velcro pockets. NOT skinny. The silhouette is relaxed and intentional.
+- SHOES: Nike Dunk Low, New Balance 550, Jordan 1 Low, or Asics Gel-Kayano — always clean, laced loosely.
+- ACCESSORIES: Crossbody sling bag (small), layered silver chain, snapback or 5-panel cap optional.
+
+COLOR: Muted and textural — washed black, faded olive, cream, stone grey, deep burgundy. NOT neon. NOT all-black-everything. At least two tones in the outfit.
+
+MOOD: He looks like he just walked out of a vintage shop in Harajuku with perfect taste. Nothing is "trying" — it all just works. The proportions are what make it special: oversized top, wide bottom, clean shoe.`,
+    female: `STYLING BRIEF — FEMALE STREET FASHION
+You are styling this woman for a Seoul/Tokyo street-snap photographer.
+
+OUTFIT BUILD:
+- LAYER 1: Cropped boxy tee, vintage band tee (tucked or knotted), OR oversized hoodie worn as a mini dress.
+- LAYER 2 (optional): Oversized denim jacket (worn off-shoulder), cropped bomber, or utility vest.
+- BOTTOM: Wide-leg cargo pants, baggy boyfriend jeans with rolled cuff, OR mini skirt + knee-high socks combo.
+- SHOES: Nike Dunk, New Balance 530, chunky platform boots, or Converse high-tops. Clean or intentionally beat-up.
+- ACCESSORIES: Micro bag or crossbody, layered necklaces, bucket hat or baseball cap, small hoop earrings.
+
+COLOR: Washed, lived-in tones — faded denim blue, dusty pink, cream, olive, washed black. Pops of color through accessories only.
+
+MOOD: She looks like the cool girl that fashion editors follow on Instagram. Effortless but every piece was chosen carefully. The proportions play big-and-small: oversized jacket + tight bottom, or fitted top + wide pants.`,
   },
   hype: {
-    male: `HYPEBEAST FASHION for this man. Think Fear of God, Off-White, visvim, Sacai.
-- Premium streetwear with designer edge — elevated basics
-- Fear of God Essentials-style relaxed hoodie or boxy tee in muted tones
-- Wide-leg trousers or premium sweatpants with correct drape
-- High-end sneakers (Travis Scott collabs, Sacai Nike, Fear of God shoes)
-- Accessories: designer crossbody, statement watch, subtle branding
-- Understated hype — NOT loud logos, but clearly premium`,
-    female: `HYPEBEAST FASHION for this woman. Think Off-White, Ambush, Sacai, Marine Serre.
-- Premium streetwear with designer edge — elevated basics
-- Oversized designer hoodie or structured crop top
-- Wide-leg trousers, cargo skirt, or technical pants
-- High-end sneakers or chunky boots
-- Accessories: designer mini bag, layered chains, statement sunglasses
-- Understated hype — NOT loud logos, but clearly premium`,
+    male: `STYLING BRIEF — MALE HYPE / DESIGNER STREETWEAR
+You are styling this man for a Highsnobiety or HYPEBEAST editorial. The look whispers money — it doesn't scream.
+
+OUTFIT BUILD:
+- TOP: Heavyweight oversized hoodie in washed earth tone (Essentials-level quality) OR boxy double-layer tee with raw hem. The fabric is thick, expensive-looking, with visible weight and drape. No loud logos — tone-on-tone branding at most.
+- BOTTOM: Wide-leg pleated trousers in technical wool OR premium cotton sweatpants with clean seaming. The drape is everything — fabric falls straight with weight.
+- SHOES: Designer sneakers that know their place — Sacai x Nike Vaporwaffle, Fear of God Athletics, Rick Owens DRKSHDW runners, or clean suede New Balance 2002R.
+- OUTER (optional): Oversized padded vest or deconstructed overcoat thrown over shoulders.
+- ACCESSORIES: Matte black crossbody, simple silver ring, quality beanie.
+
+COLOR: Muted luxury tones — cement grey, washed mocha, fog white, deep espresso, muted olive. Monochromatic or tonal — never more than 2 colors. The "richness" comes from fabric weight and texture contrast, not color.
+
+MOOD: You can't name the brand from across the room but up close everything costs $400+. He's the kind of guy who buys Bottega and wears it like it's Uniqlo. Effortless wealth. Quiet hype.`,
+    female: `STYLING BRIEF — FEMALE HYPE / DESIGNER STREETWEAR
+You are styling this woman for a Highsnobiety editorial. Understated luxury meets street edge.
+
+OUTFIT BUILD:
+- TOP: Oversized structured hoodie (cream/grey/black) OR fitted mock-neck long-sleeve with designer-level fabric weight. Minimal to zero visible branding.
+- BOTTOM: Wide-leg tailored trousers OR leather-look straight pants OR technical cargo skirt. Premium drape and construction.
+- SHOES: Chunky designer sneakers (Sacai, Maison Margiela) OR sleek knee-high boots over the pants. Statement but monochrome.
+- OUTER (optional): Oversized shearling, leather bomber, or quilted long vest.
+- ACCESSORIES: Structured mini bag (Bottega-style), thin gold chain, simple sunglasses.
+
+COLOR: Tonal luxury — all cream, all grey, all black, or espresso-to-camel gradient. Let texture and proportion do the talking.
+
+MOOD: She looks expensive. Not flashy-expensive — quietly, devastatingly expensive. The kind of woman who walks into Dover Street Market and the staff brings her coffee.`,
   },
   'minimal-mz': {
-    male: `MINIMAL MZ (Gen Z) FASHION for this man. Think COS, Lemaire, Our Legacy, Auralee.
-- Clean minimalist with subtle fashion-forward details
-- Oversized but intentional silhouette — dropped shoulders, relaxed body
-- Monochromatic or tonal dressing in muted colors (beige, grey, black, cream)
-- Clean sneakers, leather loafers, or simple boots
-- Minimal accessories: simple watch, clean bag
-- Instagram-worthy minimal aesthetic — effortlessly stylish`,
-    female: `MINIMAL MZ (Gen Z) FASHION for this woman. Think COS, Toteme, Lemaire, Acne Studios.
-- Clean minimalist with subtle fashion-forward details
-- Oversized blazer or structured crop + wide-leg combination
-- Monochromatic or tonal dressing in muted colors (beige, grey, black, cream)
-- Clean sneakers, pointed mules, or simple boots
-- Minimal accessories: delicate jewelry, structured bag
-- Instagram-worthy minimal aesthetic — effortlessly stylish`,
+    male: `STYLING BRIEF — MALE MINIMAL / MZ GEN Z
+You are styling this man for a COS or Lemaire lookbook. The beauty is in the proportions and the silence of the outfit.
+
+OUTFIT BUILD:
+- TOP: Oversized cotton or wool-blend crew top with dropped shoulders. OR clean mock-neck in ribbed knit. The fit is relaxed but structured — the shoulder seam sits 3cm past the natural shoulder.
+- BOTTOM: Wide straight-leg trousers — pressed crease, full length, clean break at the shoe. Wool, cotton-twill, or heavy linen.
+- SHOES: Clean white leather sneakers (Margiela GAT or Common Projects style), suede loafers, or minimal Chelsea boots.
+- OUTER (optional): Unstructured overcoat in wool or oversized single-button blazer. Worn open, never buttoned.
+- ACCESSORIES: Almost nothing. A simple leather tote or canvas bag. One ring maximum.
+
+COLOR: Tonal — head-to-toe in ONE color family. Oatmeal + cream + white. OR charcoal + black + slate. OR camel + sand + tan. Maximum 2 tones across the whole outfit. Zero patterns.
+
+MOOD: He looks like he lives in a Tadao Ando building and only owns 30 items of clothing, all of which are perfect. Every seam is intentional. The silhouette is a poem. This is what "less is more" actually looks like when executed flawlessly.`,
+    female: `STYLING BRIEF — FEMALE MINIMAL / MZ GEN Z
+You are styling this woman for a Toteme or The Row lookbook.
+
+OUTFIT BUILD:
+- TOP: Oversized wool blazer (sleeves slightly too long, worn pushed up) OR clean fitted turtleneck in fine-gauge knit. OR structured crop top in heavy cotton.
+- BOTTOM: Wide-leg high-waist trousers — full length, clean pressed crease, beautiful drape. The width is dramatic but controlled.
+- SHOES: Pointed-toe kitten mules, clean white sneakers, or square-toe ankle boots.
+- OUTER (optional): Long tailored coat in camel, grey, or cream. Worn draped over shoulders.
+- ACCESSORIES: Structured bag (The Row style), delicate gold chain, small hoop earrings. Nothing more.
+
+COLOR: Monochrome or tonal. Cream-on-cream-on-white. Black-on-charcoal-on-grey. Camel-on-sand. One color story, told through different textures — knit against woven, matte against sheen.
+
+MOOD: She is the human embodiment of a clean-lined apartment in Copenhagen. Serene, precise, devastatingly chic. People stare not because the outfit is loud — but because the proportions are so perfect it looks like art.`,
   },
   sporty: {
-    male: `SPORTY FASHION for this man. Think Nike Tech, Adidas Y-3, On Running, Arc'teryx.
-- Premium athleisure with technical fabrics
-- Tech fleece hoodie or zip-up, performance tee or mock-neck
-- Tapered joggers, technical pants, or sport-cut trousers
-- Performance sneakers (Nike, On, New Balance) in clean colorway
-- Accessories: sport watch, running cap, gym bag
-- Athletic but polished — NOT gym clothes, but sport-inspired fashion`,
-    female: `SPORTY FASHION for this woman. Think Nike, Adidas by Stella McCartney, Lululemon, Alo Yoga.
-- Premium athleisure with fashion edge
-- Cropped tech jacket or fitted zip-up, sports bra + oversized layer
-- High-waist leggings, track pants, or sport skirt
-- Performance sneakers in clean colorway or chunky platform trainers
-- Accessories: sport watch, mini belt bag, sunglasses
-- Athletic but polished — gym-to-street ready`,
+    male: `STYLING BRIEF — MALE SPORTY / GORPCORE
+You are styling this man for a premium athleisure or outdoor-fashion editorial. Athletic DNA, fashion execution.
+
+OUTFIT BUILD:
+- TOP: Technical mock-neck half-zip in performance fabric OR clean tech-fleece hoodie with minimal branding. The fabric has visible technical quality — moisture-wicking sheen, bonded seams.
+- BOTTOM: Tapered technical joggers with zip pockets and clean seaming (Nike Tech Fleece level) OR slim hiking-inspired pants (Arc'teryx or Salomon aesthetic).
+- SHOES: Performance runners — On Cloudmonster, Nike Vomero, Salomon XT-6, or New Balance Fresh Foam. The shoe is the statement piece. Clean, current colorway.
+- OUTER (optional): Lightweight running vest or shell jacket, packed-shoulder style.
+- ACCESSORIES: Sports watch (Garmin or Apple Watch with sport band), running cap, minimal backpack or sling.
+
+COLOR: Technical palette — black + volt accent, charcoal + reflective, navy + orange detail. OR all-neutral earth gorpcore: stone, olive, sand. The outfit should look like it performs, not like it's costume.
+
+MOOD: He just finished a 10K and is grabbing coffee before a meeting. The outfit works for both. It's not "gym clothes" — it's a lifestyle. He moves fast and dresses like it.`,
+    female: `STYLING BRIEF — FEMALE SPORTY / ATHLEISURE
+You are styling this woman for a premium athleisure editorial. The line between gym and street disappears.
+
+OUTFIT BUILD:
+- TOP: Fitted half-zip running top OR cropped tech jacket over a clean sports bra/tank. Premium performance fabric with visible quality.
+- BOTTOM: High-waist sculpt leggings in dark color OR wide-leg track pants with side-stripe detail. OR tennis skirt with built-in shorts.
+- SHOES: Fashion-forward runners — On Running, Hoka Bondi, Nike V2K, or New Balance 9060. Fresh, current silhouette.
+- OUTER (optional): Oversized puffer vest, light windbreaker, or sheer running jacket.
+- ACCESSORIES: Sleek sports watch, mini belt bag, clean sunglasses, hair in effortless ponytail or bun.
+
+COLOR: Clean sport palette — black + white + one pop (sage, dusty rose, or soft orange). OR monochrome tech: all charcoal, all navy, all cream. Cohesive and intentional.
+
+MOOD: She runs marathons, does pilates, and makes it to brunch looking like this. The outfit is technically functional but fashion-magazine ready. Fit, fresh, in motion.`,
   },
   retro: {
-    male: `RETRO VINTAGE FASHION for this man. Think 70s-90s revival, vintage Americana, retro sportswear.
-- Vintage-wash denim jacket or retro varsity jacket
-- Graphic vintage tee, polo shirt, or corduroy shirt
-- Straight-leg vintage jeans, corduroy pants, or pleated trousers
-- Retro sneakers (Vans, Converse, New Balance 574) or leather boots
-- Accessories: vintage sunglasses, leather belt, retro watch
-- Nostalgic but fresh — vintage pieces styled in a modern way`,
-    female: `RETRO VINTAGE FASHION for this woman. Think 70s boho, 90s grunge, Y2K, vintage Americana.
-- Vintage-wash denim jacket, retro cardigan, or varsity jacket
-- Graphic vintage tee, wrap top, or floral blouse
-- High-waist mom jeans, corduroy skirt, or vintage flared pants
-- Retro sneakers (Converse, Vans), platform shoes, or vintage boots
-- Accessories: vintage sunglasses, bandana, retro jewelry
-- Nostalgic but fresh — vintage pieces styled in a modern way`,
+    male: `STYLING BRIEF — MALE RETRO / VINTAGE REVIVAL
+You are styling this man for a "new vintage" editorial — 70s warmth, 80s structure, 90s ease, all filtered through a 2026 lens.
+
+OUTFIT BUILD:
+- TOP: Washed vintage-feel tee with retro graphic (sports team, old brand, faded photo print) OR fitted polo with contrast collar OR open corduroy overshirt layered over a tank.
+- BOTTOM: Straight-leg vintage-wash jeans (not skinny, not baggy — '90s cut) OR high-waist pleated chinos OR corduroy wide-legs.
+- SHOES: Retro runners — New Balance 574, Onitsuka Tiger Mexico 66, Adidas Samba, or Vans Old Skool. Worn-in and authentic. OR clean leather boots.
+- OUTER (optional): Cropped varsity jacket, suede trucker jacket, or washed denim jacket with shearling collar.
+- ACCESSORIES: Aviator or wayfarer sunglasses, woven leather belt, analog watch with leather strap.
+
+COLOR: Warm retro tones — burnt orange, mustard, faded burgundy, tobacco brown, cream, washed denim blue. The palette should feel like a Kodachrome photograph — warm, golden, slightly faded.
+
+MOOD: He looks like he stepped out of a Wes Anderson film but lives in 2026. Nostalgic without being costume-y. Every piece could be genuine vintage or a perfect modern remake — you can't tell, and that's the point.`,
+    female: `STYLING BRIEF — FEMALE RETRO / VINTAGE REVIVAL
+You are styling this woman for a "new vintage" editorial — 70s romance, 90s edge, Y2K fun, all through a modern lens.
+
+OUTFIT BUILD:
+- TOP: Fitted vintage band tee (cropped or tucked) OR wrap blouse with retro print OR slim cardigan buttoned up as a top.
+- BOTTOM: High-waist flared jeans (70s) OR pleated wide-leg trousers (80s) OR mini skirt with knee-high boots (Y2K).
+- SHOES: Platform sandals, retro Adidas Samba, Converse Chuck 70, or knee-high leather boots. Era-appropriate.
+- OUTER (optional): Oversized vintage leather jacket, cropped faux-fur, or patchwork denim jacket.
+- ACCESSORIES: Retro sunglasses (cat-eye or oversized round), silk scarf in hair, vintage-style jewelry (chunky gold hoops, layered chains), small structured bag.
+
+COLOR: Warm nostalgic palette — terracotta, mustard gold, vintage pink, faded denim, cream, burgundy. Nothing too crisp or modern — everything should feel sun-faded and lived-in.
+
+MOOD: She raided the best vintage store in the city and styled it better than anyone on the rack could imagine. Each decade is referenced but nothing is costume. She looks like the cool protagonist of an indie film set in summer.`,
   },
   'avant-garde': {
-    male: `AVANT-GARDE FASHION for this man. Think Rick Owens, Yohji Yamamoto, Comme des Garcons, Julius.
-- Architectural silhouettes with dramatic proportions
-- Oversized deconstructed coat or asymmetric jacket
-- Drop-crotch pants, wide draped trousers, or layered bottoms
-- Statement boots (Rick Owens, Maison Margiela Tabis) or platform shoes
-- All-black palette or stark monochrome with texture contrast
-- Dark, artistic, fashion-forward — wearable art`,
-    female: `AVANT-GARDE FASHION for this woman. Think Rei Kawakubo, Yohji Yamamoto, Rick Owens, Issey Miyake.
-- Architectural silhouettes with dramatic proportions
-- Oversized deconstructed coat, asymmetric dress, or sculptural top
-- Wide draped trousers, pleated experimental skirt, or layered pieces
-- Statement boots or architectural heels
-- All-black palette or stark monochrome with texture contrast
-- Dark, artistic, fashion-forward — wearable art`,
+    male: `STYLING BRIEF — MALE AVANT-GARDE / DARK FASHION
+You are styling this man for an editorial inspired by Rick Owens, Yohji Yamamoto, and Ann Demeulemeester. This is fashion as architecture.
+
+OUTFIT BUILD:
+- TOP: Asymmetric draped top OR deconstructed oversized shirt with raw edges and unfinished hems. OR a structured high-neck layer under a looser outer piece. The fabric is heavyweight — jersey, boiled wool, or waxed cotton.
+- BOTTOM: Extra-wide draped trousers that puddle at the shoe (Yohji-style) OR drop-crotch pants in heavy black cotton OR layered skirt-over-pants.
+- SHOES: Rick Owens-style angular boots, chunky platform leather boots, or Maison Margiela Tabi. The shoe is sculptural, not decorative.
+- OUTER: Oversized deconstructed overcoat with asymmetric closure OR long draped cardigan-coat. Unstructured shoulders, dramatic length.
+- ACCESSORIES: Almost nothing — maybe one architectural silver ring or a leather harness detail.
+
+COLOR: Near-total black — but with TEXTURE variation. Matte black wool next to shiny black leather next to washed black cotton. If not all-black: black + ash grey, or black + off-white for stark contrast. Never colorful.
+
+MOOD: He looks like a character from a dystopian art film who also happens to be brilliantly stylish. The silhouette is dramatic — wide, flowing, architectural. Nothing is "normal." Every proportion is pushed, every hem is intentional. This is not fashion for approval — it's fashion as self-expression.`,
+    female: `STYLING BRIEF — FEMALE AVANT-GARDE / DARK FASHION
+You are styling this woman for an editorial inspired by Rei Kawakubo, Yohji Yamamoto, and Rick Owens.
+
+OUTFIT BUILD:
+- TOP: Asymmetric deconstructed top OR sculptural draped blouse with unexpected volume — one shoulder exaggerated, or a wrapped construction. OR a fitted base layer under an oversized architectural piece.
+- BOTTOM: Ultra-wide palazzo trousers that sweep the floor OR a dramatic pleated skirt with unexpected volume OR layered asymmetric skirt.
+- SHOES: Sculptural ankle boots, Rick Owens wedge platforms, or Margiela Tabi boots. The shoe completes the architecture.
+- OUTER: Cocoon-shaped coat, deconstructed trench with raw edges, or oversized draped cape-jacket.
+- ACCESSORIES: One statement piece — an architectural cuff, or oversized geometric earring. Never multiple accessories.
+
+COLOR: Black is the foundation. Layer textures: matte black, glossy black, sheer black, crushed black velvet. For contrast: stark white, raw ecru, or deep blood-red as a single accent. Never prints, never patterns.
+
+MOOD: She is a walking installation. People don't just look — they study the construction, the movement of fabric as she walks. This is Comme des Garcons made human. Every fold is a decision. Every asymmetry is a statement. She doesn't follow trends — trends study her.`,
   },
 }
 
