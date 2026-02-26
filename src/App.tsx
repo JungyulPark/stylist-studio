@@ -6506,6 +6506,19 @@ ${hairImgs.length > 0 ? `<div class="section"><h2>${hairSection}</h2><div class=
                 </div>
                 <div className="gallery-after">
                   <span className="gallery-label gallery-label-after">{t.galleryAfter}</span>
+                  <img src="/gallery/work-lawyer-bold.png" alt="After - Lawyer Bold" loading="lazy" />
+                </div>
+              </div>
+              <span className="gallery-occasion">{lang === 'ko' ? '변호사 · 대담한 대안' : 'Lawyer · Bold Alternative'}</span>
+            </div>
+            <div className="gallery-item">
+              <div className="gallery-pair">
+                <div className="gallery-before">
+                  <span className="gallery-label">{t.galleryBefore}</span>
+                  <img src="/gallery/before-female-work.png" alt="Before - Female" loading="lazy" />
+                </div>
+                <div className="gallery-after">
+                  <span className="gallery-label gallery-label-after">{t.galleryAfter}</span>
                   <img src="/gallery/work-nurse-1.png" alt="After - Nurse" loading="lazy" />
                 </div>
               </div>
