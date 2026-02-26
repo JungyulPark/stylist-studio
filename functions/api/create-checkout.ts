@@ -21,7 +21,7 @@ const DEFAULT_PRODUCTS: Record<ProductType, string> = {
   full: '533aed39-303f-4746-afb0-d150aa294f64',
   daily_style: '2c761310-373e-4017-8141-8532748713c0',
   chat_tokens: '32416265-c924-4176-be02-cbe49bf1294c',
-  work_style: '533aed39-303f-4746-afb0-d150aa294f64',   // TODO: Polar에서 별도 상품 생성 후 교체
+  work_style: '8e319924-59a4-4cdd-857b-09c5d84b1d70',
   trend_style: '533aed39-303f-4746-afb0-d150aa294f64',   // TODO: Polar에서 별도 상품 생성 후 교체
 }
 

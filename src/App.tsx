@@ -57,7 +57,7 @@ const clearIndexedDB = async (): Promise<void> => {
 
 type Language = 'ko' | 'en' | 'ja' | 'zh' | 'es'
 type Gender = 'male' | 'female' | 'other' | null
-type Page = 'landing' | 'input' | 'loading' | 'result' | 'hair-selection' | 'hair-result' | 'how-to-use' | 'preview' | 'hair-preview' | 'login' | 'signup' | 'profile' | 'subscription-dashboard' | 'style-chat' | 'work-selection' | 'work-result' | 'trend-selection' | 'trend-result'
+type Page = 'landing' | 'input' | 'loading' | 'result' | 'hair-selection' | 'hair-result' | 'how-to-use' | 'preview' | 'hair-preview' | 'login' | 'signup' | 'profile' | 'subscription-dashboard' | 'style-chat' | 'work-selection' | 'work-preview' | 'work-result' | 'trend-selection' | 'trend-result'
 
 // 헤어스타일 상황 옵션
 interface HairOccasion {
@@ -2548,6 +2548,7 @@ function App() {
   const [loadingStep, setLoadingStep] = useState('')
   const [isFullPaid, setIsFullPaid] = useState(false)
   const [isHairPaid, setIsHairPaid] = useState(false)
+  const [isWorkPaid, setIsWorkPaid] = useState(() => localStorage.getItem('work_style_paid') === 'true')
   const [isProcessingPayment, setIsProcessingPayment] = useState(false)
   const [policyModal, setPolicyModal] = useState<'terms' | 'privacy' | 'refund' | null>(null)
   const [emailInput, setEmailInput] = useState('')
@@ -2662,6 +2663,8 @@ function App() {
   const [workLoading, setWorkLoading] = useState(false)
   const [workGenProgress, setWorkGenProgress] = useState(0)
   const [workGenStep, setWorkGenStep] = useState('')
+  const [workPreviewImage, setWorkPreviewImage] = useState<string | null>(null)
+  const [workPreviewLoading, setWorkPreviewLoading] = useState(false)
 
   // Trend Style state
   const [selectedTrend, setSelectedTrend] = useState<string>('')
@@ -2825,6 +2828,72 @@ function App() {
             console.error('Failed to record referral:', e)
           }
         })()
+      }
+
+      // Work Style 결제 성공 처리
+      if (purchasedProductType === 'work_style') {
+        trackEvent('purchase', { product: 'work_style', currency: 'USD', value: 3.99 })
+        localStorage.setItem('work_style_paid', 'true')
+        setIsWorkPaid(true)
+
+        // IndexedDB에서 저장된 데이터 복원
+        ;(async () => {
+          try {
+            const savedData = await loadFromIndexedDB() as {
+              photo: string | null; gender: Gender; height: string; weight: string; jobType: string
+            } | null
+            if (savedData?.photo) {
+              setProfile(prev => ({
+                ...prev,
+                photo: savedData.photo,
+                gender: savedData.gender || prev.gender,
+                height: savedData.height || prev.height,
+                weight: savedData.weight || prev.weight,
+              }))
+              setSelectedJob(savedData.jobType || '')
+              await clearIndexedDB()
+              localStorage.removeItem('pendingAnalysisFlag')
+              localStorage.removeItem('productType')
+
+              // 결과 생성 시작
+              setWorkLoading(true)
+              window.history.replaceState({ page: 'work-result' }, '', '#work-result')
+              setPageState('work-result')
+
+              setTimeout(async () => {
+                try {
+                  const res = await fetch('/api/generate-work-styles', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                      photo: savedData.photo,
+                      language: lang,
+                      gender: savedData.gender || 'male',
+                      height: savedData.height || '170',
+                      weight: savedData.weight || '70',
+                      jobType: savedData.jobType,
+                    })
+                  })
+                  if (res.ok) {
+                    const data = await res.json() as { styles: StyleImage[] }
+                    setWorkStyles(data.styles || [])
+                  }
+                } catch (e) {
+                  console.error('Work style generation after payment error:', e)
+                } finally {
+                  setWorkLoading(false)
+                }
+              }, 100)
+              return
+            }
+          } catch (e) {
+            console.error('Failed to restore work style data:', e)
+          }
+          // Fallback: go to work selection
+          window.history.replaceState({ page: 'work-selection' }, '', '#work-selection')
+          setPageState('work-selection')
+        })()
+        return
       }
 
       // 챗 토큰 결제 성공 처리
@@ -3686,34 +3755,76 @@ function App() {
     }
   }
 
-  // Work Style generation
-  const handleWorkStyleGenerate = async () => {
+  // Work Style generation — preview (1 image) or full (all 4)
+  const handleWorkStyleGenerate = async (fullGeneration = false) => {
     if (!selectedJob || !profile.photo) return
-    setWorkLoading(true)
-    setPage('work-result')
-    trackEvent('work_style_generate', { job_type: selectedJob })
 
-    try {
-      const res = await fetch('/api/generate-work-styles', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          photo: profile.photo,
-          language: lang,
-          gender: profile.gender || 'male',
-          height: profile.height || '170',
-          weight: profile.weight || '70',
-          jobType: selectedJob,
+    if (fullGeneration || isWorkPaid) {
+      // Paid: generate all 4 styles
+      setWorkLoading(true)
+      setPage('work-result')
+      trackEvent('work_style_generate', { job_type: selectedJob, paid: true })
+
+      try {
+        const res = await fetch('/api/generate-work-styles', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            photo: profile.photo,
+            language: lang,
+            gender: profile.gender || 'male',
+            height: profile.height || '170',
+            weight: profile.weight || '70',
+            jobType: selectedJob,
+          })
         })
-      })
-      if (!res.ok) throw new Error('Generation failed')
-      const data = await res.json() as { styles: StyleImage[] }
-      setWorkStyles(data.styles || [])
-    } catch (e) {
-      console.error('Work style error:', e)
-      setError(t.error)
-    } finally {
-      setWorkLoading(false)
+        if (!res.ok) throw new Error('Generation failed')
+        const data = await res.json() as { styles: StyleImage[] }
+        setWorkStyles(data.styles || [])
+        // Save results to sessionStorage for refresh persistence
+        try {
+          const resultMeta = (data.styles || []).map((s: StyleImage) => ({ id: s.id, label: s.label, hasImage: !!s.imageUrl }))
+          sessionStorage.setItem('work_style_results', JSON.stringify(resultMeta))
+          sessionStorage.setItem('work_style_job', selectedJob)
+        } catch { /* ignore */ }
+      } catch (e) {
+        console.error('Work style error:', e)
+        setError(t.error)
+      } finally {
+        setWorkLoading(false)
+      }
+    } else {
+      // Unpaid: generate 1 preview image, then show payment gate
+      setWorkPreviewLoading(true)
+      setPage('work-preview')
+      trackEvent('work_style_preview', { job_type: selectedJob })
+
+      try {
+        const res = await fetch('/api/generate-work-styles', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            photo: profile.photo,
+            language: lang,
+            gender: profile.gender || 'male',
+            height: profile.height || '170',
+            weight: profile.weight || '70',
+            jobType: selectedJob,
+            previewOnly: true,
+          })
+        })
+        if (!res.ok) throw new Error('Preview generation failed')
+        const data = await res.json() as { styles: StyleImage[] }
+        const firstStyle = data.styles?.[0]
+        if (firstStyle?.imageUrl) {
+          setWorkPreviewImage(firstStyle.imageUrl)
+        }
+      } catch (e) {
+        console.error('Work style preview error:', e)
+        setError(t.error)
+      } finally {
+        setWorkPreviewLoading(false)
+      }
     }
   }
 
@@ -6224,7 +6335,7 @@ ${hairImgs.length > 0 ? `<div class="section"><h2>${hairSection}</h2><div class=
                 <div className="path-content-v2">
                   <div className="path-header-v2">
                     <span className="path-module-v2">WORK STYLE</span>
-                    <span className="coming-soon-badge">COMING SOON</span>
+                    <span className="path-price-v2">$3.99</span>
                   </div>
                   <h3 className="path-title-v2">{t.workCardTitle}</h3>
                   <p className="path-desc-v2">{t.workCardDesc}</p>
@@ -6237,7 +6348,7 @@ ${hairImgs.length > 0 ? `<div class="section"><h2>${hairSection}</h2><div class=
                 </div>
               </div>
 
-              <div className="path-card-v2 trend-card coming-soon-disabled" style={{ pointerEvents: 'none', opacity: 0.7 }}>
+              <div className="path-card-v2 trend-card" onClick={() => { trackEvent('select_item', { item_category: 'trend_style' }); setPage('trend-selection') }}>
                 <picture className="path-image">
                   <source type="image/webp" srcSet="/trend-hq.webp" />
                   <img src="/Street.png" alt="Trend Style" className="path-image-img" loading="lazy" width="1456" height="816" />
@@ -6246,7 +6357,6 @@ ${hairImgs.length > 0 ? `<div class="section"><h2>${hairSection}</h2><div class=
                 <div className="path-content-v2">
                   <div className="path-header-v2">
                     <span className="path-module-v2">TREND STYLE</span>
-                    <span className="coming-soon-badge">COMING SOON</span>
                   </div>
                   <h3 className="path-title-v2">{t.trendCardTitle}</h3>
                   <p className="path-desc-v2">{t.trendCardDesc}</p>
@@ -7913,7 +8023,7 @@ ${hairImgs.length > 0 ? `<div class="section"><h2>${hairSection}</h2><div class=
 
               <button
                 className="btn-gold generate-btn"
-                onClick={handleWorkStyleGenerate}
+                onClick={() => handleWorkStyleGenerate()}
                 disabled={!profile.photo || !profile.gender}
               >
                 {t.startAnalysis}
@@ -7921,6 +8031,109 @@ ${hairImgs.length > 0 ? `<div class="section"><h2>${hairSection}</h2><div class=
             </>
           )}
         </div>
+      </div>
+    )
+  }
+
+  // Work Style Preview Page (payment gate)
+  if (page === 'work-preview') {
+    const handleWorkPayment = async () => {
+      trackEvent('begin_checkout', { product: 'work_style', currency: 'USD', value: 3.99 })
+      setIsProcessingPayment(true)
+      try {
+        const dataToSave = {
+          photo: profile.photo,
+          gender: profile.gender,
+          height: profile.height,
+          weight: profile.weight,
+          jobType: selectedJob,
+          productType: 'work_style'
+        }
+        await saveToIndexedDB(dataToSave)
+        localStorage.setItem('pendingAnalysisFlag', 'true')
+        localStorage.setItem('productType', 'work_style')
+
+        const checkoutResponse = await fetch('/api/create-checkout', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            productType: 'work_style',
+            successUrl: `${window.location.origin}/?payment=success&type=work_style`
+          })
+        })
+        const checkoutData = await checkoutResponse.json()
+        if (!checkoutResponse.ok || !checkoutData.url) {
+          throw new Error(checkoutData.message || 'Failed to create checkout session')
+        }
+        window.location.href = checkoutData.url
+      } catch (error) {
+        console.error('Payment error:', error)
+        setIsProcessingPayment(false)
+        setError(lang === 'ko' ? '결제 오류가 발생했습니다' : 'Payment error occurred')
+      }
+    }
+
+    return (
+      <div className="result-page">
+        <header className="result-header">
+          <button className="back-btn" onClick={() => setPage('work-selection')}>← {t.restart}</button>
+          <h1 className="result-title">{t.workResultTitle}</h1>
+        </header>
+
+        {workPreviewLoading ? (
+          <div className="style-loading" style={{ padding: '3rem 1rem' }}>
+            <div className="spinner small"></div>
+            <span>{t.workGenerating}</span>
+          </div>
+        ) : (
+          <div style={{ padding: '1rem' }}>
+            {/* Preview image */}
+            {workPreviewImage && (
+              <div style={{ textAlign: 'center', marginBottom: '1.5rem' }}>
+                <div className="style-card" style={{ maxWidth: '360px', margin: '0 auto' }}>
+                  <img src={workPreviewImage} alt="Preview" className="style-image" style={{ borderRadius: '12px' }} />
+                  <p className="style-label" style={{ marginTop: '0.5rem' }}>
+                    {lang === 'ko' ? '나에게 맞는 컬러 (미리보기)' : 'My Best Shade (Preview)'}
+                  </p>
+                </div>
+              </div>
+            )}
+
+            {/* Blurred placeholders for remaining 3 */}
+            <div className="style-grid" style={{ opacity: 0.5, filter: 'blur(2px)', pointerEvents: 'none' }}>
+              {['Bold Alternative', 'Soft Tonal', 'Off-Duty Commute'].map(label => (
+                <div key={label} className="style-card">
+                  <div className="style-placeholder" style={{ height: '200px', background: 'linear-gradient(135deg, #f0efe8, #e0dfd8)' }}>
+                    <span style={{ fontSize: '2rem', opacity: 0.3 }}>?</span>
+                  </div>
+                  <p className="style-label">{label}</p>
+                </div>
+              ))}
+            </div>
+
+            {/* Payment CTA */}
+            <div style={{ textAlign: 'center', marginTop: '2rem', padding: '0 1rem' }}>
+              <p style={{ fontSize: '1rem', color: '#4A4A4A', marginBottom: '0.5rem' }}>
+                {lang === 'ko'
+                  ? '나머지 3가지 스타일 + 출퇴근 룩을 확인하세요'
+                  : 'Unlock 3 more styles + off-duty commute look'}
+              </p>
+              <button
+                className="btn-gold"
+                style={{ padding: '0.9rem 2.5rem', fontSize: '1.05rem', width: '100%', maxWidth: '360px' }}
+                onClick={handleWorkPayment}
+                disabled={isProcessingPayment}
+              >
+                {isProcessingPayment
+                  ? (lang === 'ko' ? '결제 처리 중...' : 'Processing...')
+                  : (lang === 'ko' ? `전체 결과 보기 — $3.99` : `See All Results — $3.99`)}
+              </button>
+              <p style={{ fontSize: '0.78rem', color: '#999', marginTop: '0.5rem' }}>
+                {lang === 'ko' ? '4가지 컬러 변형 + AI 피부톤 분석 + 출퇴근 룩' : '4 color variations + AI skin-tone analysis + off-duty look'}
+              </p>
+            </div>
+          </div>
+        )}
       </div>
     )
   }

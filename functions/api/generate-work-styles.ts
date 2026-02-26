@@ -165,11 +165,13 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
     }
 
     const { photo, language, gender, height, weight, jobType } = validation.data!
+    const previewOnly = (body as Record<string, unknown>).previewOnly === true
     const geminiKey = context.env.GEMINI_API_KEY
     const openaiKey = context.env.OPENAI_API_KEY
     const hasPhoto = photo && photo.length > 100
 
-    const workScenarios = getWorkScenarios(jobType)
+    const allScenarios = getWorkScenarios(jobType)
+    const workScenarios = previewOnly ? allScenarios.slice(0, 1) : allScenarios
 
     if (!geminiKey && !openaiKey) {
       const demoResults = workScenarios.map(scenario => ({
