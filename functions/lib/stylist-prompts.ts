@@ -604,11 +604,15 @@ export function getWorkScenarios(jobType: string): ScenarioConfig[] {
   // Matches both "COLOR:" and "COLOR MUST BE..." formats, stops at next paragraph break
   const stripColor = (text: string) => text.replace(/\n\nCOLOR[^\n]*(?:\n(?!\n)[^\n]*)*/g, '')
 
-  // For lawyer female: reorder SUIT line so skirt is described first (AI picks the first-listed option)
+  // For lawyer female Bold Alternative: reorder SUIT + BOTTOM so skirt is described first (AI picks first-listed option)
   const skirtFirst = (text: string) => text
     .replace(
       'Slightly cropped blazer with high-waist wide trousers, OR longer blazer with a midi pencil skirt with back slit, OR a sheath dress under a structured blazer.',
       'Longer blazer with a midi pencil skirt with back slit — sharp, feminine, and commanding. OR slightly cropped blazer with high-waist wide trousers. OR a sheath dress under a structured blazer.'
+    )
+    .replace(
+      `- BOTTOM (IMPORTANT — VARY BETWEEN THESE):\n  • Wide-leg trousers with clean pressed crease (50% probability)\n  • Midi pencil skirt with back slit (30% probability)\n  • Straight-leg tailored trousers, ankle-length (20% probability)\n  Do NOT always choose pants — skirts are equally powerful.`,
+      `- BOTTOM: Midi pencil skirt with back slit — impeccably tailored, knee-length or just below. The skirt is the power move for this look.`
     )
 
   const offDuty = offDutyDirectives[jobType] || offDutyDirectives._default
