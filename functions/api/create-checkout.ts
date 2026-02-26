@@ -8,6 +8,8 @@ interface Env {
   POLAR_PRODUCT_FULL?: string
   POLAR_PRODUCT_DAILY_STYLE?: string
   POLAR_PRODUCT_CHAT_TOKENS?: string
+  POLAR_PRODUCT_WORK_STYLE?: string
+  POLAR_PRODUCT_TREND_STYLE?: string
 }
 
 // Product 타입 정의
@@ -173,6 +175,28 @@ export const onRequestGet: PagesFunction<Env> = async (context) => {
             'Expert styling advice',
             'Outfit & hair recommendations',
             'One-time purchase'
+          ]
+        },
+        work_style: {
+          name: 'Work Style Consultation',
+          description: 'AI-powered professional styling — 4 color variations for your workplace',
+          price: PRICES.work_style,
+          features: [
+            '4 work outfit variations',
+            'AI skin-tone color analysis',
+            'Off-duty commute look',
+            'Face-preserving technology'
+          ]
+        },
+        trend_style: {
+          name: 'Trend Style Consultation',
+          description: 'AI-powered trend styling — 4 variations of the latest fashion trends',
+          price: PRICES.trend_style,
+          features: [
+            '4 trend outfit variations',
+            'Signature to bold range',
+            'Personalized to your body',
+            'Face-preserving technology'
           ]
         },
       }
