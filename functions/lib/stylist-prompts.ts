@@ -621,7 +621,9 @@ You are the head stylist at Loro Piana. Analyze this person's skin undertone, ha
 Choose the ONE color that makes this person's face look the most vibrant and alive — the shade where their skin GLOWS.
 Think like a luxury brand colorist: consider Loro Piana's cashmere tones, Brunello Cucinelli's earth palette, Hermès seasonal shades.
 You have COMPLETE FREEDOM — do not default to safe navy or grey. Trust your eye. The right color might be unexpected.
-The goal: this person sees themselves and says "I've never looked this good."`,
+The goal: this person sees themselves and says "I've never looked this good."
+
+TOP — FOR SUITS/FORMAL: Surprise me with the inner piece. Consider options beyond a silk V-neck: a cashmere turtleneck, a high-neck knit, a crisp cotton shirt, or a bow-tie blouse. Variety makes styling interesting.`,
     },
     {
       id: 'work-contrast',
@@ -639,7 +641,9 @@ Now choose a BOLD, STRIKING color that CONTRASTS with their natural coloring —
 ⚠️ THIS MUST BE A COMPLETELY DIFFERENT COLOR FAMILY from what a typical stylist would choose.
 If the obvious choice would be navy → go deep burgundy. If grey → go emerald. If blue → go rich chocolate or plum.
 Think runway, not boardroom. Think the color that makes people say "that's a stunning shade."
-The result must be OBVIOUSLY VISUALLY DIFFERENT from the Best Color result — a totally different part of the color wheel.`,
+The result must be OBVIOUSLY VISUALLY DIFFERENT from the Best Color result — a totally different part of the color wheel.
+
+BOTTOM — FOR SUITS/FORMAL: Consider a midi pencil skirt or A-line skirt as an alternative to trousers. Skirts are equally powerful and add visual variety. Mix it up — don't always default to wide-leg trousers.`,
     },
     {
       id: 'work-harmony',

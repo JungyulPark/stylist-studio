@@ -2548,7 +2548,6 @@ function App() {
   const [loadingStep, setLoadingStep] = useState('')
   const [isFullPaid, setIsFullPaid] = useState(false)
   const [isHairPaid, setIsHairPaid] = useState(false)
-  const [isWorkPaid, setIsWorkPaid] = useState(() => localStorage.getItem('work_style_paid') === 'true')
   const [isProcessingPayment, setIsProcessingPayment] = useState(false)
   const [policyModal, setPolicyModal] = useState<'terms' | 'privacy' | 'refund' | null>(null)
   const [emailInput, setEmailInput] = useState('')
@@ -2750,6 +2749,8 @@ function App() {
 
     // 결제 성공 후 리다이렉트 처리
     const urlParams = new URLSearchParams(window.location.search)
+    // Clean up legacy persistent flag (no longer used)
+    localStorage.removeItem('work_style_paid')
 
     // 리퍼럴 코드 캡처 — 유효한 코드만 저장 + 무료 체험 리셋
     const refCode = urlParams.get('ref')
@@ -2833,8 +2834,7 @@ function App() {
       // Work Style 결제 성공 처리
       if (purchasedProductType === 'work_style') {
         trackEvent('purchase', { product: 'work_style', currency: 'USD', value: 3.99 })
-        localStorage.setItem('work_style_paid', 'true')
-        setIsWorkPaid(true)
+        // No persistent flag — generation happens directly below, one-time only
 
         // IndexedDB에서 저장된 데이터 복원
         ;(async () => {
@@ -3759,10 +3759,8 @@ function App() {
   const handleWorkStyleGenerate = async (fullGeneration = false) => {
     if (!selectedJob || !profile.photo) return
 
-    if (fullGeneration || isWorkPaid) {
-      // Paid: generate all 4 styles — immediately consume the payment token
-      localStorage.removeItem('work_style_paid')
-      setIsWorkPaid(false)
+    if (fullGeneration) {
+      // Only reachable from payment return flow — generate all 4 styles
       setWorkLoading(true)
       setPage('work-result')
       trackEvent('work_style_generate', { job_type: selectedJob, paid: true })
