@@ -604,6 +604,13 @@ export function getWorkScenarios(jobType: string): ScenarioConfig[] {
   // Matches both "COLOR:" and "COLOR MUST BE..." formats, stops at next paragraph break
   const stripColor = (text: string) => text.replace(/\n\nCOLOR[^\n]*(?:\n(?!\n)[^\n]*)*/g, '')
 
+  // For lawyer female: reorder SUIT line so skirt is described first (AI picks the first-listed option)
+  const skirtFirst = (text: string) => text
+    .replace(
+      'Slightly cropped blazer with high-waist wide trousers, OR longer blazer with a midi pencil skirt with back slit, OR a sheath dress under a structured blazer.',
+      'Longer blazer with a midi pencil skirt with back slit — sharp, feminine, and commanding. OR slightly cropped blazer with high-waist wide trousers. OR a sheath dress under a structured blazer.'
+    )
+
   const offDuty = offDutyDirectives[jobType] || offDutyDirectives._default
 
   return [
@@ -635,15 +642,13 @@ Now choose a BOLD, STRIKING color that CONTRASTS with their natural coloring —
 If the obvious choice would be navy → go deep burgundy. If grey → go forest green. If blue → go rich chocolate or plum.
 Think runway, not boardroom. Think the color that makes people say "that's an incredible shade."
 The result must be OBVIOUSLY VISUALLY DIFFERENT from the Best Color result — a totally different part of the color wheel.`,
-      directiveFemale: `${stripColor(job.female)}${FRAMING}\n\nCOLOR STRATEGY — CONTRAST COLOR:
+      directiveFemale: `${jobType === 'lawyer' ? skirtFirst(stripColor(job.female)) : stripColor(job.female)}${FRAMING}\n\nCOLOR STRATEGY — CONTRAST COLOR:
 You are the creative director at Bottega Veneta. Analyze this person's skin undertone from the photo.
 Now choose a BOLD, STRIKING color that CONTRASTS with their natural coloring — the shade that makes them impossible to ignore.
 ⚠️ THIS MUST BE A COMPLETELY DIFFERENT COLOR FAMILY from what a typical stylist would choose.
 If the obvious choice would be navy → go deep burgundy. If grey → go emerald. If blue → go rich chocolate or plum.
 Think runway, not boardroom. Think the color that makes people say "that's a stunning shade."
-The result must be OBVIOUSLY VISUALLY DIFFERENT from the Best Color result — a totally different part of the color wheel.
-
-BOTTOM — FOR SUITS/FORMAL: Consider a midi pencil skirt or A-line skirt as an alternative to trousers. Skirts are equally powerful and add visual variety. Mix it up — don't always default to wide-leg trousers.`,
+The result must be OBVIOUSLY VISUALLY DIFFERENT from the Best Color result — a totally different part of the color wheel.`,
     },
     {
       id: 'work-harmony',
