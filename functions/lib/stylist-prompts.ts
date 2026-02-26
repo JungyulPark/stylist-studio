@@ -433,6 +433,94 @@ MOOD: She walks into the courtroom and the temperature changes. Not loud — dev
   },
 }
 
+// ─── Job-Specific Off-Duty Commute Looks ─────────────────────────
+const offDutyDirectives: Record<string, { male: string; female: string }> = {
+  _default: {
+    male: `STYLING BRIEF — OFF-DUTY COMMUTE LOOK
+This is a COMPLETELY DIFFERENT outfit — stylish everyday clothes. NOT a uniform, NOT work clothes.
+
+OUTFIT: Modern city-smart outfit — premium wool or cashmere overcoat (camel, charcoal, or navy) over a fine-gauge merino crewneck or fitted oxford shirt. Tailored straight-leg trousers or dark slim jeans with clean break. Polished leather Chelsea boots or premium minimalist sneakers. A structured leather briefcase or sleek messenger bag.
+
+REMOVE ALL work-related items: NO badge, NO uniform pieces, NO work tools. Pure civilian fashion.
+
+COLOR MUST BE CHOSEN based on this person's skin tone. Pick colors that make their face glow.
+
+MOOD: A stylish professional walking through a cosmopolitan city. He looks like he edits a design magazine or runs a gallery. Effortlessly polished — the kind of casual that takes taste, not effort.`,
+    female: `STYLING BRIEF — OFF-DUTY COMMUTE LOOK
+This is a COMPLETELY DIFFERENT outfit — stylish everyday clothes. NOT a uniform, NOT work clothes.
+
+OUTFIT: Chic modern outfit — tailored wool coat or structured blazer over a silk blouse or cashmere turtleneck. High-waisted tailored trousers or a midi skirt with movement. Pointed-toe ankle boots or elegant loafers. A structured leather tote or crossbody bag. Delicate gold jewelry — thin chain necklace, small hoops.
+
+REMOVE ALL work-related items: NO badge, NO uniform pieces, NO work tools. Pure civilian fashion.
+
+COLOR MUST BE CHOSEN based on this person's skin tone. Pick colors that make their face glow.
+
+MOOD: A stylish woman walking through a cosmopolitan city. She looks like she curates art or runs a fashion brand. Effortlessly chic — the kind of casual that radiates confidence and taste.`,
+  },
+  lawyer: {
+    male: `STYLING BRIEF — OFF-DUTY LAWYER COMMUTE LOOK
+This is a COMPLETELY DIFFERENT outfit from the courtroom. Think weekend editorial — a man who wears suits all week and knows exactly how to dress without one.
+
+OUTFIT SPEC:
+- OUTER: Premium cashmere overcoat in camel or dark navy, OR a suede bomber jacket, OR a tailored Italian leather jacket. NOT a suit jacket — this is off-duty.
+- TOP: Fine-gauge cashmere V-neck or crewneck sweater in a rich tone, OR a perfectly fitted merino polo. The knit has visible quality — the kind you touch and know it's expensive.
+- BOTTOM: Dark indigo slim straight jeans (Japanese selvedge quality) OR tailored wool flannel trousers in a relaxed fit. NOT suit trousers.
+- SHOES: Suede Chelsea boots, premium leather sneakers (Common Projects level), OR polished penny loafers worn sockless.
+- BAG: Soft leather weekender tote or a slim leather portfolio clutch. Nothing corporate.
+- ACCESSORIES: Quality automatic watch (not a dress watch — something sportier), tortoiseshell sunglasses pushed up.
+
+COLOR STRATEGY: Analyze skin tone. Warm skin → camel, olive, warm navy, cognac. Cool skin → charcoal, steel blue, burgundy, cool grey. The palette should feel LUXURIOUS but RELAXED.
+
+MOOD: Saturday morning in SoHo or Gangnam. Walking to a specialty coffee shop, then a gallery opening. He looks like money but doesn't try. The sweater cost more than most people's suits. His off-duty style is better than most people's best-dressed day.`,
+    female: `STYLING BRIEF — OFF-DUTY LAWYER COMMUTE LOOK
+This is a COMPLETELY DIFFERENT outfit from the courtroom. Think weekend editorial — a woman who commands boardrooms all week and her off-duty style is equally deliberate.
+
+OUTFIT SPEC:
+- OUTER: Structured cashmere coat in camel or cream, OR a premium leather biker jacket (butter-soft), OR an oversized blazer in a luxurious fabric worn open.
+- TOP: Silk charmeuse camisole, cashmere turtleneck, OR a perfectly draped jersey wrap top. Something that looks effortless but feels expensive.
+- BOTTOM: High-waisted wide-leg jeans (premium Japanese denim), OR tailored wool culottes, OR a silk midi skirt with movement. NOT a pencil skirt — this is relaxed.
+- SHOES: Suede ankle boots with a sculptural heel, premium leather ballet flats (The Row level), OR clean white sneakers with gold detail.
+- BAG: Structured leather tote (Celine Sangle or Loewe Puzzle level of taste), OR a soft leather crossbody.
+- ACCESSORIES: Delicate layered gold necklaces, one statement ring, quality sunglasses. The kind of jewelry that's simple but clearly real gold.
+
+COLOR STRATEGY: Analyze skin tone. Warm skin → camel, olive, warm cream, cognac, terracotta. Cool skin → ice grey, pale blue, deep burgundy, cool white. The palette should feel LUXURIOUS but EFFORTLESS.
+
+MOOD: Saturday morning in Cheongdam or the West Village. Walking to brunch at an impossible-to-book restaurant. She looks like she could be a creative director, gallerist, or fashion editor. Her weekend look makes other women screenshot her outfit. The casual is studied but never stiff.`,
+  },
+  doctor: {
+    male: `STYLING BRIEF — OFF-DUTY DOCTOR COMMUTE LOOK
+This is a COMPLETELY DIFFERENT outfit. NO scrubs, NO white coat, NO stethoscope, NO medical anything. Pure civilian fashion.
+
+OUTFIT SPEC:
+- OUTER: Premium wool overcoat or tailored bomber jacket. Clean, modern lines.
+- TOP: Fine merino crewneck sweater or a fitted oxford shirt with rolled sleeves. Quality fabrics.
+- BOTTOM: Dark slim straight jeans or tailored chinos with clean hem. NOT hospital pants.
+- SHOES: Clean leather Chelsea boots or premium minimalist sneakers.
+- BAG: Structured leather messenger bag or premium backpack.
+
+REMOVE ALL medical items: NO stethoscope, NO ID badge, NO scrubs, NO white coat. ZERO connection to medicine.
+
+COLOR MUST BE CHOSEN based on this person's skin tone. Pick colors that make their face glow.
+
+MOOD: A stylish man heading to a café. He looks like he could be a creative director or architect. Clean, confident, modern.`,
+    female: `STYLING BRIEF — OFF-DUTY DOCTOR COMMUTE LOOK
+This is a COMPLETELY DIFFERENT outfit. NO scrubs, NO white coat, NO stethoscope, NO medical anything. Pure civilian fashion.
+
+OUTFIT SPEC:
+- OUTER: Tailored wool coat or a premium leather jacket. Feminine but structured.
+- TOP: Cashmere turtleneck or silk blouse. Something soft and luxurious.
+- BOTTOM: High-waisted tailored trousers or dark premium jeans. Flattering fit.
+- SHOES: Pointed-toe ankle boots or elegant loafers.
+- BAG: Structured leather tote or chic crossbody bag. Delicate gold jewelry.
+
+REMOVE ALL medical items: NO stethoscope, NO ID badge, NO scrubs, NO white coat. ZERO connection to medicine.
+
+COLOR MUST BE CHOSEN based on this person's skin tone. Pick colors that make their face glow.
+
+MOOD: A stylish woman heading to brunch. She looks like she could be a fashion editor or gallery owner. Effortlessly chic.`,
+  },
+}
+
 export function getWorkScenarios(jobType: string): ScenarioConfig[] {
   const job = workDirectives[jobType]
   if (!job) return getWorkScenarios('doctor') // fallback
@@ -440,48 +528,65 @@ export function getWorkScenarios(jobType: string): ScenarioConfig[] {
   // FRAMING rule injected into every work scenario to prevent head cropping
   const FRAMING = `\n\nFRAMING RULE (CRITICAL): The output image MUST have the EXACT same framing and composition as the input photo. Do NOT zoom in on the torso. Do NOT crop the head. The person's head must have the same amount of space above it as the original. If the input shows full body, output shows full body. If input shows head-to-waist, output shows head-to-waist. ZERO framing changes allowed.`
 
+  // Strip the hardcoded COLOR section from base prompts so each scenario's strategy fully controls color
+  const stripColor = (text: string) => text.replace(/\n\nCOLOR:.*?(?=\n\nMOOD:)/s, '')
+
+  const offDuty = offDutyDirectives[jobType] || offDutyDirectives._default
+
   return [
     {
       id: 'work-signature',
       labelKo: '베스트 컬러', labelEn: 'Best Color', labelJa: 'ベストカラー', labelZh: '最佳色彩', labelEs: 'Mejor Color',
-      directiveMale: `${job.male}${FRAMING}\n\nCOLOR STRATEGY: Analyze this person's ACTUAL skin undertone, hair color, and eye color from the photo. Then choose the ONE color that makes their face look the most vibrant and healthy. Consider the full spectrum of real work-appropriate colors. The goal is: when this person looks in the mirror, they think "this color makes me look GOOD." You have COMPLETE freedom to pick ANY color — trust your analysis.`,
-      directiveFemale: `${job.female}${FRAMING}\n\nCOLOR STRATEGY: Analyze this person's ACTUAL skin undertone, hair color, and eye color from the photo. Then choose the ONE color that makes their face look the most vibrant and healthy. Consider the full spectrum of real work-appropriate colors. The goal is: when this person looks in the mirror, they think "this color makes me look GOOD." You have COMPLETE freedom to pick ANY color — trust your analysis.`,
+      directiveMale: `${stripColor(job.male)}${FRAMING}\n\nCOLOR STRATEGY — BEST COLOR (CLASSIC FLATTERING):
+Analyze this person's skin undertone, hair color, and eye color from the photo.
+Choose the single MOST FLATTERING classic suit color for THIS person — the shade that makes their face look the most vibrant and healthy.
+PICK FROM THE CLASSIC POWER SPECTRUM: midnight navy, charcoal grey, slate blue-grey, deep anthracite, warm charcoal-brown.
+The goal: the client puts on this suit and thinks "this is MY color." Trust your skin-tone analysis.`,
+      directiveFemale: `${stripColor(job.female)}${FRAMING}\n\nCOLOR STRATEGY — BEST COLOR (CLASSIC FLATTERING):
+Analyze this person's skin undertone, hair color, and eye color from the photo.
+Choose the single MOST FLATTERING classic suit color for THIS person — the shade that makes their face look the most vibrant and healthy.
+PICK FROM THE CLASSIC POWER SPECTRUM: midnight navy, charcoal grey, slate blue-grey, deep anthracite, warm charcoal-brown, ivory cream.
+The goal: the client puts on this suit and thinks "this is MY color." Trust your skin-tone analysis.`,
     },
     {
       id: 'work-contrast',
       labelKo: '컨트라스트 컬러', labelEn: 'Contrast Color', labelJa: 'コントラストカラー', labelZh: '对比色', labelEs: 'Color Contraste',
-      directiveMale: `${job.male}${FRAMING}\n\nCOLOR STRATEGY: Analyze this person's skin undertone, then choose a CONTRASTING color that makes their features pop. If their skin is warm-toned, try a cool-toned color. If cool-toned, try a warm-toned color. The contrast should be FLATTERING, not jarring. Pick a color that creates visual interest and makes this person stand out in a good way. You have COMPLETE freedom — do NOT default to any specific color.`,
-      directiveFemale: `${job.female}${FRAMING}\n\nCOLOR STRATEGY: Analyze this person's skin undertone, then choose a CONTRASTING color that makes their features pop. If their skin is warm-toned, try a cool-toned color. If cool-toned, try a warm-toned color. The contrast should be FLATTERING, not jarring. Pick a color that creates visual interest and makes this person stand out in a good way. You have COMPLETE freedom — do NOT default to any specific color.`,
+      directiveMale: `${stripColor(job.male)}${FRAMING}\n\nCOLOR STRATEGY — CONTRAST COLOR (BOLD & DISTINCTIVE):
+Analyze this person's skin undertone from the photo.
+Now choose a BOLD, UNEXPECTED suit color that is VISUALLY DISTINCT from typical navy/charcoal.
+DO NOT choose navy, charcoal, or grey — those are BANNED for this scenario.
+PICK FROM THESE DISTINCTIVE OPTIONS: deep burgundy/wine, forest green, rich chocolate brown, dark plum, deep teal, cognac, dark olive.
+Choose whichever CONTRASTING tone makes this person's features POP most dramatically.
+The result must look OBVIOUSLY DIFFERENT from a standard suit — someone should notice "that's an interesting color."`,
+      directiveFemale: `${stripColor(job.female)}${FRAMING}\n\nCOLOR STRATEGY — CONTRAST COLOR (BOLD & DISTINCTIVE):
+Analyze this person's skin undertone from the photo.
+Now choose a BOLD, UNEXPECTED suit color that is VISUALLY DISTINCT from typical navy/charcoal.
+DO NOT choose navy, charcoal, or grey — those are BANNED for this scenario.
+PICK FROM THESE DISTINCTIVE OPTIONS: deep burgundy/wine, forest green, rich chocolate, dark plum, deep teal, camel, emerald, dark olive, rich ruby.
+Choose whichever CONTRASTING tone makes this person's features POP most dramatically.
+The result must look OBVIOUSLY DIFFERENT from a standard suit — someone should notice "that's a stunning color."`,
     },
     {
       id: 'work-harmony',
       labelKo: '하모니 컬러', labelEn: 'Harmony Color', labelJa: 'ハーモニーカラー', labelZh: '和谐色', labelEs: 'Color Armonía',
-      directiveMale: `${job.male}${FRAMING}\n\nCOLOR STRATEGY: Analyze this person's skin tone and hair color, then choose a color that creates a HARMONIOUS, tonal look — a color from the SAME color family as their natural coloring. If they have warm golden skin, pick a warm earthy tone. If they have cool pink undertones, pick a cool muted tone. The result should look natural and effortlessly cohesive — like the uniform color was custom-made for their complexion. You have COMPLETE freedom — do NOT default to any specific color.`,
-      directiveFemale: `${job.female}${FRAMING}\n\nCOLOR STRATEGY: Analyze this person's skin tone and hair color, then choose a color that creates a HARMONIOUS, tonal look — a color from the SAME color family as their natural coloring. If they have warm golden skin, pick a warm earthy tone. If they have cool pink undertones, pick a cool muted tone. The result should look natural and effortlessly cohesive — like the uniform color was custom-made for their complexion. You have COMPLETE freedom — do NOT default to any specific color.`,
+      directiveMale: `${stripColor(job.male)}${FRAMING}\n\nCOLOR STRATEGY — HARMONY COLOR (TONAL MONOCHROME):
+Analyze this person's skin tone and hair color from the photo.
+Choose a suit color from the SAME color family as their natural coloring — a tonal, monochromatic effect.
+Warm golden skin → warm sand, camel, warm taupe, soft tobacco. Cool pink skin → cool grey, blue-grey, soft lavender-grey, cool slate.
+The suit, shirt, and accessories should feel like ONE seamless tonal palette. Quiet, cohesive, like the outfit was custom-dyed to match this person.
+DO NOT pick the same color as Best Color or Contrast Color — this must be DISTINCTLY different.`,
+      directiveFemale: `${stripColor(job.female)}${FRAMING}\n\nCOLOR STRATEGY — HARMONY COLOR (TONAL MONOCHROME):
+Analyze this person's skin tone and hair color from the photo.
+Choose a suit color from the SAME color family as their natural coloring — a tonal, monochromatic effect.
+Warm golden skin → warm sand, camel, warm taupe, soft tobacco. Cool pink skin → cool grey, blue-grey, soft lavender-grey, cool slate.
+The suit, blouse, and accessories should feel like ONE seamless tonal palette. Quiet, cohesive, like the outfit was custom-dyed to match this person.
+DO NOT pick the same color as Best Color or Contrast Color — this must be DISTINCTLY different.`,
     },
     {
       id: 'work-offduty',
       labelKo: '출퇴근 룩', labelEn: 'Off-Duty Commute', labelJa: '通勤スタイル', labelZh: '通勤穿搭', labelEs: 'Look de Ida al Trabajo',
-      directiveMale: `STYLING BRIEF — OFF-DUTY COMMUTE LOOK
-This is a COMPLETELY DIFFERENT outfit — stylish everyday casual clothes. NOT a uniform, NOT scrubs, NOT work clothes.
-
-OUTFIT: Smart casual outfit — tailored coat or bomber jacket over a clean crew-neck sweater or shirt, well-fitted chinos or dark jeans, clean white sneakers or leather boots. A premium backpack or messenger bag.
-
-REMOVE ALL work-related items: NO stethoscope, NO ID badge, NO medical accessories, NO work tools of any kind. This person is dressed in PURE civilian fashion.
-
-COLOR MUST BE CHOSEN based on this person's skin tone. Pick colors that make their face glow. You have COMPLETE freedom.
-
-MOOD: A stylish man walking down a city street, heading to a café. He looks like he could be a creative director or architect. Zero connection to any workplace.${FRAMING}`,
-      directiveFemale: `STYLING BRIEF — OFF-DUTY COMMUTE LOOK
-This is a COMPLETELY DIFFERENT outfit — stylish everyday casual clothes. NOT a uniform, NOT scrubs, NOT work clothes.
-
-OUTFIT: Chic casual outfit — a tailored trench coat or oversized blazer, well-fitted jeans or tailored pants, a cashmere sweater or silk blouse, clean sneakers or ankle boots. A designer tote or structured bag.
-
-REMOVE ALL work-related items: NO stethoscope, NO ID badge, NO medical accessories, NO work tools of any kind. This person is dressed in PURE civilian fashion.
-
-COLOR MUST BE CHOSEN based on this person's skin tone. Pick colors that make their face glow. You have COMPLETE freedom.
-
-MOOD: A stylish woman walking down a city street, heading to brunch. She looks like she could be a fashion editor or gallery owner. Zero connection to any workplace.${FRAMING}`,
+      directiveMale: `${offDuty.male}${FRAMING}`,
+      directiveFemale: `${offDuty.female}${FRAMING}`,
     },
   ]
 }
