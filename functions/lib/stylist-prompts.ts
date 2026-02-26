@@ -639,18 +639,26 @@ Choose a color from the SAME tonal family as their natural coloring — creating
 The outfit should feel like it was custom-dyed to match this person — skin, hair, and clothes flow as ONE seamless tonal palette.
 Think Cucinelli's signature: ivory, oatmeal, soft stone, warm camel, dusty taupe, muted sage. The colors of nature and cashmere.
 
-FIT: Make the silhouette SLIGHTLY more relaxed than the other variations — softer shoulders, a touch more ease through the body. Think Cucinelli's effortless drape, not stiff tailoring. The fabric should look soft and lived-in luxurious.
+FIT — THIS IS CRITICAL AND MUST BE VISIBLY DIFFERENT FROM THE OTHER CARDS:
+The fit MUST be NOTICEABLY more relaxed and loose than the other variations. This is NOT a subtle change.
+- For scrubs/uniforms: Use OVERSIZED boxy top (1-2 sizes up), jogger-style tapered pants with elastic cuffs (NOT straight-leg). The silhouette should look distinctly modern and comfortable.
+- For suits/formal: Use an OVERSIZED unstructured blazer (dropped shoulders, longer length), wide-leg flowing trousers. Think The Row or Lemaire — architectural ease.
+- The viewer should IMMEDIATELY see that this fit is looser and more relaxed than the other cards.
 
-⚠️ This MUST look DISTINCTLY DIFFERENT from both My Best Shade and Bold Alternative — softer color, more muted, more tonal, slightly relaxed fit.`,
+⚠️ This MUST look DISTINCTLY DIFFERENT from both My Best Shade and Bold Alternative — softer color AND visibly relaxed oversized fit.`,
       directiveFemale: `${stripColor(job.female)}${FRAMING}\n\nCOLOR STRATEGY — SOFT TONAL:
 You are the personal colorist at Brunello Cucinelli. Analyze this person's skin tone and hair color from the photo.
 Choose a color from the SAME tonal family as their natural coloring — creating a soft, monochromatic, head-to-toe cohesive effect.
 The outfit should feel like it was custom-dyed to match this person — skin, hair, and clothes flow as ONE seamless tonal palette.
 Think Cucinelli's signature: ivory, oatmeal, soft stone, warm camel, dusty taupe, muted sage, off-white. The colors of nature and cashmere.
 
-FIT: Make the silhouette SLIGHTLY more relaxed than the other variations — softer shoulders, gentle drape, a touch more ease through the body. Think Cucinelli's effortless elegance, not stiff tailoring. The fabric should look soft and luxuriously comfortable.
+FIT — THIS IS CRITICAL AND MUST BE VISIBLY DIFFERENT FROM THE OTHER CARDS:
+The fit MUST be NOTICEABLY more relaxed and loose than the other variations. This is NOT a subtle change.
+- For scrubs/uniforms: Use OVERSIZED boxy top (1-2 sizes up), jogger-style tapered pants with elastic cuffs (NOT straight-leg). The silhouette should look distinctly modern and comfortable.
+- For suits/formal: Use an OVERSIZED unstructured blazer (dropped shoulders, longer length), wide-leg flowing trousers or midi skirt with movement. Think The Row or Lemaire — architectural ease.
+- The viewer should IMMEDIATELY see that this fit is looser and more relaxed than the other cards.
 
-⚠️ This MUST look DISTINCTLY DIFFERENT from both My Best Shade and Bold Alternative — softer color, more muted, more tonal, slightly relaxed fit.`,
+⚠️ This MUST look DISTINCTLY DIFFERENT from both My Best Shade and Bold Alternative — softer color AND visibly relaxed oversized fit.`,
     },
     {
       id: 'work-offduty',
