@@ -381,12 +381,12 @@ You are styling a head chef for a W Magazine culinary feature. This is where Mic
 
 OUTFIT SPEC:
 - TOP: Modern chef jacket — single-breasted, mandarin collar, short sleeves. The fit is SLIM through the torso — tailored, not baggy. Premium heavyweight Japanese cotton with a subtle texture. Hidden snap buttons, flat-felled seams. This jacket was made by a tailor, not a uniform company.
-- APRON: Signature crossback apron in full-grain vegetable-tanned leather OR heavy raw selvedge denim. The leather has patina. The straps cross at the back cleanly. This apron is a piece of craft.
+- APRON: Signature crossback apron in heavy raw selvedge denim OR washed heavyweight linen. The fabric shows wear and character. The straps cross at the back cleanly. NOT leather — this is a working kitchen, not a steakhouse.
 - BOTTOM: Slim straight black trousers — clean modern cut, no pattern, no checkering. Like Saint Laurent black jeans in a chef-appropriate fabric. Clean break at the ankle.
 - SHOES: Black leather Birkenstock Boston clogs (oiled leather) or clean black Chelsea boots. Worn-in but cared for.
 - OPTIONAL: Black merino beanie. Sleeves pushed to forearms.
 
-COLOR: Bright white jacket (the classic — nothing is more powerful) or charcoal grey for moodier look. The apron in raw natural leather, black, or indigo provides the contrast.
+COLOR: Bright white jacket (the classic — nothing is more powerful) or charcoal grey for moodier look. The apron in raw indigo denim, natural linen, or black provides the contrast.
 
 MOOD: This chef has two Michelin stars and a Netflix series. The jacket fits like Hedi Slimane cut it. The apron tells a story. He moves through the kitchen like a conductor. Every detail — the knife roll, the towel placement, the way the apron is tied — is a deliberate act of style.`,
     female: `STYLING BRIEF — FEMALE CHEF, LUXURY EDITION
@@ -394,12 +394,12 @@ You are styling a head chef for a W Magazine culinary feature.
 
 OUTFIT SPEC:
 - TOP: Modern chef jacket — feminine tailored cut, mandarin collar, short sleeves. Darted at the waist for shape. Premium Japanese cotton, crisp but with beautiful drape. The collar stands perfectly.
-- APRON: Crossback apron in washed linen or supple leather — elegant, defining the waist. Tied simply.
+- APRON: Crossback apron in washed heavyweight linen or raw selvedge denim — elegant, defining the waist. Tied simply. NOT leather.
 - BOTTOM: Slim straight black trousers — clean, modern, tailored. Like The Row trousers but kitchen-ready. Ankle-length.
 - SHOES: Black leather clogs or clean minimal black ankle boots. Timeless.
 - OPTIONAL: Hair in a sleek low bun. One thin gold chain.
 
-COLOR: White jacket (power, purity, authority) or off-white/cream for warmth. Charcoal for edge. The apron in natural linen, indigo, or black adds depth.
+COLOR: White jacket (power, purity, authority) or off-white/cream for warmth. Charcoal for edge. The apron in natural linen, indigo denim, or black adds depth.
 
 MOOD: She got the James Beard AND the Vogue Italia feature in the same year. The kitchen whites are couture-level. She plates food like she composes art. The apron has stories in its creases. This is a woman who turned craft into elegance.`
   },
@@ -517,6 +517,36 @@ COLOR STRATEGY: Analyze skin tone. Warm skin → camel, warm cream, olive, soft 
 
 MOOD: A woman walking through Cheongdam or SoHo on a weekend morning. She could be a gallerist, a creative director, or a fashion editor. Her weekend style is actually better than most people's best-dressed day. Nothing trendy — timeless. The kind of woman other women screenshot for outfit inspiration.`,
   },
+  chef: {
+    male: `STYLING BRIEF — OFF-DUTY CHEF COMMUTE LOOK
+This is a COMPLETELY DIFFERENT outfit. NO chef jacket, NO apron, NO kitchen gear. ZERO connection to cooking.
+
+OUTFIT SPEC:
+- OUTER: Premium washed cotton chore coat in faded indigo or olive, OR a cashmere crewneck sweater layered under a suede trucker jacket, OR a relaxed linen blazer (unstructured, soft shoulders).
+- TOP: Vintage-washed cotton henley, a simple linen band-collar shirt, OR a Breton stripe tee. Something that feels lived-in but quality.
+- BOTTOM: Relaxed straight-leg dark denim (Japanese selvedge), OR cotton-linen blend chinos in olive or sand. Comfortable, not too tailored — a chef is used to moving.
+- SHOES: Clean white leather sneakers, suede desert boots, OR woven leather slip-ons. Effortless.
+- BAG: Waxed canvas tote or a simple leather crossbody.
+- ACCESSORIES: Simple automatic watch with canvas strap, quality sunglasses. Maybe a thin leather cord bracelet.
+
+COLOR STRATEGY: Analyze skin tone. Warm → olive, warm sand, faded indigo, cognac. Cool → steel blue, grey, washed navy, charcoal. The palette should feel ARTISAN — like a ceramicist or furniture maker on his day off.
+
+MOOD: Saturday morning at a farmers market in Brooklyn or Itaewon. He looks like he could own a pottery studio or a natural wine bar. There's an effortless creative energy — comfortable in his skin, not trying to impress. The kind of man who rolls up his sleeves and the forearms tell you he works with his hands.`,
+    female: `STYLING BRIEF — OFF-DUTY CHEF COMMUTE LOOK
+This is a COMPLETELY DIFFERENT outfit. NO chef jacket, NO apron, NO kitchen gear. ZERO connection to cooking.
+
+OUTFIT SPEC:
+- OUTER: Relaxed linen blazer in off-white or soft khaki, OR a premium cotton-cashmere cardigan, OR a washed cotton field jacket in olive.
+- TOP: Simple silk camisole, a perfectly fitted Breton stripe tee, OR a linen button-down (sleeves rolled). Something feminine but unfussy.
+- BOTTOM: High-waisted wide-leg linen trousers, a cotton midi skirt with gentle drape, OR relaxed straight-leg jeans (premium Japanese denim).
+- SHOES: Woven leather sandals, clean white sneakers, OR suede ballet flats. Comfortable and elegant.
+- BAG: Straw basket tote or a soft leather crossbody.
+- ACCESSORIES: Delicate gold chain necklace, small hoop earrings, quality sunglasses. Simple, natural.
+
+COLOR STRATEGY: Analyze skin tone. Warm → warm cream, olive, terracotta, natural linen. Cool → soft grey, pale blue, sage, washed white. The palette should feel ARTISAN AND FEMININE — like a food photographer or a wine importer on her day off.
+
+MOOD: Sunday morning at a farmers market or a coastal café. She looks like she runs a food magazine or curates pop-up supper clubs. Effortlessly chic, creative, earthy but refined. The kind of woman who makes simple things beautiful.`,
+  },
 }
 
 export function getWorkScenarios(jobType: string): ScenarioConfig[] {
@@ -536,54 +566,52 @@ export function getWorkScenarios(jobType: string): ScenarioConfig[] {
     {
       id: 'work-signature',
       labelKo: '베스트 컬러', labelEn: 'Best Color', labelJa: 'ベストカラー', labelZh: '最佳色彩', labelEs: 'Mejor Color',
-      directiveMale: `${stripColor(job.male)}${FRAMING}\n\nCOLOR STRATEGY — BEST COLOR (MOST FLATTERING FOR THIS PERSON):
-Analyze this person's ACTUAL skin undertone, hair color, and eye color from the photo.
-Choose the single MOST FLATTERING color for the outfit — the shade that makes their face look the most vibrant, healthy, and alive.
-Warm undertone (golden/peachy skin) → deep navy, hunter green, warm charcoal, rich teal, chocolate.
-Cool undertone (pink/rosy skin) → ceil blue, cool slate, pewter grey, charcoal, deep wine.
-The goal: this person puts on the outfit and thinks "this color was MADE for me." Trust your skin-tone analysis.`,
-      directiveFemale: `${stripColor(job.female)}${FRAMING}\n\nCOLOR STRATEGY — BEST COLOR (MOST FLATTERING FOR THIS PERSON):
-Analyze this person's ACTUAL skin undertone, hair color, and eye color from the photo.
-Choose the single MOST FLATTERING color for the outfit — the shade that makes their face look the most vibrant, healthy, and alive.
-Warm undertone (golden/peachy skin) → deep navy, hunter green, warm charcoal, rich teal, soft wine.
-Cool undertone (pink/rosy skin) → ceil blue, cool slate, pewter grey, lavender-grey, deep wine.
-The goal: this person puts on the outfit and thinks "this color was MADE for me." Trust your skin-tone analysis.`,
+      directiveMale: `${stripColor(job.male)}${FRAMING}\n\nCOLOR STRATEGY — BEST COLOR:
+You are the head stylist at Loro Piana. Analyze this person's skin undertone, hair color, and eye color from the photo.
+Choose the ONE color that makes this person's face look the most vibrant and alive — the shade where their skin GLOWS.
+Think like a luxury brand colorist: consider Loro Piana's cashmere tones, Brunello Cucinelli's earth palette, Hermès seasonal shades.
+You have COMPLETE FREEDOM — do not default to safe navy or grey. Trust your eye. The right color might be unexpected.
+The goal: this person sees themselves and says "I've never looked this good."`,
+      directiveFemale: `${stripColor(job.female)}${FRAMING}\n\nCOLOR STRATEGY — BEST COLOR:
+You are the head stylist at Loro Piana. Analyze this person's skin undertone, hair color, and eye color from the photo.
+Choose the ONE color that makes this person's face look the most vibrant and alive — the shade where their skin GLOWS.
+Think like a luxury brand colorist: consider Loro Piana's cashmere tones, Brunello Cucinelli's earth palette, Hermès seasonal shades.
+You have COMPLETE FREEDOM — do not default to safe navy or grey. Trust your eye. The right color might be unexpected.
+The goal: this person sees themselves and says "I've never looked this good."`,
     },
     {
       id: 'work-contrast',
       labelKo: '컨트라스트 컬러', labelEn: 'Contrast Color', labelJa: 'コントラストカラー', labelZh: '对比色', labelEs: 'Color Contraste',
-      directiveMale: `${stripColor(job.male)}${FRAMING}\n\nCOLOR STRATEGY — CONTRAST COLOR (BOLD & UNEXPECTED):
-Analyze this person's skin undertone from the photo.
-Choose a BOLD, UNEXPECTED color that CONTRASTS with their natural coloring to make features POP.
-⚠️ BANNED COLORS: Do NOT use navy, charcoal, grey, teal, or ceil blue — those are too common. Choose something DISTINCTLY DIFFERENT.
-CHOOSE FROM: deep burgundy/wine, forest green, rich chocolate brown, dark plum, sage olive, warm rust, rich cobalt, dark emerald.
-If their skin is warm-toned → try a cool-toned color (burgundy, plum, cobalt). If cool-toned → try warm (chocolate, olive, rust).
-The result must be OBVIOUSLY DIFFERENT from the Best Color — a clearly different shade family.`,
-      directiveFemale: `${stripColor(job.female)}${FRAMING}\n\nCOLOR STRATEGY — CONTRAST COLOR (BOLD & UNEXPECTED):
-Analyze this person's skin undertone from the photo.
-Choose a BOLD, UNEXPECTED color that CONTRASTS with their natural coloring to make features POP.
-⚠️ BANNED COLORS: Do NOT use navy, charcoal, grey, teal, or ceil blue — those are too common. Choose something DISTINCTLY DIFFERENT.
-CHOOSE FROM: deep burgundy/wine, forest green, rich chocolate, dark plum, sage olive, dusty rose, warm rust, rich cobalt, dark emerald.
-If their skin is warm-toned → try a cool-toned color (burgundy, plum, cobalt). If cool-toned → try warm (chocolate, sage, dusty rose).
-The result must be OBVIOUSLY DIFFERENT from the Best Color — a clearly different shade family.`,
+      directiveMale: `${stripColor(job.male)}${FRAMING}\n\nCOLOR STRATEGY — CONTRAST COLOR:
+You are the creative director at Bottega Veneta. Analyze this person's skin undertone from the photo.
+Now choose a BOLD, STRIKING color that CONTRASTS with their natural coloring — the shade that makes them impossible to ignore.
+⚠️ THIS MUST BE A COMPLETELY DIFFERENT COLOR FAMILY from what a typical stylist would choose.
+If the obvious choice would be navy → go deep burgundy. If grey → go forest green. If blue → go rich chocolate or plum.
+Think runway, not boardroom. Think the color that makes people say "that's an incredible shade."
+The result must be OBVIOUSLY VISUALLY DIFFERENT from the Best Color result — a totally different part of the color wheel.`,
+      directiveFemale: `${stripColor(job.female)}${FRAMING}\n\nCOLOR STRATEGY — CONTRAST COLOR:
+You are the creative director at Bottega Veneta. Analyze this person's skin undertone from the photo.
+Now choose a BOLD, STRIKING color that CONTRASTS with their natural coloring — the shade that makes them impossible to ignore.
+⚠️ THIS MUST BE A COMPLETELY DIFFERENT COLOR FAMILY from what a typical stylist would choose.
+If the obvious choice would be navy → go deep burgundy. If grey → go emerald. If blue → go rich chocolate or plum.
+Think runway, not boardroom. Think the color that makes people say "that's a stunning shade."
+The result must be OBVIOUSLY VISUALLY DIFFERENT from the Best Color result — a totally different part of the color wheel.`,
     },
     {
       id: 'work-harmony',
       labelKo: '하모니 컬러', labelEn: 'Harmony Color', labelJa: 'ハーモニーカラー', labelZh: '和谐色', labelEs: 'Color Armonía',
-      directiveMale: `${stripColor(job.male)}${FRAMING}\n\nCOLOR STRATEGY — HARMONY COLOR (TONAL SKIN-MATCHING):
-Analyze this person's skin tone and hair color from the photo.
-Choose a color from the SAME color family as their natural coloring — creating a soft, tonal, cohesive effect.
-Warm golden skin → warm sand, camel, warm taupe, soft olive, warm stone.
-Cool pink skin → cool grey, blue-grey, soft lavender-grey, cool slate, muted blue.
-The entire outfit should feel like ONE seamless tonal palette — as if custom-dyed to match this person's complexion.
-⚠️ This MUST be visually different from BOTH Best Color and Contrast Color — a distinctly softer, more muted shade family.`,
-      directiveFemale: `${stripColor(job.female)}${FRAMING}\n\nCOLOR STRATEGY — HARMONY COLOR (TONAL SKIN-MATCHING):
-Analyze this person's skin tone and hair color from the photo.
-Choose a color from the SAME color family as their natural coloring — creating a soft, tonal, cohesive effect.
-Warm golden skin → warm sand, camel, warm taupe, soft olive, warm stone.
-Cool pink skin → cool grey, blue-grey, soft lavender, cool slate, muted blue.
-The entire outfit should feel like ONE seamless tonal palette — as if custom-dyed to match this person's complexion.
-⚠️ This MUST be visually different from BOTH Best Color and Contrast Color — a distinctly softer, more muted shade family.`,
+      directiveMale: `${stripColor(job.male)}${FRAMING}\n\nCOLOR STRATEGY — HARMONY COLOR:
+You are the personal colorist at Brunello Cucinelli. Analyze this person's skin tone and hair color from the photo.
+Choose a color from the SAME tonal family as their natural coloring — creating a soft, monochromatic, head-to-toe cohesive effect.
+The outfit should feel like it was custom-dyed to match this person — skin, hair, and clothes flow as ONE seamless tonal palette.
+Think Cucinelli's signature: ivory, oatmeal, soft stone, warm camel, dusty taupe, muted sage. The colors of nature and cashmere.
+⚠️ This MUST look DISTINCTLY DIFFERENT from both Best Color and Contrast Color — softer, more muted, more tonal.`,
+      directiveFemale: `${stripColor(job.female)}${FRAMING}\n\nCOLOR STRATEGY — HARMONY COLOR:
+You are the personal colorist at Brunello Cucinelli. Analyze this person's skin tone and hair color from the photo.
+Choose a color from the SAME tonal family as their natural coloring — creating a soft, monochromatic, head-to-toe cohesive effect.
+The outfit should feel like it was custom-dyed to match this person — skin, hair, and clothes flow as ONE seamless tonal palette.
+Think Cucinelli's signature: ivory, oatmeal, soft stone, warm camel, dusty taupe, muted sage, off-white. The colors of nature and cashmere.
+⚠️ This MUST look DISTINCTLY DIFFERENT from both Best Color and Contrast Color — softer, more muted, more tonal.`,
     },
     {
       id: 'work-offduty',
