@@ -421,15 +421,26 @@ MOOD: The attorney who makes opposing counsel nervous before opening statements.
 You are styling a senior attorney for a portrait in Harper's Bazaar.
 
 OUTFIT SPEC:
-- SUIT: Power suit — fitted single-breasted blazer with defined waist, clean shoulder, and modern proportion. Premium wool gabardine or silk-wool blend that photographs like liquid. Slightly cropped blazer with high-waist wide trousers, OR longer blazer with a midi pencil skirt with back slit.
-- TOP: Silk charmeuse blouse in a tonal complement, or a structured silk camisole that shows at the neckline. The fabric catches light beautifully.
-- TROUSERS: Wide-leg or straight, full-length with clean pressed crease. OR midi pencil skirt — the kind that requires precision tailoring.
+- SUIT: Power suit — fitted single-breasted blazer with defined waist, clean shoulder, and modern proportion. Premium wool gabardine or silk-wool blend that photographs like liquid. Slightly cropped blazer with high-waist wide trousers, OR longer blazer with a midi pencil skirt with back slit, OR a sheath dress under a structured blazer.
+- TOP (IMPORTANT — VARY THE INNER PIECE): Choose ONE from this list — do NOT always default to a silk V-neck blouse:
+  • Fine-gauge cashmere crewneck or turtleneck (structured, polished)
+  • Draped jersey mock-neck top
+  • Silk charmeuse blouse with bow-tie or pussy-bow neckline
+  • Structured silk camisole layered under the blazer
+  • Crisp cotton poplin shirt with French cuffs
+  • Ribbed knit fitted top in a tonal shade
+  Randomly select ONE of these — variety is essential across different generations.
+- BOTTOM (IMPORTANT — VARY BETWEEN THESE):
+  • Wide-leg trousers with clean pressed crease (50% probability)
+  • Midi pencil skirt with back slit (30% probability)
+  • Straight-leg tailored trousers, ankle-length (20% probability)
+  Do NOT always choose pants — skirts are equally powerful.
 - SHOES: Pointed-toe pumps in polished leather (80mm), elegant slingbacks, or refined suede loafers.
 - ACCESSORIES: Quality timepiece or thin gold bangle. Structured leather document bag. Small gold earrings — studs or delicate hoops.
 
 COLOR: Warm skin → rich navy, deep camel, chocolate, warm tobacco. Cool skin → charcoal, cool navy, blue-grey, deep wine. The right color makes black look lazy.
 
-MOOD: She walks into the courtroom and the temperature changes. Not loud — devastating. The suit fits like it was built on her body. The silk catches the light when she gestures. The shoes click with authority. She argues constitutional law in the morning and attends gallery openings at night. This is a woman for whom power is not performed — it's inherent.`
+MOOD: She walks into the courtroom and the temperature changes. Not loud — devastating. The suit fits like it was built on her body. The fabric catches the light when she gestures. The shoes click with authority. She argues constitutional law in the morning and attends gallery openings at night. This is a woman for whom power is not performed — it's inherent.`
   },
 }
 

@@ -3760,7 +3760,9 @@ function App() {
     if (!selectedJob || !profile.photo) return
 
     if (fullGeneration || isWorkPaid) {
-      // Paid: generate all 4 styles
+      // Paid: generate all 4 styles — immediately consume the payment token
+      localStorage.removeItem('work_style_paid')
+      setIsWorkPaid(false)
       setWorkLoading(true)
       setPage('work-result')
       trackEvent('work_style_generate', { job_type: selectedJob, paid: true })
@@ -6510,6 +6512,19 @@ ${hairImgs.length > 0 ? `<div class="section"><h2>${hairSection}</h2><div class=
                 </div>
               </div>
               <span className="gallery-occasion">{t.workJobNurse}</span>
+            </div>
+            <div className="gallery-item">
+              <div className="gallery-pair">
+                <div className="gallery-before">
+                  <span className="gallery-label">{t.galleryBefore}</span>
+                  <img src="/gallery/before-female-work.png" alt="Before - Female" loading="lazy" />
+                </div>
+                <div className="gallery-after">
+                  <span className="gallery-label gallery-label-after">{t.galleryAfter}</span>
+                  <img src="/gallery/work-nurse-bold.png" alt="After - Nurse Bold" loading="lazy" />
+                </div>
+              </div>
+              <span className="gallery-occasion">{lang === 'ko' ? '대담한 대안' : 'Bold Alternative'}</span>
             </div>
             <div className="gallery-item">
               <div className="gallery-pair">
