@@ -385,6 +385,7 @@ const translations: Record<Language, {
   galleryBadgeHair: string
   galleryBadgeOutfit: string
   galleryBadgeDaily: string
+  galleryBadgeWork: string
   galleryCta: string
   galleryResultTime: string
   // Trust Signals
@@ -742,6 +743,7 @@ const translations: Record<Language, {
     galleryBadgeHair: '헤어',
     galleryBadgeOutfit: '아웃핏',
     galleryBadgeDaily: '데일리',
+    galleryBadgeWork: '작업복',
     galleryCta: '나도 변신하기',
     galleryResultTime: '30초 만에 결과 확인',
     trustTitle: '왜 고객들이 선택할까요?',
@@ -840,7 +842,7 @@ const translations: Record<Language, {
     height: 'Height',
     heightFeet: 'ft',
     heightInches: 'in',
-    weight: 'Weight (lbs)',
+    weight: 'Weight',
     gender: 'Gender',
     male: 'Male',
     female: 'Female',
@@ -1094,6 +1096,7 @@ const translations: Record<Language, {
     galleryBadgeHair: 'Hair',
     galleryBadgeOutfit: 'Outfit',
     galleryBadgeDaily: 'Daily',
+    galleryBadgeWork: 'Work Style',
     galleryCta: 'Try My Transformation',
     galleryResultTime: 'Results in 30 seconds',
     trustTitle: 'Why Customers Choose Us',
@@ -1444,6 +1447,7 @@ const translations: Record<Language, {
     galleryBadgeHair: 'ヘア',
     galleryBadgeOutfit: 'コーデ',
     galleryBadgeDaily: 'デイリー',
+    galleryBadgeWork: 'ワークスタイル',
     galleryCta: '私も変身する',
     galleryResultTime: '30秒で結果確認',
     trustTitle: 'お客様が選ぶ理由',
@@ -1794,6 +1798,7 @@ const translations: Record<Language, {
     galleryBadgeHair: '发型',
     galleryBadgeOutfit: '穿搭',
     galleryBadgeDaily: '日常',
+    galleryBadgeWork: '职业装',
     galleryCta: '我也要变身',
     galleryResultTime: '30秒出结果',
     trustTitle: '为什么客户选择我们？',
@@ -2144,6 +2149,7 @@ const translations: Record<Language, {
     galleryBadgeHair: 'Cabello',
     galleryBadgeOutfit: 'Outfit',
     galleryBadgeDaily: 'Diario',
+    galleryBadgeWork: 'Estilo Laboral',
     galleryCta: 'Quiero mi transformación',
     galleryResultTime: 'Resultados en 30 segundos',
     trustTitle: '¿Por qué nos eligen?',
@@ -6337,6 +6343,65 @@ ${hairImgs.length > 0 ? `<div class="section"><h2>${hairSection}</h2><div class=
               <span className="gallery-occasion">Casual</span>
             </div>
           </div>
+
+          <div className="gallery-header" style={{ marginTop: '2.5rem' }}>
+            <span className="gallery-tag">WORK STYLE</span>
+            <h2 className="gallery-title">{t.galleryBadgeWork}</h2>
+          </div>
+          <div className="gallery-grid">
+            <div className="gallery-item">
+              <div className="gallery-pair">
+                <div className="gallery-before">
+                  <span className="gallery-label">{t.galleryBefore}</span>
+                  <img src="/gallery/before-male-work.png" alt="Before - Male" loading="lazy" />
+                </div>
+                <div className="gallery-after">
+                  <span className="gallery-label gallery-label-after">{t.galleryAfter}</span>
+                  <img src="/gallery/work-doctor-1.png" alt="After - Doctor" loading="lazy" />
+                </div>
+              </div>
+              <span className="gallery-occasion">{t.workJobDoctor}</span>
+            </div>
+            <div className="gallery-item">
+              <div className="gallery-pair">
+                <div className="gallery-before">
+                  <span className="gallery-label">{t.galleryBefore}</span>
+                  <img src="/gallery/before-female-work.png" alt="Before - Female" loading="lazy" />
+                </div>
+                <div className="gallery-after">
+                  <span className="gallery-label gallery-label-after">{t.galleryAfter}</span>
+                  <img src="/gallery/work-lawyer-1.png" alt="After - Lawyer" loading="lazy" />
+                </div>
+              </div>
+              <span className="gallery-occasion">{t.workJobLawyer}</span>
+            </div>
+            <div className="gallery-item">
+              <div className="gallery-pair">
+                <div className="gallery-before">
+                  <span className="gallery-label">{t.galleryBefore}</span>
+                  <img src="/gallery/before-female-work.png" alt="Before - Female" loading="lazy" />
+                </div>
+                <div className="gallery-after">
+                  <span className="gallery-label gallery-label-after">{t.galleryAfter}</span>
+                  <img src="/gallery/work-nurse-1.png" alt="After - Nurse" loading="lazy" />
+                </div>
+              </div>
+              <span className="gallery-occasion">{t.workJobNurse}</span>
+            </div>
+            <div className="gallery-item">
+              <div className="gallery-pair">
+                <div className="gallery-before">
+                  <span className="gallery-label">{t.galleryBefore}</span>
+                  <img src="/gallery/before-female-work.png" alt="Before - Female" loading="lazy" />
+                </div>
+                <div className="gallery-after">
+                  <span className="gallery-label gallery-label-after">{t.galleryAfter}</span>
+                  <img src="/gallery/work-lawyer-offduty.png" alt="After - Off-Duty" loading="lazy" />
+                </div>
+              </div>
+              <span className="gallery-occasion">Off-Duty Commute</span>
+            </div>
+          </div>
         </section>
 
         {/* Referral Section — logged-in users only */}
@@ -7806,14 +7871,44 @@ ${hairImgs.length > 0 ? `<div class="section"><h2>${hairSection}</h2><div class=
                     <button className={`gender-btn ${profile.gender === 'female' ? 'active' : ''}`} onClick={() => setProfile(prev => ({ ...prev, gender: 'female' }))}>{t.female}</button>
                   </div>
                 </div>
+
                 <div className="field-row">
-                  <label>{t.height}</label>
-                  <input type="number" placeholder="170" value={profile.height} onChange={e => setProfile(prev => ({ ...prev, height: e.target.value }))} />
+                  <label style={{ marginBottom: '0.25rem' }}>{t.height} / {t.weight}</label>
+                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem', background: 'rgba(26, 26, 26, 0.05)', borderRadius: '8px', padding: '0.4rem', marginBottom: '0.75rem' }}>
+                    <button type="button" onClick={() => setUseMetric(false)} style={{ padding: '0.35rem 0.7rem', borderRadius: '6px', border: 'none', background: !useMetric ? 'rgba(212, 175, 55, 0.3)' : 'transparent', color: !useMetric ? '#d4af37' : 'rgba(26, 26, 26, 0.6)', cursor: 'pointer', fontSize: '0.82rem', fontWeight: !useMetric ? '600' : '400', transition: 'all 0.2s' }}>ft / lbs</button>
+                    <span style={{ color: 'rgba(26, 26, 26, 0.3)' }}>|</span>
+                    <button type="button" onClick={() => setUseMetric(true)} style={{ padding: '0.35rem 0.7rem', borderRadius: '6px', border: 'none', background: useMetric ? 'rgba(212, 175, 55, 0.3)' : 'transparent', color: useMetric ? '#d4af37' : 'rgba(26, 26, 26, 0.6)', cursor: 'pointer', fontSize: '0.82rem', fontWeight: useMetric ? '600' : '400', transition: 'all 0.2s' }}>cm / kg</button>
+                  </div>
                 </div>
-                <div className="field-row">
-                  <label>{t.weight}</label>
-                  <input type="number" placeholder="70" value={profile.weight} onChange={e => setProfile(prev => ({ ...prev, weight: e.target.value }))} />
-                </div>
+
+                {isImperial ? (
+                  <>
+                    <div className="field-row">
+                      <label>{t.height}</label>
+                      <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
+                        <input type="number" placeholder="5" value={heightFeet} onChange={e => setHeightFeet(e.target.value)} min="0" max="8" style={{ flex: 1 }} />
+                        <span style={{ fontSize: '0.85rem', color: '#666' }}>{t.heightFeet}</span>
+                        <input type="number" placeholder="7" value={heightInches} onChange={e => setHeightInches(e.target.value)} min="0" max="11" style={{ flex: 1 }} />
+                        <span style={{ fontSize: '0.85rem', color: '#666' }}>{t.heightInches}</span>
+                      </div>
+                    </div>
+                    <div className="field-row">
+                      <label>{t.weight}</label>
+                      <input type="number" placeholder="150" value={weightLbs} onChange={e => setWeightLbs(e.target.value)} />
+                    </div>
+                  </>
+                ) : (
+                  <>
+                    <div className="field-row">
+                      <label>{lang === 'en' ? 'Height (cm)' : t.height}</label>
+                      <input type="number" placeholder="170" value={profile.height} onChange={e => setProfile(prev => ({ ...prev, height: e.target.value }))} />
+                    </div>
+                    <div className="field-row">
+                      <label>{lang === 'en' ? 'Weight (kg)' : t.weight}</label>
+                      <input type="number" placeholder="65" value={profile.weight} onChange={e => setProfile(prev => ({ ...prev, weight: e.target.value }))} />
+                    </div>
+                  </>
+                )}
               </div>
 
               <button
@@ -7852,26 +7947,61 @@ ${hairImgs.length > 0 ? `<div class="section"><h2>${hairSection}</h2><div class=
             </span>
           </div>
         ) : (
-          <div className="style-grid">
-            {workStyles.map(style => (
-              <div key={style.id} className="style-card" onClick={() => style.imageUrl && setFullscreenImage(style.imageUrl)}>
-                {style.imageUrl ? (
-                  <img src={style.imageUrl} alt={style.label} className="style-image" />
-                ) : (
-                  <div className="style-placeholder">
-                    <div className="loading-spinner small"></div>
+          <>
+            <div className="style-grid">
+              {workStyles.map(style => (
+                <div key={style.id} className="style-card">
+                  <div onClick={() => style.imageUrl && setFullscreenImage(style.imageUrl)} style={{ cursor: style.imageUrl ? 'pointer' : 'default' }}>
+                    {style.imageUrl ? (
+                      <img src={style.imageUrl} alt={style.label} className="style-image" />
+                    ) : (
+                      <div className="style-placeholder">
+                        <div className="loading-spinner small"></div>
+                      </div>
+                    )}
                   </div>
-                )}
-                <p className="style-label">{style.label}</p>
+                  <p className="style-label">{style.label}</p>
+                  {style.imageUrl && (
+                    <button
+                      className="btn-outline"
+                      style={{ marginTop: '0.4rem', padding: '0.3rem 0.8rem', fontSize: '0.78rem', width: '100%' }}
+                      onClick={(e) => { e.stopPropagation(); downloadImage(style.imageUrl!, `work-style-${style.id}.jpg`) }}
+                    >
+                      {t.saveImage}
+                    </button>
+                  )}
+                </div>
+              ))}
+            </div>
+
+            {workStyles.some(s => s.imageUrl) && (
+              <div className="result-actions">
+                <button
+                  className="btn-outline"
+                  onClick={() => { trackEvent('download_click', { page: 'work-result' }); handleDownloadResult(workStyles.map(s => s.imageUrl).filter(Boolean) as string[]) }}
+                >
+                  {t.downloadResult}
+                </button>
+                <button className="btn-outline" onClick={() => { trackEvent('share_click', { page: 'work-result' }); handleShareResult() }}>
+                  {t.shareResult}
+                </button>
+                <button className="btn-dark" onClick={() => setPage('landing')}>
+                  {t.backToHome}
+                </button>
               </div>
-            ))}
-          </div>
+            )}
+          </>
         )}
 
         {fullscreenImage && (
           <div className="fullscreen-overlay" onClick={() => setFullscreenImage(null)}>
-            <img src={fullscreenImage} alt="Fullscreen" className="fullscreen-image" />
-            <button className="fullscreen-close" onClick={() => setFullscreenImage(null)}>×</button>
+            <div className="fullscreen-actions">
+              <button className="fullscreen-action-btn" onClick={(e) => { e.stopPropagation(); downloadImage(fullscreenImage, 'work-style.jpg') }}>
+                {t.saveImage}
+              </button>
+              <button className="fullscreen-close" onClick={() => setFullscreenImage(null)}>×</button>
+            </div>
+            <img src={fullscreenImage} alt="Fullscreen" className="fullscreen-image" onClick={(e) => e.stopPropagation()} />
           </div>
         )}
       </div>
@@ -7948,14 +8078,44 @@ ${hairImgs.length > 0 ? `<div class="section"><h2>${hairSection}</h2><div class=
                     <button className={`gender-btn ${profile.gender === 'female' ? 'active' : ''}`} onClick={() => setProfile(prev => ({ ...prev, gender: 'female' }))}>{t.female}</button>
                   </div>
                 </div>
+
                 <div className="field-row">
-                  <label>{t.height}</label>
-                  <input type="number" placeholder="170" value={profile.height} onChange={e => setProfile(prev => ({ ...prev, height: e.target.value }))} />
+                  <label style={{ marginBottom: '0.25rem' }}>{t.height} / {t.weight}</label>
+                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem', background: 'rgba(26, 26, 26, 0.05)', borderRadius: '8px', padding: '0.4rem', marginBottom: '0.75rem' }}>
+                    <button type="button" onClick={() => setUseMetric(false)} style={{ padding: '0.35rem 0.7rem', borderRadius: '6px', border: 'none', background: !useMetric ? 'rgba(212, 175, 55, 0.3)' : 'transparent', color: !useMetric ? '#d4af37' : 'rgba(26, 26, 26, 0.6)', cursor: 'pointer', fontSize: '0.82rem', fontWeight: !useMetric ? '600' : '400', transition: 'all 0.2s' }}>ft / lbs</button>
+                    <span style={{ color: 'rgba(26, 26, 26, 0.3)' }}>|</span>
+                    <button type="button" onClick={() => setUseMetric(true)} style={{ padding: '0.35rem 0.7rem', borderRadius: '6px', border: 'none', background: useMetric ? 'rgba(212, 175, 55, 0.3)' : 'transparent', color: useMetric ? '#d4af37' : 'rgba(26, 26, 26, 0.6)', cursor: 'pointer', fontSize: '0.82rem', fontWeight: useMetric ? '600' : '400', transition: 'all 0.2s' }}>cm / kg</button>
+                  </div>
                 </div>
-                <div className="field-row">
-                  <label>{t.weight}</label>
-                  <input type="number" placeholder="70" value={profile.weight} onChange={e => setProfile(prev => ({ ...prev, weight: e.target.value }))} />
-                </div>
+
+                {isImperial ? (
+                  <>
+                    <div className="field-row">
+                      <label>{t.height}</label>
+                      <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
+                        <input type="number" placeholder="5" value={heightFeet} onChange={e => setHeightFeet(e.target.value)} min="0" max="8" style={{ flex: 1 }} />
+                        <span style={{ fontSize: '0.85rem', color: '#666' }}>{t.heightFeet}</span>
+                        <input type="number" placeholder="7" value={heightInches} onChange={e => setHeightInches(e.target.value)} min="0" max="11" style={{ flex: 1 }} />
+                        <span style={{ fontSize: '0.85rem', color: '#666' }}>{t.heightInches}</span>
+                      </div>
+                    </div>
+                    <div className="field-row">
+                      <label>{t.weight}</label>
+                      <input type="number" placeholder="150" value={weightLbs} onChange={e => setWeightLbs(e.target.value)} />
+                    </div>
+                  </>
+                ) : (
+                  <>
+                    <div className="field-row">
+                      <label>{lang === 'en' ? 'Height (cm)' : t.height}</label>
+                      <input type="number" placeholder="170" value={profile.height} onChange={e => setProfile(prev => ({ ...prev, height: e.target.value }))} />
+                    </div>
+                    <div className="field-row">
+                      <label>{lang === 'en' ? 'Weight (kg)' : t.weight}</label>
+                      <input type="number" placeholder="65" value={profile.weight} onChange={e => setProfile(prev => ({ ...prev, weight: e.target.value }))} />
+                    </div>
+                  </>
+                )}
               </div>
 
               <button
@@ -7987,26 +8147,61 @@ ${hairImgs.length > 0 ? `<div class="section"><h2>${hairSection}</h2><div class=
             <p className="loading-text">{t.trendGenerating}</p>
           </div>
         ) : (
-          <div className="style-grid">
-            {trendStyles.map(style => (
-              <div key={style.id} className="style-card" onClick={() => style.imageUrl && setFullscreenImage(style.imageUrl)}>
-                {style.imageUrl ? (
-                  <img src={style.imageUrl} alt={style.label} className="style-image" />
-                ) : (
-                  <div className="style-placeholder">
-                    <div className="loading-spinner small"></div>
+          <>
+            <div className="style-grid">
+              {trendStyles.map(style => (
+                <div key={style.id} className="style-card">
+                  <div onClick={() => style.imageUrl && setFullscreenImage(style.imageUrl)} style={{ cursor: style.imageUrl ? 'pointer' : 'default' }}>
+                    {style.imageUrl ? (
+                      <img src={style.imageUrl} alt={style.label} className="style-image" />
+                    ) : (
+                      <div className="style-placeholder">
+                        <div className="loading-spinner small"></div>
+                      </div>
+                    )}
                   </div>
-                )}
-                <p className="style-label">{style.label}</p>
+                  <p className="style-label">{style.label}</p>
+                  {style.imageUrl && (
+                    <button
+                      className="btn-outline"
+                      style={{ marginTop: '0.4rem', padding: '0.3rem 0.8rem', fontSize: '0.78rem', width: '100%' }}
+                      onClick={(e) => { e.stopPropagation(); downloadImage(style.imageUrl!, `trend-style-${style.id}.jpg`) }}
+                    >
+                      {t.saveImage}
+                    </button>
+                  )}
+                </div>
+              ))}
+            </div>
+
+            {trendStyles.some(s => s.imageUrl) && (
+              <div className="result-actions">
+                <button
+                  className="btn-outline"
+                  onClick={() => { trackEvent('download_click', { page: 'trend-result' }); handleDownloadResult(trendStyles.map(s => s.imageUrl).filter(Boolean) as string[]) }}
+                >
+                  {t.downloadResult}
+                </button>
+                <button className="btn-outline" onClick={() => { trackEvent('share_click', { page: 'trend-result' }); handleShareResult() }}>
+                  {t.shareResult}
+                </button>
+                <button className="btn-dark" onClick={() => setPage('landing')}>
+                  {t.backToHome}
+                </button>
               </div>
-            ))}
-          </div>
+            )}
+          </>
         )}
 
         {fullscreenImage && (
           <div className="fullscreen-overlay" onClick={() => setFullscreenImage(null)}>
-            <img src={fullscreenImage} alt="Fullscreen" className="fullscreen-image" />
-            <button className="fullscreen-close" onClick={() => setFullscreenImage(null)}>×</button>
+            <div className="fullscreen-actions">
+              <button className="fullscreen-action-btn" onClick={(e) => { e.stopPropagation(); downloadImage(fullscreenImage, 'trend-style.jpg') }}>
+                {t.saveImage}
+              </button>
+              <button className="fullscreen-close" onClick={() => setFullscreenImage(null)}>×</button>
+            </div>
+            <img src={fullscreenImage} alt="Fullscreen" className="fullscreen-image" onClick={(e) => e.stopPropagation()} />
           </div>
         )}
       </div>

@@ -182,7 +182,7 @@ export const onRequestGet: PagesFunction<Env> = async (context) => {
           description: 'AI-powered professional styling — 4 color variations for your workplace',
           price: PRICES.work_style,
           features: [
-            '4 work outfit variations',
+            'My Best Shade + Bold Alternative + Soft Tonal',
             'AI skin-tone color analysis',
             'Off-duty commute look',
             'Face-preserving technology'

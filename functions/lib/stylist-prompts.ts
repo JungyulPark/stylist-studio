@@ -579,7 +579,7 @@ export function getWorkScenarios(jobType: string): ScenarioConfig[] {
   return [
     {
       id: 'work-signature',
-      labelKo: '베스트 컬러', labelEn: 'Best Color', labelJa: 'ベストカラー', labelZh: '最佳色彩', labelEs: 'Mejor Color',
+      labelKo: '나에게 맞는 컬러', labelEn: 'My Best Shade', labelJa: '私に似合う色', labelZh: '最适合我的色调', labelEs: 'Mi Mejor Tono',
       directiveMale: `${stripColor(job.male)}${FRAMING}\n\nCOLOR STRATEGY — BEST COLOR:
 You are the head stylist at Loro Piana. Analyze this person's skin undertone, hair color, and eye color from the photo.
 Choose the ONE color that makes this person's face look the most vibrant and alive — the shade where their skin GLOWS.
@@ -595,7 +595,7 @@ The goal: this person sees themselves and says "I've never looked this good."`,
     },
     {
       id: 'work-contrast',
-      labelKo: '컨트라스트 컬러', labelEn: 'Contrast Color', labelJa: 'コントラストカラー', labelZh: '对比色', labelEs: 'Color Contraste',
+      labelKo: '대담한 대안', labelEn: 'Bold Alternative', labelJa: '大胆な選択', labelZh: '大胆替代', labelEs: 'Alternativa Audaz',
       directiveMale: `${stripColor(job.male)}${FRAMING}\n\nCOLOR STRATEGY — CONTRAST COLOR:
 You are the creative director at Bottega Veneta. Analyze this person's skin undertone from the photo.
 Now choose a BOLD, STRIKING color that CONTRASTS with their natural coloring — the shade that makes them impossible to ignore.
@@ -613,7 +613,7 @@ The result must be OBVIOUSLY VISUALLY DIFFERENT from the Best Color result — a
     },
     {
       id: 'work-harmony',
-      labelKo: '하모니 컬러', labelEn: 'Harmony Color', labelJa: 'ハーモニーカラー', labelZh: '和谐色', labelEs: 'Color Armonía',
+      labelKo: '소프트 톤', labelEn: 'Soft Tonal', labelJa: 'ソフトトーン', labelZh: '柔和色调', labelEs: 'Tono Suave',
       directiveMale: `${stripColor(job.male)}${FRAMING}\n\nCOLOR STRATEGY — HARMONY COLOR:
 You are the personal colorist at Brunello Cucinelli. Analyze this person's skin tone and hair color from the photo.
 Choose a color from the SAME tonal family as their natural coloring — creating a soft, monochromatic, head-to-toe cohesive effect.
