@@ -4456,7 +4456,7 @@ function App() {
   }
 
   // 결과 리포트 생성 (새 탭에서 보고서 형태로 열기)
-  const handleDownloadResult = async (imageUrls: string[]) => {
+  const handleDownloadResult = async (imageUrls: string[], customImages?: { id: string; label: string; imageUrl: string | null }[]) => {
     const validUrls = imageUrls.filter(url => url)
     if (validUrls.length === 0) return
 
@@ -4472,14 +4472,27 @@ function App() {
       daily: t.styleLabels.daily || 'Daily',
     }
 
-    const allImages = [
-      ...styleImages.filter(s => s.imageUrl).map(s => ({ url: s.imageUrl!, label: styleLabelsMap[s.id] || s.label, type: 'style' })),
-      ...transformedHairstyles.filter(s => s.imageUrl).map(s => ({ url: s.imageUrl!, label: s.label, type: 'hair' })),
-    ]
+    // If custom images are provided (work style, trend style), use those
+    const allImages = customImages
+      ? customImages.filter(s => s.imageUrl).map(s => ({ url: s.imageUrl!, label: s.label, type: 'style' }))
+      : [
+        ...styleImages.filter(s => s.imageUrl).map(s => ({ url: s.imageUrl!, label: styleLabelsMap[s.id] || s.label, type: 'style' })),
+        ...transformedHairstyles.filter(s => s.imageUrl).map(s => ({ url: s.imageUrl!, label: s.label, type: 'hair' })),
+      ]
 
-    const reportTitle = lang === 'ko' ? '나의 스타일 리포트' : lang === 'ja' ? 'マイスタイルレポート' : lang === 'zh' ? '我的风格报告' : lang === 'es' ? 'Mi Informe de Estilo' : 'My Style Report'
+    const isWorkReport = customImages && (page === 'work-result' || customImages.some(s => s.id?.startsWith('work-')))
+    const isTrendReport = customImages && (page === 'trend-result' || customImages.some(s => s.id?.startsWith('trend-')))
+    const reportTitle = isWorkReport
+      ? (lang === 'ko' ? '작업복 스타일 리포트' : 'Work Style Report')
+      : isTrendReport
+        ? (lang === 'ko' ? '트렌드 스타일 리포트' : 'Trend Style Report')
+        : (lang === 'ko' ? '나의 스타일 리포트' : lang === 'ja' ? 'マイスタイルレポート' : lang === 'zh' ? '我的风格报告' : lang === 'es' ? 'Mi Informe de Estilo' : 'My Style Report')
     const reportSubtitle = lang === 'ko' ? `${profile.gender === 'female' ? '여성' : '남성'} · ${profile.height}cm · ${profile.weight}kg` : `${profile.gender === 'female' ? 'Female' : 'Male'} · ${profile.height}cm · ${profile.weight}kg`
-    const styleSection = lang === 'ko' ? '패션 스타일링' : 'Fashion Styling'
+    const styleSection = isWorkReport
+      ? (lang === 'ko' ? '작업복 스타일링' : 'Work Styling')
+      : isTrendReport
+        ? (lang === 'ko' ? '트렌드 스타일링' : 'Trend Styling')
+        : (lang === 'ko' ? '패션 스타일링' : 'Fashion Styling')
     const hairSection = lang === 'ko' ? '헤어 스타일링' : 'Hair Styling'
     const brandLine = 'kstylist.cc'
 
@@ -8191,7 +8204,7 @@ ${hairImgs.length > 0 ? `<div class="section"><h2>${hairSection}</h2><div class=
               <div className="result-actions">
                 <button
                   className="btn-outline"
-                  onClick={() => { trackEvent('download_click', { page: 'work-result' }); handleDownloadResult(workStyles.map(s => s.imageUrl).filter(Boolean) as string[]) }}
+                  onClick={() => { trackEvent('download_click', { page: 'work-result' }); handleDownloadResult(workStyles.map(s => s.imageUrl).filter(Boolean) as string[], workStyles) }}
                 >
                   {t.downloadResult}
                 </button>
@@ -8391,7 +8404,7 @@ ${hairImgs.length > 0 ? `<div class="section"><h2>${hairSection}</h2><div class=
               <div className="result-actions">
                 <button
                   className="btn-outline"
-                  onClick={() => { trackEvent('download_click', { page: 'trend-result' }); handleDownloadResult(trendStyles.map(s => s.imageUrl).filter(Boolean) as string[]) }}
+                  onClick={() => { trackEvent('download_click', { page: 'trend-result' }); handleDownloadResult(trendStyles.map(s => s.imageUrl).filter(Boolean) as string[], trendStyles) }}
                 >
                   {t.downloadResult}
                 </button>

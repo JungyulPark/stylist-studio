@@ -434,6 +434,25 @@ MOOD: She walks into the courtroom and the temperature changes. Not loud — dev
 }
 
 // ─── Job-Specific Off-Duty Commute Looks ─────────────────────────
+// Season-aware layering guide for off-duty looks
+function getSeasonGuide(): string {
+  const month = new Date().getMonth() // 0=Jan
+  if (month >= 5 && month <= 8) {
+    // Summer (Jun-Sep)
+    return `\n\nSEASON: It is SUMMER. NO jackets, NO coats, NO heavy layers. Use lightweight breathable fabrics only: linen, cotton, silk, chambray. Short sleeves and sleeveless are preferred. Think resort-wear elegance — light, breezy, effortless. NO leather jackets, NO wool, NO cashmere coats.`
+  }
+  if (month >= 2 && month <= 4) {
+    // Spring (Mar-May)
+    return `\n\nSEASON: It is SPRING. Use LIGHT layers only: thin cotton jackets, unlined blazers, light cardigans, trench coats. NO heavy overcoats, NO thick wool, NO puffer jackets. Fabrics should be airy — cotton, light linen blends, silk. Think transitional weather: a light layer you can take off.`
+  }
+  if (month === 9 || month === 10) {
+    // Autumn (Oct-Nov)
+    return `\n\nSEASON: It is AUTUMN. Medium layers are ideal: suede jackets, unstructured blazers, light knit sweaters, cotton overcoats. Rich autumn tones welcome. NOT heavy winter coats yet.`
+  }
+  // Winter (Dec-Feb)
+  return `\n\nSEASON: It is WINTER. Warm layers are appropriate: cashmere overcoats, wool blazers, knit sweaters, leather jackets. Cozy but styled — quality fabrics that insulate elegantly.`
+}
+
 const offDutyDirectives: Record<string, { male: string; female: string }> = {
   _default: {
     male: `Create the MOST STYLISH off-duty commute look for this man. NOT boring basics — this should be the outfit that makes coworkers say "you look different outside of work."
@@ -614,24 +633,30 @@ The result must be OBVIOUSLY VISUALLY DIFFERENT from the Best Color result — a
     {
       id: 'work-harmony',
       labelKo: '소프트 톤', labelEn: 'Soft Tonal', labelJa: 'ソフトトーン', labelZh: '柔和色调', labelEs: 'Tono Suave',
-      directiveMale: `${stripColor(job.male)}${FRAMING}\n\nCOLOR STRATEGY — HARMONY COLOR:
+      directiveMale: `${stripColor(job.male)}${FRAMING}\n\nCOLOR STRATEGY — SOFT TONAL:
 You are the personal colorist at Brunello Cucinelli. Analyze this person's skin tone and hair color from the photo.
 Choose a color from the SAME tonal family as their natural coloring — creating a soft, monochromatic, head-to-toe cohesive effect.
 The outfit should feel like it was custom-dyed to match this person — skin, hair, and clothes flow as ONE seamless tonal palette.
 Think Cucinelli's signature: ivory, oatmeal, soft stone, warm camel, dusty taupe, muted sage. The colors of nature and cashmere.
-⚠️ This MUST look DISTINCTLY DIFFERENT from both Best Color and Contrast Color — softer, more muted, more tonal.`,
-      directiveFemale: `${stripColor(job.female)}${FRAMING}\n\nCOLOR STRATEGY — HARMONY COLOR:
+
+FIT: Make the silhouette SLIGHTLY more relaxed than the other variations — softer shoulders, a touch more ease through the body. Think Cucinelli's effortless drape, not stiff tailoring. The fabric should look soft and lived-in luxurious.
+
+⚠️ This MUST look DISTINCTLY DIFFERENT from both My Best Shade and Bold Alternative — softer color, more muted, more tonal, slightly relaxed fit.`,
+      directiveFemale: `${stripColor(job.female)}${FRAMING}\n\nCOLOR STRATEGY — SOFT TONAL:
 You are the personal colorist at Brunello Cucinelli. Analyze this person's skin tone and hair color from the photo.
 Choose a color from the SAME tonal family as their natural coloring — creating a soft, monochromatic, head-to-toe cohesive effect.
 The outfit should feel like it was custom-dyed to match this person — skin, hair, and clothes flow as ONE seamless tonal palette.
 Think Cucinelli's signature: ivory, oatmeal, soft stone, warm camel, dusty taupe, muted sage, off-white. The colors of nature and cashmere.
-⚠️ This MUST look DISTINCTLY DIFFERENT from both Best Color and Contrast Color — softer, more muted, more tonal.`,
+
+FIT: Make the silhouette SLIGHTLY more relaxed than the other variations — softer shoulders, gentle drape, a touch more ease through the body. Think Cucinelli's effortless elegance, not stiff tailoring. The fabric should look soft and luxuriously comfortable.
+
+⚠️ This MUST look DISTINCTLY DIFFERENT from both My Best Shade and Bold Alternative — softer color, more muted, more tonal, slightly relaxed fit.`,
     },
     {
       id: 'work-offduty',
       labelKo: '출퇴근 룩', labelEn: 'Off-Duty Commute', labelJa: '通勤スタイル', labelZh: '通勤穿搭', labelEs: 'Look de Ida al Trabajo',
-      directiveMale: `${offDuty.male}${FRAMING}`,
-      directiveFemale: `${offDuty.female}${FRAMING}`,
+      directiveMale: `${offDuty.male}${getSeasonGuide()}${FRAMING}`,
+      directiveFemale: `${offDuty.female}${getSeasonGuide()}${FRAMING}`,
     },
   ]
 }
