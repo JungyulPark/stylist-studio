@@ -6,6 +6,12 @@ interface Env {
   GEMINI_API_KEY: string
 }
 
+function fetchWithTimeout(url: string, init: RequestInit, timeoutMs = 25_000): Promise<Response> {
+  const controller = new AbortController()
+  const timer = setTimeout(() => controller.abort(), timeoutMs)
+  return fetch(url, { ...init, signal: controller.signal }).finally(() => clearTimeout(timer))
+}
+
 // ===== Gemini Image Editing =====
 async function generateFashionImageWithGemini(
   photo: string,
@@ -61,7 +67,7 @@ Generate the edited photo maintaining the original composition.`
     let response: Response | null = null
     for (const model of geminiModels) {
       try {
-        response = await fetch(
+        response = await fetchWithTimeout(
           `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`,
           {
             method: 'POST',

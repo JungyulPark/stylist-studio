@@ -16,24 +16,24 @@ interface WeatherInfo {
 
 // ─── 21 Color Palettes (curated from real runway palettes) ───────
 const maleColorPalettes = [
-  // Hermès FW25 inspired
-  { tone: 'espresso earth', c1: 'deep espresso brown', c2: 'charcoal grey', c3: 'porcelain cream', c4: 'burnished taupe', accent: 'blood orange' },
+  // Rich jewel-toned (replaces brown-heavy espresso earth)
+  { tone: 'midnight plum', c1: 'dark plum', c2: 'charcoal', c3: 'silver grey', c4: 'deep navy', accent: 'amethyst' },
   // Auralee FW26 inspired
   { tone: 'royal matte', c1: 'royal blue', c2: 'ink black', c3: 'oatmeal', c4: 'slate', accent: 'mint green' },
   // LV Pre-Spring 2026 heritage
   { tone: 'anglomania', c1: 'tweedy brown', c2: 'herringbone grey', c3: 'cream', c4: 'dark olive', accent: 'burgundy' },
   // Hermès SS26 linen mood
   { tone: 'porcelain sand', c1: 'charcoal olive', c2: 'warm sand', c3: 'porcelain white', c4: 'stone mist', accent: 'copper' },
-  // Brunello Cucinelli tonal
-  { tone: 'warm cashmere', c1: 'camel', c2: 'oatmeal', c3: 'vanilla cream', c4: 'soft taupe', accent: 'burnt sienna' },
+  // Cool winter palette (replaces brown-heavy warm cashmere)
+  { tone: 'glacier mist', c1: 'ice blue', c2: 'pearl grey', c3: 'winter white', c4: 'deep slate', accent: 'brushed gold' },
   // Loro Piana quiet luxury
   { tone: 'alpine grey', c1: 'pewter grey', c2: 'cloud white', c3: 'pale stone', c4: 'soft charcoal', accent: 'forest green' },
   // Classic navy
   { tone: 'midnight nav', c1: 'midnight navy', c2: 'chalk white', c3: 'dove grey', c4: 'warm sand', accent: 'old gold' },
   // Auralee boiled wool
   { tone: 'matte wool', c1: 'dark olive', c2: 'tobacco brown', c3: 'ecru', c4: 'moss green', accent: 'brick red' },
-  // Earth tones 2026
-  { tone: 'clay earth', c1: 'terracotta clay', c2: 'dark sage', c3: 'raw linen', c4: 'walnut brown', accent: 'amber' },
+  // Deep green luxury (replaces brown-heavy clay earth)
+  { tone: 'emerald shadow', c1: 'deep emerald', c2: 'charcoal', c3: 'ivory', c4: 'dark teal', accent: 'copper' },
   // Hermès chrome green
   { tone: 'chrome green', c1: 'chrome green', c2: 'pebble grey', c3: 'bone white', c4: 'dark bronze', accent: 'vanilla' },
   // LV Pharrell futurism
@@ -46,12 +46,12 @@ const maleColorPalettes = [
   { tone: 'tuscan sun', c1: 'sun-bleached terracotta', c2: 'olive', c3: 'warm cream', c4: 'dried lavender', accent: 'aged gold' },
   // Urban monochrome
   { tone: 'ink mono', c1: 'jet black', c2: 'medium charcoal', c3: 'heather grey', c4: 'off-white', accent: 'matte silver' },
-  // Desert palette
-  { tone: 'sand dune', c1: 'coyote tan', c2: 'dusty clay', c3: 'warm sand', c4: 'sage green', accent: 'turquoise' },
+  // Cool neutral (replaces brown-heavy sand dune)
+  { tone: 'smoke charcoal', c1: 'dark charcoal', c2: 'medium grey', c3: 'off-white', c4: 'slate blue', accent: 'brushed silver' },
   // Maritime heritage
   { tone: 'maritime', c1: 'dark navy', c2: 'rope beige', c3: 'crisp white', c4: 'faded indigo', accent: 'red' },
-  // Autumnal richness
-  { tone: 'burnt amber', c1: 'burnt amber', c2: 'dark mahogany', c3: 'wheat', c4: 'deep forest', accent: 'old gold' },
+  // Deep wine (replaces brown-heavy burnt amber)
+  { tone: 'deep burgundy', c1: 'dark burgundy', c2: 'ink black', c3: 'cream', c4: 'deep charcoal', accent: 'old gold' },
   // Soft studio
   { tone: 'studio warm', c1: 'warm grey', c2: 'sandstone', c3: 'parchment', c4: 'espresso', accent: 'bronze' },
   // Vintage workwear
@@ -63,8 +63,8 @@ const maleColorPalettes = [
 const femaleColorPalettes = [
   // Hermès FW25 "Leather Dandy"
   { tone: 'noir leather', c1: 'ink black', c2: 'deep charcoal', c3: 'warm ivory', c4: 'cognac brown', accent: 'gold' },
-  // Hermès SS26 sporty-chic
-  { tone: 'cognac polish', c1: 'polished cognac', c2: 'cream', c3: 'sand', c4: 'dark chocolate', accent: 'gold buckle' },
+  // Midnight luxury (replaces brown-heavy cognac polish)
+  { tone: 'midnight silk', c1: 'midnight navy', c2: 'silver', c3: 'pearl white', c4: 'deep charcoal', accent: 'gold chain' },
   // Auralee fabric-first soft
   { tone: 'cashmere blush', c1: 'dusty rose', c2: 'baby cashmere beige', c3: 'pearl white', c4: 'muted lavender', accent: 'rose gold' },
   // LV SS26 domestic comfort
@@ -81,8 +81,8 @@ const femaleColorPalettes = [
   { tone: 'mauve romantic', c1: 'mauve', c2: 'soft peach', c3: 'ivory', c4: 'blush', accent: 'pearl' },
   // Nordic ice
   { tone: 'frost nordic', c1: 'ice white', c2: 'pale blue', c3: 'silver birch', c4: 'frost grey', accent: 'rose gold' },
-  // Tuscan earth
-  { tone: 'tuscan earth', c1: 'warm clay', c2: 'olive', c3: 'linen white', c4: 'sun gold', accent: 'copper' },
+  // Cool lavender (replaces brown-heavy tuscan earth)
+  { tone: 'lavender dusk', c1: 'deep lavender', c2: 'charcoal', c3: 'soft white', c4: 'steel grey', accent: 'rose gold' },
   // Berry winter
   { tone: 'berry rich', c1: 'raspberry', c2: 'plum', c3: 'cream', c4: 'deep wine', accent: 'gold' },
   // Coastal light
@@ -95,8 +95,8 @@ const femaleColorPalettes = [
   { tone: 'autumn leaf', c1: 'deep rust', c2: 'mustard', c3: 'cream', c4: 'burgundy', accent: 'antique gold' },
   // Minimalist greige
   { tone: 'quiet greige', c1: 'greige', c2: 'soft white', c3: 'pale camel', c4: 'dove grey', accent: 'matte gold' },
-  // Natural oatmeal
-  { tone: 'natural linen', c1: 'oatmeal', c2: 'olive green', c3: 'sand', c4: 'warm taupe', accent: 'amber' },
+  // Soft orchid (replaces brown-heavy natural linen)
+  { tone: 'orchid mist', c1: 'soft orchid', c2: 'pale grey', c3: 'ivory', c4: 'dusty lavender', accent: 'rose gold' },
   // Botanical
   { tone: 'botanical', c1: 'forest green', c2: 'cream', c3: 'terracotta', c4: 'sage', accent: 'dried rose' },
   // Vintage blue

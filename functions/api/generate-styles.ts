@@ -15,9 +15,23 @@ interface Env {
   OPENAI_API_KEY?: string
 }
 
-// ===== Retry Helper =====
+// ===== Retry & Timeout Helpers =====
+const FETCH_TIMEOUT_MS = 25_000
+const RETRY_BASE_MS = 1500
+const RETRY_JITTER_MS = 500
+
 async function sleep(ms: number): Promise<void> {
   return new Promise(resolve => setTimeout(resolve, ms))
+}
+
+function retryDelay(retryCount: number): number {
+  return (retryCount + 1) * RETRY_BASE_MS + Math.random() * RETRY_JITTER_MS
+}
+
+function fetchWithTimeout(url: string, init: RequestInit, timeoutMs = FETCH_TIMEOUT_MS): Promise<Response> {
+  const controller = new AbortController()
+  const timer = setTimeout(() => controller.abort(), timeoutMs)
+  return fetch(url, { ...init, signal: controller.signal }).finally(() => clearTimeout(timer))
 }
 
 // ===== Image Editing (OpenAI primary → Gemini fallback) =====
@@ -61,7 +75,7 @@ async function editPhotoWithModel(
     for (const model of geminiModels) {
       try {
         console.log(`[Gemini] Trying model: ${model} for ${scenarioId}`)
-        response = await fetch(
+        response = await fetchWithTimeout(
           `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`,
           {
             method: 'POST',
@@ -101,7 +115,7 @@ async function editPhotoWithModel(
       console.error(`[Gemini] All models failed for ${scenarioId}. Last error: ${lastError}`)
       // Retry with exponential backoff
       if (retryCount < MAX_RETRIES) {
-        const delay = (retryCount + 1) * 2000 // 2s, 4s
+        const delay = retryDelay(retryCount) // 2s, 4s
         console.log(`[Gemini] Retrying ${scenarioId} in ${delay}ms (attempt ${retryCount + 2}/${MAX_RETRIES + 1})`)
         await sleep(delay)
         return editPhotoWithModel(photo, scenarioId, editPrompt, apiKey, openaiKey, retryCount + 1)
@@ -125,7 +139,7 @@ async function editPhotoWithModel(
 
     // No image in response - retry
     if (retryCount < MAX_RETRIES) {
-      const delay = (retryCount + 1) * 2000
+      const delay = retryDelay(retryCount)
       console.log(`[Gemini] No image returned for ${scenarioId}, retrying in ${delay}ms`)
       await sleep(delay)
       return editPhotoWithModel(photo, scenarioId, editPrompt, apiKey, openaiKey, retryCount + 1)
@@ -136,7 +150,7 @@ async function editPhotoWithModel(
     console.error(`Error for ${scenarioId}:`, error)
     // Retry on exception
     if (retryCount < MAX_RETRIES) {
-      const delay = (retryCount + 1) * 2000
+      const delay = retryDelay(retryCount)
       console.log(`[Gemini] Exception for ${scenarioId}, retrying in ${delay}ms`)
       await sleep(delay)
       return editPhotoWithModel(photo, scenarioId, editPrompt, apiKey, openaiKey, retryCount + 1)

@@ -2,8 +2,22 @@
  * OpenAI gpt-image-1.5 image editing utility
  */
 
+const FETCH_TIMEOUT_MS = 25_000
+const RETRY_BASE_MS = 1500
+const RETRY_JITTER_MS = 500
+
 async function sleep(ms: number): Promise<void> {
   return new Promise(resolve => setTimeout(resolve, ms))
+}
+
+function retryDelay(retryCount: number): number {
+  return (retryCount + 1) * RETRY_BASE_MS + Math.random() * RETRY_JITTER_MS
+}
+
+function fetchWithTimeout(url: string, init: RequestInit, timeoutMs = FETCH_TIMEOUT_MS): Promise<Response> {
+  const controller = new AbortController()
+  const timer = setTimeout(() => controller.abort(), timeoutMs)
+  return fetch(url, { ...init, signal: controller.signal }).finally(() => clearTimeout(timer))
 }
 
 /**
@@ -43,7 +57,7 @@ export async function editPhotoWithOpenAI(
     formData.append('quality', 'medium')
     formData.append('response_format', 'b64_json')
 
-    const response = await fetch('https://api.openai.com/v1/images/edits', {
+    const response = await fetchWithTimeout('https://api.openai.com/v1/images/edits', {
       method: 'POST',
       headers: {
         'Authorization': `Bearer ${apiKey}`
@@ -56,8 +70,8 @@ export async function editPhotoWithOpenAI(
       console.error(`[OpenAI] gpt-image-1.5 failed (${response.status}): ${errorBody.substring(0, 500)}`)
 
       if (retryCount < MAX_RETRIES) {
-        const delay = (retryCount + 1) * 2000
-        console.log(`[OpenAI] Retrying in ${delay}ms (attempt ${retryCount + 2}/${MAX_RETRIES + 1})`)
+        const delay = retryDelay(retryCount)
+        console.log(`[OpenAI] Retrying in ${Math.round(delay)}ms (attempt ${retryCount + 2}/${MAX_RETRIES + 1})`)
         await sleep(delay)
         return editPhotoWithOpenAI(base64Data, mimeType, prompt, apiKey, retryCount + 1)
       }
@@ -75,8 +89,8 @@ export async function editPhotoWithOpenAI(
 
     // No image in response — retry
     if (retryCount < MAX_RETRIES) {
-      const delay = (retryCount + 1) * 2000
-      console.log(`[OpenAI] No image returned, retrying in ${delay}ms`)
+      const delay = retryDelay(retryCount)
+      console.log(`[OpenAI] No image returned, retrying in ${Math.round(delay)}ms`)
       await sleep(delay)
       return editPhotoWithOpenAI(base64Data, mimeType, prompt, apiKey, retryCount + 1)
     }
@@ -85,8 +99,7 @@ export async function editPhotoWithOpenAI(
   } catch (error) {
     console.error(`[OpenAI] Error:`, error)
     if (retryCount < MAX_RETRIES) {
-      const delay = (retryCount + 1) * 2000
-      await sleep(delay)
+      await sleep(retryDelay(retryCount))
       return editPhotoWithOpenAI(base64Data, mimeType, prompt, apiKey, retryCount + 1)
     }
     return null

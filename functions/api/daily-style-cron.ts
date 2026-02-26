@@ -314,14 +314,14 @@ async function generateOutfitImages(
     }
     const photoBuffer = await photoObj.arrayBuffer()
     console.log(`[cron] Photo loaded: ${photoBuffer.byteLength} bytes for ${subscriber.email}`)
-    // Convert to base64 in chunks to avoid stack overflow on large photos
+    // Convert to base64 using array join (faster than repeated string concat)
     const bytes = new Uint8Array(photoBuffer)
-    let binary = ''
+    const chunks: string[] = []
     const chunkSize = 8192
     for (let i = 0; i < bytes.length; i += chunkSize) {
-      binary += String.fromCharCode(...bytes.subarray(i, i + chunkSize))
+      chunks.push(String.fromCharCode(...bytes.subarray(i, i + chunkSize)))
     }
-    const base64 = btoa(binary)
+    const base64 = btoa(chunks.join(''))
     photoDataUri = `data:image/jpeg;base64,${base64}`
   } catch (e) {
     console.error(`[cron] Failed to read photo from R2:`, e)

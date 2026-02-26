@@ -10,8 +10,22 @@ export interface ImageScenario {
   prompt: string
 }
 
+const FETCH_TIMEOUT_MS = 25_000
+const RETRY_BASE_MS = 1500
+const RETRY_JITTER_MS = 500
+
 async function sleep(ms: number): Promise<void> {
   return new Promise(resolve => setTimeout(resolve, ms))
+}
+
+function retryDelay(retryCount: number): number {
+  return (retryCount + 1) * RETRY_BASE_MS + Math.random() * RETRY_JITTER_MS
+}
+
+function fetchWithTimeout(url: string, init: RequestInit, timeoutMs = FETCH_TIMEOUT_MS): Promise<Response> {
+  const controller = new AbortController()
+  const timer = setTimeout(() => controller.abort(), timeoutMs)
+  return fetch(url, { ...init, signal: controller.signal }).finally(() => clearTimeout(timer))
 }
 
 /**
@@ -156,7 +170,7 @@ Generate the edited photo with IDENTICAL composition to the input.`
     let response: Response | null = null
     for (const model of geminiModels) {
       try {
-        response = await fetch(
+        response = await fetchWithTimeout(
           `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`,
           {
             method: 'POST',
@@ -178,8 +192,8 @@ Generate the edited photo with IDENTICAL composition to the input.`
       const errorBody = response ? await response.text() : 'No response'
       console.error(`[Gemini] All models failed for ${scenario.id}: ${errorBody.substring(0, 500)}`)
       if (retryCount < MAX_RETRIES) {
-        const delay = (retryCount + 1) * 2000
-        console.log(`[Gemini] Retrying ${scenario.id} in ${delay}ms (attempt ${retryCount + 2}/${MAX_RETRIES + 1})`)
+        const delay = retryDelay(retryCount)
+        console.log(`[Gemini] Retrying ${scenario.id} in ${Math.round(delay)}ms (attempt ${retryCount + 2}/${MAX_RETRIES + 1})`)
         await sleep(delay)
         return editPhotoWithGemini(photo, scenario, gender, apiKey, openaiKey, retryCount + 1)
       }
@@ -202,8 +216,8 @@ Generate the edited photo with IDENTICAL composition to the input.`
 
     // No image in response - retry
     if (retryCount < MAX_RETRIES) {
-      const delay = (retryCount + 1) * 2000
-      console.log(`[Gemini] No image returned for ${scenario.id}, retrying in ${delay}ms`)
+      const delay = retryDelay(retryCount)
+      console.log(`[Gemini] No image returned for ${scenario.id}, retrying in ${Math.round(delay)}ms`)
       await sleep(delay)
       return editPhotoWithGemini(photo, scenario, gender, apiKey, openaiKey, retryCount + 1)
     }
@@ -212,8 +226,7 @@ Generate the edited photo with IDENTICAL composition to the input.`
   } catch (error) {
     console.error(`[Gemini] Error for ${scenario.id}:`, error)
     if (retryCount < MAX_RETRIES) {
-      const delay = (retryCount + 1) * 2000
-      await sleep(delay)
+      await sleep(retryDelay(retryCount))
       return editPhotoWithGemini(photo, scenario, gender, apiKey, openaiKey, retryCount + 1)
     }
     return null
