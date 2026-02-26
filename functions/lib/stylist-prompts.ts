@@ -489,35 +489,33 @@ MOOD: Saturday morning in Cheongdam or the West Village. Walking to brunch at an
   },
   doctor: {
     male: `STYLING BRIEF — OFF-DUTY DOCTOR COMMUTE LOOK
-This is a COMPLETELY DIFFERENT outfit. NO scrubs, NO white coat, NO stethoscope, NO medical anything. Pure civilian fashion.
+This is a COMPLETELY DIFFERENT outfit. NO scrubs, NO white coat, NO stethoscope, NO medical anything. ZERO connection to medicine.
 
 OUTFIT SPEC:
-- OUTER: Premium wool overcoat or tailored bomber jacket. Clean, modern lines.
-- TOP: Fine merino crewneck sweater or a fitted oxford shirt with rolled sleeves. Quality fabrics.
-- BOTTOM: Dark slim straight jeans or tailored chinos with clean hem. NOT hospital pants.
-- SHOES: Clean leather Chelsea boots or premium minimalist sneakers.
-- BAG: Structured leather messenger bag or premium backpack.
+- OUTER: Cashmere-wool blend overcoat in camel or dark navy (Loro Piana level), OR a suede trucker jacket, OR a premium knit bomber. The outer piece alone signals taste.
+- TOP: Fine-gauge cashmere crewneck or half-zip in a rich tone, OR a perfectly fitted merino polo. Visible quality in the knit — not a basic mall sweater.
+- BOTTOM: Tailored wool flannel trousers with a relaxed taper (Zegna feel), OR pressed dark chinos with clean break. NOT jeans, NOT joggers — elevated but comfortable.
+- SHOES: Premium suede Chelsea boots, polished leather penny loafers, or clean Italian leather sneakers. The shoes tell the story.
+- BAG: Soft leather messenger in cognac or black, or a sleek backpack (Mismo/Troubadour level).
+- ACCESSORIES: Quality automatic watch with leather strap, tortoiseshell sunglasses. One or two pieces, nothing more.
 
-REMOVE ALL medical items: NO stethoscope, NO ID badge, NO scrubs, NO white coat. ZERO connection to medicine.
+COLOR STRATEGY: Analyze skin tone. Warm skin → camel, olive, warm navy, rich cognac tones. Cool skin → charcoal, steel blue, burgundy, cool grey. The palette reads QUIET WEALTH.
 
-COLOR MUST BE CHOSEN based on this person's skin tone. Pick colors that make their face glow.
-
-MOOD: A stylish man heading to a café. He looks like he could be a creative director or architect. Clean, confident, modern.`,
+MOOD: A man walking through Garosugil or the West Village on a Saturday morning, heading to a specialty coffee shop. He could be a venture capitalist, an architect, or an art collector. The overcoat probably cost more than most people's monthly rent. Nothing loud — everything considered. The kind of off-duty that makes people wonder what he does for a living.`,
     female: `STYLING BRIEF — OFF-DUTY DOCTOR COMMUTE LOOK
-This is a COMPLETELY DIFFERENT outfit. NO scrubs, NO white coat, NO stethoscope, NO medical anything. Pure civilian fashion.
+This is a COMPLETELY DIFFERENT outfit. NO scrubs, NO white coat, NO stethoscope, NO medical anything. ZERO connection to medicine.
 
 OUTFIT SPEC:
-- OUTER: Tailored wool coat or a premium leather jacket. Feminine but structured.
-- TOP: Cashmere turtleneck or silk blouse. Something soft and luxurious.
-- BOTTOM: High-waisted tailored trousers or dark premium jeans. Flattering fit.
-- SHOES: Pointed-toe ankle boots or elegant loafers.
-- BAG: Structured leather tote or chic crossbody bag. Delicate gold jewelry.
+- OUTER: Structured cashmere coat in camel, soft grey, or cream (Max Mara Teddy level), OR a butter-soft leather moto jacket, OR a premium oversized wool blazer.
+- TOP: Cashmere turtleneck, silk-blend mock-neck, OR a draped jersey wrap top. Something that looks simple but feels luxurious against the skin.
+- BOTTOM: High-waisted tailored wide-leg wool trousers, OR a midi-length silk skirt with gentle movement, OR premium dark straight-leg trousers. NOT jeans — more refined.
+- SHOES: Suede ankle boots with sculptural heel, The Row-style leather ballet flats, OR elegant pointed-toe mules. The shoes elevate everything.
+- BAG: Structured leather tote (Celine or Polene level), OR a minimal crossbody in butter leather.
+- ACCESSORIES: Delicate layered gold necklaces, thin gold bangle, small hoop earrings. Real gold, minimal pieces. Quality sunglasses.
 
-REMOVE ALL medical items: NO stethoscope, NO ID badge, NO scrubs, NO white coat. ZERO connection to medicine.
+COLOR STRATEGY: Analyze skin tone. Warm skin → camel, warm cream, olive, soft cognac. Cool skin → pale grey, icy blue, cool burgundy, soft white. The palette should whisper luxury.
 
-COLOR MUST BE CHOSEN based on this person's skin tone. Pick colors that make their face glow.
-
-MOOD: A stylish woman heading to brunch. She looks like she could be a fashion editor or gallery owner. Effortlessly chic.`,
+MOOD: A woman walking through Cheongdam or SoHo on a weekend morning. She could be a gallerist, a creative director, or a fashion editor. Her weekend style is actually better than most people's best-dressed day. Nothing trendy — timeless. The kind of woman other women screenshot for outfit inspiration.`,
   },
 }
 
@@ -528,8 +526,9 @@ export function getWorkScenarios(jobType: string): ScenarioConfig[] {
   // FRAMING rule injected into every work scenario to prevent head cropping
   const FRAMING = `\n\nFRAMING RULE (CRITICAL): The output image MUST have the EXACT same framing and composition as the input photo. Do NOT zoom in on the torso. Do NOT crop the head. The person's head must have the same amount of space above it as the original. If the input shows full body, output shows full body. If input shows head-to-waist, output shows head-to-waist. ZERO framing changes allowed.`
 
-  // Strip the hardcoded COLOR section from base prompts so each scenario's strategy fully controls color
-  const stripColor = (text: string) => text.replace(/\n\nCOLOR:.*?(?=\n\nMOOD:)/s, '')
+  // Strip the hardcoded COLOR paragraph from base prompts so each scenario's strategy fully controls color
+  // Matches both "COLOR:" and "COLOR MUST BE..." formats, stops at next paragraph break
+  const stripColor = (text: string) => text.replace(/\n\nCOLOR[^\n]*(?:\n(?!\n)[^\n]*)*/g, '')
 
   const offDuty = offDutyDirectives[jobType] || offDutyDirectives._default
 
@@ -537,50 +536,54 @@ export function getWorkScenarios(jobType: string): ScenarioConfig[] {
     {
       id: 'work-signature',
       labelKo: '베스트 컬러', labelEn: 'Best Color', labelJa: 'ベストカラー', labelZh: '最佳色彩', labelEs: 'Mejor Color',
-      directiveMale: `${stripColor(job.male)}${FRAMING}\n\nCOLOR STRATEGY — BEST COLOR (CLASSIC FLATTERING):
-Analyze this person's skin undertone, hair color, and eye color from the photo.
-Choose the single MOST FLATTERING classic suit color for THIS person — the shade that makes their face look the most vibrant and healthy.
-PICK FROM THE CLASSIC POWER SPECTRUM: midnight navy, charcoal grey, slate blue-grey, deep anthracite, warm charcoal-brown.
-The goal: the client puts on this suit and thinks "this is MY color." Trust your skin-tone analysis.`,
-      directiveFemale: `${stripColor(job.female)}${FRAMING}\n\nCOLOR STRATEGY — BEST COLOR (CLASSIC FLATTERING):
-Analyze this person's skin undertone, hair color, and eye color from the photo.
-Choose the single MOST FLATTERING classic suit color for THIS person — the shade that makes their face look the most vibrant and healthy.
-PICK FROM THE CLASSIC POWER SPECTRUM: midnight navy, charcoal grey, slate blue-grey, deep anthracite, warm charcoal-brown, ivory cream.
-The goal: the client puts on this suit and thinks "this is MY color." Trust your skin-tone analysis.`,
+      directiveMale: `${stripColor(job.male)}${FRAMING}\n\nCOLOR STRATEGY — BEST COLOR (MOST FLATTERING FOR THIS PERSON):
+Analyze this person's ACTUAL skin undertone, hair color, and eye color from the photo.
+Choose the single MOST FLATTERING color for the outfit — the shade that makes their face look the most vibrant, healthy, and alive.
+Warm undertone (golden/peachy skin) → deep navy, hunter green, warm charcoal, rich teal, chocolate.
+Cool undertone (pink/rosy skin) → ceil blue, cool slate, pewter grey, charcoal, deep wine.
+The goal: this person puts on the outfit and thinks "this color was MADE for me." Trust your skin-tone analysis.`,
+      directiveFemale: `${stripColor(job.female)}${FRAMING}\n\nCOLOR STRATEGY — BEST COLOR (MOST FLATTERING FOR THIS PERSON):
+Analyze this person's ACTUAL skin undertone, hair color, and eye color from the photo.
+Choose the single MOST FLATTERING color for the outfit — the shade that makes their face look the most vibrant, healthy, and alive.
+Warm undertone (golden/peachy skin) → deep navy, hunter green, warm charcoal, rich teal, soft wine.
+Cool undertone (pink/rosy skin) → ceil blue, cool slate, pewter grey, lavender-grey, deep wine.
+The goal: this person puts on the outfit and thinks "this color was MADE for me." Trust your skin-tone analysis.`,
     },
     {
       id: 'work-contrast',
       labelKo: '컨트라스트 컬러', labelEn: 'Contrast Color', labelJa: 'コントラストカラー', labelZh: '对比色', labelEs: 'Color Contraste',
-      directiveMale: `${stripColor(job.male)}${FRAMING}\n\nCOLOR STRATEGY — CONTRAST COLOR (BOLD & DISTINCTIVE):
+      directiveMale: `${stripColor(job.male)}${FRAMING}\n\nCOLOR STRATEGY — CONTRAST COLOR (BOLD & UNEXPECTED):
 Analyze this person's skin undertone from the photo.
-Now choose a BOLD, UNEXPECTED suit color that is VISUALLY DISTINCT from typical navy/charcoal.
-DO NOT choose navy, charcoal, or grey — those are BANNED for this scenario.
-PICK FROM THESE DISTINCTIVE OPTIONS: deep burgundy/wine, forest green, rich chocolate brown, dark plum, deep teal, cognac, dark olive.
-Choose whichever CONTRASTING tone makes this person's features POP most dramatically.
-The result must look OBVIOUSLY DIFFERENT from a standard suit — someone should notice "that's an interesting color."`,
-      directiveFemale: `${stripColor(job.female)}${FRAMING}\n\nCOLOR STRATEGY — CONTRAST COLOR (BOLD & DISTINCTIVE):
+Choose a BOLD, UNEXPECTED color that CONTRASTS with their natural coloring to make features POP.
+⚠️ BANNED COLORS: Do NOT use navy, charcoal, grey, teal, or ceil blue — those are too common. Choose something DISTINCTLY DIFFERENT.
+CHOOSE FROM: deep burgundy/wine, forest green, rich chocolate brown, dark plum, sage olive, warm rust, rich cobalt, dark emerald.
+If their skin is warm-toned → try a cool-toned color (burgundy, plum, cobalt). If cool-toned → try warm (chocolate, olive, rust).
+The result must be OBVIOUSLY DIFFERENT from the Best Color — a clearly different shade family.`,
+      directiveFemale: `${stripColor(job.female)}${FRAMING}\n\nCOLOR STRATEGY — CONTRAST COLOR (BOLD & UNEXPECTED):
 Analyze this person's skin undertone from the photo.
-Now choose a BOLD, UNEXPECTED suit color that is VISUALLY DISTINCT from typical navy/charcoal.
-DO NOT choose navy, charcoal, or grey — those are BANNED for this scenario.
-PICK FROM THESE DISTINCTIVE OPTIONS: deep burgundy/wine, forest green, rich chocolate, dark plum, deep teal, camel, emerald, dark olive, rich ruby.
-Choose whichever CONTRASTING tone makes this person's features POP most dramatically.
-The result must look OBVIOUSLY DIFFERENT from a standard suit — someone should notice "that's a stunning color."`,
+Choose a BOLD, UNEXPECTED color that CONTRASTS with their natural coloring to make features POP.
+⚠️ BANNED COLORS: Do NOT use navy, charcoal, grey, teal, or ceil blue — those are too common. Choose something DISTINCTLY DIFFERENT.
+CHOOSE FROM: deep burgundy/wine, forest green, rich chocolate, dark plum, sage olive, dusty rose, warm rust, rich cobalt, dark emerald.
+If their skin is warm-toned → try a cool-toned color (burgundy, plum, cobalt). If cool-toned → try warm (chocolate, sage, dusty rose).
+The result must be OBVIOUSLY DIFFERENT from the Best Color — a clearly different shade family.`,
     },
     {
       id: 'work-harmony',
       labelKo: '하모니 컬러', labelEn: 'Harmony Color', labelJa: 'ハーモニーカラー', labelZh: '和谐色', labelEs: 'Color Armonía',
-      directiveMale: `${stripColor(job.male)}${FRAMING}\n\nCOLOR STRATEGY — HARMONY COLOR (TONAL MONOCHROME):
+      directiveMale: `${stripColor(job.male)}${FRAMING}\n\nCOLOR STRATEGY — HARMONY COLOR (TONAL SKIN-MATCHING):
 Analyze this person's skin tone and hair color from the photo.
-Choose a suit color from the SAME color family as their natural coloring — a tonal, monochromatic effect.
-Warm golden skin → warm sand, camel, warm taupe, soft tobacco. Cool pink skin → cool grey, blue-grey, soft lavender-grey, cool slate.
-The suit, shirt, and accessories should feel like ONE seamless tonal palette. Quiet, cohesive, like the outfit was custom-dyed to match this person.
-DO NOT pick the same color as Best Color or Contrast Color — this must be DISTINCTLY different.`,
-      directiveFemale: `${stripColor(job.female)}${FRAMING}\n\nCOLOR STRATEGY — HARMONY COLOR (TONAL MONOCHROME):
+Choose a color from the SAME color family as their natural coloring — creating a soft, tonal, cohesive effect.
+Warm golden skin → warm sand, camel, warm taupe, soft olive, warm stone.
+Cool pink skin → cool grey, blue-grey, soft lavender-grey, cool slate, muted blue.
+The entire outfit should feel like ONE seamless tonal palette — as if custom-dyed to match this person's complexion.
+⚠️ This MUST be visually different from BOTH Best Color and Contrast Color — a distinctly softer, more muted shade family.`,
+      directiveFemale: `${stripColor(job.female)}${FRAMING}\n\nCOLOR STRATEGY — HARMONY COLOR (TONAL SKIN-MATCHING):
 Analyze this person's skin tone and hair color from the photo.
-Choose a suit color from the SAME color family as their natural coloring — a tonal, monochromatic effect.
-Warm golden skin → warm sand, camel, warm taupe, soft tobacco. Cool pink skin → cool grey, blue-grey, soft lavender-grey, cool slate.
-The suit, blouse, and accessories should feel like ONE seamless tonal palette. Quiet, cohesive, like the outfit was custom-dyed to match this person.
-DO NOT pick the same color as Best Color or Contrast Color — this must be DISTINCTLY different.`,
+Choose a color from the SAME color family as their natural coloring — creating a soft, tonal, cohesive effect.
+Warm golden skin → warm sand, camel, warm taupe, soft olive, warm stone.
+Cool pink skin → cool grey, blue-grey, soft lavender, cool slate, muted blue.
+The entire outfit should feel like ONE seamless tonal palette — as if custom-dyed to match this person's complexion.
+⚠️ This MUST be visually different from BOTH Best Color and Contrast Color — a distinctly softer, more muted shade family.`,
     },
     {
       id: 'work-offduty',
