@@ -31,7 +31,7 @@ const PRICES: Record<ProductType, { amount: number; currency: string; display: s
   full: { amount: 999, currency: 'USD', display: '$9.99' },
   daily_style: { amount: 699, currency: 'USD', display: '$6.99/mo', recurring: true },
   chat_tokens: { amount: 99, currency: 'USD', display: '$0.99' },
-  work_style: { amount: 499, currency: 'USD', display: '$4.99' },
+  work_style: { amount: 399, currency: 'USD', display: '$3.99' },
   trend_style: { amount: 499, currency: 'USD', display: '$4.99' },
 }
 
