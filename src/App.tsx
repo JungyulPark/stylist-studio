@@ -6335,7 +6335,6 @@ ${hairImgs.length > 0 ? `<div class="section"><h2>${hairSection}</h2><div class=
                 <div className="path-content-v2">
                   <div className="path-header-v2">
                     <span className="path-module-v2">WORK STYLE</span>
-                    <span className="path-price-v2">$3.99</span>
                   </div>
                   <h3 className="path-title-v2">{t.workCardTitle}</h3>
                   <p className="path-desc-v2">{t.workCardDesc}</p>
@@ -6348,7 +6347,7 @@ ${hairImgs.length > 0 ? `<div class="section"><h2>${hairSection}</h2><div class=
                 </div>
               </div>
 
-              <div className="path-card-v2 trend-card" onClick={() => { trackEvent('select_item', { item_category: 'trend_style' }); setPage('trend-selection') }}>
+              <div className="path-card-v2 trend-card" style={{ pointerEvents: 'none', opacity: 0.7 }}>
                 <picture className="path-image">
                   <source type="image/webp" srcSet="/trend-hq.webp" />
                   <img src="/Street.png" alt="Trend Style" className="path-image-img" loading="lazy" width="1456" height="816" />
@@ -6357,6 +6356,7 @@ ${hairImgs.length > 0 ? `<div class="section"><h2>${hairSection}</h2><div class=
                 <div className="path-content-v2">
                   <div className="path-header-v2">
                     <span className="path-module-v2">TREND STYLE</span>
+                    <span className="coming-soon-badge">COMING SOON</span>
                   </div>
                   <h3 className="path-title-v2">{t.trendCardTitle}</h3>
                   <p className="path-desc-v2">{t.trendCardDesc}</p>
