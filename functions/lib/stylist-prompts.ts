@@ -436,116 +436,130 @@ MOOD: She walks into the courtroom and the temperature changes. Not loud — dev
 // ─── Job-Specific Off-Duty Commute Looks ─────────────────────────
 const offDutyDirectives: Record<string, { male: string; female: string }> = {
   _default: {
-    male: `STYLING BRIEF — OFF-DUTY COMMUTE LOOK
-This is a COMPLETELY DIFFERENT outfit — stylish everyday clothes. NOT a uniform, NOT work clothes.
+    male: `Create the MOST STYLISH off-duty commute look for this man. NOT boring basics — this should be the outfit that makes coworkers say "you look different outside of work."
 
-OUTFIT: Modern city-smart outfit — premium wool or cashmere overcoat (camel, charcoal, or navy) over a fine-gauge merino crewneck or fitted oxford shirt. Tailored straight-leg trousers or dark slim jeans with clean break. Polished leather Chelsea boots or premium minimalist sneakers. A structured leather briefcase or sleek messenger bag.
+FIRST, ANALYZE this man's body type, skin tone, and proportions from the photo.
+Then choose the SINGLE most flattering combination from:
+- Cashmere overcoat + merino crewneck + tailored trousers + suede Chelsea boots (Loro Piana weekend)
+- Suede bomber jacket + fitted oxford shirt (collar open) + dark pressed chinos + polished loafers (Italian ease)
+- Premium knit zip-through + band-collar shirt + relaxed wool trousers + clean leather sneakers (Scandinavian minimal)
+- Washed cotton blazer (unstructured) + cashmere polo + straight-leg jeans + suede desert boots (French casual)
 
-REMOVE ALL work-related items: NO badge, NO uniform pieces, NO work tools. Pure civilian fashion.
+⚠️ REMOVE ALL work items: NO uniform, NO badge, NO work tools. ZERO connection to any workplace.
+⚠️ Do NOT default to jeans + hoodie or jeans + T-shirt — that is NOT styling, that is giving up.
+One quality accessory only: a watch OR sunglasses. NOT both.
 
-COLOR MUST BE CHOSEN based on this person's skin tone. Pick colors that make their face glow.
+Think Zegna or Auralee weekend editorial — relaxed but every piece is considered.
+The outfit should make people wonder what he does for a living. Quiet confidence, visible quality.`,
+    female: `Create the MOST STYLISH off-duty commute look for this woman. NOT boring basics — this should be the outfit that gets "where did you get that?" at a café.
 
-MOOD: A stylish professional walking through a cosmopolitan city. He looks like he edits a design magazine or runs a gallery. Effortlessly polished — the kind of casual that takes taste, not effort.`,
-    female: `STYLING BRIEF — OFF-DUTY COMMUTE LOOK
-This is a COMPLETELY DIFFERENT outfit — stylish everyday clothes. NOT a uniform, NOT work clothes.
+FIRST, ANALYZE this woman's body type, skin tone, face shape, and proportions from the photo.
+Then choose the SINGLE most flattering combination from:
+- Cashmere coat + silk mock-neck + wide-leg wool trousers + pointed-toe ankle boots (quiet luxury)
+- Oversized blazer (worn open) + cashmere camisole + midi silk skirt with movement + elegant loafers (Parisian weekend)
+- Premium leather jacket (butter-soft) + fine-knit turtleneck + tailored culottes + suede mules (editorial cool)
+- Knit cardigan (draped) + silk blouse + high-waisted pressed trousers + ballet flats (Sezane effortless)
 
-OUTFIT: Chic modern outfit — tailored wool coat or structured blazer over a silk blouse or cashmere turtleneck. High-waisted tailored trousers or a midi skirt with movement. Pointed-toe ankle boots or elegant loafers. A structured leather tote or crossbody bag. Delicate gold jewelry — thin chain necklace, small hoops.
+⚠️ REMOVE ALL work items: NO uniform, NO badge, NO work tools. ZERO connection to any workplace.
+⚠️ Do NOT default to jeans + sweater — elevate with feminine, intentional combinations.
+⚠️ STRONGLY prefer dresses, skirts, and feminine silhouettes when they flatter this body type.
+One delicate gold piece: pendant necklace OR small hoops. Structured leather bag.
 
-REMOVE ALL work-related items: NO badge, NO uniform pieces, NO work tools. Pure civilian fashion.
-
-COLOR MUST BE CHOSEN based on this person's skin tone. Pick colors that make their face glow.
-
-MOOD: A stylish woman walking through a cosmopolitan city. She looks like she curates art or runs a fashion brand. Effortlessly chic — the kind of casual that radiates confidence and taste.`,
+Think Reformation or Rouje editorial — relaxed, feminine, never frumpy, never boring.
+The outfit should make other women screenshot it for inspiration.`,
   },
   lawyer: {
-    male: `STYLING BRIEF — OFF-DUTY LAWYER COMMUTE LOOK
-This is a COMPLETELY DIFFERENT outfit from the courtroom. Think weekend editorial — a man who wears suits all week and knows exactly how to dress without one.
+    male: `Create the MOST STYLISH off-duty look for this man — a man who wears suits all week and knows exactly how to dress without one. NOT corporate, NOT stiff — this is Saturday morning.
 
-OUTFIT SPEC:
-- OUTER: Premium cashmere overcoat in camel or dark navy, OR a suede bomber jacket, OR a tailored Italian leather jacket. NOT a suit jacket — this is off-duty.
-- TOP: Fine-gauge cashmere V-neck or crewneck sweater in a rich tone, OR a perfectly fitted merino polo. The knit has visible quality — the kind you touch and know it's expensive.
-- BOTTOM: Dark indigo slim straight jeans (Japanese selvedge quality) OR tailored wool flannel trousers in a relaxed fit. NOT suit trousers.
-- SHOES: Suede Chelsea boots, premium leather sneakers (Common Projects level), OR polished penny loafers worn sockless.
-- BAG: Soft leather weekender tote or a slim leather portfolio clutch. Nothing corporate.
-- ACCESSORIES: Quality automatic watch (not a dress watch — something sportier), tortoiseshell sunglasses pushed up.
+FIRST, ANALYZE this man's body type, skin tone, and proportions from the photo.
+Then choose the SINGLE most flattering combination from:
+- Cashmere overcoat + fine-gauge V-neck sweater + wool flannel trousers (relaxed fit) + suede Chelsea boots (Loro Piana weekend in Gangnam)
+- Italian leather jacket (butter-soft) + merino polo + dark selvedge denim + polished penny loafers sockless (Celine off-duty)
+- Suede bomber + cashmere half-zip + pressed chinos + premium leather sneakers (Cucinelli at a gallery opening)
+- Unstructured linen-wool blazer + band-collar shirt + relaxed tailored trousers + woven leather loafers (Zegna resort)
 
-COLOR STRATEGY: Analyze skin tone. Warm skin → camel, olive, warm navy, cognac. Cool skin → charcoal, steel blue, burgundy, cool grey. The palette should feel LUXURIOUS but RELAXED.
+⚠️ NOT a suit, NOT suit trousers, NOT dress shoes. ZERO connection to a courtroom.
+⚠️ Do NOT default to jeans + basic sweater — this man's casual is better than most people's formal.
+Quality automatic watch (sporty, not dress). Tortoiseshell sunglasses. Nothing else.
 
-MOOD: Saturday morning in SoHo or Gangnam. Walking to a specialty coffee shop, then a gallery opening. He looks like money but doesn't try. The sweater cost more than most people's suits. His off-duty style is better than most people's best-dressed day.`,
-    female: `STYLING BRIEF — OFF-DUTY LAWYER COMMUTE LOOK
-This is a COMPLETELY DIFFERENT outfit from the courtroom. Think weekend editorial — a woman who commands boardrooms all week and her off-duty style is equally deliberate.
+MOOD: Saturday morning in Cheongdam or SoHo. Walking to a specialty coffee shop, then a gallery opening. The sweater cost more than most people's suits. His off-duty style is better than most people's best-dressed day.`,
+    female: `Create the MOST STYLISH off-duty look for this woman — a woman who commands boardrooms all week and her weekend style is equally deliberate. NOT corporate, NOT stiff — this is Saturday morning editorial.
 
-OUTFIT SPEC:
-- OUTER: Structured cashmere coat in camel or cream, OR a premium leather biker jacket (butter-soft), OR an oversized blazer in a luxurious fabric worn open.
-- TOP: Silk charmeuse camisole, cashmere turtleneck, OR a perfectly draped jersey wrap top. Something that looks effortless but feels expensive.
-- BOTTOM: High-waisted wide-leg jeans (premium Japanese denim), OR tailored wool culottes, OR a silk midi skirt with movement. NOT a pencil skirt — this is relaxed.
-- SHOES: Suede ankle boots with a sculptural heel, premium leather ballet flats (The Row level), OR clean white sneakers with gold detail.
-- BAG: Structured leather tote (Celine Sangle or Loewe Puzzle level of taste), OR a soft leather crossbody.
-- ACCESSORIES: Delicate layered gold necklaces, one statement ring, quality sunglasses. The kind of jewelry that's simple but clearly real gold.
+FIRST, ANALYZE this woman's body type, skin tone, face shape, and proportions from the photo.
+Then choose the SINGLE most flattering combination from:
+- Structured cashmere coat (camel or cream) + silk camisole + wide-leg wool trousers + pointed-toe mules (Max Mara weekend)
+- Premium leather biker jacket (butter-soft) + cashmere turtleneck + midi silk skirt with movement + suede ankle boots (Celine off-duty)
+- Oversized luxury blazer (worn open) + draped jersey top + high-waisted culottes + The Row ballet flats (quiet power)
+- Cashmere wrap cardigan + silk blouse + tailored wide-leg jeans (Japanese denim) + elegant loafers (Sezane brunch)
 
-COLOR STRATEGY: Analyze skin tone. Warm skin → camel, olive, warm cream, cognac, terracotta. Cool skin → ice grey, pale blue, deep burgundy, cool white. The palette should feel LUXURIOUS but EFFORTLESS.
+⚠️ NOT a pencil skirt, NOT a blazer-as-suit. ZERO connection to a courtroom.
+⚠️ Do NOT default to jeans + sweater — elevate with silk, cashmere, and intentional proportions.
+⚠️ STRONGLY prefer feminine silhouettes: wrap tops, midi skirts, flowing trousers.
+Delicate layered gold necklaces, one statement ring. Structured leather tote (Celine or Loewe level).
 
-MOOD: Saturday morning in Cheongdam or the West Village. Walking to brunch at an impossible-to-book restaurant. She looks like she could be a creative director, gallerist, or fashion editor. Her weekend look makes other women screenshot her outfit. The casual is studied but never stiff.`,
+MOOD: Saturday morning in Cheongdam or the West Village. Walking to brunch at an impossible-to-book restaurant. Her weekend look makes other women screenshot her outfit. The casual is studied but never stiff.`,
   },
   doctor: {
-    male: `STYLING BRIEF — OFF-DUTY DOCTOR COMMUTE LOOK
-This is a COMPLETELY DIFFERENT outfit. NO scrubs, NO white coat, NO stethoscope, NO medical anything. ZERO connection to medicine.
+    male: `Create the MOST STYLISH off-duty look for this man. He saves lives in scrubs all week — his weekend style should be just as impressive. NOT medical, NOT clinical — pure personal style.
 
-OUTFIT SPEC:
-- OUTER: Cashmere-wool blend overcoat in camel or dark navy (Loro Piana level), OR a suede trucker jacket, OR a premium knit bomber. The outer piece alone signals taste.
-- TOP: Fine-gauge cashmere crewneck or half-zip in a rich tone, OR a perfectly fitted merino polo. Visible quality in the knit — not a basic mall sweater.
-- BOTTOM: Tailored wool flannel trousers with a relaxed taper (Zegna feel), OR pressed dark chinos with clean break. NOT jeans, NOT joggers — elevated but comfortable.
-- SHOES: Premium suede Chelsea boots, polished leather penny loafers, or clean Italian leather sneakers. The shoes tell the story.
-- BAG: Soft leather messenger in cognac or black, or a sleek backpack (Mismo/Troubadour level).
-- ACCESSORIES: Quality automatic watch with leather strap, tortoiseshell sunglasses. One or two pieces, nothing more.
+FIRST, ANALYZE this man's body type, skin tone, and proportions from the photo.
+Then choose the SINGLE most flattering combination from:
+- Cashmere-wool overcoat + fine-gauge crewneck sweater + relaxed wool trousers + suede Chelsea boots (Loro Piana quiet wealth)
+- Suede trucker jacket + merino polo + pressed dark chinos + polished leather sneakers (Italian weekend ease)
+- Premium knit bomber + cashmere half-zip + tailored jogger-style trousers + clean premium sneakers (Zegna modern comfort)
+- Unstructured wool blazer + oxford shirt (collar open) + straight-leg selvedge denim + penny loafers sockless (Brunello Cucinelli Saturday)
 
-COLOR STRATEGY: Analyze skin tone. Warm skin → camel, olive, warm navy, rich cognac tones. Cool skin → charcoal, steel blue, burgundy, cool grey. The palette reads QUIET WEALTH.
+⚠️ NO scrubs, NO white coat, NO stethoscope, NO ID badge. ZERO connection to medicine.
+⚠️ Do NOT default to basic jeans + hoodie — this man's casual should signal taste and quiet confidence.
+One quality watch (sporty automatic, not dress). Quality sunglasses. Nothing more.
 
-MOOD: A man walking through Garosugil or the West Village on a Saturday morning, heading to a specialty coffee shop. He could be a venture capitalist, an architect, or an art collector. The overcoat probably cost more than most people's monthly rent. Nothing loud — everything considered. The kind of off-duty that makes people wonder what he does for a living.`,
-    female: `STYLING BRIEF — OFF-DUTY DOCTOR COMMUTE LOOK
-This is a COMPLETELY DIFFERENT outfit. NO scrubs, NO white coat, NO stethoscope, NO medical anything. ZERO connection to medicine.
+MOOD: Saturday morning walking through Garosugil or Greenwich Village. He could be a venture capitalist, an architect, or an art collector. Nothing loud — everything considered. The kind of off-duty that makes people wonder what he does for a living.`,
+    female: `Create the MOST STYLISH off-duty look for this woman. She wears scrubs all week — her weekend style should be a revelation. NOT medical, NOT clinical — pure personal fashion.
 
-OUTFIT SPEC:
-- OUTER: Structured cashmere coat in camel, soft grey, or cream (Max Mara Teddy level), OR a butter-soft leather moto jacket, OR a premium oversized wool blazer.
-- TOP: Cashmere turtleneck, silk-blend mock-neck, OR a draped jersey wrap top. Something that looks simple but feels luxurious against the skin.
-- BOTTOM: High-waisted tailored wide-leg wool trousers, OR a midi-length silk skirt with gentle movement, OR premium dark straight-leg trousers. NOT jeans — more refined.
-- SHOES: Suede ankle boots with sculptural heel, The Row-style leather ballet flats, OR elegant pointed-toe mules. The shoes elevate everything.
-- BAG: Structured leather tote (Celine or Polene level), OR a minimal crossbody in butter leather.
-- ACCESSORIES: Delicate layered gold necklaces, thin gold bangle, small hoop earrings. Real gold, minimal pieces. Quality sunglasses.
+FIRST, ANALYZE this woman's body type, skin tone, face shape, and proportions from the photo.
+Then choose the SINGLE most flattering combination from:
+- Structured cashmere coat + cashmere turtleneck + wide-leg wool trousers + pointed-toe ankle boots (Max Mara timeless)
+- Butter-soft leather moto jacket + silk mock-neck + flowing midi skirt + suede mules (Celine off-duty chic)
+- Premium oversized wool blazer + draped jersey wrap top + tailored culottes + The Row ballet flats (quiet luxury)
+- Cashmere cardigan (draped) + silk camisole + high-waisted pressed trousers + elegant loafers + delicate pendant (Rouje everyday)
 
-COLOR STRATEGY: Analyze skin tone. Warm skin → camel, warm cream, olive, soft cognac. Cool skin → pale grey, icy blue, cool burgundy, soft white. The palette should whisper luxury.
+⚠️ NO scrubs, NO white coat, NO stethoscope, NO ID badge. ZERO connection to medicine.
+⚠️ Do NOT default to jeans + sweater — elevate with silk, cashmere, and feminine proportions.
+⚠️ STRONGLY prefer dresses, skirts, and flowing silhouettes when they flatter this body type.
+Delicate gold jewelry: thin chain necklace OR small hoops. Structured leather tote (Celine or Polene level).
 
-MOOD: A woman walking through Cheongdam or SoHo on a weekend morning. She could be a gallerist, a creative director, or a fashion editor. Her weekend style is actually better than most people's best-dressed day. Nothing trendy — timeless. The kind of woman other women screenshot for outfit inspiration.`,
+MOOD: Weekend morning in Cheongdam or SoHo. She could be a gallerist, creative director, or fashion editor. Her weekend style is better than most people's best-dressed day. Nothing trendy — timeless. The kind of woman other women screenshot for outfit inspiration.`,
   },
   chef: {
-    male: `STYLING BRIEF — OFF-DUTY CHEF COMMUTE LOOK
-This is a COMPLETELY DIFFERENT outfit. NO chef jacket, NO apron, NO kitchen gear. ZERO connection to cooking.
+    male: `Create the MOST STYLISH off-duty look for this man. He runs a kitchen all week — his weekend style should show the same creative eye. NOT a chef, NOT a cook — a man with taste in every sense.
 
-OUTFIT SPEC:
-- OUTER: Premium washed cotton chore coat in faded indigo or olive, OR a cashmere crewneck sweater layered under a suede trucker jacket, OR a relaxed linen blazer (unstructured, soft shoulders).
-- TOP: Vintage-washed cotton henley, a simple linen band-collar shirt, OR a Breton stripe tee. Something that feels lived-in but quality.
-- BOTTOM: Relaxed straight-leg dark denim (Japanese selvedge), OR cotton-linen blend chinos in olive or sand. Comfortable, not too tailored — a chef is used to moving.
-- SHOES: Clean white leather sneakers, suede desert boots, OR woven leather slip-ons. Effortless.
-- BAG: Waxed canvas tote or a simple leather crossbody.
-- ACCESSORIES: Simple automatic watch with canvas strap, quality sunglasses. Maybe a thin leather cord bracelet.
+FIRST, ANALYZE this man's body type, skin tone, and proportions from the photo.
+Then choose the SINGLE most flattering combination from:
+- Washed cotton chore coat + linen band-collar shirt + relaxed selvedge denim + woven leather loafers (artisan weekend in Itaewon)
+- Cashmere crewneck + suede trucker jacket + cotton-linen chinos + clean white sneakers (Auralee effortless)
+- Unstructured linen blazer + Breton stripe tee + relaxed wool trousers + suede desert boots (French Riviera casual)
+- Premium knit zip-through + washed oxford shirt + straight-leg dark denim + polished leather sneakers (Nordic creative)
 
-COLOR STRATEGY: Analyze skin tone. Warm → olive, warm sand, faded indigo, cognac. Cool → steel blue, grey, washed navy, charcoal. The palette should feel ARTISAN — like a ceramicist or furniture maker on his day off.
+⚠️ NO chef jacket, NO apron, NO kitchen gear. ZERO connection to cooking.
+⚠️ Do NOT default to basic T-shirt + jeans — this man's casual has creative intentionality.
+Simple watch with canvas or leather strap. Quality sunglasses. One piece, nothing more.
 
-MOOD: Saturday morning at a farmers market in Brooklyn or Itaewon. He looks like he could own a pottery studio or a natural wine bar. There's an effortless creative energy — comfortable in his skin, not trying to impress. The kind of man who rolls up his sleeves and the forearms tell you he works with his hands.`,
-    female: `STYLING BRIEF — OFF-DUTY CHEF COMMUTE LOOK
-This is a COMPLETELY DIFFERENT outfit. NO chef jacket, NO apron, NO kitchen gear. ZERO connection to cooking.
+MOOD: Saturday morning at a farmers market or a natural wine bar. He looks like he could own a ceramics studio or curate a design shop. Creative energy — comfortable, unhurried, the kind of man who makes simple things look considered.`,
+    female: `Create the MOST STYLISH off-duty look for this woman. She runs a kitchen all week — her weekend style should show the same creative eye and love of beauty. NOT a chef — an artist with taste.
 
-OUTFIT SPEC:
-- OUTER: Relaxed linen blazer in off-white or soft khaki, OR a premium cotton-cashmere cardigan, OR a washed cotton field jacket in olive.
-- TOP: Simple silk camisole, a perfectly fitted Breton stripe tee, OR a linen button-down (sleeves rolled). Something feminine but unfussy.
-- BOTTOM: High-waisted wide-leg linen trousers, a cotton midi skirt with gentle drape, OR relaxed straight-leg jeans (premium Japanese denim).
-- SHOES: Woven leather sandals, clean white sneakers, OR suede ballet flats. Comfortable and elegant.
-- BAG: Straw basket tote or a soft leather crossbody.
-- ACCESSORIES: Delicate gold chain necklace, small hoop earrings, quality sunglasses. Simple, natural.
+FIRST, ANALYZE this woman's body type, skin tone, face shape, and proportions from the photo.
+Then choose the SINGLE most flattering combination from:
+- Relaxed linen blazer + silk camisole + wide-leg linen trousers + woven leather sandals (French Riviera editorial)
+- Premium cotton-cashmere cardigan + fitted Breton stripe tee + cotton midi skirt with drape + suede ballet flats (Sezane market morning)
+- Washed cotton field jacket + linen button-down (sleeves rolled) + high-waisted straight-leg jeans + clean white sneakers (Auralee effortless)
+- Draped knit wrap top + flowing midi skirt + delicate sandals + straw tote (Rouje coastal weekend)
 
-COLOR STRATEGY: Analyze skin tone. Warm → warm cream, olive, terracotta, natural linen. Cool → soft grey, pale blue, sage, washed white. The palette should feel ARTISAN AND FEMININE — like a food photographer or a wine importer on her day off.
+⚠️ NO chef jacket, NO apron, NO kitchen gear. ZERO connection to cooking.
+⚠️ Do NOT default to jeans + T-shirt — elevate with feminine textures and intentional combinations.
+⚠️ STRONGLY prefer dresses, skirts, and flowing silhouettes when they flatter this body type.
+Delicate gold chain necklace, small hoops. Quality sunglasses. Straw basket tote or soft leather crossbody.
 
-MOOD: Sunday morning at a farmers market or a coastal café. She looks like she runs a food magazine or curates pop-up supper clubs. Effortlessly chic, creative, earthy but refined. The kind of woman who makes simple things beautiful.`,
+MOOD: Sunday morning at a coastal café or farmers market. She looks like she runs a food magazine or curates pop-up supper clubs. Effortlessly chic, creative, the kind of woman who makes simple things beautiful. Her Instagram is all natural light and impeccable taste.`,
   },
 }
 
