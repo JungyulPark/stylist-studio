@@ -189,8 +189,15 @@ Generate the edited photo with IDENTICAL composition to the input.`
     }
 
     if (!response || !response.ok) {
+      const statusCode = response?.status || 0
       const errorBody = response ? await response.text() : 'No response'
       console.error(`[Gemini] All models failed for ${scenario.id}: ${errorBody.substring(0, 500)}`)
+
+      // Don't retry on quota/billing errors (429, 402) — they won't resolve on retry
+      if (statusCode === 429 || statusCode === 402) {
+        return null
+      }
+
       if (retryCount < MAX_RETRIES) {
         const delay = retryDelay(retryCount)
         console.log(`[Gemini] Retrying ${scenario.id} in ${Math.round(delay)}ms (attempt ${retryCount + 2}/${MAX_RETRIES + 1})`)

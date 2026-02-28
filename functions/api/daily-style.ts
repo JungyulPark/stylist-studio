@@ -49,6 +49,21 @@ interface DailyRecommendation {
   image_generation_status: string
 }
 
+function getLocalDate(timezone: string): string {
+  try {
+    const now = new Date()
+    const formatter = new Intl.DateTimeFormat('en-CA', {
+      timeZone: timezone,
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit',
+    })
+    return formatter.format(now) // returns YYYY-MM-DD
+  } catch {
+    return new Date().toISOString().split('T')[0]
+  }
+}
+
 async function getWeather(lat: number, lon: number, apiKey: string): Promise<WeatherData | null> {
   try {
     const res = await fetch(
@@ -201,7 +216,7 @@ export const onRequestGet: PagesFunction<Env> = async (context) => {
     if (langOverride && ['ko', 'en', 'ja', 'zh', 'es'].includes(langOverride)) {
       sub.preferred_language = langOverride
     }
-    const today = new Date().toISOString().split('T')[0]
+    const today = getLocalDate(sub.timezone)
 
     // 2. 오늘 이미 생성된 추천이 있는지 확인
     const existRes = await fetch(

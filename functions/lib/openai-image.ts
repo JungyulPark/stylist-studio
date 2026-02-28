@@ -69,6 +69,11 @@ export async function editPhotoWithOpenAI(
       const errorBody = await response.text()
       console.error(`[OpenAI] gpt-image-1.5 failed (${response.status}): ${errorBody.substring(0, 500)}`)
 
+      // Don't retry on quota/billing errors (429, 402) — they won't resolve on retry
+      if (response.status === 429 || response.status === 402) {
+        return null
+      }
+
       if (retryCount < MAX_RETRIES) {
         const delay = retryDelay(retryCount)
         console.log(`[OpenAI] Retrying in ${Math.round(delay)}ms (attempt ${retryCount + 2}/${MAX_RETRIES + 1})`)
