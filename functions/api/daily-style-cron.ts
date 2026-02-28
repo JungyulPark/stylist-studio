@@ -240,7 +240,7 @@ INSTRUCTIONS:
       body: JSON.stringify({
         model: 'gpt-5-mini',
         messages: [{ role: 'user', content: prompt }],
-        max_tokens: 1024,
+        max_completion_tokens: 1024,
       }),
     })
 
@@ -298,10 +298,10 @@ async function generateOutfitImages(
   imagesBucket: R2Bucket,
   precomputedScenarios?: ImageScenario[],
   openaiApiKey?: string
-): Promise<{ images: OutfitImage[]; photoSizeBytes: number }> {
+): Promise<{ images: OutfitImage[]; photoSizeBytes: number; scenarioErrors: string[] }> {
   if (!subscriber.photo_r2_key || !subscriber.gender) {
     console.log(`[cron] Skipping image gen for ${subscriber.email}: no photo or gender`)
-    return { images: [], photoSizeBytes: 0 }
+    return { images: [], photoSizeBytes: 0, scenarioErrors: ['no photo or gender'] }
   }
 
   // Fetch subscriber's photo from R2
@@ -334,6 +334,8 @@ async function generateOutfitImages(
   const today = getLocalDate(subscriber.timezone)
   const lang = subscriber.preferred_language || 'en'
   const outfitImages: OutfitImage[] = []
+  const scenarioErrors: string[] = []
+  const gender = subscriber.gender as string
 
   // Generate images in parallel for speed
   const runTs = Date.now()
@@ -343,13 +345,15 @@ async function generateOutfitImages(
       const resultDataUri = await editPhotoWithGemini(
         photoDataUri,
         scenario,
-        subscriber.gender,
+        gender,
         geminiApiKey,
         openaiApiKey
       )
 
       if (!resultDataUri) {
-        console.warn(`[cron] Image generation returned null for ${scenario.id}`)
+        const msg = `${scenario.id}: returned null (OpenAI+Gemini both failed)`
+        console.warn(`[cron] ${msg}`)
+        scenarioErrors.push(msg)
         return null
       }
 
@@ -378,11 +382,13 @@ async function generateOutfitImages(
     if (result.status === 'fulfilled' && result.value) {
       outfitImages.push(result.value)
     } else if (result.status === 'rejected') {
-      console.error(`[cron] Image gen error:`, result.reason)
+      const errMsg = result.reason instanceof Error ? result.reason.message : String(result.reason)
+      console.error(`[cron] Image gen error:`, errMsg)
+      scenarioErrors.push(errMsg)
     }
   }
 
-  return { images: outfitImages, photoSizeBytes }
+  return { images: outfitImages, photoSizeBytes, scenarioErrors }
 }
 
 // Build email HTML with outfit images
@@ -541,7 +547,7 @@ export const onRequestGet: PagesFunction<Env> = async (context) => {
 
   const results: Array<{
     email: string; status: string; images?: number;
-    image_status?: string; image_conditions?: Record<string, boolean>; image_error?: string;
+    image_status?: string; image_conditions?: Record<string, boolean>; image_error?: string; scenario_errors?: string[];
     text_source?: string; text_error?: string;
     preferred_language?: string; photo_r2_key?: string | null;
     subscriber_id?: string; updated_at?: string | null;
@@ -697,6 +703,7 @@ export const onRequestGet: PagesFunction<Env> = async (context) => {
 
         let imageError: string | undefined
         let photoSizeBytes: number | undefined
+        let scenarioErrors: string[] = []
         if (sub.profile_complete && sub.photo_r2_key && sub.gender && (context.env.GEMINI_API_KEY || context.env.OPENAI_API_KEY) && context.env.DAILY_IMAGES_BUCKET) {
           try {
             imageStatus = 'generating'
@@ -717,7 +724,11 @@ export const onRequestGet: PagesFunction<Env> = async (context) => {
             const imgResult = await Promise.race([imgPromise, timeoutPromise])
             outfitImages = imgResult.images
             photoSizeBytes = imgResult.photoSizeBytes
+            scenarioErrors = imgResult.scenarioErrors || []
             imageStatus = outfitImages.length > 0 ? 'generated' : 'no_images_returned'
+            if (outfitImages.length === 0 && scenarioErrors.length > 0) {
+              imageError = scenarioErrors.join('; ')
+            }
           } catch (e) {
             const errMsg = e instanceof Error ? e.message : String(e)
             console.error(`[cron] Image generation failed for ${sub.email}:`, errMsg)
@@ -790,6 +801,7 @@ export const onRequestGet: PagesFunction<Env> = async (context) => {
           image_status: imageStatus,
           image_conditions: imgConditions,
           image_error: imageError,
+          scenario_errors: scenarioErrors.length > 0 ? scenarioErrors : undefined,
           text_source: recResult.source,
           text_error: recResult.error,
           preferred_language: sub.preferred_language,
