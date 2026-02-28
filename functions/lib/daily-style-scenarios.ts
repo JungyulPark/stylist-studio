@@ -197,11 +197,11 @@ const maleBitterColdKits: ColdKit[] = [
 const maleColdKits: ColdKit[] = [
   { top: 'fine-gauge merino turtleneck', outer: 'single-breasted wool peacoat with notch lapel', bottom: 'straight-leg pressed wool trousers', shoes: 'premium brown suede chelsea boots', acc: 'minimal watch, leather gloves' },
   { top: 'cashmere crewneck over crisp oxford shirt', outer: 'unstructured wool blazer-coat', bottom: 'tapered wool blend chinos', shoes: 'polished leather derby shoes', acc: 'woven leather belt, brushed metal watch' },
-  { top: 'half-zip merino pullover', outer: 'quilted lightweight down jacket with stand collar', bottom: 'straight-leg cotton drill trousers', shoes: 'clean suede desert boots', acc: 'light wool scarf, simple watch' },
+  { top: 'fine-gauge merino crewneck over spread-collar shirt', outer: 'single-breasted cashmere overcoat with notch lapel', bottom: 'straight-leg pressed wool trousers', shoes: 'polished leather chelsea boots', acc: 'silk pocket square, brushed metal watch' },
   { top: 'mock-neck ribbed knit', outer: 'tailored cashmere-blend topcoat', bottom: 'pressed wool trousers with single pleat', shoes: 'leather ankle boots', acc: 'minimal watch, cashmere-lined gloves' },
-  { top: 'lightweight shawl-collar cardigan over tee', outer: 'cotton-wool blend harrington jacket', bottom: 'straight-leg dark chinos', shoes: 'clean leather sneakers or suede loafers', acc: 'leather belt, simple watch' },
+  { top: 'cashmere V-neck sweater over crisp white shirt', outer: 'double-breasted wool coat with peak lapel', bottom: 'tapered wool trousers with knife pleat', shoes: 'burnished leather derby shoes', acc: 'leather belt, brushed metal watch' },
   { top: 'fitted merino crew sweater', outer: 'mid-length wool overcoat', bottom: 'tapered flannel trousers', shoes: 'burnished leather chelsea boots', acc: 'silk-knit scarf, brushed watch' },
-  { top: 'cashmere zip-front hoodie over cotton tee', outer: 'technical wool-blend bomber jacket', bottom: 'relaxed wool trousers', shoes: 'premium leather sneakers', acc: 'minimal watch' },
+  { top: 'fine-gauge cashmere polo neck', outer: 'structured wool chesterfield coat', bottom: 'straight-leg wool trousers with clean hem', shoes: 'polished leather oxford shoes', acc: 'minimal watch, leather gloves' },
 ]
 
 const femaleColdKits: ColdKit[] = [
@@ -209,8 +209,8 @@ const femaleColdKits: ColdKit[] = [
   { top: 'fine-gauge merino turtleneck', outer: 'structured double-breasted wool blazer-coat', bottom: 'wide-leg wool trousers', shoes: 'suede ankle boots with block heel', acc: 'gold cuff bracelet, structured leather bag' },
   { top: 'cashmere wrap-front knit top', outer: 'belted wool coat with shawl collar', bottom: 'high-waisted tailored trousers', shoes: 'pointed ballet flats with wool lining', acc: 'delicate pendant necklace, leather gloves' },
   { top: 'ribbed mock-neck fitted sweater', outer: 'oversized wool-cashmere coat', bottom: 'straight-leg pressed trousers', shoes: 'leather knee-high boots', acc: 'minimal gold studs, crossbody bag' },
-  { top: 'fitted crewneck cashmere sweater', outer: 'quilted lightweight down jacket', bottom: 'high-waisted wool culottes', shoes: 'leather ankle boots', acc: 'silk scarf as accent, structured tote' },
-  { top: 'cashmere hoodie over silk camisole', outer: 'wool blend bomber jacket', bottom: 'tapered wool trousers', shoes: 'clean leather sneakers', acc: 'minimal gold bracelet' },
+  { top: 'fitted crewneck cashmere sweater', outer: 'single-breasted camel wool coat with belt', bottom: 'high-waisted wool culottes', shoes: 'polished leather ankle boots', acc: 'silk scarf as accent, structured tote' },
+  { top: 'silk blouse with soft bow neck', outer: 'tailored wool trench coat with peak lapel', bottom: 'tapered wool trousers with knife pleat', shoes: 'pointed-toe ankle boots', acc: 'minimal gold bracelet, structured leather bag' },
   { top: 'knit polo collar sweater', outer: 'long wool overcoat with minimal buttons', bottom: 'wide-leg pressed trousers', shoes: 'pointed-toe mules or ankle boots', acc: 'leather belt, delicate earrings' },
 ]
 
@@ -309,7 +309,7 @@ const maleCasualMoods = [
   { name: 'Nordic practical', guide: 'Functional minimalism. Midweight cotton sweatshirt or zip-up fleece. Simple sneakers, crossbody bag. Clean, practical.', bottom: 'tapered utility trousers', warmBottom: 'nylon-cotton shorts' },
   { name: 'outdoor-city', guide: 'City-meets-outdoor utility. Cotton overshirt or light shell jacket. Trail sneakers or simple boots. Functional but clean.', bottom: 'relaxed cargo pants', warmBottom: 'light climbing shorts' },
   // Slightly elevated everyday
-  { name: 'polished casual', guide: 'Neat casual with a touch of polish. Crewneck knit or zip hoodie. Clean sneakers. Soft and put-together, not overdressed.', bottom: 'tailored jogger-style trousers', warmBottom: 'tailored cotton shorts' },
+  { name: 'easy smart', guide: 'Clean and put-together without trying hard. Crewneck knit or zip hoodie. Clean sneakers. Soft and comfortable, not overdressed.', bottom: 'cotton jogger pants', warmBottom: 'cotton drawstring shorts' },
   { name: 'weekend ease', guide: 'Weekend off-duty. Cotton polo or crewneck sweater. Simple loafers or clean sneakers. Comfortable, not trying too hard.', bottom: 'soft cotton chinos', warmBottom: 'linen drawstring trousers' },
   { name: 'warm layers', guide: 'Warm relaxed layering. Knit sweater over simple tee. Desert boots or clean sneakers. Comfortable, approachable.', bottom: 'relaxed straight-leg cotton pants', warmBottom: 'light cotton trousers' },
 ]
@@ -318,7 +318,7 @@ const femaleCasualMoods = [
   // Everyday accessible — genuinely casual, not luxury-coded
   { name: 'modern minimal', guide: 'Clean everyday simplicity. Oversized cotton shirt or structured tee. White sneakers or simple flats. Canvas tote. No accessories needed.', bottom: 'wide cotton trousers', warmBottom: 'cotton midi skirt' },
   { name: 'soft drape', guide: 'Soft oversized knits or washed cotton, gentle drape. One fitted piece for balance. Simple flats or clean sneakers. Muted natural palette. Cozy and understated.', bottom: 'relaxed cotton trousers', warmBottom: 'light linen wide-leg pants' },
-  { name: 'neat everyday', guide: 'Neat everyday polish. Cotton knit or simple blouse. Loafers or pointed flats. Simple studs, crossbody bag.', bottom: 'tailored trousers', warmBottom: 'cotton bermuda shorts' },
+  { name: 'neat everyday', guide: 'Neat everyday look. Cotton knit or simple blouse. Clean sneakers or simple flats. Simple studs, crossbody bag.', bottom: 'relaxed cotton trousers', warmBottom: 'cotton bermuda shorts' },
   { name: 'athleisure', guide: 'Coordinated sweatshirt-and-jogger set or hoodie with fitted joggers. Cotton fleece, clean lines. White sneakers or simple slides. Minimal jewelry.', bottom: 'matching jogger pants', warmBottom: 'matching cotton shorts' },
   { name: 'Scandinavian clean', guide: 'Clean Nordic lines. Fitted ribbed knit or simple turtleneck. Ankle boots or clean sneakers. Simple jewelry, structured bag.', bottom: 'straight-leg dark jeans', warmBottom: 'cotton tailored shorts' },
   { name: 'French off-duty', guide: 'Parisian everyday. Breton stripe or plain cotton tee. Ballet flats or white sneakers. Simple crossbody, no fuss. Effortlessly chic.', bottom: 'straight-leg cotton pants', warmBottom: 'cotton skirt' },
@@ -335,20 +335,20 @@ const maleCasualOuter = [
   'down bomber jacket', 'insulated mountain parka', 'long puffer coat', 'padded coat',
 ]
 const maleCasualColdOuter = [
-  'quilted lightweight jacket', 'wool-blend coat', 'padded field jacket',
-  'cotton parka', 'fleece-lined denim jacket', 'quilted bomber', 'waxed cotton jacket',
+  'quilted lightweight jacket', 'fleece-lined zip-up hoodie jacket', 'padded field jacket',
+  'cotton parka', 'fleece-lined denim jacket', 'quilted bomber', 'cotton canvas chore jacket',
 ]
 const femaleCasualOuter = [
   'long padded down coat', 'hooded puffer jacket', 'fleece-lined down parka',
   'oversized puffer coat', 'fleece-lined hooded coat', 'insulated anorak', 'padded cocoon coat',
 ]
 const femaleCasualColdOuter = [
-  'quilted lightweight jacket', 'wool-blend coat', 'padded vest over hoodie',
+  'quilted lightweight jacket', 'fleece-lined zip-up hoodie jacket', 'padded vest over hoodie',
   'cotton field jacket', 'fleece-lined parka', 'oversized shirt-jacket', 'quilted collarless jacket',
 ]
 const casualColdTops = [
   'chunky knit sweater', 'heavyweight hoodie', 'fleece half-zip pullover',
-  'crew sweater', 'sherpa-lined sweatshirt', 'waffle-knit henley', 'brushed cotton mock-neck',
+  'crew sweatshirt', 'sherpa-lined sweatshirt', 'waffle-knit henley', 'cotton crewneck sweater',
 ]
 
 function getCasualPrompt(gender: string, temp: number): string {
