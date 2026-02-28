@@ -229,9 +229,9 @@ INSTRUCTIONS:
 5. Use plain text with line breaks — no markdown headers or asterisks, emoji sparingly
 6. Be warm, practical, and weather-appropriate`
 
-  // Use OpenAI gpt-5-mini for text generation (pay-as-you-go, no quota issues)
+  // Use OpenAI gpt-5-mini via Responses API (reasoning model, pay-as-you-go)
   try {
-    const res = await fetch('https://api.openai.com/v1/chat/completions', {
+    const res = await fetch('https://api.openai.com/v1/responses', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -239,8 +239,9 @@ INSTRUCTIONS:
       },
       body: JSON.stringify({
         model: 'gpt-5-mini',
-        messages: [{ role: 'user', content: prompt }],
-        max_completion_tokens: 1024,
+        input: [{ role: 'user', content: prompt }],
+        reasoning: { effort: 'low' },
+        max_output_tokens: 2048,
       }),
     })
 
@@ -251,10 +252,16 @@ INSTRUCTIONS:
     }
 
     const data = await res.json() as {
-      choices?: Array<{ message?: { content?: string } }>
+      output?: Array<{
+        type?: string
+        content?: Array<{ type?: string; text?: string }>
+      }>
     }
 
-    const content = data.choices?.[0]?.message?.content
+    const content = data.output
+      ?.find(o => o.type === 'message')
+      ?.content?.find(c => c.type === 'output_text')
+      ?.text
     if (!content) {
       return { text: getFallbackRecommendation(weather, lang), source: 'fallback', error: 'Empty OpenAI text response' }
     }
@@ -311,7 +318,7 @@ async function generateOutfitImages(
     const photoObj = await photosBucket.get(subscriber.photo_r2_key)
     if (!photoObj) {
       console.error(`[cron] Photo not found in R2: ${subscriber.photo_r2_key}`)
-      return { images: [], photoSizeBytes: 0 }
+      return { images: [], photoSizeBytes: 0, scenarioErrors: ['photo not found in R2'] }
     }
     const photoBuffer = await photoObj.arrayBuffer()
     console.log(`[cron] Photo loaded: ${photoBuffer.byteLength} bytes for ${subscriber.email}`)
@@ -326,7 +333,7 @@ async function generateOutfitImages(
     photoDataUri = `data:image/jpeg;base64,${base64}`
   } catch (e) {
     console.error(`[cron] Failed to read photo from R2:`, e)
-    return { images: [], photoSizeBytes: 0 }
+    return { images: [], photoSizeBytes: 0, scenarioErrors: [`R2 read error: ${e instanceof Error ? e.message : String(e)}`] }
   }
 
   const photoSizeBytes = photoDataUri.length  // approximate size for debug
@@ -707,8 +714,8 @@ export const onRequestGet: PagesFunction<Env> = async (context) => {
         if (sub.profile_complete && sub.photo_r2_key && sub.gender && (context.env.GEMINI_API_KEY || context.env.OPENAI_API_KEY) && context.env.DAILY_IMAGES_BUCKET) {
           try {
             imageStatus = 'generating'
-            // 90-second timeout to prevent infinite loops from blocking email delivery
-            const IMAGE_TIMEOUT_MS = 90_000
+            // 120-second timeout to allow for slow image generation (gpt-image-1.5 can take 30-60s per image)
+            const IMAGE_TIMEOUT_MS = 120_000
             const imgPromise = generateOutfitImages(
               sub,
               weather,

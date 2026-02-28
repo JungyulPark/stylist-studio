@@ -10,7 +10,7 @@ export interface ImageScenario {
   prompt: string
 }
 
-const FETCH_TIMEOUT_MS = 25_000
+const FETCH_TIMEOUT_MS = 55_000
 const RETRY_BASE_MS = 1500
 const RETRY_JITTER_MS = 500
 
