@@ -141,12 +141,19 @@ DO NOT generate full body if original only shows partial body.
 Generate the edited photo with IDENTICAL composition to the input.`
 
     // Try OpenAI gpt-image-1.5 first
+    let openaiError = ''
     if (openaiKey) {
-      console.log(`[OpenAI] Trying gpt-image-1.5 for ${scenario.id}`)
-      const openaiResult = await editPhotoWithOpenAI(base64Data, mimeType, editPrompt, openaiKey)
-      if (openaiResult) {
-        console.log(`[OpenAI] Success for ${scenario.id}`)
-        return openaiResult
+      try {
+        console.log(`[OpenAI] Trying gpt-image-1.5 for ${scenario.id}`)
+        const openaiResult = await editPhotoWithOpenAI(base64Data, mimeType, editPrompt, openaiKey)
+        if (openaiResult) {
+          console.log(`[OpenAI] Success for ${scenario.id}`)
+          return openaiResult
+        }
+        openaiError = 'returned null'
+      } catch (e) {
+        openaiError = e instanceof Error ? e.message : String(e)
+        console.log(`[OpenAI] Error for ${scenario.id}: ${openaiError}`)
       }
       console.log(`[OpenAI] Failed for ${scenario.id}, falling back to Gemini`)
     }

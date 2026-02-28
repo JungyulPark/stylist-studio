@@ -22,12 +22,7 @@ function fetchWithTimeout(url: string, init: RequestInit, timeoutMs = FETCH_TIME
 
 /**
  * Edit a photo using OpenAI gpt-image-1.5
- * @param base64Data - raw base64 image data (without data URI prefix)
- * @param mimeType - e.g. "image/jpeg", "image/png"
- * @param prompt - the editing prompt
- * @param apiKey - OpenAI API key
- * @param retryCount - internal retry counter
- * @returns base64 data URI of the edited photo, or null on failure
+ * Returns { result, error } - result is data URI or null, error is message if failed
  */
 export async function editPhotoWithOpenAI(
   base64Data: string,
@@ -36,7 +31,7 @@ export async function editPhotoWithOpenAI(
   apiKey: string,
   retryCount: number = 0
 ): Promise<string | null> {
-  const MAX_RETRIES = 2
+  const MAX_RETRIES = 1
 
   try {
     // Convert base64 to Blob for multipart upload
@@ -47,10 +42,10 @@ export async function editPhotoWithOpenAI(
     }
 
     const extension = mimeType.split('/')[1] || 'png'
-    const blob = new Blob([bytes], { type: mimeType })
+    const file = new File([bytes], `photo.${extension}`, { type: mimeType })
 
     const formData = new FormData()
-    formData.append('image', blob, `photo.${extension}`)
+    formData.append('image', file)
     formData.append('prompt', prompt)
     formData.append('model', 'gpt-image-1.5')
     formData.append('n', '1')
@@ -60,6 +55,8 @@ export async function editPhotoWithOpenAI(
     formData.append('moderation', 'auto')
     formData.append('input_fidelity', 'high')
     formData.append('response_format', 'b64_json')
+
+    console.log(`[OpenAI] Sending request: image=${(bytes.length/1024).toFixed(0)}KB, prompt=${prompt.substring(0, 80)}...`)
 
     const response = await fetchWithTimeout('https://api.openai.com/v1/images/edits', {
       method: 'POST',
@@ -71,11 +68,12 @@ export async function editPhotoWithOpenAI(
 
     if (!response.ok) {
       const errorBody = await response.text()
-      console.error(`[OpenAI] gpt-image-1.5 failed (${response.status}): ${errorBody.substring(0, 500)}`)
+      const errMsg = `OpenAI ${response.status}: ${errorBody.substring(0, 300)}`
+      console.error(`[OpenAI] ${errMsg}`)
 
-      // Don't retry on quota/billing errors (429, 402) — they won't resolve on retry
-      if (response.status === 429 || response.status === 402) {
-        return null
+      // Don't retry on quota/billing/validation errors
+      if (response.status === 429 || response.status === 402 || response.status === 400) {
+        throw new Error(errMsg)
       }
 
       if (retryCount < MAX_RETRIES) {
@@ -84,7 +82,7 @@ export async function editPhotoWithOpenAI(
         await sleep(delay)
         return editPhotoWithOpenAI(base64Data, mimeType, prompt, apiKey, retryCount + 1)
       }
-      return null
+      throw new Error(errMsg)
     }
 
     const data = await response.json() as {
@@ -104,13 +102,17 @@ export async function editPhotoWithOpenAI(
       return editPhotoWithOpenAI(base64Data, mimeType, prompt, apiKey, retryCount + 1)
     }
 
-    return null
+    throw new Error('OpenAI: no image in response after retries')
   } catch (error) {
-    console.error(`[OpenAI] Error:`, error)
+    if (error instanceof Error && error.message.startsWith('OpenAI')) {
+      throw error // propagate specific errors
+    }
+    const errMsg = error instanceof Error ? error.message : String(error)
+    console.error(`[OpenAI] Error: ${errMsg}`)
     if (retryCount < MAX_RETRIES) {
       await sleep(retryDelay(retryCount))
       return editPhotoWithOpenAI(base64Data, mimeType, prompt, apiKey, retryCount + 1)
     }
-    return null
+    throw new Error(`OpenAI exception: ${errMsg}`)
   }
 }
