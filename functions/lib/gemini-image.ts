@@ -48,6 +48,12 @@ export async function editPhotoWithGemini(
 ): Promise<string | null> {
   const MAX_RETRIES = 2
 
+  // Guard: need at least one API key
+  if (!apiKey && !openaiKey) {
+    console.error('[ImageGen] No API keys available (neither Gemini nor OpenAI)')
+    return null
+  }
+
   try {
     const base64Match = photo.match(/^data:image\/(\w+);base64,(.+)$/)
     if (!base64Match) return null

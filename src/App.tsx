@@ -138,6 +138,8 @@ const translations: Record<Language, {
   report: string
   restart: string
   error: string
+  errorApologyRefund: string
+  hairErrorApologyRefund: string
   retry: string
   styleGallery: string
   styleGalleryDesc: string
@@ -507,6 +509,8 @@ const translations: Record<Language, {
     report: '전문 스타일 분석 리포트',
     restart: '다시 분석하기',
     error: '분석 중 오류가 발생했습니다',
+    errorApologyRefund: '죄송합니다. 스타일 분석 중 일시적인 오류가 발생했습니다. 결제하신 금액은 자동으로 환불 처리됩니다. 불편을 드려 진심으로 사과드립니다.',
+    hairErrorApologyRefund: '죄송합니다. 헤어스타일 생성 중 일시적인 오류가 발생했습니다. 결제하신 금액은 자동으로 환불 처리됩니다. 불편을 드려 진심으로 사과드립니다.',
     retry: '다시 시도',
     styleGallery: '스타일 추천',
     styleGalleryDesc: '상황별 맞춤 스타일을 스타일리스트가 제안합니다',
@@ -866,6 +870,8 @@ const translations: Record<Language, {
     report: 'Expert Style Analysis Report',
     restart: 'Analyze Again',
     error: 'An error occurred during analysis',
+    errorApologyRefund: 'We sincerely apologize. A temporary error occurred during style analysis. Your payment will be automatically refunded. We are sorry for the inconvenience.',
+    hairErrorApologyRefund: 'We sincerely apologize. A temporary error occurred during hairstyle generation. Your payment will be automatically refunded. We are sorry for the inconvenience.',
     retry: 'Try Again',
     styleGallery: 'Style Recommendations',
     styleGalleryDesc: 'Your stylist suggests personalized styles for different occasions',
@@ -1223,6 +1229,8 @@ const translations: Record<Language, {
     report: 'スタイル分析レポート',
     restart: '再分析する',
     error: '分析中にエラーが発生しました',
+    errorApologyRefund: '大変申し訳ございません。スタイル分析中に一時的なエラーが発生しました。お支払い金額は自動的に返金処理されます。ご不便をおかけし誠に申し訳ございません。',
+    hairErrorApologyRefund: '大変申し訳ございません。ヘアスタイル生成中に一時的なエラーが発生しました。お支払い金額は自動的に返金処理されます。ご不便をおかけし誠に申し訳ございません。',
     retry: '再試行',
     styleGallery: 'スタイル提案',
     styleGalleryDesc: 'シーン別のおすすめスタイルをスタイリストがご提案します',
@@ -1580,6 +1588,8 @@ const translations: Record<Language, {
     report: '风格分析报告',
     restart: '重新分析',
     error: '分析过程中发生错误',
+    errorApologyRefund: '非常抱歉，样式分析过程中出现了暂时性错误。您的付款将自动退款处理。给您带来不便，我们深表歉意。',
+    hairErrorApologyRefund: '非常抱歉，发型生成过程中出现了暂时性错误。您的付款将自动退款处理。给您带来不便，我们深表歉意。',
     retry: '重试',
     styleGallery: '风格推荐',
     styleGalleryDesc: '造型师为您推荐不同场合的穿搭风格',
@@ -1937,6 +1947,8 @@ const translations: Record<Language, {
     report: 'Informe de Análisis de Estilo',
     restart: 'Analizar de nuevo',
     error: 'Ocurrió un error durante el análisis',
+    errorApologyRefund: 'Lo sentimos mucho. Ocurrió un error temporal durante el análisis de estilo. Su pago será reembolsado automáticamente. Pedimos disculpas por las molestias.',
+    hairErrorApologyRefund: 'Lo sentimos mucho. Ocurrió un error temporal durante la generación del peinado. Su pago será reembolsado automáticamente. Pedimos disculpas por las molestias.',
     retry: 'Reintentar',
     styleGallery: 'Recomendaciones de Estilo',
     styleGalleryDesc: 'Tu estilista sugiere estilos personalizados para diferentes ocasiones',
@@ -3554,9 +3566,7 @@ function App() {
       setCheckoutId(null)
     } catch (err) {
       console.error('Analysis error:', err)
-      setError(lang === 'ko'
-        ? '분석 중 오류가 발생했습니다. 자동으로 환불 처리됩니다.'
-        : 'An error occurred during analysis. Your payment will be automatically refunded.')
+      setError(t.errorApologyRefund)
       setPage('input')
     }
   }
@@ -3636,18 +3646,14 @@ function App() {
             trackEvent('generation_error', { type: 'hair', reason: 'no_images' })
             await processAutoRefund('Hair style generation failed - no images returned')
             setGeneratedHairImages([])
-            setError(lang === 'ko'
-              ? '헤어스타일 생성에 실패했습니다. 자동으로 환불 처리됩니다.'
-              : 'Hair style generation failed. Your payment will be automatically refunded.')
+            setError(t.hairErrorApologyRefund)
           }
         } else {
           // API 오류 - 자동 환불
           trackEvent('generation_error', { type: 'hair', reason: 'api_error' })
           await processAutoRefund('Hair style generation failed - API error')
           setGeneratedHairImages([])
-          setError(lang === 'ko'
-            ? '헤어스타일 생성에 실패했습니다. 자동으로 환불 처리됩니다.'
-            : 'Hair style generation failed. Your payment will be automatically refunded.')
+          setError(t.hairErrorApologyRefund)
         }
       } catch (e) {
         console.error('Hair generation error:', e)
@@ -3655,9 +3661,7 @@ function App() {
         trackEvent('generation_error', { type: 'hair', reason: 'exception' })
         await processAutoRefund('Hair style generation failed - exception')
         setGeneratedHairImages([])
-        setError(lang === 'ko'
-          ? '헤어스타일 생성에 실패했습니다. 자동으로 환불 처리됩니다.'
-          : 'Hair style generation failed. Your payment will be automatically refunded.')
+        setError(t.hairErrorApologyRefund)
       }
     }
 
