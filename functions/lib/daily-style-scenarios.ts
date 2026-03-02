@@ -52,10 +52,10 @@ const maleColorPalettes = [
   { tone: 'maritime', c1: 'dark navy', c2: 'rope beige', c3: 'crisp white', c4: 'faded indigo', accent: 'red' },
   // Deep wine (replaces brown-heavy burnt amber)
   { tone: 'deep burgundy', c1: 'dark burgundy', c2: 'ink black', c3: 'cream', c4: 'deep charcoal', accent: 'old gold' },
-  // Soft studio
-  { tone: 'studio warm', c1: 'warm grey', c2: 'sandstone', c3: 'parchment', c4: 'espresso', accent: 'bronze' },
-  // Vintage workwear
-  { tone: 'worn canvas', c1: 'faded indigo', c2: 'worn khaki', c3: 'raw ecru', c4: 'rust brown', accent: 'antique brass' },
+  // Soft studio (cool-shifted)
+  { tone: 'studio cool', c1: 'cool grey', c2: 'stone blue', c3: 'parchment', c4: 'dark slate', accent: 'bronze' },
+  // Vintage workwear (indigo-focused)
+  { tone: 'worn indigo', c1: 'faded indigo', c2: 'washed navy', c3: 'raw ecru', c4: 'dark denim', accent: 'antique brass' },
   // Slate cool
   { tone: 'steel blue', c1: 'steel blue', c2: 'slate', c3: 'ice white', c4: 'deep navy', accent: 'teal' },
 ]
@@ -417,6 +417,7 @@ OUTFIT DIRECTION (adapt colors/fabrics to this person's skin undertone):
 ${basePrompt}
 
 ${emotionBlock}
+PANTS/TROUSERS COLOR ACCURACY: The bottom color MUST match the specified color exactly. Do NOT default to brown, tan, or khaki unless the palette explicitly calls for brown tones. If the palette says navy — make them navy. If charcoal — make them charcoal. Color accuracy for bottoms is critical.
 The specified colors are SUGGESTIONS — shift warmer or cooler to match this person's undertone.
 WARM skin (golden, peachy) → terracotta, camel, olive, cream work best.
 COOL skin (pink, rosy) → navy, lavender, emerald, pearl white work best.`
