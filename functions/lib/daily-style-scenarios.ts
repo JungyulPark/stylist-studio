@@ -417,7 +417,7 @@ OUTFIT DIRECTION (adapt colors/fabrics to this person's skin undertone):
 ${basePrompt}
 
 ${emotionBlock}
-PANTS/TROUSERS COLOR ACCURACY: The bottom color MUST match the specified color exactly. Do NOT default to brown, tan, or khaki unless the palette explicitly calls for brown tones. If the palette says navy — make them navy. If charcoal — make them charcoal. Color accuracy for bottoms is critical.
+STYLING VARIETY: A great stylist never recommends the same look twice. Vary the bottoms — sometimes dark navy trousers, sometimes medium-wash denim jeans, sometimes charcoal wool pants, sometimes olive chinos, sometimes black slim trousers. Match the bottom style to the overall mood. Denim is perfectly appropriate for smart casual and casual looks. Avoid repeating the same brown/tan/khaki bottoms — explore the full spectrum.
 The specified colors are SUGGESTIONS — shift warmer or cooler to match this person's undertone.
 WARM skin (golden, peachy) → terracotta, camel, olive, cream work best.
 COOL skin (pink, rosy) → navy, lavender, emerald, pearl white work best.`
