@@ -51,9 +51,6 @@ export async function editPhotoWithOpenAI(
     formData.append('n', '1')
     formData.append('size', '1024x1024')
     formData.append('quality', 'auto')
-    formData.append('background', 'auto')
-    formData.append('moderation', 'auto')
-    formData.append('input_fidelity', 'high')
     formData.append('response_format', 'b64_json')
 
     console.log(`[OpenAI] Sending request: image=${(bytes.length/1024).toFixed(0)}KB, prompt=${prompt.substring(0, 80)}...`)
