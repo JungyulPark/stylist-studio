@@ -10,6 +10,23 @@
   --font-serif: 'Playfair Display', Georgia, serif;
 }
 
+/* ===== MICRO-INTERACTIONS ===== */
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.fade-in-up {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.5s ease, transform 0.5s ease;
+}
+
+.fade-in-up.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
 /* ===== LANDING PAGE ===== */
 .landing-page {
   min-height: 100vh;
@@ -44,16 +61,30 @@
 }
 
 .logo-icon {
-  width: 56px;
-  height: 56px;
+  width: 44px;
+  height: 44px;
   flex-shrink: 0;
-  filter: drop-shadow(0 1px 3px rgba(0, 0, 0, 0.12));
-  image-rendering: -webkit-optimize-contrast;
-  image-rendering: crisp-edges;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-.logo-icon img {
-  border-radius: 8px;
+.logo-k {
+  font-family: var(--font-serif);
+  font-size: 28px;
+  font-weight: 700;
+  font-style: italic;
+  background: linear-gradient(135deg, #c9a962, #d4af37);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  line-height: 1;
+  filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.08));
+  transition: filter 0.2s ease;
+}
+
+.logo:hover .logo-k {
+  filter: drop-shadow(0 2px 4px rgba(201, 169, 98, 0.3));
 }
 
 .logo-text {

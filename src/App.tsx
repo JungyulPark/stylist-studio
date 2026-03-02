@@ -5185,7 +5185,7 @@ ${hairImgs.length > 0 ? `<div class="section"><h2>${hairSection}</h2><div class=
         <header className="app-header">
           <div className="logo" onClick={handleRestart} style={{ cursor: 'pointer' }}>
             <div className="logo-icon">
-              <img src="/favicon.png" alt="K" style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
+              <span className="logo-k">K</span>
             </div>
             <span className="logo-text">{t.title}</span>
           </div>
@@ -5412,7 +5412,7 @@ ${hairImgs.length > 0 ? `<div class="section"><h2>${hairSection}</h2><div class=
         <header className="app-header">
           <div className="logo" onClick={() => setPage('landing')} style={{ cursor: 'pointer' }}>
             <div className="logo-icon">
-              <img src="/favicon.png" alt="K" style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
+              <span className="logo-k">K</span>
             </div>
             <span className="logo-text">{t.title}</span>
           </div>
@@ -5540,7 +5540,7 @@ ${hairImgs.length > 0 ? `<div class="section"><h2>${hairSection}</h2><div class=
         <header className="app-header">
           <div className="logo" onClick={() => setPage('landing')} style={{ cursor: 'pointer' }}>
             <div className="logo-icon">
-              <img src="/favicon.png" alt="K" style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
+              <span className="logo-k">K</span>
             </div>
             <span className="logo-text">{t.title}</span>
           </div>
@@ -5962,7 +5962,7 @@ ${hairImgs.length > 0 ? `<div class="section"><h2>${hairSection}</h2><div class=
         <header className="app-header">
           <div className="logo" onClick={() => setPage('landing')} style={{ cursor: 'pointer' }}>
             <div className="logo-icon">
-              <img src="/favicon.png" alt="K" style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
+              <span className="logo-k">K</span>
             </div>
             <span className="logo-text">{t.title}</span>
           </div>
@@ -6129,7 +6129,7 @@ ${hairImgs.length > 0 ? `<div class="section"><h2>${hairSection}</h2><div class=
         <header className="landing-header">
           <div className="logo">
             <div className="logo-icon">
-              <img src="/favicon.png" alt="K" style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
+              <span className="logo-k">K</span>
             </div>
             <span className="logo-text">{t.title}</span>
           </div>
@@ -6220,54 +6220,80 @@ ${hairImgs.length > 0 ? `<div class="section"><h2>${hairSection}</h2><div class=
         </section>
 
         {/* Situation Hooks — empathy-driven CTA */}
-        <section className="situation-section">
-          <h2 className="situation-title">{t.situationTitle}</h2>
+        <section className="situation-section" ref={(el) => {
+          if (el) {
+            const cards = el.querySelectorAll('.situation-card, .situation-title, .situation-cta')
+            const observer = new IntersectionObserver(([entry]) => {
+              if (entry.isIntersecting) {
+                cards.forEach((card, i) => {
+                  setTimeout(() => card.classList.add('visible'), i * 100)
+                })
+                observer.disconnect()
+              }
+            }, { threshold: 0.2 })
+            observer.observe(el)
+          }
+        }}>
+          <h2 className="situation-title fade-in-up">{t.situationTitle}</h2>
           <div className="situation-grid">
-            <div className="situation-card" onClick={() => { trackEvent('situation_click', { type: 'interview' }); setPage('hair-selection') }}>
+            <div className="situation-card fade-in-up" onClick={() => { trackEvent('situation_click', { type: 'interview' }); trackEvent('select_item', { item_category: 'full_style' }); setPage('input') }}>
               <span className="situation-icon-text">&#x1F454;</span>
               <p className="situation-text">{t.situation1}</p>
             </div>
-            <div className="situation-card" onClick={() => { trackEvent('situation_click', { type: 'date' }); setPage('hair-selection') }}>
+            <div className="situation-card fade-in-up" onClick={() => { trackEvent('situation_click', { type: 'date' }); trackEvent('select_item', { item_category: 'full_style' }); setPage('input') }}>
               <span className="situation-icon-text">&#x2764;&#xFE0F;</span>
               <p className="situation-text">{t.situation2}</p>
             </div>
-            <div className="situation-card" onClick={() => { trackEvent('situation_click', { type: 'new_people' }); setPage('hair-selection') }}>
+            <div className="situation-card fade-in-up" onClick={() => { trackEvent('situation_click', { type: 'new_people' }); trackEvent('select_item', { item_category: 'full_style' }); setPage('input') }}>
               <span className="situation-icon-text">&#x2728;</span>
               <p className="situation-text">{t.situation3}</p>
             </div>
-            <div className="situation-card" onClick={() => { trackEvent('situation_click', { type: 'change' }); setPage('hair-selection') }}>
+            <div className="situation-card fade-in-up" onClick={() => { trackEvent('situation_click', { type: 'change' }); trackEvent('select_item', { item_category: 'full_style' }); setPage('input') }}>
               <span className="situation-icon-text">&#x1F331;</span>
               <p className="situation-text">{t.situation4}</p>
             </div>
           </div>
-          <button className="situation-cta" onClick={() => { trackEvent('situation_cta_click'); setPage('hair-selection') }}>
+          <button className="situation-cta fade-in-up" onClick={() => { trackEvent('situation_cta_click'); trackEvent('select_item', { item_category: 'full_style' }); setPage('input') }}>
             {t.situationCta}
           </button>
         </section>
 
         {/* How It Works — 3-step process */}
-        <section className="how-it-works-section">
-          <h2 className="how-title">{lang === 'ko' ? '이렇게 진행됩니다' : lang === 'ja' ? '流れはこちら' : lang === 'zh' ? '使用流程' : lang === 'es' ? 'Cómo funciona' : 'How It Works'}</h2>
+        <section className="how-it-works-section" ref={(el) => {
+          if (el) {
+            const items = el.querySelectorAll('.how-title, .how-step, .how-cta')
+            const observer = new IntersectionObserver(([entry]) => {
+              if (entry.isIntersecting) {
+                items.forEach((item, i) => {
+                  setTimeout(() => item.classList.add('visible'), i * 120)
+                })
+                observer.disconnect()
+              }
+            }, { threshold: 0.2 })
+            observer.observe(el)
+          }
+        }}>
+          <h2 className="how-title fade-in-up">{lang === 'ko' ? '이렇게 진행됩니다' : lang === 'ja' ? '流れはこちら' : lang === 'zh' ? '使用流程' : lang === 'es' ? 'Cómo funciona' : 'How It Works'}</h2>
           <div className="how-steps">
-            <div className="how-step">
+            <div className="how-step fade-in-up">
               <div className="how-step-num">1</div>
               <h3 className="how-step-title">{lang === 'ko' ? '사진 업로드' : lang === 'ja' ? '写真をアップロード' : lang === 'zh' ? '上传照片' : lang === 'es' ? 'Sube tu foto' : 'Upload Photo'}</h3>
               <p className="how-step-desc">{lang === 'ko' ? '셀카 또는 전신 사진 한 장이면 충분합니다' : lang === 'ja' ? 'セルフィーまたは全身写真1枚でOK' : lang === 'zh' ? '一张自拍或全身照即可' : lang === 'es' ? 'Una selfie o foto de cuerpo completo' : 'A selfie or full-body photo is all you need'}</p>
             </div>
             <div className="how-step-arrow">→</div>
-            <div className="how-step">
+            <div className="how-step fade-in-up">
               <div className="how-step-num">2</div>
               <h3 className="how-step-title">{lang === 'ko' ? '스타일 분석' : lang === 'ja' ? 'スタイル分析' : lang === 'zh' ? '风格分析' : lang === 'es' ? 'Análisis de estilo' : 'Style Analysis'}</h3>
               <p className="how-step-desc">{lang === 'ko' ? '얼굴형, 체형, 피부톤을 종합 분석합니다' : lang === 'ja' ? '顔型・体型・肌色を総合分析' : lang === 'zh' ? '综合分析脸型、体型、肤色' : lang === 'es' ? 'Análisis integral de tu rostro, cuerpo y tono de piel' : 'Face shape, body type, and skin tone analyzed'}</p>
             </div>
             <div className="how-step-arrow">→</div>
-            <div className="how-step">
+            <div className="how-step fade-in-up">
               <div className="how-step-num">3</div>
               <h3 className="how-step-title">{lang === 'ko' ? '맞춤 결과' : lang === 'ja' ? 'パーソナル結果' : lang === 'zh' ? '个性化结果' : lang === 'es' ? 'Resultados personalizados' : 'Your Results'}</h3>
               <p className="how-step-desc">{lang === 'ko' ? '헤어스타일 5종 + 패션 코디 6종을 받아보세요' : lang === 'ja' ? 'ヘアスタイル5種＋ファッションコーデ6種' : lang === 'zh' ? '获得5种发型+6套穿搭推荐' : lang === 'es' ? '5 peinados + 6 looks de moda' : '5 hairstyles + 6 fashion looks delivered'}</p>
             </div>
           </div>
-          <button className="how-cta" onClick={() => { trackEvent('how_cta_click'); setPage('hair-selection') }}>
+          <button className="how-cta fade-in-up" onClick={() => { trackEvent('how_cta_click'); setPage('hair-selection') }}>
             {t.galleryCta}
           </button>
         </section>
@@ -6736,7 +6762,7 @@ ${hairImgs.length > 0 ? `<div class="section"><h2>${hairSection}</h2><div class=
         <header className="app-header">
           <div className="logo" onClick={handleRestart} style={{ cursor: 'pointer' }}>
             <div className="logo-icon">
-              <img src="/favicon.png" alt="K" style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
+              <span className="logo-k">K</span>
             </div>
             <span className="logo-text">{t.title}</span>
           </div>
@@ -7287,7 +7313,7 @@ ${hairImgs.length > 0 ? `<div class="section"><h2>${hairSection}</h2><div class=
           </button>
           <div className="logo" onClick={handleRestart} style={{ cursor: 'pointer' }}>
             <div className="logo-icon">
-              <img src="/favicon.png" alt="K" style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
+              <span className="logo-k">K</span>
             </div>
             <span className="logo-text">{t.title}</span>
           </div>
@@ -7422,7 +7448,7 @@ ${hairImgs.length > 0 ? `<div class="section"><h2>${hairSection}</h2><div class=
         <header className="app-header">
           <div className="logo" onClick={handleRestart} style={{ cursor: 'pointer' }}>
             <div className="logo-icon">
-              <img src="/favicon.png" alt="K" style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
+              <span className="logo-k">K</span>
             </div>
             <span className="logo-text">{t.title}</span>
           </div>
@@ -7560,7 +7586,7 @@ ${hairImgs.length > 0 ? `<div class="section"><h2>${hairSection}</h2><div class=
         <header className="app-header">
           <div className="logo" onClick={handleRestart} style={{ cursor: 'pointer' }}>
             <div className="logo-icon">
-              <img src="/favicon.png" alt="K" style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
+              <span className="logo-k">K</span>
             </div>
             <span className="logo-text">{t.title}</span>
           </div>
@@ -8531,7 +8557,7 @@ ${hairImgs.length > 0 ? `<div class="section"><h2>${hairSection}</h2><div class=
           </button>
           <div className="logo" onClick={handleRestart} style={{ cursor: 'pointer' }}>
             <div className="logo-icon">
-              <img src="/favicon.png" alt="K" style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
+              <span className="logo-k">K</span>
             </div>
             <span className="logo-text">{t.title}</span>
           </div>
@@ -8738,7 +8764,7 @@ ${hairImgs.length > 0 ? `<div class="section"><h2>${hairSection}</h2><div class=
       <header className="app-header">
         <div className="logo" onClick={handleRestart} style={{ cursor: 'pointer' }}>
           <div className="logo-icon">
-            <img src="/favicon.png" alt="K" style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
+            <span className="logo-k">K</span>
           </div>
           <span className="logo-text">{t.title}</span>
         </div>
