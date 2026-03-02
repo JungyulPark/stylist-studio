@@ -158,11 +158,15 @@ Generate the edited photo.`
 
     // Try OpenAI gpt-image-1.5 first
     if (openaiKey) {
-      console.log(`[OpenAI] Trying gpt-image-1.5 for ${style.id}`)
-      const openaiResult = await editPhotoWithOpenAI(base64Data, mimeType, editPrompt, openaiKey)
-      if (openaiResult) {
-        console.log(`[OpenAI] Success for ${style.id}`)
-        return openaiResult
+      try {
+        console.log(`[OpenAI] Trying gpt-image-1.5 for ${style.id}`)
+        const openaiResult = await editPhotoWithOpenAI(base64Data, mimeType, editPrompt, openaiKey)
+        if (openaiResult) {
+          console.log(`[OpenAI] Success for ${style.id}`)
+          return openaiResult
+        }
+      } catch (e) {
+        console.log(`[OpenAI] Error for ${style.id}: ${e instanceof Error ? e.message : e}`)
       }
       console.log(`[OpenAI] Failed for ${style.id}, falling back to Gemini`)
     }

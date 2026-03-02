@@ -106,11 +106,15 @@ Generate the edited photo.`
 
     // Try OpenAI gpt-image-1.5 first
     if (openaiKey) {
-      console.log(`[OpenAI] Trying gpt-image-1.5 for hair: ${styleName}`)
-      const openaiResult = await editPhotoWithOpenAI(base64Data, mimeType, editPrompt, openaiKey)
-      if (openaiResult) {
-        console.log(`[OpenAI] Success for hair: ${styleName}`)
-        return { style: styleName, imageUrl: openaiResult }
+      try {
+        console.log(`[OpenAI] Trying gpt-image-1.5 for hair: ${styleName}`)
+        const openaiResult = await editPhotoWithOpenAI(base64Data, mimeType, editPrompt, openaiKey)
+        if (openaiResult) {
+          console.log(`[OpenAI] Success for hair: ${styleName}`)
+          return { style: styleName, imageUrl: openaiResult }
+        }
+      } catch (e) {
+        console.log(`[OpenAI] Error for hair ${styleName}: ${e instanceof Error ? e.message : e}`)
       }
       console.log(`[OpenAI] Failed for hair: ${styleName}, falling back to Gemini`)
     }

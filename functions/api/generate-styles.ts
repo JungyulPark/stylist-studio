@@ -54,11 +54,15 @@ async function editPhotoWithModel(
 
     // Try OpenAI gpt-image-1.5 first
     if (openaiKey) {
-      console.log(`[OpenAI] Trying gpt-image-1.5 for ${scenarioId}`)
-      const openaiResult = await editPhotoWithOpenAI(base64Data, mimeType, editPrompt, openaiKey)
-      if (openaiResult) {
-        console.log(`[OpenAI] Success for ${scenarioId}`)
-        return openaiResult
+      try {
+        console.log(`[OpenAI] Trying gpt-image-1.5 for ${scenarioId}`)
+        const openaiResult = await editPhotoWithOpenAI(base64Data, mimeType, editPrompt, openaiKey)
+        if (openaiResult) {
+          console.log(`[OpenAI] Success for ${scenarioId}`)
+          return openaiResult
+        }
+      } catch (e) {
+        console.log(`[OpenAI] Error for ${scenarioId}: ${e instanceof Error ? e.message : e}`)
       }
       console.log(`[OpenAI] Failed for ${scenarioId}, falling back to Gemini`)
     }
