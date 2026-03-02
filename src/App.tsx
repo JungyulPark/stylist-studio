@@ -6221,6 +6221,12 @@ ${hairImgs.length > 0 ? `<div class="section"><h2>${hairSection}</h2><div class=
               <span className="magazine">{t.badgeWeather}</span>
             </div>
           </div>
+          <div className="scroll-hint" onClick={() => document.querySelector('.situation-section')?.scrollIntoView({ behavior: 'smooth' })}>
+            <span className="scroll-hint-text">SCROLL</span>
+            <div className="scroll-hint-arrow">
+              <svg width="20" height="10" viewBox="0 0 20 10" fill="none"><path d="M1 1L10 9L19 1" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>
+            </div>
+          </div>
         </section>
 
         {/* Situation Hooks — empathy-driven CTA */}

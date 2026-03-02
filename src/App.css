@@ -180,6 +180,46 @@
   display: flex;
   flex-direction: column;
   min-height: calc(100vh - 80px);
+  position: relative;
+}
+
+/* Scroll Hint Indicator */
+.scroll-hint {
+  position: absolute;
+  bottom: 1.5rem;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.35rem;
+  cursor: pointer;
+  z-index: 10;
+  animation: scrollFadeIn 1.5s ease 2s both;
+}
+.scroll-hint-text {
+  font-family: var(--font-display);
+  font-size: 0.65rem;
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  color: var(--primary-light);
+  opacity: 0.7;
+}
+.scroll-hint-arrow {
+  color: var(--primary);
+  opacity: 0.6;
+  animation: scrollBounce 2s ease-in-out infinite;
+}
+@keyframes scrollBounce {
+  0%, 100% { transform: translateY(0); opacity: 0.6; }
+  50% { transform: translateY(6px); opacity: 1; }
+}
+@keyframes scrollFadeIn {
+  from { opacity: 0; transform: translateX(-50%) translateY(10px); }
+  to { opacity: 1; transform: translateX(-50%) translateY(0); }
+}
+@media (min-width: 768px) {
+  .scroll-hint { bottom: 2rem; }
 }
 
 @media (min-width: 768px) {
