@@ -118,7 +118,6 @@ async function transformWithGemini(
     const mimeType = `image/${base64Match[1]}`
     const base64Data = base64Match[2]
 
-    const genderWord = gender === 'female' ? 'woman' : 'man'
     const genderGuideHair = gender === 'female'
       ? 'This is a WOMAN. Style should be feminine and suit women.'
       : 'This is a MAN. The hairstyle should suit a man naturally. Perms, soft waves, textured styles are fine. Just avoid overly feminine or women\'s hairstyles.'

@@ -70,7 +70,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       }
 
       return null
-    } catch (e) {
+    } catch {
       console.log('Profile fetch skipped')
       return null
     }
@@ -348,7 +348,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       }
 
       return { error: null }
-    } catch (e) {
+    } catch {
       console.log('Profile update skipped')
       return { error: null }
     }

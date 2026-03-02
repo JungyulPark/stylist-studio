@@ -415,6 +415,13 @@ const translations: Record<Language, {
   badgeRunway: string
   badgePersonalized: string
   badgeWeather: string
+  // Situation hooks
+  situationTitle: string
+  situation1: string
+  situation2: string
+  situation3: string
+  situation4: string
+  situationCta: string
   // Style Chat
   chatTitle: string
   chatPlaceholder: string
@@ -769,6 +776,12 @@ const translations: Record<Language, {
     badgeRunway: '런웨이 영감',
     badgePersonalized: '맞춤형',
     badgeWeather: '날씨 연동',
+    situationTitle: '첫인상이 달라지는 순간',
+    situation1: '중요한 면접을 앞두고 있나요?',
+    situation2: '설레는 데이트, 뭘 입어야 할지 모르겠나요?',
+    situation3: '새로운 인연 앞에서 자신감이 필요한가요?',
+    situation4: '매일 같은 옷, 변화가 필요한 순간인가요?',
+    situationCta: '지금 나만의 스타일 찾기',
     chatTitle: 'Style Advisor',
     chatPlaceholder: '스타일 질문을 입력하세요...',
     chatSend: '전송',
@@ -1122,6 +1135,12 @@ const translations: Record<Language, {
     badgeRunway: 'RUNWAY-INSPIRED',
     badgePersonalized: 'PERSONALIZED',
     badgeWeather: 'WEATHER-AWARE',
+    situationTitle: 'The moment your first impression changes',
+    situation1: 'Got a big interview coming up?',
+    situation2: 'Exciting date night, but nothing to wear?',
+    situation3: 'Need confidence before meeting someone new?',
+    situation4: 'Same outfits every day — ready for a change?',
+    situationCta: 'Find My Style Now',
     chatTitle: 'Style Advisor',
     chatPlaceholder: 'Ask your style question...',
     chatSend: 'Send',
@@ -1473,6 +1492,12 @@ const translations: Record<Language, {
     badgeRunway: 'ランウェイ発',
     badgePersonalized: 'パーソナライズ',
     badgeWeather: '天気連動',
+    situationTitle: '第一印象が変わる瞬間',
+    situation1: '大事な面接を控えていますか？',
+    situation2: 'ドキドキのデート、何を着ればいい？',
+    situation3: '新しい出会いの前に自信が欲しい？',
+    situation4: '毎日同じ服、そろそろ変化が必要？',
+    situationCta: '自分だけのスタイルを見つける',
     chatTitle: 'Style Advisor',
     chatPlaceholder: 'スタイルの質問を入力...',
     chatSend: '送信',
@@ -1824,6 +1849,12 @@ const translations: Record<Language, {
     badgeRunway: '秀场灵感',
     badgePersonalized: '个性定制',
     badgeWeather: '天气感知',
+    situationTitle: '第一印象改变的瞬间',
+    situation1: '即将迎来重要的面试？',
+    situation2: '心动的约会，却不知道穿什么？',
+    situation3: '遇见新朋友前需要自信？',
+    situation4: '每天穿一样的衣服，是时候改变了？',
+    situationCta: '立即找到我的风格',
     chatTitle: 'Style Advisor',
     chatPlaceholder: '输入你的穿搭问题...',
     chatSend: '发送',
@@ -2175,6 +2206,12 @@ const translations: Record<Language, {
     badgeRunway: 'PASARELA',
     badgePersonalized: 'PERSONALIZADO',
     badgeWeather: 'CLIMA-ADAPTADO',
+    situationTitle: 'El momento en que tu primera impresion cambia',
+    situation1: 'Tienes una entrevista importante?',
+    situation2: 'Una cita emocionante y no sabes que ponerte?',
+    situation3: 'Necesitas confianza antes de conocer a alguien?',
+    situation4: 'La misma ropa todos los dias — listo para un cambio?',
+    situationCta: 'Encuentra mi estilo ahora',
     chatTitle: 'Style Advisor',
     chatPlaceholder: 'Escribe tu pregunta de estilo...',
     chatSend: 'Enviar',
@@ -6180,6 +6217,32 @@ ${hairImgs.length > 0 ? `<div class="section"><h2>${hairSection}</h2><div class=
               <span className="magazine">{t.badgeWeather}</span>
             </div>
           </div>
+        </section>
+
+        {/* Situation Hooks — empathy-driven CTA */}
+        <section className="situation-section">
+          <h2 className="situation-title">{t.situationTitle}</h2>
+          <div className="situation-grid">
+            <div className="situation-card" onClick={() => { trackEvent('situation_click', { type: 'interview' }); setPage('hair-selection') }}>
+              <span className="situation-icon-text">&#x1F454;</span>
+              <p className="situation-text">{t.situation1}</p>
+            </div>
+            <div className="situation-card" onClick={() => { trackEvent('situation_click', { type: 'date' }); setPage('hair-selection') }}>
+              <span className="situation-icon-text">&#x2764;&#xFE0F;</span>
+              <p className="situation-text">{t.situation2}</p>
+            </div>
+            <div className="situation-card" onClick={() => { trackEvent('situation_click', { type: 'new_people' }); setPage('hair-selection') }}>
+              <span className="situation-icon-text">&#x2728;</span>
+              <p className="situation-text">{t.situation3}</p>
+            </div>
+            <div className="situation-card" onClick={() => { trackEvent('situation_click', { type: 'change' }); setPage('hair-selection') }}>
+              <span className="situation-icon-text">&#x1F331;</span>
+              <p className="situation-text">{t.situation4}</p>
+            </div>
+          </div>
+          <button className="situation-cta" onClick={() => { trackEvent('situation_cta_click'); setPage('hair-selection') }}>
+            {t.situationCta}
+          </button>
         </section>
 
         {/* How It Works — 3-step process */}

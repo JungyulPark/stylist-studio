@@ -18,10 +18,10 @@ describe('renderMarkdownToHtml', () => {
       const input = '## 💎 Your Style Profile'
       const output = renderMarkdownToHtml(input)
 
-      expect(output).toContain('section-icon')
+      expect(output).toContain('rpt-icon')
       expect(output).toContain('💎')
       expect(output).toContain('Your Style Profile')
-      expect(output).toContain('report-section-card')
+      expect(output).toContain('rpt-section')
     })
 
     it('converts section headers without emoji', () => {
@@ -30,7 +30,7 @@ describe('renderMarkdownToHtml', () => {
 
       expect(output).toContain('✦')
       expect(output).toContain('Style Tips')
-      expect(output).toContain('section-header')
+      expect(output).toContain('rpt-heading')
     })
   })
 
@@ -39,7 +39,7 @@ describe('renderMarkdownToHtml', () => {
       const input = '### Color Recommendations'
       const output = renderMarkdownToHtml(input)
 
-      expect(output).toContain('<h4 class="subsection-title">')
+      expect(output).toContain('<h4 class="rpt-subheading">')
       expect(output).toContain('Color Recommendations')
     })
   })
@@ -49,8 +49,8 @@ describe('renderMarkdownToHtml', () => {
       const input = '**1) Business Casual**'
       const output = renderMarkdownToHtml(input)
 
-      expect(output).toContain('look-card')
-      expect(output).toContain('look-number')
+      expect(output).toContain('rpt-look')
+      expect(output).toContain('rpt-look-num')
       expect(output).toContain('1')
       expect(output).toContain('Business Casual')
     })
@@ -60,10 +60,10 @@ describe('renderMarkdownToHtml', () => {
       const input = '- **Top**: White oxford shirt'
       const output = renderMarkdownToHtml(input)
 
-      expect(output).toContain('look-item')
-      expect(output).toContain('item-label')
+      expect(output).toContain('rpt-item')
+      expect(output).toContain('rpt-item-label')
       expect(output).toContain('Top')
-      expect(output).toContain('item-value')
+      expect(output).toContain('rpt-item-value')
       expect(output).toContain('White oxford shirt')
     })
   })
@@ -73,8 +73,8 @@ describe('renderMarkdownToHtml', () => {
       const input = '1. First item\n2. Second item'
       const output = renderMarkdownToHtml(input)
 
-      expect(output).toContain('numbered-item')
-      expect(output).toContain('item-number')
+      expect(output).toContain('rpt-numbered')
+      expect(output).toContain('rpt-num')
       expect(output).toContain('1')
       expect(output).toContain('First item')
     })
@@ -83,21 +83,20 @@ describe('renderMarkdownToHtml', () => {
       const input = '- Regular item\n- Another item'
       const output = renderMarkdownToHtml(input)
 
-      expect(output).toContain('list-item')
-      expect(output).toContain('list-bullet')
+      expect(output).toContain('rpt-bullet')
+      expect(output).toContain('rpt-dot')
       expect(output).toContain('Regular item')
     })
 
-    it('converts check-style rules', () => {
+    it('converts check-style rules as bullets', () => {
       const keywords = ['Choose', 'Use', 'Keep', 'Select', 'Avoid', 'Prioritize', 'Focus']
 
       keywords.forEach(keyword => {
         const input = `- ${keyword} dark colors for a slimming effect`
         const output = renderMarkdownToHtml(input)
 
-        expect(output).toContain('check-item')
-        expect(output).toContain('check-icon')
-        expect(output).toContain('✓')
+        expect(output).toContain('rpt-bullet')
+        expect(output).toContain('rpt-dot')
         expect(output).toContain(keyword)
       })
     })
@@ -108,7 +107,7 @@ describe('renderMarkdownToHtml', () => {
       const input = 'This is **bold** text'
       const output = renderMarkdownToHtml(input)
 
-      expect(output).toContain('<strong class="accent-text">bold</strong>')
+      expect(output).toContain('<strong>bold</strong>')
     })
 
     it('converts italic text', () => {
@@ -122,7 +121,7 @@ describe('renderMarkdownToHtml', () => {
       const input = '---'
       const output = renderMarkdownToHtml(input)
 
-      expect(output).toContain('<hr class="section-divider" />')
+      expect(output).toContain('<hr class="rpt-divider" />')
     })
   })
 
@@ -139,7 +138,7 @@ describe('renderMarkdownToHtml', () => {
       const input = 'This is a regular paragraph.'
       const output = renderMarkdownToHtml(input)
 
-      expect(output).toContain('<p>This is a regular paragraph.</p>')
+      expect(output).toContain('<p class="rpt-para">This is a regular paragraph.</p>')
     })
   })
 
@@ -161,14 +160,14 @@ You have an athletic build with broad shoulders.
       const output = renderMarkdownToHtml(input)
 
       // Check structure
-      expect(output).toContain('report-section-card')
-      expect(output).toContain('section-header')
+      expect(output).toContain('rpt-section')
+      expect(output).toContain('rpt-heading')
       expect(output).toContain('💎')
       expect(output).toContain('Your Style Profile')
-      expect(output).toContain('subsection-title')
-      expect(output).toContain('look-card')
-      expect(output).toContain('look-item')
-      expect(output).toContain('check-item')
+      expect(output).toContain('rpt-subheading')
+      expect(output).toContain('rpt-look')
+      expect(output).toContain('rpt-item')
+      expect(output).toContain('rpt-bullet')
     })
   })
 })

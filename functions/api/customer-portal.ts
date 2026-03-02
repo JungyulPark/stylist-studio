@@ -78,7 +78,6 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
     }
 
     // 2. Create a Customer Session → get portal URL
-    const origin = new URL(context.request.url).origin
     const sessionRes = await fetch('https://api.polar.sh/v1/customer-sessions/', {
       method: 'POST',
       headers: {
