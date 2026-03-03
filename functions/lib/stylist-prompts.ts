@@ -1005,10 +1005,10 @@ STYLING APPROACH — PERSONAL COLOR ANALYSIS:
   * COOL (pink, rosy, bluish): Best in navy, lavender, ice blue, emerald, burgundy, pearl white. Avoid warm yellows/oranges.
 - Dark skin + warm tones = striking harmony; light skin + cool tones = refined elegance
 - Quality fabrics with natural texture and drape, not stiff or costume-like
-- Avoid overly theatrical, costume-like, neon, or overly saturated outfits — keep it realistic, modern, and tasteful
-- Think modern minimalist brands: COS, Zara, Uniqlo, Massimo Dutti — NOT costume or runway-only styles
-- Colors should be muted and wearable — NO bright red, pumpkin orange, hot pink, or neon tones
-- Prioritize neutral-based outfits with ONE subtle color accent at most
+- Avoid overly theatrical or costume-like outfits — keep it realistic and tasteful
+- Style should feel modern, fresh, and fashion-forward — 2026 trends with timeless sensibility
+- Think luxury editorial quality: Bottega Veneta, Celine, The Row, Toteme, Auralee, Lemaire
+- Colors should complement this person's skin tone — rich, sophisticated shades that make them glow
 ${getGenderStyleRules(gender)}${silhouetteGuide}
 
 ${getBeautyRetouch(gender)}
@@ -1115,7 +1115,7 @@ STYLING APPROACH — PERSONAL COLOR ANALYSIS:
 - The specified color palette is a SUGGESTION — shift shades warmer or cooler to suit this person's undertone
 - Quality fabrics with natural texture and drape, not stiff or costume-like
 - Avoid overly theatrical, costume-like, or neon outfits — keep it realistic and tasteful
-${gender === 'male' ? '- Relaxed, comfortable silhouette — NOT tight, NOT skinny fit\n- Trousers with comfortable straight-leg or slightly wide drape, jackets with soft natural shoulders\n- Mix of relaxed tailored fit and easy casual fit — modern men prefer comfort over constriction' : '- STRONGLY prefer dresses, skirts, and feminine silhouettes over pants\n- Use wrap dresses, midi skirts, pleated skirts, A-line skirts, slip dresses, knit dresses\n- Emphasize waist definition, flowing fabrics, elegant draping\n- Think Reformation, Rouje, Sezane — modern feminine, NOT corporate or frumpy\n- Include heels, mules, or strappy sandals when appropriate'}
+${gender === 'male' ? '- Relaxed, comfortable silhouette — NOT tight, NOT skinny fit\n- Trousers with comfortable straight-leg or slightly wide drape, jackets with soft natural shoulders\n- Mix of relaxed tailored fit and easy casual fit — modern men prefer comfort over constriction' : '- Use a MIX of feminine clothing — tailored trousers, wide-leg pants, blouses, knits, dresses, skirts\n- Do NOT default to only skirts/dresses — trousers are equally feminine and stylish\n- Emphasize waist definition, quality fabrics, elegant proportions\n- Think Reformation, Rouje, Sezane, The Row — modern feminine with variety\n- Include heels, mules, flats, or clean sneakers depending on the look'}
 
 BODY PROPORTION STYLING:
 - ANALYZE this person's body type and proportions from the photo

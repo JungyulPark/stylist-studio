@@ -142,10 +142,7 @@ Generate the edited photo.`
                 ]
               }],
               generationConfig: {
-                responseModalities: ['IMAGE', 'TEXT'],
-                imageConfig: {
-                  imageSize: '1K'
-                }
+                responseModalities: ['IMAGE', 'TEXT']
               }
             })
           }
