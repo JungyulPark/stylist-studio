@@ -119,12 +119,12 @@ const maleMoods = [
   { name: 'LV heritage', guide: 'Heritage patterns reimagined — Prince of Wales check, herringbone, houndstooth in updated proportions. Tweed with modern cut. Structured coat over relaxed knitwear. Polished boots, bold watch or ring.' },
   // Bottega Veneta: contemporary edge
   { name: 'Bottega urban', guide: 'Bold contemporary edge — forest green or deep burgundy double-breasted coat, architectural shoulders. Textured leather pieces, woven intrecciato motif. Dark palette with one pop accent. Lug-sole boots, matte black accessories.' },
-  // Lemaire: architectural ease
-  { name: 'Lemaire ease', guide: 'Sculpted drape with relaxed silhouette — oversized shirt jacket in washed cotton, wide band-collar shirt, tapered wool trousers with volume at hip. Earthy palette: clay, sand, charcoal. Simple leather derbies, canvas tote.' },
+  // Savile Row / J.Press: classic British tailoring — navy suit
+  { name: 'Savile Row navy', guide: 'Classic British bespoke tailoring. FULL MATCHING SUIT in deep navy wool — single-breasted two-button jacket with natural shoulders, notch lapel, working sleeve buttons. Matching navy straight-leg trousers with clean break. Crisp white or pale blue spread-collar shirt. Polished black or oxblood cap-toe oxford shoes. Silk pocket square, minimal dress watch. The kind of suit that commands respect in a boardroom.' },
   // Tom Ford: razor-sharp tailoring
   { name: 'Tom Ford sharp', guide: 'Razor-sharp tailoring with confident ease. Peak-lapel jacket with clean chest, slim straight trousers with perfect break. Rich fabrics: mohair-blend suiting, silk-cotton knit. Polished oxford shoes, bold watch. Monochrome or dark tonal palette.' },
-  // Celine: slim modern Parisian
-  { name: 'Celine modern', guide: 'Slim sharp Parisian silhouette with youthful edge. Fitted leather jacket or slim blazer, narrow trousers, Chelsea boots. Clean lines, dark palette, no excess. Confidence in restraint.' },
+  // Classic charcoal suit — Savile Row / J.Press / Brooks Brothers tradition
+  { name: 'Savile Row charcoal', guide: 'Timeless dark charcoal grey wool suit — full matching set. Single-breasted jacket with soft structured shoulders, straight-leg trousers with single pleat and clean hem. White or ecru dress shirt with spread collar. Dark leather oxford or derby shoes. Silver or gunmetal watch, silk tie in muted tone. Old-money restraint — nothing trendy, everything perfect.' },
   // Zegna: luxurious Italian softness
   { name: 'Zegna refined', guide: 'Luxurious Italian softness with structure. Unlined cashmere blazer over fine-gauge polo or mock-neck, relaxed tailored trousers with soft pleat. Triple Stitch sneakers or suede loafers. Warm earth and grey tones. Effortless sophistication.' },
 ]
@@ -136,18 +136,18 @@ const femaleMoods = [
   { name: 'Auralee soft', guide: 'Fabric-first — garment-dyed cashmere poplin, high-twist wool, supple leather in soft forms. Loose silhouette balanced with one fitted piece. Matte surfaces. Simple elegant flats or loafers.' },
   // LV SS26 domestic comfort: plush approachable
   { name: 'LV comfort', guide: 'Plush and approachable — billowing silhouettes, elegant fluidity, flowing draperies evoking comfort and femininity. Silky trousers, knit pieces, loose coats. Flat shoes. Soft and serene.' },
-  // Hermès SS26: sporty-chic with polish
-  { name: 'Hermès sport', guide: 'Sporty-chic with flirty edge — curve-aware proportions, structured harness or buckle details. Hand-polished cognac leather. Short boots or strappy sandals. Confidence-forward styling.' },
+  // Hermès tailored: power suit with feminine elegance
+  { name: 'Hermès tailored', guide: 'Hermès power tailoring — impeccably cut wool blazer with subtle nipped waist, matching high-waisted straight-leg or slightly wide trousers. Silk blouse or fine-knit turtleneck underneath. Rich equestrian-inspired palette: navy, cognac, ivory, deep green. Polished leather ankle boots or pointed pumps. Hermès-style silk scarf or Kelly bag as accent. Confidence meets femininity — a woman who runs the room.' },
+  // Loro Piana: quiet luxury tailored femininity
+  { name: 'Loro Piana refined', guide: 'Loro Piana quiet luxury — matching cashmere-wool blazer and wide-leg trousers in tonal palette. Silk-cashmere knit camisole or fine-gauge turtleneck. Ultra-premium fabrics with visible softness and weight. Pointed-toe suede pumps or elegant leather flats. Delicate gold jewelry, structured leather tote. Muted palette: ivory, camel, soft grey, powder blue. Whispers wealth through material quality — never a logo in sight.' },
   // Minimalist The Row / Jil Sander
   { name: 'minimal Row', guide: 'Pared-back perfection — every seam intentional. Oversized coat or blazer over slip dress or wide trousers. Tonal monochrome dressing. Pointed flats or block-heel boots. One statement piece of jewelry.' },
-  // Bottega Veneta: sculptural femininity
-  { name: 'Bottega sculptural', guide: 'Sculptural forms with rich material — structured leather or padded knit pieces. Deep jewel tones: emerald, burgundy, midnight. Architectural handbag as focal point. Knee-high boots or platform sandals. Bold gold jewelry.' },
   // Max Mara: timeless Italian craft
   { name: 'Max Mara timeless', guide: 'Enduring Italian elegance — double-breasted camel coat or structured blazer in cream. Silk blouses with soft bow neck. Pressed wool wide-leg trousers. Pointed-toe pumps, tortoiseshell sunglasses. Structured leather bag. Warm earth tones.' },
   // Celine: sharp Parisian minimalism
   { name: 'Celine Parisian', guide: 'Sharp Parisian minimalism with edge. Fitted blazer or leather jacket, silk camisole, slim cigarette trousers or mini skirt with tights. Pointed-toe boots, structured bag. Black and cream palette with one accent. Cool confidence.' },
-  // Valentino: modern romantic elegance
-  { name: 'Valentino romantic', guide: 'Modern romantic elegance. Flowing midi dress or wide palazzo trousers with draped blouse. Rich jewel tones or soft pastels. Elegant heels or embellished flats. Statement earrings, feminine clutch.' },
+  // Bottega Veneta: sculptural femininity
+  { name: 'Bottega sculptural', guide: 'Sculptural forms with rich material — structured leather or padded knit pieces. Deep jewel tones: emerald, burgundy, midnight. Architectural handbag as focal point. Knee-high boots or platform sandals. Bold gold jewelry.' },
   // Dior: architectural French femininity
   { name: 'Dior structured', guide: 'Architectural French femininity. Fitted bar jacket or structured coat-dress with nipped waist. A-line midi skirt or tailored cigarette trousers. Lady-like pumps, structured handbag. Pearl or gold accessories. Polished and poised.' },
 ]
@@ -315,18 +315,18 @@ const maleCasualMoods = [
 ]
 
 const femaleCasualMoods = [
-  // Everyday accessible — genuinely casual, not luxury-coded
-  { name: 'modern minimal', guide: 'Clean everyday simplicity. Oversized cotton shirt or structured tee. White sneakers or simple flats. Canvas tote. No accessories needed.', bottom: 'wide cotton trousers', warmBottom: 'cotton midi skirt' },
-  { name: 'soft drape', guide: 'Soft oversized knits or washed cotton, gentle drape. One fitted piece for balance. Simple flats or clean sneakers. Muted natural palette. Cozy and understated.', bottom: 'wide-leg grey wool trousers with soft drape', warmBottom: 'light linen wide-leg pants' },
-  { name: 'neat everyday', guide: 'Neat everyday look. Cotton knit or simple blouse. Clean sneakers or simple flats. Simple studs, crossbody bag.', bottom: 'relaxed cotton trousers', warmBottom: 'cotton bermuda shorts' },
-  { name: 'athleisure', guide: 'Coordinated sweatshirt-and-jogger set or hoodie with fitted joggers. Cotton fleece, clean lines. White sneakers or simple slides. Minimal jewelry.', bottom: 'matching jogger pants', warmBottom: 'matching cotton shorts' },
+  // Everyday accessible — diverse, feminine, pretty
+  { name: 'modern minimal', guide: 'Clean everyday simplicity. Oversized cotton shirt or structured tee tucked into high waist. White sneakers or simple ballet flats. Canvas tote. Delicate necklace.', bottom: 'wide cotton trousers', warmBottom: 'flowy cotton midi skirt' },
+  { name: 'soft drape', guide: 'Soft oversized knits or washed cotton, gentle drape. One fitted piece for balance. Simple flats or clean sneakers. Muted natural palette. Cozy and understated.', bottom: 'wide-leg grey wool trousers with soft drape', warmBottom: 'flowing linen wide-leg pants' },
+  { name: 'knit dress', guide: 'Elegant knit dress or fitted ribbed midi dress. Simple and feminine — one-piece effortless style. Ankle boots or pointed flats. Delicate earrings, structured mini bag. Polished without trying.', bottom: 'fitted ribbed knit midi skirt', warmBottom: 'light jersey midi dress (no separate bottom)' },
+  { name: 'café date', guide: 'Pretty and put-together for a weekend café or gallery visit. Soft cardigan over fitted top, or a romantic blouse. Crossbody bag, simple jewelry. Feminine but comfortable.', bottom: 'A-line wool midi skirt or pleated skirt', warmBottom: 'flowing floral midi skirt' },
   { name: 'Scandinavian clean', guide: 'Clean Nordic lines. Fitted ribbed knit or simple turtleneck. Ankle boots or clean sneakers. Simple jewelry, structured bag.', bottom: 'medium-wash relaxed straight-leg jeans with natural fade', warmBottom: 'cotton tailored shorts' },
-  { name: 'French off-duty', guide: 'Parisian everyday. Breton stripe or plain cotton tee. Ballet flats or white sneakers. Simple crossbody, no fuss. Effortlessly chic.', bottom: 'straight-leg cotton pants', warmBottom: 'cotton skirt' },
+  { name: 'French off-duty', guide: 'Parisian everyday. Breton stripe or plain cotton tee. Ballet flats or white sneakers. Simple crossbody, no fuss. Effortlessly chic.', bottom: 'straight-leg cotton pants or casual wide trousers', warmBottom: 'cotton wrap skirt or linen shorts' },
   { name: 'understated craft', guide: 'Understated craft. Cotton oxford shirt or simple knit. Simple brogues or trainers. Natural fabrics, muted tones.', bottom: 'wide-leg corduroy trousers', warmBottom: 'cotton canvas trousers' },
   // Slightly elevated everyday
-  { name: 'cozy weekend', guide: 'Cozy weekend ease. Soft cardigan or knit polo. Simple loafers, delicate jewelry. Comfortable and put-together.', bottom: 'cotton wide trousers', warmBottom: 'linen wide-leg pants' },
-  { name: 'warm layers', guide: 'Warm layered comfort. Soft knit over fitted tee. Ankle boots or clean sneakers. Earth tones, approachable.', bottom: 'original-wash slightly wide denim jeans', warmBottom: 'light cotton wide-leg pants' },
-  { name: 'easy comfort', guide: 'Easy modern comfort. Cotton hoodie or zip knit. Clean sneakers, simple bracelet. Relaxed and comfortable.', bottom: 'wide-leg jogger trousers', warmBottom: 'jersey shorts or cotton skirt' },
+  { name: 'cozy weekend', guide: 'Cozy weekend charm. Oversized cashmere cardigan over fitted tee or simple turtleneck. Soft loafers or clean sneakers. Delicate gold hoops, woven bag. Like a fashion editor on her day off.', bottom: 'original-wash slightly wide denim jeans', warmBottom: 'linen wide-leg pants' },
+  { name: 'warm layers', guide: 'Warm layered feminine comfort. Chunky knit sweater over collared shirt, or wrap cardigan with fitted inner. Ankle boots or suede loafers. Crossbody bag, simple bracelet.', bottom: 'wool blend wide trousers in grey or navy', warmBottom: 'light cotton wide-leg pants' },
+  { name: 'easy comfort', guide: 'Easy modern comfort with feminine edge. Cotton hoodie or zip knit paired with something structured on the bottom. Clean sneakers, simple bracelet. Relaxed but cute.', bottom: 'pleated wide trousers or relaxed jogger pants', warmBottom: 'jersey midi skirt or cotton shorts' },
 ]
 
 // ─── Casual Cold-Weather Outerwear Pools (rotate daily for variety) ──
