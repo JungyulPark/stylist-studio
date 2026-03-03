@@ -302,30 +302,30 @@ function getTodaysPickPrompt(weather: WeatherInfo, gender: string): string {
 const maleCasualMoods = [
   // Everyday accessible — genuinely casual, not luxury-coded
   { name: 'clean minimal', guide: 'Simple well-cut basics. Relaxed cotton tee or clean sweatshirt. White sneakers, simple tote. No logos, no fuss.', bottom: 'relaxed chinos', warmBottom: 'cotton shorts' },
-  { name: 'relaxed fit', guide: 'Relaxed silhouette. Oversized cotton shirt or band-collar pullover. Simple sneakers or sandals. Unhurried, effortless.', bottom: 'wide straight-leg cotton trousers', warmBottom: 'wide linen shorts' },
-  { name: 'soft texture', guide: 'Comfort-first. Garment-washed cotton or brushed jersey in muted tones. Dropped shoulders, relaxed body. Canvas shoes or simple sneakers.', bottom: 'tapered cotton pants', warmBottom: 'relaxed linen shorts' },
+  { name: 'relaxed fit', guide: 'Relaxed silhouette. Oversized cotton shirt or band-collar pullover. Simple sneakers or sandals. Unhurried, effortless.', bottom: 'wide straight-leg grey wool trousers with soft drape', warmBottom: 'wide linen shorts' },
+  { name: 'soft texture', guide: 'Comfort-first. Garment-washed cotton or brushed jersey in muted tones. Dropped shoulders, relaxed body. Canvas shoes or simple sneakers.', bottom: 'relaxed wide corduroy trousers', warmBottom: 'relaxed linen shorts' },
   { name: 'sweat setup', guide: 'Clean coordinated sweatshirt-and-jogger set in cotton fleece. Relaxed but not sloppy — fitted enough through the body. Clean sneakers. Simple cap or watch.', bottom: 'matching jogger pants', warmBottom: 'matching jersey shorts' },
-  { name: 'French casual', guide: 'French casual ease. Plain crew-neck tee or breton stripe. Cotton jacket or harrington if cool. Clean white sneakers. Minimal, timeless.', bottom: 'straight-leg dark jeans', warmBottom: 'light cotton chinos with rolled hem' },
+  { name: 'French casual', guide: 'French casual ease. Plain crew-neck tee or breton stripe. Cotton jacket or harrington if cool. Clean white sneakers. Minimal, timeless.', bottom: 'medium-wash relaxed straight-leg jeans (NOT dark indigo — natural faded denim)', warmBottom: 'light cotton chinos with rolled hem' },
   { name: 'Nordic practical', guide: 'Functional minimalism. Midweight cotton sweatshirt or zip-up fleece. Simple sneakers, crossbody bag. Clean, practical.', bottom: 'tapered utility trousers', warmBottom: 'nylon-cotton shorts' },
   { name: 'outdoor-city', guide: 'City-meets-outdoor utility. Cotton overshirt or light shell jacket. Trail sneakers or simple boots. Functional but clean.', bottom: 'relaxed cargo pants', warmBottom: 'light climbing shorts' },
   // Slightly elevated everyday
-  { name: 'easy smart', guide: 'Clean and put-together without trying hard. Crewneck knit or zip hoodie. Clean sneakers. Soft and comfortable, not overdressed.', bottom: 'cotton jogger pants', warmBottom: 'cotton drawstring shorts' },
-  { name: 'weekend ease', guide: 'Weekend off-duty. Cotton polo or crewneck sweater. Simple loafers or clean sneakers. Comfortable, not trying too hard.', bottom: 'soft cotton chinos', warmBottom: 'linen drawstring trousers' },
+  { name: 'easy smart', guide: 'Clean and put-together without trying hard. Crewneck knit or zip hoodie. Clean sneakers. Soft and comfortable, not overdressed.', bottom: 'slightly wide wool blend trousers in grey or charcoal', warmBottom: 'cotton drawstring shorts' },
+  { name: 'weekend ease', guide: 'Weekend off-duty. Cotton polo or crewneck sweater. Simple loafers or clean sneakers. Comfortable, not trying too hard.', bottom: 'original-wash slightly wide denim jeans with natural fade', warmBottom: 'linen drawstring trousers' },
   { name: 'warm layers', guide: 'Warm relaxed layering. Knit sweater over simple tee. Desert boots or clean sneakers. Comfortable, approachable.', bottom: 'relaxed straight-leg cotton pants', warmBottom: 'light cotton trousers' },
 ]
 
 const femaleCasualMoods = [
   // Everyday accessible — genuinely casual, not luxury-coded
   { name: 'modern minimal', guide: 'Clean everyday simplicity. Oversized cotton shirt or structured tee. White sneakers or simple flats. Canvas tote. No accessories needed.', bottom: 'wide cotton trousers', warmBottom: 'cotton midi skirt' },
-  { name: 'soft drape', guide: 'Soft oversized knits or washed cotton, gentle drape. One fitted piece for balance. Simple flats or clean sneakers. Muted natural palette. Cozy and understated.', bottom: 'relaxed cotton trousers', warmBottom: 'light linen wide-leg pants' },
+  { name: 'soft drape', guide: 'Soft oversized knits or washed cotton, gentle drape. One fitted piece for balance. Simple flats or clean sneakers. Muted natural palette. Cozy and understated.', bottom: 'wide-leg grey wool trousers with soft drape', warmBottom: 'light linen wide-leg pants' },
   { name: 'neat everyday', guide: 'Neat everyday look. Cotton knit or simple blouse. Clean sneakers or simple flats. Simple studs, crossbody bag.', bottom: 'relaxed cotton trousers', warmBottom: 'cotton bermuda shorts' },
   { name: 'athleisure', guide: 'Coordinated sweatshirt-and-jogger set or hoodie with fitted joggers. Cotton fleece, clean lines. White sneakers or simple slides. Minimal jewelry.', bottom: 'matching jogger pants', warmBottom: 'matching cotton shorts' },
-  { name: 'Scandinavian clean', guide: 'Clean Nordic lines. Fitted ribbed knit or simple turtleneck. Ankle boots or clean sneakers. Simple jewelry, structured bag.', bottom: 'straight-leg dark jeans', warmBottom: 'cotton tailored shorts' },
+  { name: 'Scandinavian clean', guide: 'Clean Nordic lines. Fitted ribbed knit or simple turtleneck. Ankle boots or clean sneakers. Simple jewelry, structured bag.', bottom: 'medium-wash relaxed straight-leg jeans with natural fade', warmBottom: 'cotton tailored shorts' },
   { name: 'French off-duty', guide: 'Parisian everyday. Breton stripe or plain cotton tee. Ballet flats or white sneakers. Simple crossbody, no fuss. Effortlessly chic.', bottom: 'straight-leg cotton pants', warmBottom: 'cotton skirt' },
-  { name: 'understated craft', guide: 'Understated craft. Cotton oxford shirt or simple knit. Simple brogues or trainers. Natural fabrics, muted tones.', bottom: 'relaxed chinos', warmBottom: 'cotton canvas trousers' },
+  { name: 'understated craft', guide: 'Understated craft. Cotton oxford shirt or simple knit. Simple brogues or trainers. Natural fabrics, muted tones.', bottom: 'wide-leg corduroy trousers', warmBottom: 'cotton canvas trousers' },
   // Slightly elevated everyday
   { name: 'cozy weekend', guide: 'Cozy weekend ease. Soft cardigan or knit polo. Simple loafers, delicate jewelry. Comfortable and put-together.', bottom: 'cotton wide trousers', warmBottom: 'linen wide-leg pants' },
-  { name: 'warm layers', guide: 'Warm layered comfort. Soft knit over fitted tee. Ankle boots or clean sneakers. Earth tones, approachable.', bottom: 'soft joggers or relaxed trousers', warmBottom: 'light cotton wide-leg pants' },
+  { name: 'warm layers', guide: 'Warm layered comfort. Soft knit over fitted tee. Ankle boots or clean sneakers. Earth tones, approachable.', bottom: 'original-wash slightly wide denim jeans', warmBottom: 'light cotton wide-leg pants' },
   { name: 'easy comfort', guide: 'Easy modern comfort. Cotton hoodie or zip knit. Clean sneakers, simple bracelet. Relaxed and comfortable.', bottom: 'wide-leg jogger trousers', warmBottom: 'jersey shorts or cotton skirt' },
 ]
 
