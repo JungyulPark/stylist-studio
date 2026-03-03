@@ -396,8 +396,8 @@ Then ADAPT the outfit below to be MOST FLATTERING for HER specific body:
 - Broad shoulders → balance with V-necklines, A-line shapes, or wide-leg bottoms
 - Petite frame → elongate with high waist, monochromatic palette, pointed-toe shoes
 - Curvy figure → highlight with X-silhouette, defined waist, vertical lines
-STRONGLY prefer dresses, skirts, and feminine silhouettes when possible.
-Emphasize waist definition, flowing fabrics, elegant draping.`
+Use a MIX of trousers and skirts/dresses — tailored trousers, wide-leg pants, and denim are equally feminine and stylish.
+Emphasize waist definition, quality fabrics, elegant proportions.`
     : `FIRST, ANALYZE this man's body type, skin tone, face shape, and proportions from the photo.
 Then ADAPT the outfit below to be MOST FLATTERING for HIS specific body:
 - Broad shoulders → lean into structured pieces, clean lines

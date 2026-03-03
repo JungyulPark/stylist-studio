@@ -111,13 +111,14 @@ Think COS, Massimo Dutti, or Zara editorial — modern, versatile, his everyday 
       directiveFemale: `Create the MOST FLATTERING versatile outfit for this woman — like her personal signature style that makes her look her absolute best.
 
 ANALYZE her body type, skin tone, and proportions, then design the perfect outfit:
-- Long legs → show with a midi skirt, A-line dress, or tailored silhouette
-- Defined waist → emphasize with a belt, wrap dress, or fitted knit
-- Broad shoulders → balance with V-neckline, A-line skirt, or wide-leg bottoms
+- Long legs → show with high-waisted wide-leg trousers or a tailored silhouette
+- Defined waist → emphasize with a belt, fitted blazer, or structured knit
+- Broad shoulders → balance with V-neckline and wide-leg bottoms
 - Petite frame → elongate with high waist, monochromatic palette, pointed-toe shoes
-- Curvy figure → highlight with an X-silhouette, wrap dress, or fitted-and-flare shapes
+- Curvy figure → highlight with an X-silhouette, fitted top + flowing trousers
 
-Choose the single most flattering option from: wrap dress, midi skirt + knit top, A-line dress, tailored trousers + silk blouse, or a jumpsuit.
+Choose the single most flattering option from: tailored blazer + wide-leg trousers, silk blouse + pressed pants, knit top + high-waisted trousers, wrap dress, or clean separates.
+IMPORTANT: Include trousers/pants in at least half of all recommendations — do NOT default to only skirts and dresses.
 Think Reformation, Rouje, or Sezane editorial — effortlessly chic, feminine, her everyday best.`,
     },
     {
@@ -138,7 +139,7 @@ Think modern tech CEO meets creative director — confident, capable, approachab
 
 ANALYZE her coloring and build to choose the most powerful professional outfit:
 - Determine her best power color (navy, cream, charcoal, or jewel tones) based on skin undertone
-- Choose the most flattering professional silhouette: tailored blazer + skirt, structured dress, or blouse + tailored trousers
+- Choose the most flattering professional silhouette: tailored blazer + pressed trousers, blouse + wide-leg wool pants, or structured blazer + tailored skirt
 - Nipped waist, feminine lines — powerful but not masculine
 - Elegant footwear: pointed-toe heels, kitten heels, or sophisticated flats
 
@@ -162,8 +163,8 @@ Think refined evening aesthetic — effortlessly stylish, subtly magnetic.`,
       directiveFemale: `Create an ALLURING, ROMANTIC date night look for this woman. Something that highlights her best features and gets a second glance.
 
 ANALYZE her body and choose the most stunning date outfit:
-- Highlight her best features: legs (midi with slit or above-knee), waist (cinched or fitted), decolletage (V-neck or off-shoulder), back (elegant straps)
-- Choose the most flattering option from: satin slip dress, body-skimming knit dress, off-shoulder midi, fitted top + satin skirt, or elegant jumpsuit
+- Highlight her best features: legs (tailored slim trousers or midi with slit), waist (cinched or fitted), decolletage (V-neck or off-shoulder), back (elegant straps)
+- Choose the most flattering option from: silk blouse + tailored slim trousers, body-skimming knit top + pressed wide-leg pants, satin slip dress, elegant jumpsuit, or fitted blazer dress
 - Sensual yet tasteful — alluring, not overly revealing
 - Strappy heels, pointed-toe mules, or elegant sandals
 
@@ -187,15 +188,15 @@ Think The Row, Loro Piana, Brunello Cucinelli — understated opulence.`,
       directiveFemale: `Create a HEAD-TURNING quiet luxury look for this woman. Think front row at fashion week — extraordinary fabrics, impeccable tailoring.
 
 ANALYZE her body and coloring to create the ultimate luxury outfit:
-- Choose her most elevated silhouette: cashmere coat, silk midi dress, or tailored ensemble
+- Choose her most elevated silhouette: cashmere blazer + wide-leg wool trousers, tailored coat + pressed pants, or silk blouse + fine wool-crepe trousers
 - Select fabric-forward pieces: cashmere, silk, fine wool crepe, supple leather
 - Monochromatic or tonal palette that whispers wealth
-- Choose from: long cashmere coat + knit dress, silk blouse + wool-crepe skirt, structured coat-dress, or tonal separates
+- Choose from: cashmere blazer + wide-leg trousers, silk blouse + tailored wool pants, structured coat + knit + pressed trousers, or tonal separates with clean lines
 - Premium footwear: pointed-toe boots, elegant pumps, or refined flats
 - One statement piece of delicate jewelry — less is more
 
 Every piece should radiate quality. Zero logos, pure craftsmanship.
-Think Toteme, The Row, Max Mara — understated opulence, head-turning elegance.`,
+Think Toteme, The Row, Loro Piana — understated opulence, head-turning elegance.`,
     },
     {
       id: 'casual',
@@ -215,7 +216,7 @@ Think off-duty model meets creative professional — effortless cool.`,
 
 ANALYZE her body and style potential:
 - Don't default to jeans + sweater — elevate with feminine combinations
-- Choose the most flattering from: belted shirt dress, oversized knit + midi skirt, fitted striped top + relaxed linen skirt, cardigan + flowing dress, or casual co-ord set
+- Choose the most flattering from: oversized knit + relaxed wide-leg jeans, fitted tee + high-waisted wide trousers, cardigan + cotton chinos, casual blazer + relaxed denim, or belted shirt dress
 - Comfortable but beautiful — every piece contributes to the look
 - Clean sneakers, woven sandals, ballet flats, or casual mules
 
@@ -239,7 +240,7 @@ Think everyday editorial — the best-dressed regular guy in any room.`,
 
 ANALYZE her body and choose the most flattering daily outfit:
 - Simple but intentional — effortless elegance for any day
-- Choose the most flattering from: knit cardigan + camisole + midi skirt, simple wrap dress, fitted top + flowing trousers, knit dress with belt, or blouse + tailored pants
+- Choose the most flattering from: fitted top + wide-leg trousers, cashmere knit + pressed chinos, blouse + tailored pants, knit cardigan + relaxed jeans, or simple wrap dress
 - One delicate piece of jewelry: pendant necklace, simple studs, or thin bracelet
 - Ballet flats, low block-heel mules, or clean sneakers
 
@@ -492,7 +493,7 @@ Then choose the SINGLE most flattering combination from:
 
 ⚠️ REMOVE ALL work items: NO uniform, NO badge, NO work tools. ZERO connection to any workplace.
 ⚠️ Do NOT default to jeans + sweater — elevate with feminine, intentional combinations.
-⚠️ STRONGLY prefer dresses, skirts, and feminine silhouettes when they flatter this body type.
+⚠️ Use a MIX of trousers and skirts/dresses — do NOT default to skirts only. Tailored trousers are equally feminine.
 One delicate gold piece: pendant necklace OR small hoops. Structured leather bag.
 
 Think Reformation or Rouje editorial — relaxed, feminine, never frumpy, never boring.
@@ -524,7 +525,7 @@ Then choose the SINGLE most flattering combination from:
 
 ⚠️ NOT a pencil skirt, NOT a blazer-as-suit. ZERO connection to a courtroom.
 ⚠️ Do NOT default to jeans + sweater — elevate with silk, cashmere, and intentional proportions.
-⚠️ STRONGLY prefer feminine silhouettes: wrap tops, midi skirts, flowing trousers.
+⚠️ Mix feminine silhouettes: wrap tops with tailored trousers, or midi skirts with knits — variety is key.
 Delicate layered gold necklaces, one statement ring. Structured leather tote (Celine or Loewe level).
 
 MOOD: Saturday morning in Cheongdam or the West Village. Walking to brunch at an impossible-to-book restaurant. Her weekend look makes other women screenshot her outfit. The casual is studied but never stiff.`,
@@ -555,7 +556,7 @@ Then choose the SINGLE most flattering combination from:
 
 ⚠️ NO scrubs, NO white coat, NO stethoscope, NO ID badge. ZERO connection to medicine.
 ⚠️ Do NOT default to jeans + sweater — elevate with silk, cashmere, and feminine proportions.
-⚠️ STRONGLY prefer dresses, skirts, and flowing silhouettes when they flatter this body type.
+⚠️ Use a MIX of trousers and skirts/dresses — do NOT default to skirts only. Wide-leg trousers, tailored pants, and denim are equally feminine and stylish.
 Delicate gold jewelry: thin chain necklace OR small hoops. Structured leather tote (Celine or Polene level).
 
 MOOD: Weekend morning in Cheongdam or SoHo. She could be a gallerist, creative director, or fashion editor. Her weekend style is better than most people's best-dressed day. Nothing trendy — timeless. The kind of woman other women screenshot for outfit inspiration.`,
@@ -586,7 +587,7 @@ Then choose the SINGLE most flattering combination from:
 
 ⚠️ NO chef jacket, NO apron, NO kitchen gear. ZERO connection to cooking.
 ⚠️ Do NOT default to jeans + T-shirt — elevate with feminine textures and intentional combinations.
-⚠️ STRONGLY prefer dresses, skirts, and flowing silhouettes when they flatter this body type.
+⚠️ Use a MIX of trousers and skirts/dresses — do NOT default to skirts only. Wide-leg trousers, tailored pants, and denim are equally feminine and stylish.
 Delicate gold chain necklace, small hoops. Quality sunglasses. Straw basket tote or soft leather crossbody.
 
 MOOD: Sunday morning at a coastal café or farmers market. She looks like she runs a food magazine or curates pop-up supper clubs. Effortlessly chic, creative, the kind of woman who makes simple things beautiful. Her Instagram is all natural light and impeccable taste.`,
@@ -951,12 +952,13 @@ function getBeautyRetouch(gender: string): string {
 
 function getGenderStyleRules(gender: string): string {
   if (gender === 'female') {
-    return `- STRONGLY prefer dresses, skirts, and feminine silhouettes over pants
-- Use wrap dresses, midi skirts, pleated skirts, A-line skirts, slip dresses, knit dresses
-- Emphasize waist definition, flowing fabrics, elegant draping
-- Think Reformation, Rouje, Sezane, Realisation Par — modern feminine, NOT corporate
-- Avoid basic jeans+sweater combos — every outfit should feel special and put-together
-- Include heels, mules, or strappy sandals when appropriate (not just sneakers and loafers)`
+    return `- Mix of trousers AND skirts/dresses — do NOT default to only skirts. Trousers are equally feminine and stylish.
+- Trousers options: wide-leg wool, tailored straight-leg, relaxed chinos, pressed pants, slim cigarette trousers
+- Dress/skirt options: wrap dress, midi skirt, A-line skirt, knit dress — when appropriate for the scenario
+- Emphasize waist definition, quality fabrics, elegant proportions
+- Think Reformation, Rouje, Sezane, The Row — modern feminine with variety
+- Every outfit should feel special and put-together
+- Include heels, mules, flats, or clean sneakers depending on the look`
   }
   return `- Relaxed, comfortable silhouette — NOT tight, NOT skinny fit
 - Trousers with comfortable straight-leg or slightly wide drape, jackets with soft natural shoulders
@@ -1097,7 +1099,7 @@ export function buildBrandEditPrompt(opts: {
   const genderWord = gender === 'female' ? 'woman' : 'man'
 
   const genderGuideFashion = gender === 'female'
-    ? 'This is a WOMAN. The outfit MUST be soft and feminine - use dresses, blouses, cardigans, skirts in soft/pastel colors. NO masculine suits, NO blazers, NO formal business wear.'
+    ? 'This is a WOMAN. The outfit MUST be feminine and stylish. Use a MIX of trousers, blazers, blouses, knits, dresses, and skirts — NOT only skirts/dresses. Tailored trousers with a feminine top are equally beautiful. Adapt the style to her body type.'
     : 'This is a MAN. The outfit MUST be masculine and designed for men. Use suits, shirts, masculine jackets, pants - NOT women\'s clothing.'
 
   return `You are the world's top personal stylist. Your job is to dress this person in the PERFECT outfit that complements their unique skin tone, face shape, and body proportions.

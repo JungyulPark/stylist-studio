@@ -97,7 +97,7 @@ STYLING APPROACH — PERSONAL COLOR ANALYSIS:
 - The specified color palette is a SUGGESTION — shift shades warmer or cooler to suit this person's undertone
 - Quality fabrics with natural texture and drape, not stiff or costume-like
 - Avoid overly theatrical, costume-like, or neon outfits — keep it realistic and tasteful
-${gender === 'female' ? '- Use soft, feminine clothing — dresses, blouses, cardigans, skirts' : '- Relaxed, comfortable silhouette — NOT tight, NOT skinny fit\n- Trousers with comfortable straight-leg or slightly wide drape, jackets with soft natural shoulders\n- Mix of relaxed tailored fit and easy casual fit — modern men prefer comfort over constriction'}
+${gender === 'female' ? '- Use a MIX of feminine clothing — tailored trousers, wide-leg pants, blouses, knits, dresses, skirts. Do NOT default to only skirts/dresses.' : '- Relaxed, comfortable silhouette — NOT tight, NOT skinny fit\n- Trousers with comfortable straight-leg or slightly wide drape, jackets with soft natural shoulders\n- Mix of relaxed tailored fit and easy casual fit — modern men prefer comfort over constriction'}
 
 BODY PROPORTION STYLING:
 - Observe body proportions and select silhouettes that FLATTER this build

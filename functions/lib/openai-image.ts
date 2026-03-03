@@ -49,7 +49,7 @@ export async function editPhotoWithOpenAI(
     formData.append('prompt', prompt)
     formData.append('model', 'gpt-image-1.5')
     formData.append('n', '1')
-    formData.append('size', '1024x1024')
+    formData.append('size', 'auto')
     formData.append('quality', 'auto')
     formData.append('response_format', 'b64_json')
 
