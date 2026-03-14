@@ -400,6 +400,8 @@ const translations: Record<Language, {
   trustRefundDesc: string
   trustAI: string
   trustAIDesc: string
+  trustGlobal: string
+  trustGlobalDesc: string
   // SEO meta
   metaTitle: string
   metaDescription: string
@@ -483,7 +485,7 @@ const translations: Record<Language, {
     subtitle: '나만의 퍼스널 스타일리스트',
     heroTitle1: 'Your Personal',
     heroTitle2: 'Stylist',
-    heroDesc: '럭셔리 패션 트랜스포메이션을 경험하세요. 맞춤형 헤어 스타일링부터 큐레이팅된 런웨이 워드로브까지, 당신의 진화가 시작됩니다.',
+    heroDesc: '사진 한 장으로 30초 만에 나만의 헤어 & 패션 스타일링. AI가 얼굴형, 체형, 퍼스널 컬러를 분석합니다.',
     startBtn: '스타일 분석 시작',
     learnMore: '더 알아보기',
     featuredIn: 'Featured in',
@@ -772,14 +774,16 @@ const translations: Record<Language, {
     galleryCta: '나도 변신하기',
     galleryResultTime: '30초 만에 결과 확인',
     trustTitle: '왜 고객들이 선택할까요?',
-    trustRating: '4.8/5.0',
-    trustRatingCount: '만족도',
+    trustRating: '3회 무료',
+    trustRatingCount: '카드 없이 시작',
     trustSpeed: '30초',
-    trustSpeedDesc: '결과 생성',
+    trustSpeedDesc: 'AI 결과 생성',
     trustRefund: '100%',
     trustRefundDesc: '환불 보장',
     trustAI: 'GPT + Gemini',
-    trustAIDesc: '최신 AI 기술',
+    trustAIDesc: '듀얼 AI 엔진',
+    trustGlobal: '5개 언어',
+    trustGlobalDesc: '글로벌 서비스',
     metaTitle: 'PERSONAL STYLIST | 헤어스타일 추천 & 런웨이 패션 스타일링',
     metaDescription: '사진 한 장으로 나만의 스타일을 찾으세요. 첫 방문 무료! 헤어스타일 5종 미리보기 + 럭셔리 브랜드 영감 패션 코디 7종 추천.',
     timerTitle: '첫 방문 특별 할인',
@@ -855,7 +859,7 @@ const translations: Record<Language, {
     subtitle: 'Your Personal Style Assistant',
     heroTitle1: 'Your Personal',
     heroTitle2: 'Stylist',
-    heroDesc: 'Experience a luxurious fashion transformation powered by expert styling. From bespoke hair engineering to curated runway wardrobes, your evolution begins here.',
+    heroDesc: 'Upload one photo. Get personalized hair & fashion styling in 30 seconds. AI analyzes your face shape, body type, and personal color.',
     startBtn: 'Start Transformation',
     learnMore: 'Learn More',
     featuredIn: 'Featured in',
@@ -1144,14 +1148,16 @@ const translations: Record<Language, {
     galleryCta: 'Try My Transformation',
     galleryResultTime: 'Results in 30 seconds',
     trustTitle: 'Why Customers Choose Us',
-    trustRating: '4.8/5.0',
-    trustRatingCount: 'Satisfaction',
+    trustRating: '3x Free',
+    trustRatingCount: 'No Card Required',
     trustSpeed: '30s',
-    trustSpeedDesc: 'Results',
+    trustSpeedDesc: 'AI Results',
     trustRefund: '100%',
     trustRefundDesc: 'Refund Guarantee',
     trustAI: 'GPT + Gemini',
-    trustAIDesc: 'Latest AI Tech',
+    trustAIDesc: 'Dual AI Engine',
+    trustGlobal: '5 Languages',
+    trustGlobalDesc: 'Global Service',
     metaTitle: 'AI Personal Stylist | Hair & Fashion Recommendations',
     metaDescription: 'Find your perfect style with one photo. Free first try! 5 AI hairstyle previews + luxury fashion outfit recommendations.',
     timerTitle: 'First Visit Special',
@@ -1225,7 +1231,7 @@ const translations: Record<Language, {
     subtitle: 'あなただけのスタイリスト',
     heroTitle1: 'Your Personal',
     heroTitle2: 'Stylist',
-    heroDesc: 'プロのスタイリングによるラグジュアリーなファッション変身を体験してください。オーダーメイドのヘアエンジニアリングからキュレートされたランウェイワードローブまで。',
+    heroDesc: '写真1枚で30秒。AIが顔の形、体型、パーソナルカラーを分析し、あなただけのヘア&ファッションスタイリング。',
     startBtn: '変身を開始',
     learnMore: '詳細を見る',
     featuredIn: '掲載メディア',
@@ -1514,14 +1520,16 @@ const translations: Record<Language, {
     galleryCta: '私も変身する',
     galleryResultTime: '30秒で結果確認',
     trustTitle: 'お客様が選ぶ理由',
-    trustRating: '4.8/5.0',
-    trustRatingCount: '満足度',
+    trustRating: '3回無料',
+    trustRatingCount: 'カード不要',
     trustSpeed: '30秒',
-    trustSpeedDesc: '結果生成',
+    trustSpeedDesc: 'AI結果生成',
     trustRefund: '100%',
     trustRefundDesc: '返金保証',
     trustAI: 'GPT + Gemini',
-    trustAIDesc: '最新AI技術',
+    trustAIDesc: 'デュアルAIエンジン',
+    trustGlobal: '5言語',
+    trustGlobalDesc: 'グローバルサービス',
     metaTitle: 'AIパーソナルスタイリスト | ヘア＆ファッション提案',
     metaDescription: '写真1枚であなたに似合うスタイルを発見。初回無料！ヘアスタイル5種プレビュー＋ファッションコーディネート提案。',
     timerTitle: '初回限定割引',
@@ -1595,7 +1603,7 @@ const translations: Record<Language, {
     subtitle: '您的私人造型师',
     heroTitle1: 'Your Personal',
     heroTitle2: 'Stylist',
-    heroDesc: '体验专业造型驱动的奢华时尚蜕变。从定制发型工程到精选秀场衣橱，您的进化从这里开始。',
+    heroDesc: '一张照片，30秒出结果。AI分析你的脸型、体型和个人色彩，打造专属发型和穿搭方案。',
     startBtn: '开始蜕变',
     learnMore: '了解更多',
     featuredIn: '媒体报道',
@@ -1884,14 +1892,16 @@ const translations: Record<Language, {
     galleryCta: '我也要变身',
     galleryResultTime: '30秒出结果',
     trustTitle: '为什么客户选择我们？',
-    trustRating: '4.8/5.0',
-    trustRatingCount: '满意度',
+    trustRating: '3次免费',
+    trustRatingCount: '无需绑卡',
     trustSpeed: '30秒',
-    trustSpeedDesc: '生成结果',
+    trustSpeedDesc: 'AI生成结果',
     trustRefund: '100%',
     trustRefundDesc: '退款保障',
     trustAI: 'GPT + Gemini',
-    trustAIDesc: '最新AI技术',
+    trustAIDesc: '双AI引擎',
+    trustGlobal: '5种语言',
+    trustGlobalDesc: '全球服务',
     metaTitle: 'AI个人造型师 | 发型和时尚推荐',
     metaDescription: '一张照片发现最适合你的风格。首次免费！5种发型预览 + 奢华时尚穿搭推荐。',
     timerTitle: '首次访问特惠',
@@ -1965,7 +1975,7 @@ const translations: Record<Language, {
     subtitle: 'Tu estilista personal',
     heroTitle1: 'Your Personal',
     heroTitle2: 'Stylist',
-    heroDesc: 'Experimenta una lujosa transformación de moda impulsada por estilismo experto. Desde ingeniería capilar a medida hasta guardarropas de pasarela curados.',
+    heroDesc: 'Una foto, 30 segundos. La IA analiza tu rostro, cuerpo y colorimetría personal para crear tu estilo ideal de cabello y moda.',
     startBtn: 'Iniciar Transformación',
     learnMore: 'Saber Más',
     featuredIn: 'Destacado en',
@@ -2254,14 +2264,16 @@ const translations: Record<Language, {
     galleryCta: 'Quiero mi transformación',
     galleryResultTime: 'Resultados en 30 segundos',
     trustTitle: '¿Por qué nos eligen?',
-    trustRating: '4.8/5.0',
-    trustRatingCount: 'Satisfacción',
+    trustRating: '3x Gratis',
+    trustRatingCount: 'Sin tarjeta',
     trustSpeed: '30s',
-    trustSpeedDesc: 'Resultados',
+    trustSpeedDesc: 'Resultados IA',
     trustRefund: '100%',
     trustRefundDesc: 'Garantía de reembolso',
     trustAI: 'GPT + Gemini',
-    trustAIDesc: 'Última tecnología IA',
+    trustAIDesc: 'Doble motor IA',
+    trustGlobal: '5 Idiomas',
+    trustGlobalDesc: 'Servicio global',
     metaTitle: 'Estilista Personal IA | Recomendaciones de Cabello y Moda',
     metaDescription: 'Encuentra tu estilo perfecto con una foto. ¡Primera vez gratis! Vista previa de 5 peinados + recomendaciones de moda de lujo.',
     timerTitle: 'Oferta de primera visita',
@@ -6606,9 +6618,12 @@ ${hairImgs.length > 0 ? `<div class="section"><h2>${hairSection}</h2><div class=
             <p className="hero-desc">{t.heroDesc}</p>
             <div className="hero-buttons">
               {hasFreeTrial ? (
-                <button className="free-cta-pulse" onClick={() => { trackEvent('hero_cta_click', { type: 'free_trial' }); setPage('hair-selection') }}>
-                  {t.freeTrialCta}
-                </button>
+                <div className="hero-cta-wrapper">
+                  <button className="free-cta-pulse" onClick={() => { trackEvent('hero_cta_click', { type: 'free_trial' }); setPage('hair-selection') }}>
+                    {t.freeTrialCta}
+                  </button>
+                  <span className="hero-cta-sub">{t.trustRatingCount}</span>
+                </div>
               ) : (
                 <button className="btn-dark" onClick={() => document.getElementById('features')?.scrollIntoView({ behavior: 'smooth' })}>
                   {t.startBtn}
@@ -6732,6 +6747,10 @@ ${hairImgs.length > 0 ? `<div class="section"><h2>${hairSection}</h2><div class=
             <div className="trust-item">
               <span className="trust-value">{t.trustRefund}</span>
               <span className="trust-desc">{t.trustRefundDesc}</span>
+            </div>
+            <div className="trust-item">
+              <span className="trust-value">{t.trustAI}</span>
+              <span className="trust-desc">{t.trustAIDesc}</span>
             </div>
           </div>
         </section>
