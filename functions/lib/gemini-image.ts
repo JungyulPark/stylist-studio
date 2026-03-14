@@ -89,14 +89,16 @@ EDIT this photo - ONLY change the OUTFIT of the MAIN PERSON to: ${scenario.promp
 
 CRITICAL: This is a ${genderWord}. The outfit MUST be appropriate for a ${genderWord}.
 
-STYLING APPROACH — PERSONAL COLOR ANALYSIS:
-- Examine skin undertone from the photo:
-  * WARM (golden, peachy, yellow): Best in terracotta, olive, camel, mustard, coral, cream. Avoid stark cool tones.
-  * COOL (pink, rosy, bluish): Best in navy, lavender, ice blue, emerald, burgundy, pearl white. Avoid warm yellows/oranges.
-- Dark skin + warm tones = striking harmony; light skin + cool tones = refined elegance
-- The specified color palette is a SUGGESTION — shift shades warmer or cooler to suit this person's undertone
-- Quality fabrics with natural texture and drape, not stiff or costume-like
-- Avoid overly theatrical, costume-like, or neon outfits — keep it realistic and tasteful
+STYLING APPROACH — PROFESSIONAL PERSONAL COLOR & BODY ANALYSIS:
+- Diagnose the person's seasonal color type from their skin undertone:
+  * SPRING WARM (golden, peachy glow): Coral, warm peach, cream, light camel — vivid warm radiance
+  * SUMMER COOL (pink, delicate): Lavender, dusty rose, powder blue, mauve — muted cool elegance
+  * AUTUMN WARM (deep golden/olive): Terracotta, olive, mustard, burgundy, forest green — rich depth
+  * WINTER COOL (high contrast, clear): Cobalt, emerald, magenta, true red, black, white — bold clarity
+- Visually analyze body type and choose the most flattering silhouette strategy
+- The specified color palette is a SUGGESTION — shift to match this person's seasonal color type
+- Quality fabrics with natural texture and drape — cashmere, silk, fine wool, supple leather
+- Avoid overly theatrical or costume-like outfits — keep it realistic, modern, and luxurious
 ${gender === 'female' ? '- Use a MIX of feminine clothing — tailored trousers, wide-leg pants, blouses, knits, dresses, skirts. Do NOT default to only skirts/dresses.' : '- Relaxed, comfortable silhouette — NOT tight, NOT skinny fit\n- Trousers with comfortable straight-leg or slightly wide drape, jackets with soft natural shoulders\n- Mix of relaxed tailored fit and easy casual fit — modern men prefer comfort over constriction'}
 
 BODY PROPORTION STYLING:

@@ -106,7 +106,7 @@ ANALYZE his body type, skin tone, and proportions, then design the perfect outfi
 - Fuller build → elongate with vertical lines, V-necks, dark monochromatic tones
 
 Choose the single most flattering outfit from: smart knit + trousers, casual blazer + tee, clean minimal separates, or elevated basics.
-Think COS, Massimo Dutti, or Zara editorial — modern, versatile, his everyday best.`,
+Think Auralee, Lemaire, or Massimo Dutti at its best — quietly elevated, effortlessly stylish.`,
 
       directiveFemale: `Create the MOST FLATTERING versatile outfit for this woman — like her personal signature style that makes her look her absolute best.
 
@@ -918,16 +918,16 @@ export function getSilhouetteGuide(gender: string, height?: string, weight?: str
   const bmi = w / ((h / 100) ** 2)
 
   if (gender === 'female') {
-    if (bmi < 18.5) return '\nSILHOUETTE: Slim build — add visual volume with layered textures, soft ruffles, and A-line shapes. Warm colors add presence.'
-    if (bmi < 23) return '\nSILHOUETTE: Balanced build — most silhouettes work well. Highlight waist with belts or fitted mid-sections for defined proportions.'
-    if (bmi < 27) return '\nSILHOUETTE: Curvy build — emphasize slim areas (wrists, ankles, collarbone). X-silhouette with defined waist. Vertical lines and monochromatic tones for a streamlined look.'
-    return '\nSILHOUETTE: Fuller build — show slim areas (wrists, ankles, collarbone). Vertical lines and monochromatic tones for streamlined look. X-design with defined waist. Avoid overly tight or baggy.'
+    if (bmi < 18.5) return '\nSILHOUETTE: Slim build — add visual volume with layered textures, structured shoulders, A-line shapes. Warm rich colors add presence. Belted waist creates curves.'
+    if (bmi < 23) return '\nSILHOUETTE: Balanced build — most silhouettes work beautifully. Highlight waist with belts or fitted mid-sections. High waist elongates legs. Both fitted and relaxed proportions suit well.'
+    if (bmi < 27) return '\nSILHOUETTE: Curvy build — X-silhouette with defined waist is most flattering. Show slim areas (wrists, ankles, collarbone). Vertical monochromatic flow streamlines. Wrap dresses and V-necks are powerful.'
+    return '\nSILHOUETTE: Fuller build — vertical lines and monochromatic tones for streamlined elegance. Show slim wrists, ankles, collarbone. X-silhouette with defined waist. Structured fabrics that hold shape, not cling.'
   }
 
-  if (bmi < 18.5) return '\nSILHOUETTE: Slim build — add structure with layered pieces, textured fabrics, and structured shoulders to build visual volume.'
-  if (bmi < 24) return '\nSILHOUETTE: Balanced build — most fits work well. Clean proportions with well-fitted pieces that follow the body naturally.'
-  if (bmi < 28) return '\nSILHOUETTE: Stocky build — vertical lines, monochromatic color flow, and structured fabrics for a lean look. V-shaped layering draws eyes upward.'
-  return '\nSILHOUETTE: Fuller build — dark vertical lines and structured fabrics for a streamlined silhouette. V-neck and open collars elongate. Avoid overly tight or boxy cuts.'
+  if (bmi < 18.5) return '\nSILHOUETTE: Slim build — add structure with layered pieces, textured fabrics, structured shoulders. Relaxed fits with quality drape add visual presence without bulk.'
+  if (bmi < 24) return '\nSILHOUETTE: Balanced build — clean proportions with well-fitted pieces. Both relaxed and tailored work well. Straight-leg or slightly wide trousers with natural drape.'
+  if (bmi < 28) return '\nSILHOUETTE: Athletic/stocky build — vertical lines, monochromatic color flow, V-shaped layering draws eyes upward. Relaxed straight-leg trousers, not tight or skinny.'
+  return '\nSILHOUETTE: Fuller build — dark vertical flow and structured fabrics for streamlined silhouette. V-neck and open collars elongate. Relaxed straight-leg trousers, never tight. Show structure through shoulders.'
 }
 
 // ─── Beauty Retouch ─────────────────────────────────────────────
@@ -999,16 +999,28 @@ ${colorInspiration}
 
 CRITICAL: This is a ${genderWord}. The outfit MUST be appropriate for a ${genderWord}.
 
-STYLING APPROACH — PERSONAL COLOR ANALYSIS:
-- Examine skin undertone from the photo:
-  * WARM (golden, peachy, yellow): Best in terracotta, olive, camel, mustard, coral, cream. Avoid stark cool tones.
-  * COOL (pink, rosy, bluish): Best in navy, lavender, ice blue, emerald, burgundy, pearl white. Avoid warm yellows/oranges.
-- Dark skin + warm tones = striking harmony; light skin + cool tones = refined elegance
-- Quality fabrics with natural texture and drape, not stiff or costume-like
-- Avoid overly theatrical or costume-like outfits — keep it realistic and tasteful
-- Style should feel modern, fresh, and fashion-forward — 2026 trends with timeless sensibility
-- Think luxury editorial quality: Bottega Veneta, Celine, The Row, Toteme, Auralee, Lemaire
-- Colors should complement this person's skin tone — rich, sophisticated shades that make them glow
+STYLING APPROACH — PROFESSIONAL PERSONAL COLOR & BODY ANALYSIS:
+
+STEP 1 — PERSONAL COLOR SEASON (examine skin undertone, then select the best palette):
+  * SPRING WARM (bright golden glow, peach undertone): Coral, warm peach, lime green, warm cream, light camel — radiant, vivid warm colors that make skin luminous
+  * SUMMER COOL (pinkish, delicate, soft complexion): Lavender, dusty rose, powder blue, mauve, soft grey-blue, cool ivory — muted elegant tones that refine
+  * AUTUMN WARM (deep golden/olive, rich depth): Terracotta, olive, mustard, burgundy, forest green, deep camel — rich earth tones with warmth and gravitas
+  * WINTER COOL (high contrast, clear): Cobalt blue, emerald, magenta, true red, pure black, pure white — bold saturated colors that match the person's clarity
+Choose the season that makes THIS person's skin look most alive and radiant.
+
+STEP 2 — BODY TYPE STRATEGY (visually analyze silhouette, apply most flattering approach):
+  * Hourglass → emphasize the defined waist, fitted-at-waist silhouettes
+  * Triangle (wider hips) → draw attention upward with interesting tops, streamline lower body
+  * Inverted Triangle (broad shoulders) → V-necklines, wider bottoms to balance proportions
+  * Rectangle (straight) → create curves with belts, layering, peplum, texture contrast
+  * Round (fuller midsection) → vertical lines, monochromatic flow, show slim wrists/ankles/collarbone
+  * For shorter legs or longer torso: HIGH WAIST is critical — raise the visual waistline to elongate
+
+- Quality fabrics with natural texture and drape — cashmere, silk, fine wool, supple leather
+- Avoid overly theatrical or costume-like outfits — realistic, tasteful, modern luxury
+- Style should feel fashion-forward and editorially polished — 2026 luxury aesthetic
+- Think Bottega Veneta, Celine, The Row, Toteme, Auralee, Lemaire, Loro Piana
+- The right color transforms everything — make this person's skin GLOW
 ${getGenderStyleRules(gender)}${silhouetteGuide}
 
 ${getBeautyRetouch(gender)}
@@ -1107,14 +1119,15 @@ export function buildBrandEditPrompt(opts: {
 BRAND MOOD DIRECTIVE:
 ${brandDirective}
 
-STYLING APPROACH — PERSONAL COLOR ANALYSIS:
-- Examine skin undertone from the photo:
-  * WARM (golden, peachy, yellow): Best in terracotta, olive, camel, mustard, coral, cream. Avoid stark cool tones.
-  * COOL (pink, rosy, bluish): Best in navy, lavender, ice blue, emerald, burgundy, pearl white. Avoid warm yellows/oranges.
-- Dark skin + warm tones = striking harmony; light skin + cool tones = refined elegance
-- The specified color palette is a SUGGESTION — shift shades warmer or cooler to suit this person's undertone
-- Quality fabrics with natural texture and drape, not stiff or costume-like
-- Avoid overly theatrical, costume-like, or neon outfits — keep it realistic and tasteful
+STYLING APPROACH — PROFESSIONAL PERSONAL COLOR ANALYSIS:
+- Diagnose the person's seasonal color type from their skin undertone:
+  * SPRING WARM (golden, peachy glow): Coral, warm peach, cream, light camel — vivid warm radiance
+  * SUMMER COOL (pink, delicate): Lavender, dusty rose, powder blue, mauve — muted cool elegance
+  * AUTUMN WARM (deep golden/olive): Terracotta, olive, mustard, burgundy, forest green — rich depth
+  * WINTER COOL (high contrast, clear): Cobalt, emerald, magenta, true red, black, white — bold clarity
+- The specified color palette is a SUGGESTION — shift to match this person's seasonal color type
+- Quality fabrics with natural texture and drape — cashmere, silk, fine wool, supple leather
+- Avoid overly theatrical or costume-like outfits — keep it realistic, modern, and luxurious
 ${gender === 'male' ? '- Relaxed, comfortable silhouette — NOT tight, NOT skinny fit\n- Trousers with comfortable straight-leg or slightly wide drape, jackets with soft natural shoulders\n- Mix of relaxed tailored fit and easy casual fit — modern men prefer comfort over constriction' : '- Use a MIX of feminine clothing — tailored trousers, wide-leg pants, blouses, knits, dresses, skirts\n- Do NOT default to only skirts/dresses — trousers are equally feminine and stylish\n- Emphasize waist definition, quality fabrics, elegant proportions\n- Think Reformation, Rouje, Sezane, The Row — modern feminine with variety\n- Include heels, mules, flats, or clean sneakers depending on the look'}
 
 BODY PROPORTION STYLING:

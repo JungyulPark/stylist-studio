@@ -418,9 +418,12 @@ ${basePrompt}
 
 ${emotionBlock}
 STYLING VARIETY: A great stylist never recommends the same look twice. Vary the bottoms — sometimes dark navy trousers, sometimes medium-wash denim jeans, sometimes charcoal wool pants, sometimes olive chinos, sometimes black slim trousers. Match the bottom style to the overall mood. Denim is perfectly appropriate for smart casual and casual looks. Avoid repeating the same brown/tan/khaki bottoms — explore the full spectrum.
-The specified colors are SUGGESTIONS — shift warmer or cooler to match this person's undertone.
-WARM skin (golden, peachy) → terracotta, camel, olive, cream work best.
-COOL skin (pink, rosy) → navy, lavender, emerald, pearl white work best.`
+The specified colors are SUGGESTIONS — diagnose this person's seasonal color type and adapt:
+SPRING WARM (golden, peachy glow) → coral, warm peach, cream, light camel — vivid warm radiance.
+SUMMER COOL (pink, delicate) → lavender, dusty rose, powder blue, mauve — muted cool elegance.
+AUTUMN WARM (deep golden/olive) → terracotta, olive, mustard, burgundy — rich depth.
+WINTER COOL (high contrast, clear) → cobalt, emerald, true red, black, white — bold clarity.
+For shorter legs or longer torso: HIGH WAIST bottoms are critical to elongate proportions.`
 }
 
 export function getDailyScenarios(weather: WeatherInfo, gender: string): ImageScenario[] {
