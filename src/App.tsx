@@ -463,6 +463,20 @@ const translations: Record<Language, {
   trendAvantGarde: string
   trendGenerating: string
   trendResultTitle: string
+  // SNS Share Card
+  shareCardTitle: string
+  shareCardCta: string
+  shareToInstagram: string
+  // A/B Paywall
+  abUrgencyText: string
+  // Style DNA
+  styleDnaTitle: string
+  styleDnaSeason: string
+  styleDnaSeasons: { spring: string; summer: string; autumn: string; winter: string }
+  styleDnaBodyType: string
+  styleDnaColors: string
+  styleDnaSilhouettes: string
+  styleDnaShare: string
 }> = {
   ko: {
     title: 'PERSONAL STYLIST',
@@ -824,6 +838,17 @@ const translations: Record<Language, {
     trendAvantGarde: '아방가르드',
     trendGenerating: '트렌드 스타일을 디자인하고 있습니다',
     trendResultTitle: '트렌드 스타일 결과',
+    shareCardTitle: '나만의 스타일 DNA',
+    shareCardCta: '나의 스타일 발견하기',
+    shareToInstagram: 'Instagram 공유용 이미지 저장',
+    abUrgencyText: '지금만 이 가격',
+    styleDnaTitle: '나의 스타일 DNA',
+    styleDnaSeason: '퍼스널 컬러 시즌',
+    styleDnaSeasons: { spring: '봄 웜톤', summer: '여름 쿨톤', autumn: '가을 웜톤', winter: '겨울 쿨톤' },
+    styleDnaBodyType: '체형',
+    styleDnaColors: '추천 컬러 팔레트',
+    styleDnaSilhouettes: '추천 실루엣',
+    styleDnaShare: '스타일 카드 저장',
   },
   en: {
     title: 'PERSONAL STYLIST',
@@ -1183,6 +1208,17 @@ const translations: Record<Language, {
     trendAvantGarde: 'Avant-Garde',
     trendGenerating: 'Designing your trend style',
     trendResultTitle: 'Trend Style Results',
+    shareCardTitle: 'My Style DNA',
+    shareCardCta: 'Discover Your Style',
+    shareToInstagram: 'Save Image for Instagram',
+    abUrgencyText: 'Limited time offer',
+    styleDnaTitle: 'Your Style DNA',
+    styleDnaSeason: 'Personal Color Season',
+    styleDnaSeasons: { spring: 'Spring', summer: 'Summer', autumn: 'Autumn', winter: 'Winter' },
+    styleDnaBodyType: 'Body Type',
+    styleDnaColors: 'Recommended Colors',
+    styleDnaSilhouettes: 'Best Silhouettes',
+    styleDnaShare: 'Save Style Card',
   },
   ja: {
     title: 'PERSONAL STYLIST',
@@ -1542,6 +1578,17 @@ const translations: Record<Language, {
     trendAvantGarde: 'アバンギャルド',
     trendGenerating: 'トレンドスタイルをデザイン中',
     trendResultTitle: 'トレンドスタイル結果',
+    shareCardTitle: '私のスタイルDNA',
+    shareCardCta: 'あなたのスタイルを発見',
+    shareToInstagram: 'Instagram共有用画像を保存',
+    abUrgencyText: '今だけこの価格',
+    styleDnaTitle: 'あなたのスタイルDNA',
+    styleDnaSeason: 'パーソナルカラーシーズン',
+    styleDnaSeasons: { spring: 'スプリング', summer: 'サマー', autumn: 'オータム', winter: 'ウィンター' },
+    styleDnaBodyType: '体型',
+    styleDnaColors: 'おすすめカラー',
+    styleDnaSilhouettes: 'おすすめシルエット',
+    styleDnaShare: 'スタイルカードを保存',
   },
   zh: {
     title: 'PERSONAL STYLIST',
@@ -1901,6 +1948,17 @@ const translations: Record<Language, {
     trendAvantGarde: '前卫风格',
     trendGenerating: '正在设计潮流造型',
     trendResultTitle: '潮流风格结果',
+    shareCardTitle: '我的风格DNA',
+    shareCardCta: '发现你的风格',
+    shareToInstagram: '保存Instagram分享图片',
+    abUrgencyText: '限时优惠',
+    styleDnaTitle: '你的风格DNA',
+    styleDnaSeason: '个人色彩季节',
+    styleDnaSeasons: { spring: '春季暖色调', summer: '夏季冷色调', autumn: '秋季暖色调', winter: '冬季冷色调' },
+    styleDnaBodyType: '体型',
+    styleDnaColors: '推荐色彩',
+    styleDnaSilhouettes: '推荐轮廓',
+    styleDnaShare: '保存风格卡片',
   },
   es: {
     title: 'PERSONAL STYLIST',
@@ -2260,6 +2318,17 @@ const translations: Record<Language, {
     trendAvantGarde: 'Avant-Garde',
     trendGenerating: 'Diseñando tu estilo de tendencia',
     trendResultTitle: 'Resultados de Estilo Tendencia',
+    shareCardTitle: 'Mi Estilo DNA',
+    shareCardCta: 'Descubre Tu Estilo',
+    shareToInstagram: 'Guardar imagen para Instagram',
+    abUrgencyText: 'Oferta por tiempo limitado',
+    styleDnaTitle: 'Tu Estilo DNA',
+    styleDnaSeason: 'Temporada de Color Personal',
+    styleDnaSeasons: { spring: 'Primavera', summer: 'Verano', autumn: 'Otoño', winter: 'Invierno' },
+    styleDnaBodyType: 'Tipo de Cuerpo',
+    styleDnaColors: 'Colores Recomendados',
+    styleDnaSilhouettes: 'Mejores Siluetas',
+    styleDnaShare: 'Guardar Tarjeta de Estilo',
   }
 }
 
@@ -2553,6 +2622,136 @@ function trackEvent(eventName: string, params?: Record<string, string | number |
   } catch { /* noop */ }
 }
 
+// GA4 user properties
+function setUserProperties(props: Record<string, string | number>) {
+  try {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const w = window as any
+    if (typeof w?.gtag === 'function') {
+      w.gtag('set', 'user_properties', props)
+    }
+  } catch { /* noop */ }
+}
+
+// A/B test cohort assignment (persistent)
+function getABVariant(testId: string): 'A' | 'B' {
+  const key = `stylist_ab_${testId}`
+  const stored = localStorage.getItem(key)
+  if (stored === 'A' || stored === 'B') return stored
+  const variant = Math.random() < 0.5 ? 'A' : 'B'
+  localStorage.setItem(key, variant)
+  return variant as 'A' | 'B'
+}
+
+// Style DNA parser — extracts structured data from markdown report
+interface StyleDNA {
+  season: 'spring' | 'summer' | 'autumn' | 'winter' | null
+  bodyType: string | null
+  colors: string[]
+  silhouettes: string[]
+}
+
+const COLOR_NAME_TO_HEX: Record<string, string> = {
+  navy: '#001f3f', coral: '#FF7F50', beige: '#F5F5DC', ivory: '#FFFFF0',
+  burgundy: '#800020', olive: '#808000', camel: '#C19A6B', charcoal: '#36454F',
+  cream: '#FFFDD0', khaki: '#C3B091', sage: '#BCB88A', terracotta: '#E2725B',
+  rust: '#B7410E', mauve: '#E0B0FF', taupe: '#483C32', blush: '#DE5D83',
+  peach: '#FFCBA4', lavender: '#E6E6FA', teal: '#008080', forest: '#228B22',
+  plum: '#8E4585', wine: '#722F37', chocolate: '#7B3F00', sand: '#C2B280',
+  rose: '#FF007F', mint: '#3EB489', dusty: '#B2996E', emerald: '#50C878',
+  sapphire: '#0F52BA', slate: '#708090', stone: '#928E85', powder: '#B0E0E6',
+  denim: '#1560BD', espresso: '#4E312D', honey: '#EB9605', oatmeal: '#D4C5A9',
+  white: '#FFFFFF', black: '#000000', red: '#E74C3C', blue: '#3498DB',
+  green: '#27AE60', pink: '#FF69B4', yellow: '#F1C40F', orange: '#E67E22',
+  brown: '#8B4513', grey: '#95A5A6', gray: '#95A5A6', gold: '#D4AF37',
+  silver: '#C0C0C0', tan: '#D2B48C', maroon: '#800000', indigo: '#4B0082',
+}
+
+function colorNameToHex(name: string): string | null {
+  const lower = name.toLowerCase().trim()
+  return COLOR_NAME_TO_HEX[lower] || null
+}
+
+const SEASON_KEYWORDS: Record<string, 'spring' | 'summer' | 'autumn' | 'winter'> = {
+  coral: 'spring', peach: 'spring', warm: 'spring', golden: 'spring', honey: 'spring',
+  camel: 'spring', ivory: 'spring', apricot: 'spring',
+  lavender: 'summer', powder: 'summer', cool: 'summer', rose: 'summer', mauve: 'summer',
+  dusty: 'summer', slate: 'summer', periwinkle: 'summer',
+  terracotta: 'autumn', rust: 'autumn', olive: 'autumn', burgundy: 'autumn', forest: 'autumn',
+  khaki: 'autumn', chocolate: 'autumn', espresso: 'autumn',
+  navy: 'winter', black: 'winter', emerald: 'winter', sapphire: 'winter', wine: 'winter',
+  plum: 'winter', charcoal: 'winter', cobalt: 'winter',
+}
+
+function parseStyleDNA(report: string): StyleDNA {
+  const result: StyleDNA = { season: null, bodyType: null, colors: [], silhouettes: [] }
+  if (!report) return result
+
+  const lower = report.toLowerCase()
+
+  // Season detection from keywords in the report
+  if (lower.includes('spring') || lower.includes('봄') || lower.includes('スプリング') || lower.includes('春')) result.season = 'spring'
+  else if (lower.includes('summer') || lower.includes('여름') || lower.includes('サマー') || lower.includes('夏')) result.season = 'summer'
+  else if (lower.includes('autumn') || lower.includes('fall') || lower.includes('가을') || lower.includes('オータム') || lower.includes('秋')) result.season = 'autumn'
+  else if (lower.includes('winter') || lower.includes('겨울') || lower.includes('ウィンター') || lower.includes('冬')) result.season = 'winter'
+
+  // Fallback: detect season from color keywords
+  if (!result.season) {
+    const seasonVotes: Record<string, number> = { spring: 0, summer: 0, autumn: 0, winter: 0 }
+    for (const [kw, season] of Object.entries(SEASON_KEYWORDS)) {
+      if (lower.includes(kw)) seasonVotes[season]++
+    }
+    const maxSeason = Object.entries(seasonVotes).sort((a, b) => b[1] - a[1])[0]
+    if (maxSeason && maxSeason[1] > 0) result.season = maxSeason[0] as StyleDNA['season']
+  }
+
+  // Body type detection
+  const bodyPatterns = [
+    /body\s*type[:\s]*([^\n,.]+)/i,
+    /체형[:\s]*([^\n,.]+)/i,
+    /体型[:\s]*([^\n,.]+)/i,
+    /(hourglass|triangle|inverted\s*triangle|rectangle|round|oval|pear|apple)/i,
+    /(모래시계|삼각형|역삼각형|직사각형|둥근형|타원형)/,
+  ]
+  for (const pat of bodyPatterns) {
+    const m = report.match(pat)
+    if (m) { result.bodyType = m[1].trim(); break }
+  }
+
+  // Color extraction — find color names mentioned in recommendations
+  const colorSection = report.match(/(?:추천\s*컬러|recommended\s*color|color\s*palette|컬러\s*팔레트|おすすめカラー|推荐色彩)[:\s]*([^\n]+(?:\n[^\n#]*)*)/i)
+  const colorText = colorSection ? colorSection[1] : report
+  const foundColors: string[] = []
+  for (const colorName of Object.keys(COLOR_NAME_TO_HEX)) {
+    if (colorText.toLowerCase().includes(colorName) && foundColors.length < 8) {
+      foundColors.push(colorName)
+    }
+  }
+  result.colors = foundColors.length > 0 ? foundColors : ['navy', 'beige', 'burgundy', 'olive', 'cream']
+
+  // Silhouette extraction
+  const silhouettePatterns = [
+    /(?:추천\s*실루엣|silhouette|실루엣|シルエット|轮廓)[:\s]*([^\n]+(?:\n[^\n#]*)*)/i,
+    /(?:best\s*fit|핏|フィット)[:\s]*([^\n]+)/i,
+  ]
+  for (const pat of silhouettePatterns) {
+    const m = report.match(pat)
+    if (m) {
+      result.silhouettes = m[1].split(/[,·•\-]/).map(s => s.trim()).filter(s => s.length > 1 && s.length < 40).slice(0, 5)
+      break
+    }
+  }
+  if (result.silhouettes.length === 0) {
+    // Fallback: common silhouettes from general context
+    const silhouetteKeywords = ['A-line', 'straight', 'tailored', 'oversized', 'slim fit', 'wide leg', 'fitted', 'relaxed']
+    for (const kw of silhouetteKeywords) {
+      if (lower.includes(kw.toLowerCase())) result.silhouettes.push(kw)
+    }
+  }
+
+  return result
+}
+
 // GA4 SPA virtual pageview — page_title & page_location 포함해야 GA4 표준 리포트에 표시됨
 function trackPageView(pageName: string) {
   try {
@@ -2719,6 +2918,10 @@ function App() {
   const [trendStyles, setTrendStyles] = useState<StyleImage[]>([])
   const [trendLoading, setTrendLoading] = useState(false)
 
+  // A/B Paywall test state
+  const [abPaywallVariant] = useState<'A' | 'B'>(() => getABVariant('paywall_v1'))
+  const [abUrgencyTimer, setAbUrgencyTimer] = useState(15 * 60) // 15 min in seconds
+
   const feetInchesToCm = (feet: string, inches: string): string => {
     const ft = parseFloat(feet) || 0
     const inch = parseFloat(inches) || 0
@@ -2759,6 +2962,96 @@ function App() {
     const metaDesc = document.querySelector('meta[name="description"]')
     if (metaDesc) metaDesc.setAttribute('content', t.metaDescription)
   }, [lang, t.metaTitle, t.metaDescription])
+
+  // GA4 User Properties — set on mount and when relevant state changes
+  useEffect(() => {
+    const userType = isSubscribed ? 'subscriber' : (isFullPaid || isHairPaid) ? 'paid' : 'free'
+    setUserProperties({
+      user_type: userType,
+      trial_remaining: freeTrialRemaining,
+    })
+  }, [isSubscribed, isFullPaid, isHairPaid, freeTrialRemaining])
+
+  // GA4 gender user property
+  useEffect(() => {
+    if (profile.gender) {
+      setUserProperties({ gender: profile.gender })
+    }
+  }, [profile.gender])
+
+  // GA4 A/B variant user property
+  useEffect(() => {
+    setUserProperties({ ab_paywall: abPaywallVariant })
+  }, [abPaywallVariant])
+
+  // GA4 Scroll depth tracking (landing page only)
+  useEffect(() => {
+    if (page !== 'landing') return
+    const thresholds = [25, 50, 75, 100]
+    const fired = new Set<number>()
+    const onScroll = () => {
+      const scrollTop = window.scrollY
+      const docHeight = document.documentElement.scrollHeight - window.innerHeight
+      if (docHeight <= 0) return
+      const pct = Math.round((scrollTop / docHeight) * 100)
+      for (const t of thresholds) {
+        if (pct >= t && !fired.has(t)) {
+          fired.add(t)
+          trackEvent('scroll_depth', { percent: t, page: 'landing' })
+        }
+      }
+    }
+    window.addEventListener('scroll', onScroll, { passive: true })
+    return () => window.removeEventListener('scroll', onScroll)
+  }, [page])
+
+  // GA4 Page engagement time tracking
+  useEffect(() => {
+    const startTime = Date.now()
+    return () => {
+      const elapsed = Math.round((Date.now() - startTime) / 1000)
+      if (elapsed >= 3) {
+        trackEvent('page_engagement', { page, engagement_time_sec: elapsed })
+      }
+    }
+  }, [page])
+
+  // GA4 Form abandonment tracking
+  useEffect(() => {
+    const onVisibilityChange = () => {
+      if (document.visibilityState === 'hidden') {
+        const hasPhoto = !!profile.photo || !!hairPhoto
+        const isPaymentPage = ['preview', 'hair-preview', 'work-preview'].includes(page)
+        if (hasPhoto && !isFullPaid && !isHairPaid && isPaymentPage) {
+          const currentProduct = page === 'hair-preview' ? 'hair' : page === 'work-preview' ? 'work' : 'full'
+          trackEvent('form_abandonment', { page, has_photo: true, funnel_product: currentProduct })
+        }
+      }
+    }
+    document.addEventListener('visibilitychange', onVisibilityChange)
+    return () => document.removeEventListener('visibilitychange', onVisibilityChange)
+  }, [page, profile.photo, hairPhoto, isFullPaid, isHairPaid])
+
+  // Paywall view tracking (fires once per page visit)
+  useEffect(() => {
+    if (['preview', 'hair-preview', 'work-preview'].includes(page)) {
+      trackEvent('paywall_view', { variant: abPaywallVariant, page })
+    }
+  }, [page, abPaywallVariant])
+
+  // A/B Urgency timer countdown (Variant B only, on preview pages)
+  useEffect(() => {
+    if (abPaywallVariant !== 'B') return
+    if (!['preview', 'hair-preview', 'work-preview'].includes(page)) return
+    setAbUrgencyTimer(15 * 60) // reset on page enter
+    const interval = setInterval(() => {
+      setAbUrgencyTimer(prev => {
+        if (prev <= 0) return 0
+        return prev - 1
+      })
+    }, 1000)
+    return () => clearInterval(interval)
+  }, [page, abPaywallVariant])
 
   // Polar Checkout Configuration (Sandbox 환경)
   // Product ID: cca7d48e-6758-4e83-a375-807ab70615ea
@@ -2882,7 +3175,7 @@ function App() {
 
       // Work Style 결제 성공 처리
       if (purchasedProductType === 'work_style') {
-        trackEvent('purchase', { product: 'work_style', currency: 'USD', value: 3.99 })
+        trackEvent('purchase', { product: 'work_style', currency: 'USD', value: 3.99, ab_variant: abPaywallVariant })
         // No persistent flag — generation happens directly below, one-time only
 
         // IndexedDB에서 저장된 데이터 복원
@@ -2947,7 +3240,7 @@ function App() {
 
       // 챗 토큰 결제 성공 처리
       if (purchasedProductType === 'chat_tokens') {
-        trackEvent('purchase', { product: 'chat_tokens', currency: 'USD', value: 0.99 })
+        trackEvent('purchase', { product: 'chat_tokens', currency: 'USD', value: 0.99, ab_variant: abPaywallVariant })
         const newTokens = chatTokens + 10
         setChatTokens(newTokens)
         localStorage.setItem('stylist_chat_tokens', String(newTokens))
@@ -2959,7 +3252,7 @@ function App() {
       // 구독 결제 성공 처리
       const subscriptionParam = urlParams.get('subscription')
       if (subscriptionParam === 'active' || purchasedProductType === 'daily_style') {
-        trackEvent('purchase', { product: 'daily_style', currency: 'USD', value: 6.99 })
+        trackEvent('purchase', { product: 'daily_style', currency: 'USD', value: 6.99, ab_variant: abPaywallVariant })
         localStorage.setItem('stylist_subscription_active', 'true')
         if (polarCheckoutId) {
           localStorage.setItem('stylist_subscription_checkout_id', polarCheckoutId)
@@ -3043,9 +3336,9 @@ function App() {
 
             if (savedData) {
               // Hair Only 상품인 경우
-              if (purchasedProductType === 'hair') trackEvent('purchase', { product: 'hair', currency: 'USD', value: 2.99 })
-              else trackEvent('purchase', { product: 'full_style', currency: 'USD', value: 4.99 })
-              trackEvent('funnel_step', { step_name: 'purchase', step_number: 5 })
+              if (purchasedProductType === 'hair') trackEvent('purchase', { product: 'hair', currency: 'USD', value: 2.99, ab_variant: abPaywallVariant })
+              else trackEvent('purchase', { product: 'full_style', currency: 'USD', value: 4.99, ab_variant: abPaywallVariant })
+              trackEvent('funnel_step', { step_name: 'purchase', step_number: 5, funnel_product: purchasedProductType })
               if (purchasedProductType === 'hair' && savedData.hairPhoto) {
                 setHairPhoto(savedData.hairPhoto)
                 setSelectedOccasion(savedData.selectedOccasion || null)
@@ -3336,7 +3629,7 @@ function App() {
     const file = e.target.files?.[0]
     if (file) {
       trackEvent('photo_upload', { funnel: 'full_style' })
-      trackEvent('funnel_step', { step_name: 'photo_upload', step_number: 2 })
+      trackEvent('funnel_step', { step_name: 'photo_upload', step_number: 2, funnel_product: 'full' })
       processFile(file)
     }
   }
@@ -3371,8 +3664,8 @@ function App() {
 
   // Polar 결제 처리
   const handlePayment = async (productType: 'full' | 'hair' = 'full') => {
-    trackEvent('begin_checkout', { product: productType, currency: 'USD', value: productType === 'full' ? 4.99 : 2.99 })
-    trackEvent('funnel_step', { step_name: 'begin_checkout', step_number: 4 })
+    trackEvent('begin_checkout', { product: productType, currency: 'USD', value: productType === 'full' ? 4.99 : 2.99, ab_variant: abPaywallVariant })
+    trackEvent('funnel_step', { step_name: 'begin_checkout', step_number: 4, funnel_product: productType })
     setIsProcessingPayment(true)
     try {
       // 결제 전 폼 데이터 저장 (IndexedDB - 사진 포함 가능)
@@ -3491,7 +3784,7 @@ function App() {
       await new Promise(resolve => setTimeout(resolve, 400))
       trackEvent('generation_complete', { type: 'full_style' })
       trackEvent('result_view', { type: 'full_style' })
-      trackEvent('funnel_step', { step_name: 'result_view', step_number: 6 })
+      trackEvent('funnel_step', { step_name: 'result_view', step_number: 6, funnel_product: 'full' })
       setPage('result')
 
       // Step 2: Generate style images first, then hairstyles using best-match outfit
@@ -3668,7 +3961,7 @@ function App() {
     setIsGeneratingHair(false)
     trackEvent('generation_complete', { type: 'hair', paid: false, image_count: generatedHairImages.length })
     trackEvent('result_view', { type: 'hair', is_free_trial: true })
-    trackEvent('funnel_step', { step_name: 'result_view', step_number: 6 })
+    trackEvent('funnel_step', { step_name: 'result_view', step_number: 6, funnel_product: 'hair' })
     setPage('hair-result')
   }
 
@@ -3734,7 +4027,7 @@ function App() {
     setIsGeneratingHair(false)
     trackEvent('generation_complete', { type: 'hair', paid: true, image_count: generatedHairImages.length })
     trackEvent('result_view', { type: 'hair', paid: true })
-    trackEvent('funnel_step', { step_name: 'result_view', step_number: 6 })
+    trackEvent('funnel_step', { step_name: 'result_view', step_number: 6, funnel_product: 'hair' })
     setPage('hair-result')
   }
 
@@ -4255,7 +4548,7 @@ function App() {
       localStorage.setItem('pending_subscription_data', JSON.stringify(subscriptionData))
 
       trackEvent('sub_city_submit', { city: subscriptionCity.trim() })
-      trackEvent('begin_checkout', { product: 'daily_style', currency: 'USD', value: 6.99 })
+      trackEvent('begin_checkout', { product: 'daily_style', currency: 'USD', value: 6.99, ab_variant: abPaywallVariant })
       // Polar 결제 생성
       const response = await fetch('/api/create-checkout', {
         method: 'POST',
@@ -4396,7 +4689,7 @@ function App() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     trackEvent('full_input_submit', { has_photo: !!profile.photo, is_paid: isFullPaid })
-    trackEvent('funnel_step', { step_name: 'form_submit', step_number: 3 })
+    trackEvent('funnel_step', { step_name: 'form_submit', step_number: 3, funnel_product: 'full' })
 
     if (isFullPaid) {
       // 결제 완료 → 결과 페이지로
@@ -4747,6 +5040,116 @@ ${hairImgs.length > 0 ? `<div class="section"><h2>${hairSection}</h2><div class=
     return new Promise(resolve => canvas.toBlob(blob => resolve(blob!), 'image/jpeg', 0.92))
   }, [])
 
+  // Share Card: generate 1080×1920 Instagram Story image
+  const generateShareCard = useCallback(async (imageUrl: string): Promise<Blob> => {
+    const W = 1080, H = 1920
+    const canvas = document.createElement('canvas')
+    canvas.width = W
+    canvas.height = H
+    const ctx = canvas.getContext('2d')!
+
+    // Background
+    ctx.fillStyle = '#FAFAF8'
+    ctx.fillRect(0, 0, W, H)
+
+    // Gold header bar
+    const grad = ctx.createLinearGradient(0, 0, W, 0)
+    grad.addColorStop(0, '#c9a962')
+    grad.addColorStop(1, '#d4af37')
+    ctx.fillStyle = grad
+    ctx.fillRect(0, 0, W, 8)
+
+    // Title
+    ctx.fillStyle = '#1A1A1A'
+    ctx.font = 'bold 56px Manrope, sans-serif'
+    ctx.textAlign = 'center'
+    ctx.fillText(t.shareCardTitle, W / 2, 120)
+
+    // Decorative line
+    ctx.strokeStyle = '#c9a962'
+    ctx.lineWidth = 2
+    ctx.beginPath()
+    ctx.moveTo(W / 2 - 80, 150)
+    ctx.lineTo(W / 2 + 80, 150)
+    ctx.stroke()
+
+    // Style image
+    try {
+      const img = new Image()
+      img.crossOrigin = 'anonymous'
+      await new Promise<void>((resolve, reject) => {
+        img.onload = () => resolve()
+        img.onerror = reject
+        img.src = imageUrl
+      })
+      const imgY = 200
+      const maxImgH = 1300
+      const scale = Math.min((W - 80) / img.width, maxImgH / img.height)
+      const drawW = img.width * scale
+      const drawH = img.height * scale
+      const drawX = (W - drawW) / 2
+      // Rounded rectangle clip
+      ctx.save()
+      const r = 24
+      ctx.beginPath()
+      ctx.moveTo(drawX + r, imgY)
+      ctx.lineTo(drawX + drawW - r, imgY)
+      ctx.arcTo(drawX + drawW, imgY, drawX + drawW, imgY + r, r)
+      ctx.lineTo(drawX + drawW, imgY + drawH - r)
+      ctx.arcTo(drawX + drawW, imgY + drawH, drawX + drawW - r, imgY + drawH, r)
+      ctx.lineTo(drawX + r, imgY + drawH)
+      ctx.arcTo(drawX, imgY + drawH, drawX, imgY + drawH - r, r)
+      ctx.lineTo(drawX, imgY + r)
+      ctx.arcTo(drawX, imgY, drawX + r, imgY, r)
+      ctx.closePath()
+      ctx.clip()
+      ctx.drawImage(img, drawX, imgY, drawW, drawH)
+      ctx.restore()
+    } catch { /* image failed, continue with text-only card */ }
+
+    // CTA text
+    ctx.fillStyle = '#c9a962'
+    ctx.font = 'bold 36px Manrope, sans-serif'
+    ctx.textAlign = 'center'
+    ctx.fillText(t.shareCardCta, W / 2, H - 160)
+
+    // Watermark
+    ctx.fillStyle = '#4A4A4A'
+    ctx.font = '28px Manrope, sans-serif'
+    ctx.fillText('kstylist.cc', W / 2, H - 80)
+
+    // Bottom gold bar
+    ctx.fillStyle = grad
+    ctx.fillRect(0, H - 8, W, 8)
+
+    return new Promise(resolve => canvas.toBlob(blob => resolve(blob!), 'image/png'))
+  }, [t.shareCardTitle, t.shareCardCta])
+
+  // Handle share card generation & sharing
+  const handleShareCardGenerate = useCallback(async (imageUrl: string) => {
+    trackEvent('share_card_generate', { page })
+    try {
+      const blob = await generateShareCard(imageUrl)
+      const file = new File([blob], 'kstylist-style-dna.png', { type: 'image/png' })
+
+      if (navigator.share && navigator.canShare?.({ files: [file] })) {
+        await navigator.share({ files: [file], title: t.shareCardTitle, text: t.shareCardCta })
+      } else {
+        // Fallback: download
+        const url = URL.createObjectURL(blob)
+        const a = document.createElement('a')
+        a.href = url
+        a.download = 'kstylist-style-dna.png'
+        a.click()
+        URL.revokeObjectURL(url)
+      }
+    } catch (err) {
+      if ((err as Error).name !== 'AbortError') {
+        console.error('Share card failed:', err)
+      }
+    }
+  }, [generateShareCard, page, t.shareCardTitle, t.shareCardCta])
+
   // First-visit timer: start 24h countdown on first hair result view
   useEffect(() => {
     if (page === 'hair-result' && isFreeTrial && !timerEnd) {
@@ -4863,7 +5266,7 @@ ${hairImgs.length > 0 ? `<div class="section"><h2>${hairSection}</h2><div class=
     const file = e.target.files?.[0]
     if (file && file.type.startsWith('image/')) {
       trackEvent('photo_upload', { funnel: 'hair' })
-      trackEvent('funnel_step', { step_name: 'photo_upload', step_number: 2 })
+      trackEvent('funnel_step', { step_name: 'photo_upload', step_number: 2, funnel_product: 'hair' })
       const reader = new FileReader()
       reader.onloadend = () => {
         setHairPhoto(reader.result as string)
@@ -4875,7 +5278,7 @@ ${hairImgs.length > 0 ? `<div class="section"><h2>${hairSection}</h2><div class=
   const handleHairRecommendation = async () => {
     if (!selectedOccasion || !selectedVibe) return
     trackEvent('hair_submit', { has_photo: !!hairPhoto, occasion: selectedOccasion, vibe: selectedVibe })
-    trackEvent('funnel_step', { step_name: 'form_submit', step_number: 3 })
+    trackEvent('funnel_step', { step_name: 'form_submit', step_number: 3, funnel_product: 'hair' })
 
     // 사진이 있고 헤어 결제 완료된 경우 바로 결과 생성
     if (hairPhoto && isHairPaid) {
@@ -4925,7 +5328,7 @@ ${hairImgs.length > 0 ? `<div class="section"><h2>${hairSection}</h2><div class=
 
     // 사진 없이 데모 모드로 진행하는 경우 (기존 로직)
     if (!hairPhoto) {
-      trackEvent('begin_checkout', { product: 'hair', currency: 'USD', value: 2.99 })
+      trackEvent('begin_checkout', { product: 'hair', currency: 'USD', value: 2.99, ab_variant: abPaywallVariant })
       setIsProcessingPayment(true)
       try {
         // 결제 전 데이터 저장
@@ -6373,6 +6776,7 @@ ${hairImgs.length > 0 ? `<div class="section"><h2>${hairSection}</h2><div class=
                 </picture>
                 <div className="path-overlay"></div>
                 <span className="path-popular-badge">{t.bestValue}</span>
+                {abPaywallVariant === 'B' && <span className="ab-price-badge">$4.99</span>}
                 <div className="path-content-v2">
                   <div className="path-header-v2">
                     <span className="path-module-v2">FULL PACKAGE</span>
@@ -6398,6 +6802,7 @@ ${hairImgs.length > 0 ? `<div class="section"><h2>${hairSection}</h2><div class=
                   <img src="/hairnew-800w.webp" alt="Hair Styling" className="path-image-img" loading="lazy" width="800" height="600" />
                 </picture>
                 <div className="path-overlay"></div>
+                {abPaywallVariant === 'B' && !hasFreeTrial && <span className="ab-price-badge">$2.99</span>}
                 <div className="path-content-v2">
                   <div className="path-header-v2">
                     <span className="path-module-v2">HAIR STYLING</span>
@@ -6444,6 +6849,7 @@ ${hairImgs.length > 0 ? `<div class="section"><h2>${hairSection}</h2><div class=
                   <img src="/uniform.png" alt="Work Style" className="path-image-img" loading="lazy" width="1456" height="816" />
                 </picture>
                 <div className="path-overlay work-overlay"></div>
+                {abPaywallVariant === 'B' && <span className="ab-price-badge">$3.99</span>}
                 <div className="path-content-v2">
                   <div className="path-header-v2">
                     <span className="path-module-v2">WORK STYLE</span>
@@ -6809,6 +7215,63 @@ ${hairImgs.length > 0 ? `<div class="section"><h2>${hairSection}</h2><div class=
             </div>
           </div>
 
+          {/* Style DNA Card */}
+          {report && (() => {
+            const dna = parseStyleDNA(report)
+            return (
+              <div className="style-dna-card">
+                <h3 className="style-dna-title">{t.styleDnaTitle}</h3>
+                {dna.season && (
+                  <div className="dna-row">
+                    <span className="dna-label">{t.styleDnaSeason}</span>
+                    <span className={`dna-season-badge ${dna.season}`}>
+                      {t.styleDnaSeasons[dna.season]}
+                    </span>
+                  </div>
+                )}
+                {dna.bodyType && (
+                  <div className="dna-row">
+                    <span className="dna-label">{t.styleDnaBodyType}</span>
+                    <span className="dna-value">{dna.bodyType}</span>
+                  </div>
+                )}
+                {dna.colors.length > 0 && (
+                  <div className="dna-row dna-colors-row">
+                    <span className="dna-label">{t.styleDnaColors}</span>
+                    <div className="dna-swatches">
+                      {dna.colors.map((c, i) => (
+                        <div
+                          key={i}
+                          className="dna-swatch"
+                          style={{ background: colorNameToHex(c) || '#ccc' }}
+                          title={c}
+                        />
+                      ))}
+                    </div>
+                  </div>
+                )}
+                {dna.silhouettes.length > 0 && (
+                  <div className="dna-row dna-silhouettes-row">
+                    <span className="dna-label">{t.styleDnaSilhouettes}</span>
+                    <div className="dna-silhouette-list">
+                      {dna.silhouettes.map((s, i) => (
+                        <span key={i} className="dna-silhouette-tag">{s}</span>
+                      ))}
+                    </div>
+                  </div>
+                )}
+                {styleImages.some(s => s.imageUrl) && (
+                  <button
+                    className="btn-gold dna-share-btn"
+                    onClick={() => handleShareCardGenerate(styleImages.find(s => s.imageUrl)!.imageUrl!)}
+                  >
+                    {t.styleDnaShare}
+                  </button>
+                )}
+              </div>
+            )
+          })()}
+
           {report && (
             <div
               className="report-content"
@@ -6950,6 +7413,12 @@ ${hairImgs.length > 0 ? `<div class="section"><h2>${hairSection}</h2><div class=
               </button>
               <button className="btn-outline" onClick={handleShareResult}>
                 {t.shareResult}
+              </button>
+              <button
+                className="btn-gold"
+                onClick={() => handleShareCardGenerate((styleImages.find(s => s.imageUrl) || transformedHairstyles.find(s => s.imageUrl))!.imageUrl!)}
+              >
+                {t.shareToInstagram}
               </button>
             </>
           )}
@@ -7277,7 +7746,7 @@ ${hairImgs.length > 0 ? `<div class="section"><h2>${hairSection}</h2><div class=
     const selectedVibeData = hairVibes.find(v => v.id === selectedVibe)
 
     const handleHairPayment = async () => {
-      trackEvent('begin_checkout', { product: 'hair', currency: 'USD', value: 2.99 })
+      trackEvent('begin_checkout', { product: 'hair', currency: 'USD', value: 2.99, ab_variant: abPaywallVariant })
       setIsProcessingPayment(true)
       try {
         // 결제 전 데이터 저장
@@ -7434,9 +7903,19 @@ ${hairImgs.length > 0 ? `<div class="section"><h2>${hairSection}</h2><div class=
               </p>
             </div>
 
+            {/* A/B Variant B: Urgency Timer */}
+            {abPaywallVariant === 'B' && abUrgencyTimer > 0 && (
+              <div className="ab-urgency-banner">
+                <span>{t.abUrgencyText}</span>
+                <span className="ab-urgency-timer">
+                  {Math.floor(abUrgencyTimer / 60).toString().padStart(2, '0')}:{(abUrgencyTimer % 60).toString().padStart(2, '0')}
+                </span>
+              </div>
+            )}
+
             {/* CTA Button */}
             <button
-              onClick={handleHairPayment}
+              onClick={() => { trackEvent('paywall_cta_click', { variant: abPaywallVariant, product: 'hair' }); handleHairPayment() }}
               disabled={isProcessingPayment}
               className="btn-gold submit-btn"
             >
@@ -7851,6 +8330,14 @@ ${hairImgs.length > 0 ? `<div class="section"><h2>${hairSection}</h2><div class=
                 <button className="btn-outline" onClick={() => { trackEvent('share_click', { page: 'hair-result' }); handleShareResult() }}>
                   {t.shareResult}
                 </button>
+                {generatedHairImages.some(img => img.imageUrl) && (
+                  <button
+                    className="btn-gold"
+                    onClick={() => handleShareCardGenerate(generatedHairImages.find(img => img.imageUrl)!.imageUrl!)}
+                  >
+                    {t.shareToInstagram}
+                  </button>
+                )}
               </>
             )}
             <button className="btn-outline" onClick={() => {
@@ -8163,7 +8650,7 @@ ${hairImgs.length > 0 ? `<div class="section"><h2>${hairSection}</h2><div class=
   // Work Style Preview Page (payment gate)
   if (page === 'work-preview') {
     const handleWorkPayment = async () => {
-      trackEvent('begin_checkout', { product: 'work_style', currency: 'USD', value: 3.99 })
+      trackEvent('begin_checkout', { product: 'work_style', currency: 'USD', value: 3.99, ab_variant: abPaywallVariant })
       setIsProcessingPayment(true)
       try {
         const dataToSave = {
@@ -8243,10 +8730,19 @@ ${hairImgs.length > 0 ? `<div class="section"><h2>${hairSection}</h2><div class=
                   ? '나머지 3가지 스타일 + 출퇴근 룩을 확인하세요'
                   : 'Unlock 3 more styles + off-duty commute look'}
               </p>
+              {/* A/B Variant B: Urgency Timer */}
+              {abPaywallVariant === 'B' && abUrgencyTimer > 0 && (
+                <div className="ab-urgency-banner" style={{ marginBottom: '0.75rem' }}>
+                  <span>{t.abUrgencyText}</span>
+                  <span className="ab-urgency-timer">
+                    {Math.floor(abUrgencyTimer / 60).toString().padStart(2, '0')}:{(abUrgencyTimer % 60).toString().padStart(2, '0')}
+                  </span>
+                </div>
+              )}
               <button
                 className="btn-gold"
                 style={{ padding: '0.9rem 2.5rem', fontSize: '1.05rem', width: '100%', maxWidth: '360px' }}
-                onClick={handleWorkPayment}
+                onClick={() => { trackEvent('paywall_cta_click', { variant: abPaywallVariant, product: 'work' }); handleWorkPayment() }}
                 disabled={isProcessingPayment}
               >
                 {isProcessingPayment
@@ -8323,6 +8819,14 @@ ${hairImgs.length > 0 ? `<div class="section"><h2>${hairSection}</h2><div class=
                 <button className="btn-outline" onClick={() => { trackEvent('share_click', { page: 'work-result' }); handleShareResult() }}>
                   {t.shareResult}
                 </button>
+                {workStyles.some(s => s.imageUrl) && (
+                  <button
+                    className="btn-gold"
+                    onClick={() => handleShareCardGenerate(workStyles.find(s => s.imageUrl)!.imageUrl!)}
+                  >
+                    {t.shareToInstagram}
+                  </button>
+                )}
                 <button className="btn-dark" onClick={() => setPage('landing')}>
                   {t.backToHome}
                 </button>
@@ -8523,6 +9027,14 @@ ${hairImgs.length > 0 ? `<div class="section"><h2>${hairSection}</h2><div class=
                 <button className="btn-outline" onClick={() => { trackEvent('share_click', { page: 'trend-result' }); handleShareResult() }}>
                   {t.shareResult}
                 </button>
+                {trendStyles.some(s => s.imageUrl) && (
+                  <button
+                    className="btn-gold"
+                    onClick={() => handleShareCardGenerate(trendStyles.find(s => s.imageUrl)!.imageUrl!)}
+                  >
+                    {t.shareToInstagram}
+                  </button>
+                )}
                 <button className="btn-dark" onClick={() => setPage('landing')}>
                   {t.backToHome}
                 </button>
@@ -8754,9 +9266,19 @@ ${hairImgs.length > 0 ? `<div class="section"><h2>${hairSection}</h2><div class=
               </p>
             </div>
 
+            {/* A/B Variant B: Urgency Timer */}
+            {abPaywallVariant === 'B' && abUrgencyTimer > 0 && (
+              <div className="ab-urgency-banner">
+                <span>{t.abUrgencyText}</span>
+                <span className="ab-urgency-timer">
+                  {Math.floor(abUrgencyTimer / 60).toString().padStart(2, '0')}:{(abUrgencyTimer % 60).toString().padStart(2, '0')}
+                </span>
+              </div>
+            )}
+
             {/* CTA Button */}
             <button
-              onClick={() => handlePayment('full')}
+              onClick={() => { trackEvent('paywall_cta_click', { variant: abPaywallVariant, product: 'full' }); handlePayment('full') }}
               disabled={isProcessingPayment}
               className="btn-gold submit-btn"
             >
