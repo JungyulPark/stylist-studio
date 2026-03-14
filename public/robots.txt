@@ -93,3 +93,4 @@ Disallow: /
 # 사이트맵 위치
 # -----------------------------------------------------------------------------
 Sitemap: https://kstylist.cc/sitemap.xml
+Sitemap: https://kstylist.cc/sitemap_v2.xml
