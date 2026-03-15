@@ -65,6 +65,13 @@ async function generateHairImageWithGemini(
 
     const editPrompt = `You are a world-class hair designer at a top salon. Analyze this person's face shape, skin tone, and features, then show them how they would look with the perfect hairstyle — beautiful, stylish, and practical for everyday life.
 
+FRAMING RULE (CRITICAL — READ FIRST):
+The output image MUST have the EXACT same framing, zoom level, and composition as the input photo.
+Do NOT zoom in on the face. Do NOT zoom out. Do NOT crop the head or body.
+The person's head, shoulders, and body must be at the EXACT same position and size as the original.
+If the input shows head-to-chest, output shows head-to-chest at the same scale.
+ZERO framing changes allowed. This is the #1 rule.
+
 EDIT this photo - change ONLY the HAIRSTYLE to: "${styleName}"
 
 STYLE DETAILS:
@@ -97,7 +104,7 @@ CRITICAL RULES — VIOLATION IS FAILURE:
 3. Only the HAIR should change
 4. KEEP the person's NATURAL HAIR COLOR — do NOT dramatically change hair color
 5. NO unnatural colors, NO hair accessories (clips, pins, ribbons, bows)
-6. NEVER crop, zoom, or change the framing of the photo
+6. NEVER crop, zoom, or change the framing of the photo — the person must stay the SAME SIZE in the image
 7. Output resolution MUST match input resolution exactly
 
 Apply subtle beauty retouching: smooth clear skin, even skin tone, soft studio lighting.

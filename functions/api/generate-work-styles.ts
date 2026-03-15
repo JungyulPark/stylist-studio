@@ -90,9 +90,6 @@ async function editPhotoWithModel(
               }],
               generationConfig: {
                 responseModalities: ['IMAGE', 'TEXT'],
-                imageConfig: {
-                  imageSize: '1K'
-                }
               }
             })
           }

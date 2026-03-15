@@ -82,9 +82,6 @@ Generate the edited photo maintaining the original composition.`
               }],
               generationConfig: {
                 responseModalities: ['IMAGE', 'TEXT'],
-                imageConfig: {
-                  imageSize: '1K'
-                }
               }
             })
           }

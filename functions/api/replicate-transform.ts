@@ -81,9 +81,6 @@ Generate the edited photo with IDENTICAL composition to the input.`
               }],
               generationConfig: {
                 responseModalities: ['IMAGE', 'TEXT'],
-                imageConfig: {
-                  imageSize: '1K'
-                }
               }
             })
           }

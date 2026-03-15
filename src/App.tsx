@@ -479,6 +479,8 @@ const translations: Record<Language, {
   styleDnaColors: string
   styleDnaSilhouettes: string
   styleDnaShare: string
+  heroHeadline: string
+  heroSubCta: string
 }> = {
   ko: {
     title: 'PERSONAL STYLIST',
@@ -853,6 +855,8 @@ const translations: Record<Language, {
     styleDnaColors: '추천 컬러 팔레트',
     styleDnaSilhouettes: '추천 실루엣',
     styleDnaShare: '스타일 카드 저장',
+    heroHeadline: '내 얼굴에 맞는 스타일, AI가 찾아줍니다',
+    heroSubCta: '카드 없이 시작 · 3회 무료',
   },
   en: {
     title: 'PERSONAL STYLIST',
@@ -1225,6 +1229,8 @@ const translations: Record<Language, {
     styleDnaColors: 'Recommended Colors',
     styleDnaSilhouettes: 'Best Silhouettes',
     styleDnaShare: 'Save Style Card',
+    heroHeadline: 'See Your Best Look — AI-Powered Personal Styling',
+    heroSubCta: 'No card required · 3x free',
   },
   ja: {
     title: 'PERSONAL STYLIST',
@@ -1597,6 +1603,8 @@ const translations: Record<Language, {
     styleDnaColors: 'おすすめカラー',
     styleDnaSilhouettes: 'おすすめシルエット',
     styleDnaShare: 'スタイルカードを保存',
+    heroHeadline: 'あなたに似合うスタイル、AIが見つけます',
+    heroSubCta: 'カード不要 · 3回無料',
   },
   zh: {
     title: 'PERSONAL STYLIST',
@@ -1969,6 +1977,8 @@ const translations: Record<Language, {
     styleDnaColors: '推荐色彩',
     styleDnaSilhouettes: '推荐轮廓',
     styleDnaShare: '保存风格卡片',
+    heroHeadline: 'AI为你找到最适合的风格',
+    heroSubCta: '无需绑卡 · 3次免费',
   },
   es: {
     title: 'PERSONAL STYLIST',
@@ -2341,6 +2351,8 @@ const translations: Record<Language, {
     styleDnaColors: 'Colores Recomendados',
     styleDnaSilhouettes: 'Mejores Siluetas',
     styleDnaShare: 'Guardar Tarjeta de Estilo',
+    heroHeadline: 'Tu mejor look, descubierto por IA',
+    heroSubCta: 'Sin tarjeta · 3 veces gratis',
   }
 }
 
@@ -2885,6 +2897,10 @@ function App() {
   // Before/After slider state
   const [sliderPos, setSliderPos] = useState(50)
   const sliderRef = useRef<HTMLDivElement>(null)
+
+  // Hero Before/After slider state
+  const [heroSliderPos, setHeroSliderPos] = useState(50)
+  const heroSliderRef = useRef<HTMLDivElement>(null)
 
   // First-visit timer discount
   const [timerEnd, setTimerEnd] = useState<number | null>(() => {
@@ -5025,6 +5041,35 @@ ${hairImgs.length > 0 ? `<div class="section"><h2>${hairSection}</h2><div class=
     document.addEventListener('touchend', onEnd)
   }, [handleSliderDrag])
 
+  // Hero Before/After slider drag handler
+  const handleHeroSliderDrag = useCallback((clientX: number) => {
+    if (!heroSliderRef.current) return
+    const rect = heroSliderRef.current.getBoundingClientRect()
+    const x = clientX - rect.left
+    const pct = Math.max(0, Math.min(100, (x / rect.width) * 100))
+    setHeroSliderPos(pct)
+  }, [])
+
+  const handleHeroSliderMouseDown = useCallback(() => {
+    const onMove = (e: MouseEvent) => handleHeroSliderDrag(e.clientX)
+    const onUp = () => {
+      document.removeEventListener('mousemove', onMove)
+      document.removeEventListener('mouseup', onUp)
+    }
+    document.addEventListener('mousemove', onMove)
+    document.addEventListener('mouseup', onUp)
+  }, [handleHeroSliderDrag])
+
+  const handleHeroSliderTouchStart = useCallback(() => {
+    const onMove = (e: TouchEvent) => handleHeroSliderDrag(e.touches[0].clientX)
+    const onEnd = () => {
+      document.removeEventListener('touchmove', onMove)
+      document.removeEventListener('touchend', onEnd)
+    }
+    document.addEventListener('touchmove', onMove)
+    document.addEventListener('touchend', onEnd)
+  }, [handleHeroSliderDrag])
+
   // Watermark: draw image with subtle branding
   const addWatermark = useCallback(async (imageUrl: string): Promise<Blob> => {
     const img = new Image()
@@ -6593,97 +6638,32 @@ ${hairImgs.length > 0 ? `<div class="section"><h2>${hairSection}</h2><div class=
           </div>
         </header>
 
-        {/* Hero Section */}
-        <section className="hero-section">
-          <div className="hero-image">
-            <picture className="hero-image-bg">
-              <source type="image/avif" srcSet="/hero-480w.avif 480w, /hero-800w.avif 800w, /hero-1024w.avif 1024w" sizes="(min-width: 768px) 50vw, 100vw" />
-              <source type="image/webp" srcSet="/hero-480w.webp 480w, /hero-800w.webp 800w, /hero-1024w.webp 1024w" sizes="(min-width: 768px) 50vw, 100vw" />
-              <img src="/hero-480w.webp" alt="AI Personal Styling Preview" className="hero-image-bg-img" fetchPriority="high" width="480" height="600" />
-            </picture>
-            <div className="glass-card">
-              <span className="glass-tag">PERSONAL STYLING</span>
-              <p className="glass-text">Your Style, Reimagined</p>
+        {/* Hero Section V2 — center-aligned with B/A slider */}
+        <section className="hero-section-v2">
+          <h1 className="hero-v2-headline">{t.heroHeadline}</h1>
+          <p className="hero-v2-desc">{t.heroDesc}</p>
+          <div
+            className="ba-slider hero-ba-slider"
+            ref={heroSliderRef}
+            onMouseDown={handleHeroSliderMouseDown}
+            onTouchStart={handleHeroSliderTouchStart}
+          >
+            <img src="/gallery/after-female-best.png" alt="After" className="ba-img ba-after" />
+            <div className="ba-before-clip" style={{ width: `${heroSliderPos}%` }}>
+              <img src="/gallery/before-female.png" alt="Before" className="ba-img ba-before" style={{ width: `${heroSliderRef.current?.offsetWidth || 480}px` }} />
             </div>
-            <div className="slider-handle">
-              <div className="slider-dot"></div>
+            <div className="ba-handle" style={{ left: `${heroSliderPos}%` }}>
+              <div className="ba-handle-line"></div>
+              <div className="ba-handle-circle">◀ ▶</div>
+              <div className="ba-handle-line"></div>
             </div>
+            <span className="ba-label ba-label-before">{t.galleryBefore}</span>
+            <span className="ba-label ba-label-after">{t.galleryAfter}</span>
           </div>
-          <div className="hero-content">
-            <span className="hero-tag">DIGITAL ATELIER</span>
-            <h1 className="hero-title">
-              {t.heroTitle1} <br />
-              <span className="text-gradient">{t.heroTitle2}</span>
-            </h1>
-            <p className="hero-desc">{t.heroDesc}</p>
-            <div className="hero-buttons">
-              {hasFreeTrial ? (
-                <div className="hero-cta-wrapper">
-                  <button className="free-cta-pulse" onClick={() => { trackEvent('hero_cta_click', { type: 'free_trial' }); setPage('hair-selection') }}>
-                    {t.freeTrialCta}
-                  </button>
-                  <span className="hero-cta-sub">{t.trustRatingCount}</span>
-                </div>
-              ) : (
-                <button className="btn-dark" onClick={() => document.getElementById('features')?.scrollIntoView({ behavior: 'smooth' })}>
-                  {t.startBtn}
-                </button>
-              )}
-              <button className="btn-outline" onClick={() => setPage('how-to-use')}>
-                {t.learnMore}
-              </button>
-            </div>
-            <div className="featured-in">
-              <span className="magazine">{t.badgeRunway}</span>
-              <span className="magazine">{t.badgePersonalized}</span>
-              <span className="magazine">{t.badgeWeather}</span>
-            </div>
-          </div>
-          <div className="scroll-hint" onClick={() => document.querySelector('.situation-section')?.scrollIntoView({ behavior: 'smooth' })}>
-            <span className="scroll-hint-text">SCROLL</span>
-            <div className="scroll-hint-arrow">
-              <svg width="20" height="10" viewBox="0 0 20 10" fill="none"><path d="M1 1L10 9L19 1" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>
-            </div>
-          </div>
-        </section>
-
-        {/* Situation Hooks — empathy-driven CTA */}
-        <section className="situation-section" ref={(el) => {
-          if (el) {
-            const cards = el.querySelectorAll('.situation-card, .situation-title, .situation-cta')
-            const observer = new IntersectionObserver(([entry]) => {
-              if (entry.isIntersecting) {
-                cards.forEach((card, i) => {
-                  setTimeout(() => card.classList.add('visible'), i * 100)
-                })
-                observer.disconnect()
-              }
-            }, { threshold: 0.2 })
-            observer.observe(el)
-          }
-        }}>
-          <h2 className="situation-title fade-in-up">{t.situationTitle}</h2>
-          <div className="situation-grid">
-            <div className="situation-card fade-in-up" onClick={() => { trackEvent('situation_click', { type: 'interview' }); trackEvent('select_item', { item_category: 'full_style' }); setPage('input') }}>
-              <span className="situation-icon-text">&#x1F454;</span>
-              <p className="situation-text">{t.situation1}</p>
-            </div>
-            <div className="situation-card fade-in-up" onClick={() => { trackEvent('situation_click', { type: 'date' }); trackEvent('select_item', { item_category: 'full_style' }); setPage('input') }}>
-              <span className="situation-icon-text">&#x2764;&#xFE0F;</span>
-              <p className="situation-text">{t.situation2}</p>
-            </div>
-            <div className="situation-card fade-in-up" onClick={() => { trackEvent('situation_click', { type: 'new_people' }); trackEvent('select_item', { item_category: 'full_style' }); setPage('input') }}>
-              <span className="situation-icon-text">&#x2728;</span>
-              <p className="situation-text">{t.situation3}</p>
-            </div>
-            <div className="situation-card fade-in-up" onClick={() => { trackEvent('situation_click', { type: 'change' }); trackEvent('select_item', { item_category: 'full_style' }); setPage('input') }}>
-              <span className="situation-icon-text">&#x1F331;</span>
-              <p className="situation-text">{t.situation4}</p>
-            </div>
-          </div>
-          <button className="situation-cta fade-in-up" onClick={() => { trackEvent('situation_cta_click'); trackEvent('select_item', { item_category: 'full_style' }); setPage('input') }}>
-            {t.situationCta}
+          <button className="free-cta-pulse hero-gold-cta" onClick={() => { trackEvent('hero_cta_click', { type: 'free_trial' }); setPage('hair-selection') }}>
+            {t.freeTrialCta}
           </button>
+          <span className="hero-v2-sub">{t.heroSubCta}</span>
         </section>
 
         {/* How It Works — 3-step process */}
@@ -6759,9 +6739,7 @@ ${hairImgs.length > 0 ? `<div class="section"><h2>${hairSection}</h2><div class=
         <section className="path-section" id="features">
           <h2 className="section-title">{t.pathTitle}</h2>
           <div className="section-divider"></div>
-          <div className="path-grid-2-1">
-            {/* Row 1: Daily Style + Full Package (2 large cards) */}
-            <div className="path-row-top">
+          <div className="path-grid-3">
               {/* Card 1: Daily Style Subscription */}
               <div className="path-card-v2 subscription" onClick={handleSubscription}>
                 <picture className="path-image">
@@ -6810,10 +6788,8 @@ ${hairImgs.length > 0 ? `<div class="section"><h2>${hairSection}</h2><div class=
                   <div className="path-cta-v2 gold">{t.explore} →</div>
                 </div>
               </div>
-            </div>
 
-            {/* Row 2: Hair Styling (centered) */}
-            <div className="path-row-bottom">
+              {/* Card 3: Hair Styling */}
               <div className="path-card-v2 hair-card" onClick={() => { trackEvent('select_item', { item_category: 'hair' }); setPage('hair-selection') }}>
                 <picture className="path-image">
                   <source type="image/avif" srcSet="/hairnew-800w.avif" />
@@ -6837,95 +6813,6 @@ ${hairImgs.length > 0 ? `<div class="section"><h2>${hairSection}</h2><div class=
                   <div className="path-cta-v2">{t.explore} →</div>
                 </div>
               </div>
-            </div>
-
-            {/* Row 3: Style Chat Advisor — editorial card */}
-            <div className="chat-promo-card" onClick={() => { trackEvent('select_item', { item_category: 'style_chat' }); setPage('style-chat') }}>
-              <div className="chat-promo-left">
-                <span className="chat-promo-tag">STYLE CHAT</span>
-                <h3 className="chat-promo-title">{t.chatCardTitle}</h3>
-                <p className="chat-promo-desc">{t.chatCardDesc}</p>
-                <div className="chat-promo-cta">
-                  <span className="btn-gold chat-promo-btn">{t.chatBuyTokens}</span>
-                  {chatTokens > 0 && <span className="chat-promo-tokens">{chatTokens}{t.chatTokensLeft}</span>}
-                </div>
-              </div>
-              <div className="chat-promo-right">
-                <div className="chat-promo-preview">
-                  <div className="chat-preview-bubble user">{t.chatExample1}</div>
-                  <div className="chat-preview-bubble assistant">{lang === 'ko' ? '오늘 같은 날씨엔 라이트 베이지 트렌치코트에 화이트 니트, 스트레이트 데님을 추천드려요. 깔끔하면서도 세련된 느낌을 줍니다.' : 'I\'d suggest a light beige trench with a white knit and straight-leg denim. Clean, effortless, and refined.'}</div>
-                  <div className="chat-preview-bubble user">{t.chatExample2}</div>
-                  <div className="chat-preview-typing"><span></span><span></span><span></span></div>
-                </div>
-              </div>
-            </div>
-
-            {/* Row 4: Work Style + Trend Style (2 promo cards) */}
-            <div className="path-row-top">
-              <div className="path-card-v2 work-card" onClick={() => { trackEvent('select_item', { item_category: 'work_style' }); setPage('work-selection') }}>
-                <picture className="path-image">
-                  <source type="image/webp" srcSet="/work-hq.webp" />
-                  <img src="/uniform.png" alt="Work Style" className="path-image-img" loading="lazy" width="1456" height="816" />
-                </picture>
-                <div className="path-overlay work-overlay"></div>
-                {abPaywallVariant === 'B' && <span className="ab-price-badge">$3.99</span>}
-                <div className="path-content-v2">
-                  <div className="path-header-v2">
-                    <span className="path-module-v2">WORK STYLE</span>
-                  </div>
-                  <h3 className="path-title-v2">{t.workCardTitle}</h3>
-                  <p className="path-desc-v2">{t.workCardDesc}</p>
-                  <ul className="path-features-v2">
-                    <li>{t.workJobDoctor} / {t.workJobDentist}</li>
-                    <li>{t.workJobNurse} / {t.workJobVet}</li>
-                    <li>{t.workJobChef} / {t.workJobLawyer}</li>
-                  </ul>
-                  <div className="path-cta-v2">{t.explore} →</div>
-                </div>
-              </div>
-
-              <div className="path-card-v2 trend-card" style={{ pointerEvents: 'none', opacity: 0.7 }}>
-                <picture className="path-image">
-                  <source type="image/webp" srcSet="/trend-hq.webp" />
-                  <img src="/Street.png" alt="Trend Style" className="path-image-img" loading="lazy" width="1456" height="816" />
-                </picture>
-                <div className="path-overlay trend-overlay"></div>
-                <div className="path-content-v2">
-                  <div className="path-header-v2">
-                    <span className="path-module-v2">TREND STYLE</span>
-                    <span className="coming-soon-badge">COMING SOON</span>
-                  </div>
-                  <h3 className="path-title-v2">{t.trendCardTitle}</h3>
-                  <p className="path-desc-v2">{t.trendCardDesc}</p>
-                  <ul className="path-features-v2">
-                    <li>{t.trendStreet} / {t.trendHype}</li>
-                    <li>{t.trendMinimalMZ} / {t.trendSporty}</li>
-                    <li>{t.trendRetro} / {t.trendAvantGarde}</li>
-                  </ul>
-                  <div className="path-cta-v2">{t.explore} →</div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* How It Works — compact strip */}
-        <section className="how-strip">
-          <div className="how-strip-inner">
-            <div className="how-strip-step">
-              <span className="how-strip-num">1</span>
-              <span>{t.serviceStep1}</span>
-            </div>
-            <span className="how-strip-arrow">→</span>
-            <div className="how-strip-step">
-              <span className="how-strip-num">2</span>
-              <span>{t.serviceStep2}</span>
-            </div>
-            <span className="how-strip-arrow">→</span>
-            <div className="how-strip-step">
-              <span className="how-strip-num">3</span>
-              <span>{t.serviceStep3}</span>
-            </div>
           </div>
         </section>
 
@@ -6991,77 +6878,6 @@ ${hairImgs.length > 0 ? `<div class="section"><h2>${hairSection}</h2><div class=
             </div>
           </div>
 
-          <div className="gallery-header" style={{ marginTop: '2.5rem' }}>
-            <span className="gallery-tag">WORK STYLE</span>
-            <h2 className="gallery-title">{t.galleryBadgeWork}</h2>
-          </div>
-          <div className="gallery-grid">
-            <div className="gallery-item">
-              <div className="gallery-pair">
-                <div className="gallery-before">
-                  <span className="gallery-label">{t.galleryBefore}</span>
-                  <img src="/gallery/before-male-work.png" alt="Before - Male" loading="lazy" />
-                </div>
-                <div className="gallery-after">
-                  <span className="gallery-label gallery-label-after">{t.galleryAfter}</span>
-                  <img src="/gallery/work-doctor-1.png" alt="After - Doctor" loading="lazy" />
-                </div>
-              </div>
-              <span className="gallery-occasion">{t.workJobDoctor}</span>
-            </div>
-            <div className="gallery-item">
-              <div className="gallery-pair">
-                <div className="gallery-before">
-                  <span className="gallery-label">{t.galleryBefore}</span>
-                  <img src="/gallery/before-female-work.png" alt="Before - Female" loading="lazy" />
-                </div>
-                <div className="gallery-after">
-                  <span className="gallery-label gallery-label-after">{t.galleryAfter}</span>
-                  <img src="/gallery/work-lawyer-1.png" alt="After - Lawyer" loading="lazy" />
-                </div>
-              </div>
-              <span className="gallery-occasion">{t.workJobLawyer}</span>
-            </div>
-            <div className="gallery-item">
-              <div className="gallery-pair">
-                <div className="gallery-before">
-                  <span className="gallery-label">{t.galleryBefore}</span>
-                  <img src="/gallery/before-female-work.png" alt="Before - Female" loading="lazy" />
-                </div>
-                <div className="gallery-after">
-                  <span className="gallery-label gallery-label-after">{t.galleryAfter}</span>
-                  <img src="/gallery/work-lawyer-bold.png" alt="After - Lawyer Bold" loading="lazy" />
-                </div>
-              </div>
-              <span className="gallery-occasion">{lang === 'ko' ? '변호사 · 대담한 대안' : 'Lawyer · Bold Alternative'}</span>
-            </div>
-            <div className="gallery-item">
-              <div className="gallery-pair">
-                <div className="gallery-before">
-                  <span className="gallery-label">{t.galleryBefore}</span>
-                  <img src="/gallery/before-female-work.png" alt="Before - Female" loading="lazy" />
-                </div>
-                <div className="gallery-after">
-                  <span className="gallery-label gallery-label-after">{t.galleryAfter}</span>
-                  <img src="/gallery/work-nurse-1.png" alt="After - Nurse" loading="lazy" />
-                </div>
-              </div>
-              <span className="gallery-occasion">{t.workJobNurse}</span>
-            </div>
-            <div className="gallery-item">
-              <div className="gallery-pair">
-                <div className="gallery-before">
-                  <span className="gallery-label">{t.galleryBefore}</span>
-                  <img src="/gallery/before-female-work.png" alt="Before - Female" loading="lazy" />
-                </div>
-                <div className="gallery-after">
-                  <span className="gallery-label gallery-label-after">{t.galleryAfter}</span>
-                  <img src="/gallery/work-lawyer-offduty.png" alt="After - Off-Duty" loading="lazy" />
-                </div>
-              </div>
-              <span className="gallery-occasion">Off-Duty Commute</span>
-            </div>
-          </div>
         </section>
 
         {/* Referral Section — logged-in users only */}

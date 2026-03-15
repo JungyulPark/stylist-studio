@@ -62,32 +62,54 @@ const FOCUS_RULES = `FOCUS ON MAIN SUBJECT ONLY:
 - If there are OTHER PEOPLE in the background, LEAVE THEM COMPLETELY UNCHANGED
 - Do NOT modify, remove, or add any other people`
 
-// ─── Color Palettes (suggestions, not prescriptions) ─────────────
+// ─── Color Palettes (21 runway-curated, c1-c4 structure) ─────────
 
 const maleColorPalettes = [
-  { tone: 'minimal', colors: 'black, off-white, charcoal, cream', accent: 'silver' },
-  { tone: 'coastal', colors: 'navy, white, stone grey, sand', accent: 'tan leather' },
-  { tone: 'earth', colors: 'olive, cream, tan, dark brown', accent: 'brass' },
-  { tone: 'urban', colors: 'charcoal, white, slate, black', accent: 'gunmetal' },
-  { tone: 'warm', colors: 'camel, white, chocolate, cream', accent: 'gold' },
-  { tone: 'nordic', colors: 'grey, oatmeal, black, soft white', accent: 'silver' },
-  { tone: 'heritage', colors: 'navy, deep burgundy, cream, charcoal', accent: 'gold' },
-  { tone: 'natural', colors: 'sage, cream, tan, soft grey', accent: 'brass' },
-  { tone: 'dusk', colors: 'deep navy, grey, soft white, stone', accent: 'silver' },
-  { tone: 'timber', colors: 'dark brown, cream, olive, charcoal', accent: 'copper' },
+  { tone: 'midnight plum', c1: 'dark plum', c2: 'charcoal', c3: 'silver grey', c4: 'deep navy', accent: 'amethyst' },
+  { tone: 'royal matte', c1: 'royal blue', c2: 'ink black', c3: 'oatmeal', c4: 'slate', accent: 'mint green' },
+  { tone: 'anglomania', c1: 'tweedy brown', c2: 'herringbone grey', c3: 'cream', c4: 'dark olive', accent: 'burgundy' },
+  { tone: 'porcelain sand', c1: 'charcoal olive', c2: 'warm sand', c3: 'porcelain white', c4: 'stone mist', accent: 'copper' },
+  { tone: 'glacier mist', c1: 'ice blue', c2: 'pearl grey', c3: 'winter white', c4: 'deep slate', accent: 'brushed gold' },
+  { tone: 'alpine grey', c1: 'pewter grey', c2: 'cloud white', c3: 'pale stone', c4: 'soft charcoal', accent: 'forest green' },
+  { tone: 'midnight nav', c1: 'midnight navy', c2: 'chalk white', c3: 'dove grey', c4: 'warm sand', accent: 'old gold' },
+  { tone: 'matte wool', c1: 'dark olive', c2: 'tobacco brown', c3: 'ecru', c4: 'moss green', accent: 'brick red' },
+  { tone: 'emerald shadow', c1: 'deep emerald', c2: 'charcoal', c3: 'ivory', c4: 'dark teal', accent: 'copper' },
+  { tone: 'chrome green', c1: 'chrome green', c2: 'pebble grey', c3: 'bone white', c4: 'dark bronze', accent: 'vanilla' },
+  { tone: 'graphite modern', c1: 'graphite black', c2: 'silver grey', c3: 'ivory', c4: 'deep indigo', accent: 'electric blue' },
+  { tone: 'ocean air', c1: 'faded ocean blue', c2: 'driftwood', c3: 'off-white linen', c4: 'washed sage', accent: 'sunset coral' },
+  { tone: 'birch white', c1: 'birch white', c2: 'pale grey', c3: 'cream wool', c4: 'pine green', accent: 'copper' },
+  { tone: 'tuscan sun', c1: 'sun-bleached terracotta', c2: 'olive', c3: 'warm cream', c4: 'dried lavender', accent: 'aged gold' },
+  { tone: 'ink mono', c1: 'jet black', c2: 'medium charcoal', c3: 'heather grey', c4: 'off-white', accent: 'matte silver' },
+  { tone: 'smoke charcoal', c1: 'dark charcoal', c2: 'medium grey', c3: 'off-white', c4: 'slate blue', accent: 'brushed silver' },
+  { tone: 'maritime', c1: 'dark navy', c2: 'rope beige', c3: 'crisp white', c4: 'faded indigo', accent: 'red' },
+  { tone: 'deep burgundy', c1: 'dark burgundy', c2: 'ink black', c3: 'cream', c4: 'deep charcoal', accent: 'old gold' },
+  { tone: 'studio cool', c1: 'cool grey', c2: 'stone blue', c3: 'parchment', c4: 'dark slate', accent: 'bronze' },
+  { tone: 'worn indigo', c1: 'faded indigo', c2: 'washed navy', c3: 'raw ecru', c4: 'dark denim', accent: 'antique brass' },
+  { tone: 'steel blue', c1: 'steel blue', c2: 'slate', c3: 'ice white', c4: 'deep navy', accent: 'teal' },
 ]
 
 const femaleColorPalettes = [
-  { tone: 'minimal', colors: 'ivory, warm grey, soft black, cream', accent: 'gold' },
-  { tone: 'sand', colors: 'warm sand, taupe, soft white, dove grey', accent: 'rose gold' },
-  { tone: 'slate', colors: 'cool grey, pale blue, off-white, charcoal', accent: 'silver' },
-  { tone: 'sage', colors: 'muted sage, cream, warm beige, soft olive', accent: 'gold' },
-  { tone: 'blush', colors: 'dusty pink, cream, light grey, soft taupe', accent: 'pearl' },
-  { tone: 'marine', colors: 'navy, crisp white, camel, grey', accent: 'gold' },
-  { tone: 'wine', colors: 'deep burgundy, charcoal, cream, stone', accent: 'antique gold' },
-  { tone: 'forest', colors: 'deep forest green, cream, tan, charcoal', accent: 'bronze' },
-  { tone: 'espresso', colors: 'dark chocolate, cream, camel, soft white', accent: 'gold' },
-  { tone: 'cloud', colors: 'soft grey, white, pale taupe, silver grey', accent: 'pearl' },
+  { tone: 'noir leather', c1: 'ink black', c2: 'deep charcoal', c3: 'warm ivory', c4: 'cognac brown', accent: 'gold' },
+  { tone: 'midnight silk', c1: 'midnight navy', c2: 'silver', c3: 'pearl white', c4: 'deep charcoal', accent: 'gold chain' },
+  { tone: 'cashmere blush', c1: 'dusty rose', c2: 'baby cashmere beige', c3: 'pearl white', c4: 'muted lavender', accent: 'rose gold' },
+  { tone: 'silk plush', c1: 'champagne silk', c2: 'soft camel', c3: 'powder pink', c4: 'warm grey', accent: 'antique gold' },
+  { tone: 'jewel depth', c1: 'emerald', c2: 'deep burgundy', c3: 'ivory', c4: 'midnight blue', accent: 'bronze' },
+  { tone: 'garden fresh', c1: 'sage green', c2: 'petal pink', c3: 'cream', c4: 'soft fern', accent: 'coral' },
+  { tone: 'parisian', c1: 'navy', c2: 'red', c3: 'cream', c4: 'black', accent: 'gold' },
+  { tone: 'mint pop', c1: 'mint green', c2: 'ecru', c3: 'light grey', c4: 'royal blue accent', accent: 'silver' },
+  { tone: 'mauve romantic', c1: 'mauve', c2: 'soft peach', c3: 'ivory', c4: 'blush', accent: 'pearl' },
+  { tone: 'frost nordic', c1: 'ice white', c2: 'pale blue', c3: 'silver birch', c4: 'frost grey', accent: 'rose gold' },
+  { tone: 'lavender dusk', c1: 'deep lavender', c2: 'charcoal', c3: 'soft white', c4: 'steel grey', accent: 'rose gold' },
+  { tone: 'berry rich', c1: 'raspberry', c2: 'plum', c3: 'cream', c4: 'deep wine', accent: 'gold' },
+  { tone: 'coastal', c1: 'sand', c2: 'ocean blue', c3: 'white', c4: 'driftwood grey', accent: 'turquoise' },
+  { tone: 'sunset glow', c1: 'burnt orange', c2: 'dusty pink', c3: 'warm cream', c4: 'peach', accent: 'bronze' },
+  { tone: 'ethereal', c1: 'lilac', c2: 'powder blue', c3: 'cloud white', c4: 'pale mint', accent: 'silver' },
+  { tone: 'autumn leaf', c1: 'deep rust', c2: 'mustard', c3: 'cream', c4: 'burgundy', accent: 'antique gold' },
+  { tone: 'quiet greige', c1: 'greige', c2: 'soft white', c3: 'pale camel', c4: 'dove grey', accent: 'matte gold' },
+  { tone: 'orchid mist', c1: 'soft orchid', c2: 'pale grey', c3: 'ivory', c4: 'dusty lavender', accent: 'rose gold' },
+  { tone: 'botanical', c1: 'forest green', c2: 'cream', c3: 'terracotta', c4: 'sage', accent: 'dried rose' },
+  { tone: 'vintage blue', c1: 'dusty blue', c2: 'antique rose', c3: 'ivory', c4: 'faded gold', accent: 'copper' },
+  { tone: 'modern mono', c1: 'black', c2: 'white', c3: 'camel', c4: 'red', accent: 'gold' },
 ]
 
 // ─── 6 Scenario Directives ──────────────────────────────────────
@@ -97,154 +119,196 @@ export function getScenarios(): ScenarioConfig[] {
     {
       id: 'best-match',
       labelKo: '베스트 매치', labelEn: 'Best Match', labelJa: 'ベストマッチ', labelZh: '最佳搭配', labelEs: 'Mejor Combinación',
-      directiveMale: `Create the MOST FLATTERING versatile outfit for this man — like his personal signature style that makes him look his absolute best.
+      directiveMale: `Create this man's SIGNATURE LOOK — his single best outfit.
 
-ANALYZE his body type, skin tone, and proportions, then design the perfect outfit:
-- Broad shoulders → lean into structured pieces, clean single-breasted blazer or fitted crewneck
-- Slim build → add visual presence with layered textures, structured shoulders, quality knits
-- Athletic build → showcase with fitted knits, well-proportioned trousers, clean lines
-- Fuller build → elongate with vertical lines, V-necks, dark monochromatic tones
+STYLING: Auralee minimal — Fabric takes the lead — boiled wool, garment-washed cotton poplin, baby cashmere. Dropped-shoulder seams, relaxed body with clean hems. Matte textures. Proprietary suede shoes or simple leather sneakers.
 
-Choose the single most flattering outfit from: smart knit + trousers, casual blazer + tee, clean minimal separates, or elevated basics.
-Think Auralee, Lemaire, or Massimo Dutti at its best — quietly elevated, effortlessly stylish.`,
+FIRST, ANALYZE his body type, skin tone, face shape, and proportions from the photo.
+Then choose the SINGLE most flattering combination from these options, and ADAPT it to his specific body:
+- Fine-gauge merino crewneck in tonal shade + straight-leg pressed wool trousers with natural drape + polished leather derby shoes + brushed metal watch (Auralee minimal)
+- Unstructured cotton-linen blazer (soft shoulder, no padding) + garment-washed band-collar shirt + relaxed chinos with single pleat + clean suede loafers (Lemaire ease)
+- Cashmere-cotton crewneck layered over oxford shirt (collar visible) + tapered wool-blend trousers + premium leather sneakers + woven leather belt (Cucinelli smart-casual)
+- Mock-neck fine-gauge knit + straight-leg dark denim with clean hem + suede desert boots + minimal watch (Massimo Dutti refined)
 
-      directiveFemale: `Create the MOST FLATTERING versatile outfit for this woman — like her personal signature style that makes her look her absolute best.
+The fabric should have visible WEIGHT and TEXTURE — not flat, not cheap-looking.
+Think the best-dressed man at a gallery opening — quiet confidence, zero effort.`,
 
-ANALYZE her body type, skin tone, and proportions, then design the perfect outfit:
-- Long legs → show with high-waisted wide-leg trousers or a tailored silhouette
-- Defined waist → emphasize with a belt, fitted blazer, or structured knit
-- Broad shoulders → balance with V-neckline and wide-leg bottoms
-- Petite frame → elongate with high waist, monochromatic palette, pointed-toe shoes
-- Curvy figure → highlight with an X-silhouette, fitted top + flowing trousers
+      directiveFemale: `Create this woman's SIGNATURE LOOK — her single best outfit.
 
-Choose the single most flattering option from: tailored blazer + wide-leg trousers, silk blouse + pressed pants, knit top + high-waisted trousers, wrap dress, or clean separates.
-IMPORTANT: Include trousers/pants in at least half of all recommendations — do NOT default to only skirts and dresses.
-Think Reformation, Rouje, or Sezane editorial — effortlessly chic, feminine, her everyday best.`,
+STYLING: Auralee soft — Fabric-first — garment-dyed cashmere poplin, high-twist wool, supple leather in soft forms. Loose silhouette balanced with one fitted piece. Matte surfaces. Simple elegant flats or loafers.
+
+FIRST, ANALYZE her body type, skin tone, face shape, and proportions from the photo.
+Then choose the SINGLE most flattering combination from these options, and ADAPT it to her specific body:
+- Tailored blazer with subtle nipped waist + silk-cotton camisole + high-waisted wide-leg pressed trousers + pointed-toe leather mules + delicate gold pendant (Reformation editorial)
+- Fine-gauge cashmere V-neck + high-waisted straight-leg wool trousers with knife pleat + suede ankle boots + thin gold bracelet (Toteme minimal)
+- Draped silk blouse with hidden placket + tailored wide-leg chinos + pointed ballet flats + delicate layered necklaces (Rouje Parisian)
+- Fitted ribbed knit top + A-line midi skirt in quality wool + polished leather ankle boots + simple gold hoops (Sezane feminine)
+
+IMPORTANT: Mix trousers and skirts — do NOT default to skirts only. Wide-leg trousers are equally feminine.
+The fabric should have visible QUALITY — silk that catches light, wool with drape, cashmere with softness.`,
     },
     {
       id: 'interview',
       labelKo: '인터뷰룩', labelEn: 'Interview', labelJa: 'インタビュー', labelZh: '面试装', labelEs: 'Entrevista',
-      directiveMale: `Create a SHARP, CONFIDENT professional look for this man. Modern creative industry professional — NOT stiff corporate.
+      directiveMale: `Create a SHARP professional look — modern creative industry, NOT stiff corporate.
 
-ANALYZE his coloring and build to choose the most powerful professional outfit:
-- Determine his best power color (navy, charcoal, or warm dark tones) based on skin undertone
-- Choose between structured blazer, modern sport coat, or sharp knitwear based on his frame
-- Clean tailored trousers with proper drape and break
-- Polished leather shoes — derbies, loafers, or clean boots
+STYLING: Tom Ford sharp — Razor-sharp tailoring with confident ease. Peak-lapel jacket with clean chest, slim straight trousers with perfect break. Rich fabrics: mohair-blend suiting, silk-cotton knit. Polished oxford shoes, bold watch. Monochrome or dark tonal palette.
 
-The outfit should say "I'm the smartest person in the room" without trying too hard.
-Think modern tech CEO meets creative director — confident, capable, approachable.`,
+FIRST, ANALYZE his coloring, build, and skin undertone from the photo.
+Then choose the SINGLE most powerful combination from these options, and ADAPT it to his specific body:
+- Single-breasted wool blazer (natural shoulder, clean chest) + crisp spread-collar shirt + straight-leg pressed trousers with clean break + polished cap-toe derby shoes (modern Savile Row)
+- Structured sport coat in fine herringbone or textured wool + mock-neck fine-gauge knit + tapered wool trousers + burnished leather chelsea boots (creative director)
+- Fine-gauge merino turtleneck under unstructured blazer + pressed dark trousers + polished leather loafers + minimal dress watch (tech CEO refined)
+- Fitted cashmere crewneck + tailored chinos in dark tone + clean leather sneakers + quality leather belt (startup executive)
 
-      directiveFemale: `Create a SHARP, CONFIDENT professional look for this woman. Modern creative industry professional — NOT stiff corporate.
+The suit/blazer fabric must have visible TEXTURE — Super 120s wool, cashmere blend, or fine flannel. NOT flat poly-blend.
+POWER COLOR: Choose based on his skin undertone — warm skin → navy, chocolate; cool skin → charcoal, blue-grey.`,
 
-ANALYZE her coloring and build to choose the most powerful professional outfit:
-- Determine her best power color (navy, cream, charcoal, or jewel tones) based on skin undertone
-- Choose the most flattering professional silhouette: tailored blazer + pressed trousers, blouse + wide-leg wool pants, or structured blazer + tailored skirt
-- Nipped waist, feminine lines — powerful but not masculine
-- Elegant footwear: pointed-toe heels, kitten heels, or sophisticated flats
+      directiveFemale: `Create a SHARP professional look — modern creative industry, NOT stiff corporate.
 
-The outfit should say "I'm the smartest person in the room" without trying too hard.
-Think magazine-cover professional woman — confident, sophisticated, memorable.`,
+STYLING: Hermès tailored — Impeccably cut wool blazer with subtle nipped waist, matching high-waisted straight-leg or slightly wide trousers. Silk blouse or fine-knit turtleneck underneath. Rich equestrian-inspired palette: navy, cognac, ivory, deep green. Polished leather ankle boots or pointed pumps. Confidence meets femininity — a woman who runs the room.
+
+FIRST, ANALYZE her coloring, build, and proportions from the photo.
+Then choose the SINGLE most powerful combination from these options, and ADAPT it to her specific body:
+- Tailored blazer with subtle nipped waist + silk charmeuse blouse + wide-leg wool gabardine trousers + pointed-toe pumps (80mm) + gold stud earrings (Hermès power)
+- Structured cashmere-blend blazer + fine-gauge turtleneck + pressed straight-leg trousers + refined suede loafers + thin gold bangle (Loro Piana quiet authority)
+- Double-breasted wool blazer + silk camisole + high-waisted tailored trousers + elegant slingback heels + structured leather bag (Celine Parisian power)
+- Cashmere knit fitted top + tailored midi pencil skirt with back slit + pointed-toe ankle boots + delicate gold chain (Max Mara timeless)
+
+POWER COLOR: Warm skin → rich navy, deep camel, warm charcoal. Cool skin → cool charcoal, blue-grey, deep wine.
+The fabric must have visible LUXURY — wool gabardine with sheen, silk with drape, cashmere with softness. NOT fast-fashion flat fabric.`,
     },
     {
       id: 'date',
       labelKo: '데이트룩', labelEn: 'Date Night', labelJa: 'デートルック', labelZh: '约会装', labelEs: 'Cita',
-      directiveMale: `Create an ALLURING, STYLISH date night look for this man. The kind of outfit that gets a second glance.
+      directiveMale: `Create a RELAXED, MAGNETIC date night look. NOT a suit — think Saturday night at a candlelit wine bar. Effortless cool.
 
-ANALYZE his features and choose the most attractive evening outfit:
-- Highlight his best feature: broad shoulders (fitted jacket), height (monochromatic elongation), strong jaw (open collar)
-- Choose from: soft blazer + knit polo, mock-neck + tailored trousers, fitted leather jacket + knit
-- Relaxed confidence — NOT overdressed, NOT underdressed
-- Suede loafers, clean boots, or polished leather shoes
+STYLING: Weekend evening — Relaxed textures, open collar, leather and denim. Every piece touchable, nothing stiff. Butter-soft leather jacket or garment-washed overshirt. Dark denim or relaxed chinos. Clean sneakers or suede boots. The confidence comes from not trying.
 
-The outfit should make his date think "wow, he has great style."
-Think refined evening aesthetic — effortlessly stylish, subtly magnetic.`,
+FIRST, ANALYZE his features, build, and skin tone from the photo.
+Then choose the SINGLE most attractive combination from these options, and ADAPT it to his specific body:
+- Butter-soft leather jacket (moto or café racer) + fitted crew-neck tee in dark tone + slim dark jeans with clean hem + clean white leather sneakers or suede chelsea boots (cool confident)
+- Relaxed knit polo in rich tone + straight-leg dark chinos + premium suede loafers (no socks) + simple leather strap watch (Italian ease)
+- Garment-washed cotton overshirt (unbuttoned) + fitted mock-neck knit + dark straight-leg trousers + polished leather boots (layered texture)
+- Open-collar linen-cotton shirt (top 2 buttons undone) + well-fitted dark jeans + clean suede desert boots + rolled sleeves showing forearms (casual magnetism)
 
-      directiveFemale: `Create an ALLURING, ROMANTIC date night look for this woman. Something that highlights her best features and gets a second glance.
+KEY DIFFERENCE FROM LUXURY: Date Night is RELAXED — no blazers, no formal trousers, no dress shoes.
+The vibe is "he didn't try but he looks incredible." Leather, denim, open collar, rolled sleeves.
+Think Ryan Gosling off-duty — confident without being overdressed.`,
 
-ANALYZE her body and choose the most stunning date outfit:
-- Highlight her best features: legs (tailored slim trousers or midi with slit), waist (cinched or fitted), decolletage (V-neck or off-shoulder), back (elegant straps)
-- Choose the most flattering option from: silk blouse + tailored slim trousers, body-skimming knit top + pressed wide-leg pants, satin slip dress, elegant jumpsuit, or fitted blazer dress
-- Sensual yet tasteful — alluring, not overly revealing
-- Strappy heels, pointed-toe mules, or elegant sandals
+      directiveFemale: `Create a ROMANTIC, ALLURING date night look. Think candlelit dinner — feminine, head-turning, but never overdone.
 
-The outfit should make heads turn at a candlelit restaurant.
-Think romantic, feminine, the kind of look that sparks compliments all night.`,
+STYLING: Romantic evening — Silk, satin, fine knit in warm touchable textures. Skin-showing details: V-neck, off-shoulder, subtle slit. Strappy sandals or pointed-toe mules. Delicate gold jewelry catching candlelight. The vibe is intimacy and warmth — she glows in soft lighting.
+
+FIRST, ANALYZE her body, features, and skin tone from the photo.
+Then choose the SINGLE most stunning combination from these options, and ADAPT it to her specific body:
+- Silk satin camisole or V-neck top + high-waisted tailored slim trousers + strappy heeled sandals + delicate pendant necklace + clutch bag (sensual minimal)
+- Body-skimming knit midi dress with subtle slit + pointed-toe mules + small gold hoops + structured mini bag (effortless romantic)
+- Off-shoulder or one-shoulder fitted top + flowing wide-leg satin trousers + elegant heeled sandals + statement earrings (modern romantic)
+- Fitted cashmere wrap top + tailored cigarette trousers + pointed-toe ankle boots + delicate layered necklaces (warm allure)
+
+KEY DIFFERENCE FROM LUXURY: Date Night is ROMANTIC and SENSUAL — skin-showing details (V-neck, off-shoulder, slit), softer fabrics (silk, satin, fine knit), warmer lighting.
+The vibe is "she glows in candlelight." Think intimate, feminine, touchable textures.
+NOT power dressing, NOT formal — relaxed sensuality.`,
     },
     {
       id: 'luxury',
       labelKo: '럭셔리', labelEn: 'Luxury', labelJa: 'ラグジュアリー', labelZh: '奢华', labelEs: 'Lujo',
-      directiveMale: `Create a HEAD-TURNING quiet luxury look for this man. Think front row at fashion week — extraordinary fabrics, impeccable fit.
+      directiveMale: `Create a QUIET LUXURY editorial look — front row at Pitti Uomo.
 
-ANALYZE his build and coloring to create the ultimate luxury outfit:
-- Choose his most elevated silhouette: cashmere overcoat, fine-gauge turtleneck, or double-breasted blazer
-- Select fabric-forward pieces: cashmere, fine merino, wool gabardine, supple leather
-- Monochromatic or tonal color scheme that looks effortlessly expensive
-- Premium footwear: leather Chelsea boots, polished derbies, or suede ankle boots
+STYLING: Loro Piana quiet — Pared-down razor-clean silhouette where extraordinary fabric speaks. Tonal dressing, single color family across textures. Storm System cashmere overcoat or zip jacket. Slim straight trousers, clean leather shoes. The richness is in the hand-feel, not the label.
 
-Every piece should look like it costs more than it is. Zero logos, pure quality.
-Think The Row, Loro Piana, Brunello Cucinelli — understated opulence.`,
+FIRST, ANALYZE his build and coloring from the photo.
+Then choose the SINGLE most elevated combination from these options, and ADAPT it to his specific body:
+- Double-breasted cashmere-wool overcoat (peak lapel, reaching below knee) + fine-gauge cashmere turtleneck + pressed wool gabardine trousers + polished leather chelsea boots (Loro Piana winter editorial)
+- Unlined cashmere blazer (soft construction, patch pockets) + cashmere crewneck over spread-collar shirt + straight-leg pressed trousers with single pleat + suede loafers (Cucinelli elegant ease)
+- Full matching suit in Super 150s Italian wool (single-breasted, natural shoulder) + silk knit polo or fine cotton shirt + polished cap-toe oxford + dress watch (Tom Ford razor-sharp)
+- Shawl-collar cashmere cardigan over mock-neck + tailored wool trousers + premium suede ankle boots + minimal gold watch (The Row quiet wealth)
 
-      directiveFemale: `Create a HEAD-TURNING quiet luxury look for this woman. Think front row at fashion week — extraordinary fabrics, impeccable tailoring.
+MONOCHROMATIC TONAL PALETTE: head-to-toe in one color family — different textures create depth. Think navy on navy, charcoal on charcoal, cream on cream.
+Every fabric must look EXPENSIVE — cashmere with visible softness, wool with natural luster, leather with patina.
+KEY DIFFERENCE FROM DATE NIGHT: This is FORMAL, STRUCTURED, FULL ENSEMBLE — overcoats, blazers, suits. Zero casualness.`,
 
-ANALYZE her body and coloring to create the ultimate luxury outfit:
-- Choose her most elevated silhouette: cashmere blazer + wide-leg wool trousers, tailored coat + pressed pants, or silk blouse + fine wool-crepe trousers
-- Select fabric-forward pieces: cashmere, silk, fine wool crepe, supple leather
-- Monochromatic or tonal palette that whispers wealth
-- Choose from: cashmere blazer + wide-leg trousers, silk blouse + tailored wool pants, structured coat + knit + pressed trousers, or tonal separates with clean lines
-- Premium footwear: pointed-toe boots, elegant pumps, or refined flats
-- One statement piece of delicate jewelry — less is more
+      directiveFemale: `Create a QUIET LUXURY editorial look — front row at Paris Fashion Week.
 
-Every piece should radiate quality. Zero logos, pure craftsmanship.
-Think Toteme, The Row, Loro Piana — understated opulence, head-turning elegance.`,
+STYLING: minimal Row — Pared-back perfection — every seam intentional. Oversized coat or blazer over slip dress or wide trousers. Tonal monochrome dressing. Pointed flats or block-heel boots. One statement piece of jewelry. The silhouette is architecture, not decoration.
+
+FIRST, ANALYZE her body and coloring from the photo.
+Then choose the SINGLE most elevated combination from these options, and ADAPT it to her specific body:
+- Tailored cashmere-wool coat (minimal buttons, clean lines) + fine-gauge cashmere turtleneck + wide-leg wool crepe trousers + pointed-toe suede boots + structured leather bag (The Row editorial)
+- Silk-cashmere blazer with nipped waist + draped silk blouse + pressed wide-leg trousers + elegant leather pumps + one gold cuff bracelet (Hermès runway)
+- Oversized cashmere coat thrown over shoulders + ribbed knit midi dress + leather knee-high boots + delicate gold chain (Toteme Scandinavian luxury)
+- Full tonal ensemble: cashmere top + matching wool wide-leg trousers + cashmere scarf + pointed-toe flats in matching tone + minimal pearl earrings (Loro Piana monochrome wealth)
+
+MONOCHROMATIC TONAL PALETTE: head-to-toe in one color family — ivory, camel, grey, or navy. Different textures and weights create richness within the single palette.
+Every fabric must look EXPENSIVE — cashmere you can feel through the photo, silk with visible drape, wool with perfect pressing.
+KEY DIFFERENCE FROM DATE NIGHT: This is POWERFUL, STRUCTURED, COMPLETE — coats, suits, tonal dressing. Formal opulence, not romantic softness.`,
     },
     {
       id: 'casual',
       labelKo: '캐주얼', labelEn: 'Casual', labelJa: 'カジュアル', labelZh: '休闲', labelEs: 'Casual',
-      directiveMale: `Create an EFFORTLESSLY CHIC weekend look for this man. NOT boring basics — styled, intentional, the kind of casual that looks like it took no effort but actually looks amazing.
+      directiveMale: `Create an ELEVATED weekend look — NOT boring basics.
 
-ANALYZE his style potential and choose the perfect weekend outfit:
-- Don't default to boring jeans + tee — elevate with unexpected combinations
-- Choose from: premium sweatshirt + tailored joggers, oversized shirt + relaxed chinos, casual knit + comfortable jeans, bomber jacket + relaxed separates
-- Comfortable but intentional — every piece has a reason
-- Clean sneakers, suede desert boots, or canvas slip-ons
+STYLING: French off-duty — Plain crew-neck tee or Breton stripe. Cotton jacket or harrington if cool. Clean white sneakers. Minimal, timeless. The kind of casual that looks effortless but every piece was chosen with intention.
 
-The outfit should get a "you always look so put-together" even on a Saturday.
-Think off-duty model meets creative professional — effortless cool.`,
+FIRST, ANALYZE his body type and coloring from the photo.
+Then choose the SINGLE most stylish combination from these options, and ADAPT it to his specific body:
+- Garment-washed cotton overshirt in muted tone + relaxed crew-neck tee + straight-leg medium-wash denim with natural fade + clean white leather sneakers (Auralee weekend)
+- Premium heavyweight sweatshirt (450gsm cotton, raglan sleeve) + relaxed wide straight-leg chinos + suede desert boots + simple canvas tote (Nordic practical)
+- Knit zip-through jacket in oatmeal or grey + band-collar cotton shirt + relaxed corduroy trousers + clean canvas sneakers + simple watch (French casual)
+- Oversized cotton-linen shirt (sleeves rolled to forearm) + fitted crew tee underneath + relaxed dark chinos + woven leather sandals or clean sneakers (coastal ease)
 
-      directiveFemale: `Create an EFFORTLESSLY CHIC weekend look for this woman. NOT boring basics — styled, intentional, the kind of casual that looks like it took no effort but actually looks amazing.
+IMPORTANT: Vary the bottoms — NOT always dark navy or brown chinos. Use medium-wash denim, grey wool, olive chinos, corduroy, wide-leg cotton.
+The fabrics must have WEIGHT and TEXTURE — heavyweight cotton, washed linen, brushed fleece. NOT thin fast-fashion polyester.
+Think the best-dressed guy at a farmers market — comfortable, cool, every piece is considered.`,
 
-ANALYZE her body and style potential:
-- Don't default to jeans + sweater — elevate with feminine combinations
-- Choose the most flattering from: oversized knit + relaxed wide-leg jeans, fitted tee + high-waisted wide trousers, cardigan + cotton chinos, casual blazer + relaxed denim, or belted shirt dress
-- Comfortable but beautiful — every piece contributes to the look
-- Clean sneakers, woven sandals, ballet flats, or casual mules
+      directiveFemale: `Create an ELEVATED weekend look — NOT boring basics.
 
-The outfit should get "where did you get that?" at a weekend brunch.
-Think French-girl weekend — relaxed, feminine, never frumpy, never boring.`,
+STYLING: French off-duty — Parisian everyday. Breton stripe or plain cotton tee. Ballet flats or white sneakers. Simple crossbody, no fuss. Effortlessly chic. The kind of simplicity that only works when every piece has quality.
+
+FIRST, ANALYZE her body type and coloring from the photo.
+Then choose the SINGLE most stylish combination from these options, and ADAPT it to her specific body:
+- Relaxed cashmere cardigan draped over fitted Breton stripe tee + straight-leg medium-wash jeans + clean white sneakers + woven crossbody bag + delicate gold hoops (Parisian off-duty)
+- Oversized cotton button-down (sleeves rolled) + high-waisted wide-leg linen trousers + woven leather sandals + straw tote + delicate pendant (coastal chic)
+- Fitted ribbed knit top + flowing cotton midi skirt with drape + suede ballet flats + delicate layered necklaces + canvas bag (Sezane feminine)
+- Premium crew-neck sweatshirt + tailored wide-leg cotton chinos + clean sneakers + simple gold studs + leather crossbody (modern minimal)
+
+IMPORTANT: Mix trousers, skirts, and dresses — do NOT default to one type. Denim, wide-leg cotton, midi skirts are all valid.
+The fabrics must have QUALITY — washed cotton with weight, linen with texture, cashmere with softness.
+Think the girl every fashion blog photographs on the street — effortless, feminine, never trying too hard.`,
     },
     {
       id: 'daily',
       labelKo: '데일리', labelEn: 'Daily', labelJa: 'デイリー', labelZh: '日常', labelEs: 'Diario',
-      directiveMale: `Create a POLISHED everyday outfit for this man. The kind of look that gets compliments at the coffee shop — simple but noticeably well-dressed.
+      directiveMale: `Create a POLISHED everyday outfit — the best-dressed regular person in any room.
 
-ANALYZE his proportions and choose a flattering daily outfit:
-- Simple but intentional — a clean knit, well-fitted trousers, quality accessories
-- Choose from: crewneck + chinos, lightweight knit + relaxed trousers, polo + tailored pants, or simple tee + structured trousers
-- One quality accessory: leather watch, woven belt, or clean sneakers
-- Clothes that fit perfectly — not too tight, not too loose
+STYLING: Cucinelli ease — Warm layered look — fine-gauge knit over spread-collar shirt, collar and cuffs visible. Cashmere-blend sweater or gilet. Straight-leg trousers with single pleat. Suede loafers, no socks. Minimal leather watch. The warmth of quality materials radiates.
 
-Think everyday editorial — the best-dressed regular guy in any room.`,
+FIRST, ANALYZE his proportions, skin tone, and build from the photo.
+Then choose the SINGLE most flattering combination from these options, and ADAPT it to his specific body:
+- Fine-gauge merino crewneck over crisp oxford shirt (collar and cuffs visible) + straight-leg pressed chinos + polished leather sneakers + woven leather belt (elevated smart-casual)
+- Clean cotton polo in rich tone + tapered wool-blend trousers + suede loafers + minimal watch (Italian everyday)
+- Lightweight cashmere crewneck + straight-leg dark denim with clean hem + clean white sneakers + simple leather strap watch (quiet refinement)
+- Band-collar cotton-linen shirt + relaxed cotton trousers + leather desert boots + brushed metal watch (modern ease)
 
-      directiveFemale: `Create a POLISHED everyday outfit for this woman. The kind of look that gets compliments at the coffee shop — simple but noticeably well-dressed.
+The fit must be PERFECT — not too tight (uncomfortable), not too loose (sloppy). Natural body skimming with room to move.
+Every piece should look one tier above what's expected. The KIND of crewneck that makes people ask "where is that from?"
+Think the man who makes basics look expensive — quiet quality in every detail.`,
 
-ANALYZE her body and choose the most flattering daily outfit:
-- Simple but intentional — effortless elegance for any day
-- Choose the most flattering from: fitted top + wide-leg trousers, cashmere knit + pressed chinos, blouse + tailored pants, knit cardigan + relaxed jeans, or simple wrap dress
-- One delicate piece of jewelry: pendant necklace, simple studs, or thin bracelet
-- Ballet flats, low block-heel mules, or clean sneakers
+      directiveFemale: `Create a POLISHED everyday outfit — effortlessly put-together.
 
-Think everyday elegance — the woman who always looks polished without visible effort.`,
+STYLING: Loro Piana refined — Matching cashmere-wool blazer and wide-leg trousers in tonal palette. Silk-cashmere knit camisole or fine-gauge turtleneck. Ultra-premium fabrics with visible softness and weight. Pointed-toe suede pumps or elegant leather flats. Delicate gold jewelry, structured leather tote. Whispers wealth through material quality.
+
+FIRST, ANALYZE her body type, skin tone, and proportions from the photo.
+Then choose the SINGLE most flattering combination from these options, and ADAPT it to her specific body:
+- Fitted cashmere crewneck + high-waisted straight-leg wool trousers + pointed-toe ballet flats + delicate pendant necklace + structured leather tote (quiet elegance)
+- Silk-cotton blouse with clean lines + tailored wide-leg chinos + clean leather mules + thin gold bracelet (modern professional)
+- Fine-gauge knit cardigan over fitted tee + straight-leg medium-wash jeans + suede ankle boots + simple gold hoops (warm everyday)
+- Draped jersey wrap top + pressed wide-leg trousers + pointed ballet flats + delicate layered necklaces (feminine daily)
+
+IMPORTANT: Mix trousers, jeans, and skirts — do NOT default to one type.
+The fit should be effortless — pieces that drape naturally on the body, not stiff or costume-like.
+Think the woman who always looks "put-together" without visible effort — the quiet power of well-chosen basics.`,
     },
   ]
 }
@@ -904,8 +968,13 @@ export function getTrendScenarios(trendType: string): ScenarioConfig[] {
 export function getColorInspiration(gender: string, seed: number): string {
   const palettes = gender === 'female' ? femaleColorPalettes : maleColorPalettes
   const p = palettes[seed % palettes.length]
-  return `Color inspiration (starting point — adapt to this person's skin undertone): ${p.colors}, with ${p.accent} accent.
-This is a SUGGESTION — deviate freely if their coloring demands different tones. Warm-undertone skin pairs better with warm colors; cool-undertone skin pairs better with cool colors.`
+  return `Color palette (${p.tone}): Primary ${p.c1}, Secondary ${p.c2}, Light ${p.c3}, Accent base ${p.c4}, Pop accent ${p.accent}.
+These are SUGGESTIONS — diagnose this person's seasonal color type and adapt:
+SPRING WARM (golden/peachy glow) → shift toward coral, warm peach, cream, light camel.
+SUMMER COOL (pink/delicate) → shift toward lavender, dusty rose, powder blue, mauve.
+AUTUMN WARM (deep golden/olive) → shift toward terracotta, olive, mustard, burgundy.
+WINTER COOL (high contrast, clear) → shift toward cobalt, emerald, true red, black/white.
+Adapt to this person's skin undertone — shift warm if golden/peachy skin, shift cool if pink/rosy skin.`
 }
 
 // ─── Silhouette Guide (BMI-based) ───────────────────────────────
@@ -992,6 +1061,13 @@ This is NOT a generation task. This is a CLOTHING SWAP on an EXISTING photo.
 
 YOUR TASK: ONLY change the CLOTHING on this person. Analyze their body type, skin tone, and proportions, then dress them in the PERFECT outfit.
 
+FRAMING RULE (CRITICAL — READ FIRST):
+The output image MUST have the EXACT same framing and composition as the input photo.
+Do NOT zoom in on the torso. Do NOT crop the head. Do NOT change the camera angle.
+The person's head must have the same amount of space above it as the original.
+If the input shows full body, output shows full body. If input shows head-to-waist, output shows head-to-waist.
+ZERO framing changes allowed. This is the #1 rule.
+
 SCENARIO DIRECTIVE:
 ${directive}
 
@@ -999,22 +1075,29 @@ ${colorInspiration}
 
 CRITICAL: This is a ${genderWord}. The outfit MUST be appropriate for a ${genderWord}.
 
-STYLING APPROACH — PROFESSIONAL PERSONAL COLOR & BODY ANALYSIS:
+BODY ADAPTATION (adapt the outfit to THIS person's body — analyze from the photo):
+${gender === 'female' ? `- Long legs → show with the right hemline and silhouette
+- Defined waist → emphasize with belts, fitted mid-sections, or wrap elements
+- Broad shoulders → balance with V-necklines, A-line shapes, or wide-leg bottoms
+- Petite frame → elongate with high waist, monochromatic palette, pointed-toe shoes
+- Curvy figure → highlight with X-silhouette, defined waist, vertical lines
+- Fuller build → vertical lines, monochromatic flow, show slim wrists/ankles/collarbone
+- For shorter legs or longer torso: HIGH WAIST bottoms are critical to elongate proportions` : `- Broad shoulders → lean into structured pieces, clean lines
+- Slim build → add visual presence with layered textures, structured shoulders
+- Athletic build → showcase with fitted knits, well-proportioned trousers
+- Fuller build → elongate with vertical lines, V-necks, dark monochromatic tones
+- For shorter legs or longer torso: HIGH WAIST bottoms are critical to elongate proportions
+- Relaxed comfortable silhouette — NOT tight, NOT skinny fit`}
 
-STEP 1 — PERSONAL COLOR SEASON (examine skin undertone, then select the best palette):
-  * SPRING WARM (bright golden glow, peach undertone): Coral, warm peach, lime green, warm cream, light camel — radiant, vivid warm colors that make skin luminous
-  * SUMMER COOL (pinkish, delicate, soft complexion): Lavender, dusty rose, powder blue, mauve, soft grey-blue, cool ivory — muted elegant tones that refine
-  * AUTUMN WARM (deep golden/olive, rich depth): Terracotta, olive, mustard, burgundy, forest green, deep camel — rich earth tones with warmth and gravitas
-  * WINTER COOL (high contrast, clear): Cobalt blue, emerald, magenta, true red, pure black, pure white — bold saturated colors that match the person's clarity
-Choose the season that makes THIS person's skin look most alive and radiant.
+PERSONAL COLOR SEASON (diagnose from skin undertone, then adapt ALL colors):
+  * SPRING WARM (golden/peachy glow) → coral, warm peach, cream, light camel — vivid warm radiance
+  * SUMMER COOL (pink/delicate) → lavender, dusty rose, powder blue, mauve — muted cool elegance
+  * AUTUMN WARM (deep golden/olive) → terracotta, olive, mustard, burgundy — rich depth
+  * WINTER COOL (high contrast, clear) → cobalt, emerald, true red, black/white — bold clarity
+Choose the season that makes THIS person's skin GLOW, then shift the palette colors accordingly.
+Adapt specified colors to this person's skin undertone — shift warm if golden/peachy skin, shift cool if pink/rosy skin.
 
-STEP 2 — BODY TYPE STRATEGY (visually analyze silhouette, apply most flattering approach):
-  * Hourglass → emphasize the defined waist, fitted-at-waist silhouettes
-  * Triangle (wider hips) → draw attention upward with interesting tops, streamline lower body
-  * Inverted Triangle (broad shoulders) → V-necklines, wider bottoms to balance proportions
-  * Rectangle (straight) → create curves with belts, layering, peplum, texture contrast
-  * Round (fuller midsection) → vertical lines, monochromatic flow, show slim wrists/ankles/collarbone
-  * For shorter legs or longer torso: HIGH WAIST is critical — raise the visual waistline to elongate
+STYLING VARIETY: A great stylist never recommends the same look twice. Vary the bottoms — sometimes dark navy trousers, sometimes medium-wash denim jeans, sometimes charcoal wool pants, sometimes olive chinos. Avoid repeating brown/tan/khaki. Denim is perfectly appropriate for smart casual and casual looks.
 
 - Quality fabrics with natural texture and drape — cashmere, silk, fine wool, supple leather
 - Avoid overly theatrical or costume-like outfits — realistic, tasteful, modern luxury
