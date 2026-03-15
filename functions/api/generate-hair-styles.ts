@@ -44,16 +44,16 @@ async function generateHairImageWithGemini(
 - Style must look masculine and natural
 - The result should look like the person actually went to a good barber shop`
 
-    // Each of the 3 styles gets a MAXIMALLY DISTINCT visual variation
+    // 3 distinct but NATURAL, WEARABLE variations
     const maleVariations = [
-      { length: 'short and clean on the sides, neat on top', texture: 'clean and sleek with subtle definition', color: 'keep the person\'s natural hair color', volume: 'low to medium volume, close to the head', faceShapeNote: 'Good for oval and oblong faces. For round: add height on top. For square: soften temples.' },
-      { length: 'short to medium, longer on top (5-7cm)', texture: 'textured with natural movement and soft layering', color: 'keep the person\'s natural hair color', volume: 'medium volume with movement', faceShapeNote: 'Great for round faces (adds vertical). For square: texture softens angles. For oblong: keep sides fuller.' },
-      { length: 'medium on top (5-7cm), tapered sides', texture: 'straight and polished with defined shape', color: 'keep the person\'s natural hair color', volume: 'moderate volume with defined shape', faceShapeNote: 'Good for oval and heart. For round: height elongates. For square: side part softens angles.' },
+      { length: 'short, sides tapered, top 3-4cm', texture: 'clean and neat', color: 'natural hair color', volume: 'low, close to head', faceShapeNote: 'Round: add height on top. Square: soften temples.' },
+      { length: 'medium, top 5-6cm, sides tapered', texture: 'soft natural texture', color: 'natural hair color', volume: 'medium, natural movement', faceShapeNote: 'Round: adds vertical height. Square: texture softens angles.' },
+      { length: 'medium, top 5-7cm, side-parted', texture: 'polished with soft definition', color: 'natural hair color', volume: 'moderate, styled shape', faceShapeNote: 'Round: side part elongates. Square: diagonal part softens.' },
     ]
     const femaleVariations = [
-      { length: 'shoulder length or above', texture: 'sleek and straight with subtle layering', color: 'keep the person\'s natural hair color', volume: 'smooth and refined', faceShapeNote: 'Great for oval and heart. For round: long layers past chin. For square: add layers below jaw with C-curl ends.' },
-      { length: 'medium to long length', texture: 'soft natural waves with body', color: 'keep the person\'s natural hair color, add subtle warmth', volume: 'natural body and bounce', faceShapeNote: 'Good for round (elongates). Heart: add volume below ears. Square: softens angles with movement.' },
-      { length: 'medium layered cut', texture: 'natural and effortless with face-framing layers', color: 'keep the person\'s natural hair color', volume: 'natural movement and body', faceShapeNote: 'Versatile for most faces. Round: long layers past chin. Square: diagonal layers soften jaw. Oblong: add side volume.' },
+      { length: 'medium, collarbone length', texture: 'layered with face-framing pieces', color: 'natural hair color', volume: 'natural movement', faceShapeNote: 'Round: long layers past chin. Square: layers soften jaw.' },
+      { length: 'long, past shoulders', texture: 'soft gentle waves', color: 'natural hair color', volume: 'natural body and flow', faceShapeNote: 'Round: elongates. Heart: volume at mid-length.' },
+      { length: 'shoulder length bob', texture: 'sleek with subtle inward curve', color: 'natural hair color', volume: 'smooth and refined', faceShapeNote: 'Oval and heart: flattering. Square: slight layers below jaw.' },
     ]
 
     const variations = gender === 'female' ? femaleVariations : maleVariations

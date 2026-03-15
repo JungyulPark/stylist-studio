@@ -133,19 +133,19 @@ Then choose the SINGLE most flattering combination from these options, and ADAPT
 The fabric should have visible WEIGHT and TEXTURE — not flat, not cheap-looking.
 Think the best-dressed man at a gallery opening — quiet confidence, zero effort.`,
 
-      directiveFemale: `Create this woman's SIGNATURE LOOK — her single best outfit.
+      directiveFemale: `Create this woman's SIGNATURE LOOK — her single most head-turning outfit.
 
-STYLING: Auralee soft — Fabric-first — garment-dyed cashmere poplin, high-twist wool, supple leather in soft forms. Loose silhouette balanced with one fitted piece. Matte surfaces. Simple elegant flats or loafers.
+STYLING: 2026 It-Girl meets quiet luxury. Clean lines, intentional proportions, one unexpected detail. Think Hailey Bieber meets old Celine — polished but never boring.
 
 FIRST, ANALYZE her body type, skin tone, face shape, and proportions from the photo.
-Then choose the SINGLE most flattering combination from these options, and ADAPT it to her specific body:
-- Tailored blazer with subtle nipped waist + silk-cotton camisole + high-waisted wide-leg pressed trousers + pointed-toe leather mules + delicate gold pendant (Reformation editorial)
-- Fine-gauge cashmere V-neck + high-waisted straight-leg wool trousers with knife pleat + suede ankle boots + thin gold bracelet (Toteme minimal)
-- Draped silk blouse with hidden placket + tailored wide-leg chinos + pointed ballet flats + delicate layered necklaces (Rouje Parisian)
-- Fitted ribbed knit top + A-line midi skirt in quality wool + polished leather ankle boots + simple gold hoops (Sezane feminine)
+Then choose the SINGLE most flattering combination and ADAPT it to her specific body:
+- Oversized structured blazer (slightly oversized, padded shoulders) + fitted ribbed tank + straight-leg tailored trousers + pointed-toe slingback heels + chunky gold hoops (Frankie Shop power)
+- Cashmere-blend knit polo + high-waisted pleated wide-leg trousers + leather loafers + delicate layered gold chains (Toteme effortless)
+- Butter-soft leather jacket + silk camisole + dark straight-leg jeans + pointed-toe ankle boots + minimal gold pendant (cool girl edge)
+- Fitted mock-neck knit + draped midi skirt with slit + strappy heeled mules + statement earrings (modern feminine)
 
-IMPORTANT: Mix trousers and skirts — do NOT default to skirts only. Wide-leg trousers are equally feminine.
-The fabric should have visible QUALITY — silk that catches light, wool with drape, cashmere with softness.`,
+Mix trousers and skirts — wide-leg trousers are equally feminine and trendy in 2026.
+The outfit should make her look like the most stylish person in any room — fashion-forward but wearable.`,
     },
     {
       id: 'date',
@@ -165,20 +165,19 @@ KEY DIFFERENCE FROM LUXURY: Date Night is RELAXED — no blazers, no formal trou
 The vibe is "he didn't try but he looks incredible." Leather, denim, open collar, rolled sleeves.
 Think Ryan Gosling off-duty — confident without being overdressed.`,
 
-      directiveFemale: `Create a ROMANTIC, ALLURING date night look. Think candlelit dinner — feminine, head-turning, but never overdone.
+      directiveFemale: `Create a STUNNING date night look — the outfit that makes everyone in the restaurant look twice.
 
-STYLING: Romantic evening — Silk, satin, fine knit in warm touchable textures. Skin-showing details: V-neck, off-shoulder, subtle slit. Strappy sandals or pointed-toe mules. Delicate gold jewelry catching candlelight. The vibe is intimacy and warmth — she glows in soft lighting.
+STYLING: 2026 evening chic — sensual but sophisticated. Think Zendaya at a dinner party. Luxe fabrics, strategic skin-showing, effortless confidence.
 
 FIRST, ANALYZE her body, features, and skin tone from the photo.
-Then choose the SINGLE most stunning combination from these options, and ADAPT it to her specific body:
-- Silk satin camisole or V-neck top + high-waisted tailored slim trousers + strappy heeled sandals + delicate pendant necklace + clutch bag (sensual minimal)
-- Body-skimming knit midi dress with subtle slit + pointed-toe mules + small gold hoops + structured mini bag (effortless romantic)
-- Off-shoulder or one-shoulder fitted top + flowing wide-leg satin trousers + elegant heeled sandals + statement earrings (modern romantic)
-- Fitted cashmere wrap top + tailored cigarette trousers + pointed-toe ankle boots + delicate layered necklaces (warm allure)
+Then choose the SINGLE most stunning combination and ADAPT it to her specific body:
+- Silk satin slip dress (midi length, subtle cowl neck) + strappy heeled sandals + delicate gold layered necklaces + small structured clutch (understated sexy)
+- Off-shoulder fitted knit top + high-waisted satin wide-leg trousers + pointed-toe mules + statement gold earrings (modern allure)
+- Body-skimming ribbed midi dress with side slit + leather ankle boots + chunky gold bracelet + mini bag (effortless hot)
+- Sheer-panel blouse (subtle, not revealing) + tailored cigarette trousers + strappy heels + delicate pendant (date confidence)
 
-KEY DIFFERENCE FROM LUXURY: Date Night is ROMANTIC and SENSUAL — skin-showing details (V-neck, off-shoulder, slit), softer fabrics (silk, satin, fine knit), warmer lighting.
-The vibe is "she glows in candlelight." Think intimate, feminine, touchable textures.
-NOT power dressing, NOT formal — relaxed sensuality.`,
+The vibe is "she didn't try too hard but she's the most beautiful person here."
+Skin-showing details: V-neck, off-shoulder, or subtle slit — but never vulgar.`,
     },
     {
       id: 'daily',
@@ -198,20 +197,19 @@ The fit must be PERFECT — not too tight (uncomfortable), not too loose (sloppy
 Every piece should look one tier above what's expected. The KIND of crewneck that makes people ask "where is that from?"
 Think the man who makes basics look expensive — quiet quality in every detail.`,
 
-      directiveFemale: `Create a POLISHED everyday outfit — effortlessly put-together.
+      directiveFemale: `Create the PERFECT everyday outfit — the kind strangers compliment on the street.
 
-STYLING: Loro Piana refined — Matching cashmere-wool blazer and wide-leg trousers in tonal palette. Silk-cashmere knit camisole or fine-gauge turtleneck. Ultra-premium fabrics with visible softness and weight. Pointed-toe suede pumps or elegant leather flats. Delicate gold jewelry, structured leather tote. Whispers wealth through material quality.
+STYLING: 2026 elevated basics — clean, modern, Instagram-worthy. Think the girl every fashion blog photographs. Quality basics styled perfectly — nothing forced, everything intentional.
 
 FIRST, ANALYZE her body type, skin tone, and proportions from the photo.
-Then choose the SINGLE most flattering combination from these options, and ADAPT it to her specific body:
-- Fitted cashmere crewneck + high-waisted straight-leg wool trousers + pointed-toe ballet flats + delicate pendant necklace + structured leather tote (quiet elegance)
-- Silk-cotton blouse with clean lines + tailored wide-leg chinos + clean leather mules + thin gold bracelet (modern professional)
-- Fine-gauge knit cardigan over fitted tee + straight-leg medium-wash jeans + suede ankle boots + simple gold hoops (warm everyday)
-- Draped jersey wrap top + pressed wide-leg trousers + pointed ballet flats + delicate layered necklaces (feminine daily)
+Then choose the SINGLE most flattering combination and ADAPT it to her specific body:
+- Oversized cashmere cardigan (dropped shoulder) + fitted ribbed tank + straight-leg jeans + clean white sneakers + simple gold hoops (Parisian off-duty)
+- Cropped boxy blazer + high-waisted wide-leg linen trousers + leather slide sandals + delicate pendant + canvas tote (modern minimal)
+- Fitted ribbed knit top + high-waisted pleated midi skirt + suede loafers + layered gold necklaces (feminine chic)
+- Premium cotton crew sweatshirt + tailored wide-leg chinos + clean leather sneakers + simple studs + crossbody bag (cool casual)
 
-IMPORTANT: Mix trousers, jeans, and skirts — do NOT default to one type.
-The fit should be effortless — pieces that drape naturally on the body, not stiff or costume-like.
-Think the woman who always looks "put-together" without visible effort — the quiet power of well-chosen basics.`,
+Mix trousers, jeans, and skirts — the outfit should look effortless but considered.
+Think the girl who makes basics look expensive — "where did you get that?"`,
     },
   ]
 }
@@ -906,18 +904,23 @@ export function getSilhouetteGuide(gender: string, height?: string, weight?: str
 
 function getBeautyRetouch(gender: string): string {
   if (gender === 'female') {
-    return `BEAUTY ENHANCEMENT for the face:
-- Apply soft, natural skin smoothing (reduce wrinkles and blemishes subtly)
-- Add gentle soft-focus glow effect on the face
-- Even out skin tone with warm, healthy glow
-- Enhance with soft studio lighting effect
-- Keep the face looking NATURAL - not overly edited`
+    return `BEAUTY ENHANCEMENT — make this person look their BEST:
+- Smooth skin naturally (reduce wrinkles, blemishes, pores)
+- Brighten and even out skin tone with warm healthy glow
+- Subtle face slimming and jawline refinement
+- Brighter, clearer eyes with soft catchlight
+- Soft studio lighting effect — like a professional portrait
+- The person should look like the BEST version of themselves
+- Keep it NATURAL — enhanced beauty, not plastic surgery`
   }
-  return `SUBTLE BEAUTY ENHANCEMENT for the face:
-- Apply light natural skin smoothing (reduce blemishes subtly)
-- Add subtle soft-focus glow effect on the face
-- Even out skin tone slightly for a clean, fresh look
-- Keep the face looking NATURAL and masculine - not overly edited`
+  return `BEAUTY ENHANCEMENT — make this person look their BEST:
+- Smooth skin naturally (reduce blemishes, pores, redness)
+- Even out skin tone for a clean, fresh, healthy look
+- Subtle jawline definition and cleaner facial contours
+- Brighter, clearer eyes
+- Soft studio lighting effect — like a professional portrait
+- The person should look like the BEST version of themselves
+- Keep it NATURAL and masculine — enhanced, not artificial`
 }
 
 // ─── Gender-Specific Style Rules ─────────────────────────────────

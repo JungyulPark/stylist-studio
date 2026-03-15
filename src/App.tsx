@@ -7166,6 +7166,7 @@ ${hairImgs.length > 0 ? `<div class="section"><h2>${hairSection}</h2><div class=
                   </div>
                 ))}
               </div>
+              <p className="tap-hint">{lang === 'ko' ? '* 이미지를 클릭하면 원본 크기로 볼 수 있습니다' : lang === 'ja' ? '* 画像をクリックすると原寸で表示' : lang === 'zh' ? '* 点击图片查看原图' : lang === 'es' ? '* Toca la imagen para ver tamaño completo' : '* Tap image to view full size'}</p>
             </>
           ) : (
             <div className="style-generate-prompt">
@@ -8040,6 +8041,7 @@ ${hairImgs.length > 0 ? `<div class="section"><h2>${hairSection}</h2><div class=
                       </div>
                     ))}
                   </div>
+                  <p className="tap-hint">{lang === 'ko' ? '* 이미지를 클릭하면 원본 크기로 볼 수 있습니다' : '* Tap image to view full size'}</p>
 
                   {/* Blur unlock CTA for free trial */}
                   {isFreeTrial && generatedHairImages.filter(img => img.imageUrl).length > 1 && (

@@ -24,14 +24,14 @@ interface StyleOption {
 
 const hairstyles: Record<string, StyleOption[]> = {
   male: [
-    { id: 'clean-short', ko: '클린 숏컷', en: 'Clean Short', prompt: 'SHORT clean cut — sides closely tapered, top about 2-4cm, neat and sharp. Like a premium barber cut — clean, minimal, polished. Keep natural hair color.' },
-    { id: 'textured-crop', ko: '텍스처드 크롭', en: 'Textured Crop', prompt: 'MEDIUM textured crop — top about 4-6cm with natural texture and soft movement, sides tapered. Modern, casual, approachable. Keep natural hair color.' },
-    { id: 'side-part', ko: '사이드 파트', en: 'Side Part', prompt: 'MEDIUM classic side part — top about 5-7cm swept to one side, sides shorter and tapered, clean and polished. Classic gentlemen style. Keep natural hair color.' },
+    { id: 'clean-short', ko: '클린 숏컷', en: 'Clean Short', prompt: 'Clean, neat short haircut. Sides tapered short, top 3-4cm, well-groomed. Like leaving a premium Korean barber. Natural hair color. Simple, masculine, sharp.' },
+    { id: 'textured-medium', ko: '내추럴 미디엄', en: 'Natural Medium', prompt: 'Natural medium-length hair. Top 5-6cm with soft texture and gentle movement, sides neatly tapered. The kind of easy, stylish Korean male hairstyle seen on actors. Natural hair color.' },
+    { id: 'comma-part', ko: '가르마 스타일', en: 'Styled Part', prompt: 'Side-parted medium hair with slight volume. Top 5-7cm, parted naturally to one side, styled but not stiff. Clean and modern — like a K-drama lead. Natural hair color.' },
   ],
   female: [
-    { id: 'shoulder-bob', ko: '숄더 밥', en: 'Shoulder Bob', prompt: 'SHOULDER-LENGTH bob — clean one-length or slightly layered bob ending at shoulders, sleek with subtle inward curve, chic and modern. Keep natural hair color.' },
-    { id: 'soft-waves', ko: '소프트 웨이브', en: 'Soft Waves', prompt: 'MEDIUM-LONG soft waves — past shoulders with loose gentle waves, romantic and feminine volume, natural flow. Keep natural hair color.' },
-    { id: 'layered-medium', ko: '레이어드 미디', en: 'Layered Medium', prompt: 'MEDIUM layered cut — collarbone length with face-framing layers, natural movement and body, effortless and modern. Keep natural hair color.' },
+    { id: 'layered-medium', ko: '레이어드 미디', en: 'Layered Medium', prompt: 'Medium layered cut at collarbone length. Soft face-framing layers, natural movement, effortless and modern. Like leaving a premium Seoul salon. Natural hair color.' },
+    { id: 'soft-long', ko: '소프트 롱', en: 'Soft Long', prompt: 'Long hair with soft gentle waves. Past shoulders, natural body and flow, romantic and feminine. Healthy, glossy texture. Natural hair color.' },
+    { id: 'clean-bob', ko: '클린 밥', en: 'Clean Bob', prompt: 'Shoulder-length clean bob. One-length or slight layers, sleek with subtle inward curve at ends. Chic, modern, put-together. Natural hair color.' },
   ]
 }
 
