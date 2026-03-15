@@ -3820,7 +3820,6 @@ function App() {
       setIsTransformingHair(true)
 
       // First: Generate fashion styles
-      let bestMatchPhoto = profileData.photo // fallback to original
       try {
         const stylesResponse = await fetch('/api/generate-styles', {
           method: 'POST',
@@ -3838,12 +3837,6 @@ function App() {
           console.log('[Fashion] Success:', stylesData)
           const styles = stylesData.results || stylesData.styles || []
           setStyleImages(styles)
-          // Use best-match outfit image as base for hairstyle generation
-          const bestMatch = styles.find((s: { id: string; imageUrl?: string | null }) => s.id === 'best-match' && s.imageUrl)
-          if (bestMatch?.imageUrl) {
-            bestMatchPhoto = bestMatch.imageUrl
-            console.log('[Hair] Using best-match outfit image as base for hairstyles')
-          }
         } else {
           console.error('[Fashion] API error:', stylesResponse.status)
         }
@@ -3855,13 +3848,13 @@ function App() {
       await new Promise(resolve => setTimeout(resolve, 300))
       setIsGeneratingStyles(false)
 
-      // Second: Generate hairstyles using best-match outfit photo
+      // Second: Generate hairstyles using ORIGINAL photo (never use transformed image)
       try {
         const hairResponse = await fetch('/api/transform-batch', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
-            photo: bestMatchPhoto,
+            photo: profileData.photo,
             type: 'hairstyle',
             gender: profileData.gender,
             language: lang

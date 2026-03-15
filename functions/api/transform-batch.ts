@@ -4,7 +4,7 @@ import { errors } from '../lib/errors'
 import { editPhotoWithOpenAI } from '../lib/openai-image'
 import { buildBrandEditPrompt } from '../lib/stylist-prompts'
 
-function fetchWithTimeout(url: string, init: RequestInit, timeoutMs = 25_000): Promise<Response> {
+function fetchWithTimeout(url: string, init: RequestInit, timeoutMs = 55_000): Promise<Response> {
   const controller = new AbortController()
   const timer = setTimeout(() => controller.abort(), timeoutMs)
   return fetch(url, { ...init, signal: controller.signal }).finally(() => clearTimeout(timer))
@@ -24,18 +24,14 @@ interface StyleOption {
 
 const hairstyles: Record<string, StyleOption[]> = {
   male: [
-    { id: 'clean-short', ko: '클린 숏컷', en: 'Clean Short', prompt: 'SHORT clean cut — sides closely tapered/faded, top about 2-3cm, neat and minimal. Like a clean crew cut or buzz fade. Very short and sharp. Keep natural hair color. Result should look like a real barber visit.' },
-    { id: 'side-part', ko: '사이드 파트', en: 'Side Part', prompt: 'MEDIUM length classic side part — top about 5-7cm swept to one side, sides shorter and tapered, clean and polished. Think classic gentlemen style. Keep natural hair color. Result should look like a real barber visit.' },
-    { id: 'textured-crop', ko: '텍스처드 크롭', en: 'Textured Crop', prompt: 'MEDIUM textured crop — top about 4-6cm with natural texture and movement, slightly messy and tousled, sides tapered. Modern and casual. Keep natural hair color. Result should look like a real barber visit.' },
-    { id: 'comma-hair', ko: '쉼표 머리', en: 'Comma Hair', prompt: 'MEDIUM Korean comma hair — top about 5-7cm with a subtle comma-shaped fringe falling to one side, sides tapered short. Clean and modern, NOT long or flowing. Keep natural hair color. Result should look like a real barber visit.' },
-    { id: 'wavy-natural', ko: '웨이비 내추럴', en: 'Wavy Natural', prompt: 'SHORT-MEDIUM natural wavy style — top about 4-6cm with slight soft texture, sides tapered clean. Casual and approachable, NOT long or flowing. Keep natural hair color. Result should look like a real barber visit.' }
+    { id: 'clean-short', ko: '클린 숏컷', en: 'Clean Short', prompt: 'SHORT clean cut — sides closely tapered, top about 2-4cm, neat and sharp. Like a premium barber cut — clean, minimal, polished. Keep natural hair color.' },
+    { id: 'textured-crop', ko: '텍스처드 크롭', en: 'Textured Crop', prompt: 'MEDIUM textured crop — top about 4-6cm with natural texture and soft movement, sides tapered. Modern, casual, approachable. Keep natural hair color.' },
+    { id: 'side-part', ko: '사이드 파트', en: 'Side Part', prompt: 'MEDIUM classic side part — top about 5-7cm swept to one side, sides shorter and tapered, clean and polished. Classic gentlemen style. Keep natural hair color.' },
   ],
   female: [
-    { id: 'long-straight', ko: '롱 스트레이트', en: 'Long Straight', prompt: 'LONG sleek straight hair — past shoulders, smooth and glossy with subtle face-framing layers, elegant and refined. Keep natural hair color. Result should look like a real salon blowout.' },
-    { id: 'shoulder-bob', ko: '숄더 밥', en: 'Shoulder Bob', prompt: 'SHOULDER-LENGTH bob — clean one-length or slightly layered bob ending at shoulders, sleek with subtle inward curve, chic and modern. Keep natural hair color. Result should look like a real salon cut.' },
-    { id: 'soft-waves', ko: '소프트 웨이브', en: 'Soft Waves', prompt: 'MEDIUM-LONG soft waves — past shoulders with loose gentle waves, romantic and feminine volume, natural flow. Keep natural hair color. Result should look like a real salon styling.' },
-    { id: 'layered-medium', ko: '레이어드 미디', en: 'Layered Medium', prompt: 'MEDIUM layered cut — collarbone length with face-framing layers, natural movement and body, effortless and modern. Keep natural hair color. Result should look like a real salon cut.' },
-    { id: 'short-pixie', ko: '숏 픽시', en: 'Short Pixie', prompt: 'SHORT pixie or cropped bob — above ear or chin length, textured and bold, feminine yet edgy, easy to maintain. Keep natural hair color. Result should look like a real salon cut.' }
+    { id: 'shoulder-bob', ko: '숄더 밥', en: 'Shoulder Bob', prompt: 'SHOULDER-LENGTH bob — clean one-length or slightly layered bob ending at shoulders, sleek with subtle inward curve, chic and modern. Keep natural hair color.' },
+    { id: 'soft-waves', ko: '소프트 웨이브', en: 'Soft Waves', prompt: 'MEDIUM-LONG soft waves — past shoulders with loose gentle waves, romantic and feminine volume, natural flow. Keep natural hair color.' },
+    { id: 'layered-medium', ko: '레이어드 미디', en: 'Layered Medium', prompt: 'MEDIUM layered cut — collarbone length with face-framing layers, natural movement and body, effortless and modern. Keep natural hair color.' },
   ]
 }
 
@@ -123,35 +119,50 @@ async function transformWithGemini(
       : 'This is a MAN. The hairstyle should suit a man naturally. Perms, soft waves, textured styles are fine. Just avoid overly feminine or women\'s hairstyles.'
 
     const editPrompt = type === 'hairstyle'
-      ? `You are a world-class hair designer at a top salon. Analyze this person's face shape, skin tone, and features, then show them the perfect hairstyle — beautiful, stylish, and practical for everyday life.
+      ? `You are a world-class hair designer at a premium salon in Seoul/Tokyo. Show this person their perfect hairstyle — the kind that makes people say "your hair looks amazing."
+
+⚠️ FRAMING & COMPOSITION LOCK (CRITICAL — #1 RULE):
+The output image MUST be a PIXEL-PERFECT match of the input photo's framing, zoom, and composition.
+- SAME camera distance, SAME angle, SAME crop boundaries — ZERO deviation
+- The person's HEAD, FACE, and BODY must be at the EXACT same position, size, and scale
+- Do NOT zoom in on the face. Do NOT zoom out. Do NOT crop ANY part of the person.
+- The person must occupy the EXACT same percentage of the frame as the original
+- Output image dimensions and aspect ratio MUST match the input EXACTLY
+- VIOLATION of framing = COMPLETE FAILURE. Return the original unchanged rather than changing the frame.
 
 EDIT this photo - ONLY change the HAIRSTYLE to: ${style.prompt}
 
 ${genderGuideHair}
 
-FACE SHAPE ANALYSIS — classify this face and apply the correction:
-- OVAL: Ideal. Any style works. Updos highlight balance. Avoid heavy full bangs.
-- ROUND (wide cheeks, short chin): Create VERTICAL elongation. Root volume on top. Expose forehead (no full bangs). Avoid chin-length bobs.
-- OBLONG (long, narrow): Reduce vertical, add horizontal. Eye-level bangs shorten face. Side waves add width. NEVER long straight hair.
-- SQUARE (wide jaw, angular): Soften angles. Layered cuts below jaw with C-curl ends. Side-swept or sheer bangs — NEVER blunt straight-across.
-- HEART/DIAMOND (wide forehead/cheekbones, narrow chin): Volume at jawline to balance. Diagonal bangs.
+FACE SHAPE ANALYSIS — classify this face and apply:
+- OVAL: Any style works. Avoid heavy full bangs.
+- ROUND: Create VERTICAL elongation. Root volume on top. Expose forehead. Avoid chin-length bobs.
+- OBLONG: Reduce vertical, add horizontal. Eye-level bangs. Side waves add width.
+- SQUARE: Soften angles. Layered cuts below jaw with C-curl ends. Side-swept bangs.
+- HEART/DIAMOND: Volume at jawline to balance. Diagonal bangs.
 
 STYLING APPROACH:
-- Choose a style that flatters THIS person's specific face shape using the classification above
-- HAIR-SKIN CONTRAST: Lower contrast between hair and skin looks more natural. Keep shifts subtle.
-- The result must look like a real premium salon visit — polished, modern, and wearable
-- Think everyday beautiful — a style this person would love wearing daily
-- NO extreme, avant-garde, or impractical styles
+- The result must look like a real premium salon visit — polished, modern, WEARABLE
+- NO extreme, avant-garde, theatrical, or impractical styles
+- The hair must look NATURAL — like real hair, NOT like a wig or digital art
+- The person should look MORE ATTRACTIVE — better groomed, more stylish, more confident
 
-CRITICAL - DO NOT CHANGE:
-- Face, eyes, nose, mouth - MUST stay IDENTICAL
-- Skin tone and body shape - MUST stay IDENTICAL
-- Expression and pose - MUST stay IDENTICAL
-- Hair color - KEEP the ORIGINAL natural hair color, do NOT change it
-- NO hair accessories (clips, pins, ribbons, bows, headbands)
-- NO unnatural or fantasy hair colors
+⚠️ FACE PRESERVATION — ABSOLUTE REQUIREMENT:
+1. The FACE must remain 100% PIXEL-PERFECT IDENTICAL — same eyes, nose, mouth, jawline, expression, skin texture
+2. Do NOT regenerate, redraw, or reinterpret the face in ANY way
+3. If you cannot preserve the face EXACTLY, return the original photo UNCHANGED
+4. The person must be CLEARLY RECOGNIZABLE as the same person
+5. Skin tone, pose, background — ZERO changes
+6. Hair color — KEEP the ORIGINAL natural color, do NOT change it
+7. NO hair accessories, NO unnatural colors
 
-Apply subtle beauty retouching: smooth clear skin, even skin tone, soft studio lighting.
+Apply subtle beauty retouching: smooth clear skin, even skin tone, soft studio lighting — but the face MUST still look like the SAME person.
+
+⚠️ FINAL CHECK before outputting:
+1. Is the FACE identical to the input? If not → return original unchanged
+2. Is the framing/zoom IDENTICAL to input? If not → REDO
+3. Does the hairstyle look NATURAL and wearable? If not → make it more subtle
+4. Would this person recognize themselves? If not → REDO
 
 Generate the edited photo.`
       : buildBrandEditPrompt({ brandDirective: style.prompt, gender })
