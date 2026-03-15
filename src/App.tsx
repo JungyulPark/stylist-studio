@@ -497,7 +497,7 @@ const translations: Record<Language, {
     module1Features: ['얼굴형 분석 맞춤 스타일', '나만의 얼굴에 적용', '즉시 결과 확인'],
     module2Title: '풀 스타일 컨설팅',
     module2Desc: '얼굴형·피부톤 맞춤 헤어 + 패션 변신',
-    module2Features: ['퍼스널 컬러·체형 분석', '얼굴형 맞춤 헤어 5종', '피부톤 맞춤 패션 4종', '전문 스타일 리포트'],
+    module2Features: ['퍼스널 컬러·체형 분석', '얼굴형 맞춤 헤어 3종', '피부톤 맞춤 패션 3종', '전문 스타일 리포트'],
     bestValue: '베스트',
     explore: '시작하기',
     algorithmTag: '알고리즘',
@@ -618,8 +618,8 @@ const translations: Record<Language, {
     previewSubtitle: '당신만을 위한 스타일을 찾았어요',
     previewAnalysisComplete: '스타일 분석이 완료되었습니다',
     previewFaceShape: '얼굴형 분석 결과',
-    previewHairStylesFound: '어울리는 헤어스타일 5개 발견!',
-    previewFashionFound: '맞춤 패션 코디 6개 준비 완료!',
+    previewHairStylesFound: '어울리는 헤어스타일 3개 발견!',
+    previewFashionFound: '맞춤 패션 코디 3개 준비 완료!',
     previewCuriosity1: '의외의 결과가 나왔어요! 👀',
     previewCuriosity2: '1위 스타일이 궁금하지 않으세요?',
     previewProgress: '87% 완료 - 결과만 확인하면 끝!',
@@ -787,7 +787,7 @@ const translations: Record<Language, {
     trustGlobal: '5개 언어',
     trustGlobalDesc: '글로벌 서비스',
     metaTitle: 'PERSONAL STYLIST | 헤어스타일 추천 & 런웨이 패션 스타일링',
-    metaDescription: '사진 한 장으로 나만의 스타일을 찾으세요. 첫 방문 무료! 헤어스타일 5종 미리보기 + 럭셔리 브랜드 영감 패션 코디 7종 추천.',
+    metaDescription: '사진 한 장으로 나만의 스타일을 찾으세요. 첫 방문 무료! 헤어스타일 3종 미리보기 + 럭셔리 브랜드 영감 패션 코디 3종 추천.',
     timerTitle: '첫 방문 특별 할인',
     timerDesc: '후 종료',
     unlockAllStyles: '모든 스타일 잠금 해제',
@@ -873,7 +873,7 @@ const translations: Record<Language, {
     module1Features: ['Face shape-matched styles', 'Applied to your face', 'Instant results'],
     module2Title: 'Full Style Consultation',
     module2Desc: 'Hair + fashion matched to your face & complexion',
-    module2Features: ['Personal color & body analysis', '5 face-matched hairstyles', '4 skin tone-matched outfits', 'Expert style report'],
+    module2Features: ['Personal color & body analysis', '3 face-matched hairstyles', '3 skin tone-matched outfits', 'Expert style report'],
     bestValue: 'BEST',
     explore: 'Get Started',
     algorithmTag: 'The Method',
@@ -994,8 +994,8 @@ const translations: Record<Language, {
     previewSubtitle: 'We found styles just for you',
     previewAnalysisComplete: 'Style analysis is complete',
     previewFaceShape: 'Face Shape Analysis',
-    previewHairStylesFound: '5 matching hairstyles found!',
-    previewFashionFound: '6 custom fashion looks ready!',
+    previewHairStylesFound: '3 matching hairstyles found!',
+    previewFashionFound: '3 custom fashion looks ready!',
     previewCuriosity1: 'Surprising results! 👀',
     previewCuriosity2: 'Curious about your #1 style?',
     previewProgress: '87% complete - just unlock to finish!',
@@ -1163,7 +1163,7 @@ const translations: Record<Language, {
     trustGlobal: '5 Languages',
     trustGlobalDesc: 'Global Service',
     metaTitle: 'AI Personal Stylist | Hair & Fashion Recommendations',
-    metaDescription: 'Find your perfect style with one photo. Free first try! 5 AI hairstyle previews + luxury fashion outfit recommendations.',
+    metaDescription: 'Find your perfect style with one photo. Free first try! 3 AI hairstyle previews + luxury fashion outfit recommendations.',
     timerTitle: 'First Visit Special',
     timerDesc: ' left',
     unlockAllStyles: 'Unlock All Styles',
@@ -1247,7 +1247,7 @@ const translations: Record<Language, {
     module1Features: ['顔型分析カスタムスタイル', 'あなたの顔に適用', '即座に結果確認'],
     module2Title: 'フルスタイルコンサル',
     module2Desc: '顔型・肌色に合ったヘア＋ファッション変身',
-    module2Features: ['パーソナルカラー・体型分析', '顔型カスタムヘア5種', '肌色カスタムファッション4種', '専門スタイルレポート'],
+    module2Features: ['パーソナルカラー・体型分析', '顔型カスタムヘア3種', '肌色カスタムファッション3種', '専門スタイルレポート'],
     bestValue: 'おすすめ',
     explore: '始める',
     algorithmTag: 'メソッド',
@@ -1368,8 +1368,8 @@ const translations: Record<Language, {
     previewSubtitle: 'あなただけのスタイルを見つけました',
     previewAnalysisComplete: 'スタイル分析が完了しました',
     previewFaceShape: '顔型分析結果',
-    previewHairStylesFound: 'お似合いのヘアスタイル5つ発見！',
-    previewFashionFound: 'カスタムファッション6点準備完了！',
+    previewHairStylesFound: 'お似合いのヘアスタイル3つ発見！',
+    previewFashionFound: 'カスタムファッション3点準備完了！',
     previewCuriosity1: '意外な結果が出ました！👀',
     previewCuriosity2: '1位のスタイルが気になりませんか？',
     previewProgress: '87%完了 - 結果を確認するだけ！',
@@ -1537,7 +1537,7 @@ const translations: Record<Language, {
     trustGlobal: '5言語',
     trustGlobalDesc: 'グローバルサービス',
     metaTitle: 'AIパーソナルスタイリスト | ヘア＆ファッション提案',
-    metaDescription: '写真1枚であなたに似合うスタイルを発見。初回無料！ヘアスタイル5種プレビュー＋ファッションコーディネート提案。',
+    metaDescription: '写真1枚であなたに似合うスタイルを発見。初回無料！ヘアスタイル3種プレビュー＋ファッションコーディネート提案。',
     timerTitle: '初回限定割引',
     timerDesc: 'で終了',
     unlockAllStyles: '全スタイルをロック解除',
@@ -1621,7 +1621,7 @@ const translations: Record<Language, {
     module1Features: ['脸型分析定制风格', '应用到您的脸上', '即时查看结果'],
     module2Title: '全套风格咨询',
     module2Desc: '根据脸型·肤色定制发型 + 时尚',
-    module2Features: ['个人色彩·体型分析', '5种脸型定制发型', '4种肤色定制穿搭', '专业风格报告'],
+    module2Features: ['个人色彩·体型分析', '3种脸型定制发型', '3种肤色定制穿搭', '专业风格报告'],
     bestValue: '最佳',
     explore: '开始',
     algorithmTag: '方法',
@@ -1742,8 +1742,8 @@ const translations: Record<Language, {
     previewSubtitle: '我们为您找到了专属风格',
     previewAnalysisComplete: '风格分析已完成',
     previewFaceShape: '脸型分析结果',
-    previewHairStylesFound: '发现5款适合您的发型！',
-    previewFashionFound: '6套定制时尚搭配已就绪！',
+    previewHairStylesFound: '发现3款适合您的发型！',
+    previewFashionFound: '3套定制时尚搭配已就绪！',
     previewCuriosity1: '出乎意料的结果！👀',
     previewCuriosity2: '想知道您的第1名风格吗？',
     previewProgress: '87%完成 - 只需解锁查看结果！',
@@ -1911,7 +1911,7 @@ const translations: Record<Language, {
     trustGlobal: '5种语言',
     trustGlobalDesc: '全球服务',
     metaTitle: 'AI个人造型师 | 发型和时尚推荐',
-    metaDescription: '一张照片发现最适合你的风格。首次免费！5种发型预览 + 奢华时尚穿搭推荐。',
+    metaDescription: '一张照片发现最适合你的风格。首次免费！3种发型预览 + 奢华时尚穿搭推荐。',
     timerTitle: '首次访问特惠',
     timerDesc: '后结束',
     unlockAllStyles: '解锁全部风格',
@@ -1995,7 +1995,7 @@ const translations: Record<Language, {
     module1Features: ['Estilos según forma facial', 'Aplicado a tu rostro', 'Resultados instantáneos'],
     module2Title: 'Consulta de Estilo Completa',
     module2Desc: 'Cabello + moda según tu rostro y complexión',
-    module2Features: ['Análisis de color y cuerpo', '5 peinados según tu rostro', '4 outfits según tu tono', 'Informe de estilo experto'],
+    module2Features: ['Análisis de color y cuerpo', '3 peinados según tu rostro', '3 outfits según tu tono', 'Informe de estilo experto'],
     bestValue: 'MEJOR',
     explore: 'Comenzar',
     algorithmTag: 'El Método',
@@ -2116,8 +2116,8 @@ const translations: Record<Language, {
     previewSubtitle: 'Encontramos estilos perfectos para ti',
     previewAnalysisComplete: 'El análisis de IA está completo',
     previewFaceShape: 'Análisis de Forma de Cara',
-    previewHairStylesFound: '¡5 peinados compatibles encontrados!',
-    previewFashionFound: '¡6 looks de moda personalizados listos!',
+    previewHairStylesFound: '¡3 peinados compatibles encontrados!',
+    previewFashionFound: '¡3 looks de moda personalizados listos!',
     previewCuriosity1: '¡Resultados sorprendentes! 👀',
     previewCuriosity2: '¿Curioso por tu estilo #1?',
     previewProgress: '87% completo - ¡solo desbloquea para terminar!',
@@ -2285,7 +2285,7 @@ const translations: Record<Language, {
     trustGlobal: '5 Idiomas',
     trustGlobalDesc: 'Servicio global',
     metaTitle: 'Estilista Personal IA | Recomendaciones de Cabello y Moda',
-    metaDescription: 'Encuentra tu estilo perfecto con una foto. ¡Primera vez gratis! Vista previa de 5 peinados + recomendaciones de moda de lujo.',
+    metaDescription: 'Encuentra tu estilo perfecto con una foto. ¡Primera vez gratis! Vista previa de 3 peinados + recomendaciones de moda de lujo.',
     timerTitle: 'Oferta de primera visita',
     timerDesc: ' restante',
     unlockAllStyles: 'Desbloquear todos los estilos',
@@ -2739,7 +2739,7 @@ function parseStyleDNA(report: string): StyleDNA {
   ]
   for (const pat of bodyPatterns) {
     const m = report.match(pat)
-    if (m) { result.bodyType = m[1].trim(); break }
+    if (m) { result.bodyType = m[1].trim().replace(/\*+/g, '').trim(); break }
   }
 
   // Color extraction — find color names mentioned in recommendations
@@ -4827,10 +4827,7 @@ function App() {
     // Build styled report HTML
     const styleLabelsMap: Record<string, string> = {
       'best-match': t.styleLabels['best-match'] || 'Best Match',
-      interview: t.styleLabels.interview || 'Interview',
       date: t.styleLabels.date || 'Date Night',
-      luxury: t.styleLabels.luxury || 'Luxury',
-      casual: t.styleLabels.casual || 'Casual',
       daily: t.styleLabels.daily || 'Daily',
     }
 
@@ -5629,7 +5626,8 @@ ${hairImgs.length > 0 ? `<div class="section"><h2>${hairSection}</h2><div class=
     const key = `${occasion}-${vibe}`
     const langKey = language === 'ko' ? 'ko' : 'en'
     const recommendations = gender === 'male' ? maleRecommendations : femaleRecommendations
-    return recommendations[langKey]?.[key] || recommendations[langKey]?.['daily-natural'] || []
+    const all = recommendations[langKey]?.[key] || recommendations[langKey]?.['daily-natural'] || []
+    return all.slice(0, 3)
   }
 
   // Fetch favorites when profile page is opened
@@ -6648,7 +6646,7 @@ ${hairImgs.length > 0 ? `<div class="section"><h2>${hairSection}</h2><div class=
             onMouseDown={handleHeroSliderMouseDown}
             onTouchStart={handleHeroSliderTouchStart}
           >
-            <img src="/gallery/after-female-best.png" alt="After" className="ba-img ba-after" />
+            <img src="/gallery/after-female-date.png" alt="After" className="ba-img ba-after" />
             <div className="ba-before-clip" style={{ width: `${heroSliderPos}%` }}>
               <img src="/gallery/before-female.png" alt="Before" className="ba-img ba-before" style={{ width: `${heroSliderRef.current?.offsetWidth || 480}px` }} />
             </div>
@@ -6698,7 +6696,7 @@ ${hairImgs.length > 0 ? `<div class="section"><h2>${hairSection}</h2><div class=
             <div className="how-step fade-in-up">
               <div className="how-step-num">3</div>
               <h3 className="how-step-title">{lang === 'ko' ? '맞춤 결과' : lang === 'ja' ? 'パーソナル結果' : lang === 'zh' ? '个性化结果' : lang === 'es' ? 'Resultados personalizados' : 'Your Results'}</h3>
-              <p className="how-step-desc">{lang === 'ko' ? '헤어스타일 5종 + 패션 코디 6종을 받아보세요' : lang === 'ja' ? 'ヘアスタイル5種＋ファッションコーデ6種' : lang === 'zh' ? '获得5种发型+6套穿搭推荐' : lang === 'es' ? '5 peinados + 6 looks de moda' : '5 hairstyles + 6 fashion looks delivered'}</p>
+              <p className="how-step-desc">{lang === 'ko' ? '헤어스타일 3종 + 패션 코디 3종을 받아보세요' : lang === 'ja' ? 'ヘアスタイル3種＋ファッションコーデ3種' : lang === 'zh' ? '获得3种发型+3套穿搭推荐' : lang === 'es' ? '3 peinados + 3 looks de moda' : '3 hairstyles + 3 fashion looks delivered'}</p>
             </div>
           </div>
           <button className="how-cta fade-in-up" onClick={() => { trackEvent('how_cta_click'); setPage('hair-selection') }}>
@@ -6875,6 +6873,19 @@ ${hairImgs.length > 0 ? `<div class="section"><h2>${hairSection}</h2><div class=
                 </div>
               </div>
               <span className="gallery-occasion">Casual</span>
+            </div>
+            <div className="gallery-item">
+              <div className="gallery-pair">
+                <div className="gallery-before">
+                  <span className="gallery-label">{t.galleryBefore}</span>
+                  <img src="/gallery/before-male-founder.jpeg" alt="Before - Founder" loading="lazy" />
+                </div>
+                <div className="gallery-after">
+                  <span className="gallery-label gallery-label-after">{t.galleryAfter}</span>
+                  <img src="/gallery/after-male-founder.jpg" alt="After - Winter Style" loading="lazy" />
+                </div>
+              </div>
+              <span className="gallery-occasion">Winter Style</span>
             </div>
           </div>
 

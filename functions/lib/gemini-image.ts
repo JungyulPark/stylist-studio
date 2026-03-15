@@ -131,8 +131,8 @@ BODY PROPORTION PRESERVATION (CRITICAL):
 
 ABSOLUTE REQUIREMENTS - VIOLATION IS FAILURE:
 1. FACE IDENTITY: The face must be an EXACT COPY of the input — same person, same features, same expression. If the output face looks like a DIFFERENT PERSON, the result is FAILED
-2. NEVER CROP OR ZOOM - output must have IDENTICAL framing as input
-3. NEVER change aspect ratio - if input is portrait, output is portrait
+2. NEVER CROP OR ZOOM - output must have PIXEL-PERFECT IDENTICAL framing, zoom level, and composition as input. The person's HEAD must be fully visible with the SAME space above it.
+3. NEVER change aspect ratio - if input is portrait, output is portrait. Output dimensions MUST match input.
 4. Hairstyle, hair color, skin tone base - ZERO changes allowed
 5. Keep EXACTLY what is visible in the original - do not extend or add content
 6. Background and OTHER PEOPLE - ZERO changes allowed
@@ -142,11 +142,18 @@ ABSOLUTE REQUIREMENTS - VIOLATION IS FAILURE:
 10. Body proportions (especially leg length) - ZERO distortion allowed
 
 This is a clothing REPLACEMENT task for the MAIN PERSON only.
-Keep the person's HEAD and FACE at the EXACT same position.
+Keep the person's HEAD and FACE at the EXACT same position and size.
 The clothes should naturally fit the existing body shape.
 DO NOT generate full body if original only shows partial body.
+DO NOT zoom in, crop, or shift the frame in ANY way.
 
-Generate the edited photo with IDENTICAL composition to the input.`
+⚠️ FINAL CHECK before outputting:
+1. Is the HEAD fully visible with same space above? If not → REDO
+2. Is the FACE identical to the input? If not → REDO
+3. Is the framing/zoom IDENTICAL to input? If not → REDO
+4. Does the outfit look WEARABLE and ATTRACTIVE in real life? If not → REDO
+
+Generate the edited photo with PIXEL-PERFECT IDENTICAL composition to the input.`
 
     // Try OpenAI gpt-image-1.5 first
     let openaiError = ''

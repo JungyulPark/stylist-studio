@@ -44,33 +44,33 @@ async function generateHairImageWithGemini(
 - Style must look masculine and natural
 - The result should look like the person actually went to a good barber shop`
 
-    // Each of the 5 styles gets a DISTINCT visual variation
+    // Each of the 3 styles gets a MAXIMALLY DISTINCT visual variation
     const maleVariations = [
-      { length: 'short and clean on the sides', texture: 'clean and sleek', color: 'keep the person\'s natural hair color', volume: 'low volume, close to the head', faceShapeNote: 'Good for oval and oblong faces. For round: add height on top. For square: soften temples.' },
-      { length: 'short to medium, longer on top (5-7cm)', texture: 'textured with natural movement', color: 'keep the person\'s natural hair color', volume: 'medium volume with movement', faceShapeNote: 'Great for round faces (adds vertical). For square: texture softens angles. For oblong: keep sides fuller.' },
-      { length: 'short on the sides, moderate top (4-6cm)', texture: 'slightly wavy and tousled', color: 'keep the person\'s natural hair color, add very subtle warm tone', volume: 'moderate volume, lifted at the front', faceShapeNote: 'Good for round and heart faces. For square: tousled texture softens jawline. Avoid for oblong.' },
-      { length: 'short to medium, even all around (3-5cm)', texture: 'soft and natural', color: 'keep the person\'s natural hair color', volume: 'natural body', faceShapeNote: 'Best for oval. For round: style upward for height. For square: keep natural and relaxed.' },
-      { length: 'medium on top (5-7cm), tapered sides', texture: 'straight and polished', color: 'keep the person\'s natural hair color', volume: 'moderate volume with defined shape', faceShapeNote: 'Good for oval and heart. For round: height elongates. For square: side part softens angles.' },
+      { length: 'short and clean on the sides, neat on top', texture: 'clean and sleek with subtle definition', color: 'keep the person\'s natural hair color', volume: 'low to medium volume, close to the head', faceShapeNote: 'Good for oval and oblong faces. For round: add height on top. For square: soften temples.' },
+      { length: 'short to medium, longer on top (5-7cm)', texture: 'textured with natural movement and soft layering', color: 'keep the person\'s natural hair color', volume: 'medium volume with movement', faceShapeNote: 'Great for round faces (adds vertical). For square: texture softens angles. For oblong: keep sides fuller.' },
+      { length: 'medium on top (5-7cm), tapered sides', texture: 'straight and polished with defined shape', color: 'keep the person\'s natural hair color', volume: 'moderate volume with defined shape', faceShapeNote: 'Good for oval and heart. For round: height elongates. For square: side part softens angles.' },
     ]
     const femaleVariations = [
-      { length: 'shoulder length or above', texture: 'sleek and straight', color: 'keep the person\'s natural hair color', volume: 'smooth and refined', faceShapeNote: 'Great for oval and heart. AVOID for round faces (widens). For square: add layers below jaw with C-curl ends.' },
-      { length: 'medium to long length', texture: 'soft natural waves', color: 'keep the person\'s natural hair color, add subtle warmth', volume: 'natural body and bounce', faceShapeNote: 'Good for round (elongates). AVOID for oblong. Heart: add volume below ears to balance narrow chin.' },
-      { length: 'shorter bob or lob style', texture: 'textured and layered', color: 'keep the person\'s natural hair color', volume: 'airy and light', faceShapeNote: 'AVOID for round faces. For square: cut below jaw with C-curl. For heart/diamond: add jaw-level volume.' },
-      { length: 'long and flowing', texture: 'loose gentle waves', color: 'keep the person\'s natural hair color', volume: 'natural fullness', faceShapeNote: 'Elongates round faces. AVOID for oblong (too vertical). Heart: volume at mid-length. Diamond: soft face-framing.' },
-      { length: 'medium layered cut', texture: 'natural and effortless', color: 'keep the person\'s natural hair color, add subtle face-framing lightness', volume: 'natural movement and body', faceShapeNote: 'Versatile for most faces. Round: long layers past chin. Square: diagonal layers soften jaw. Oblong: add side volume.' },
+      { length: 'shoulder length or above', texture: 'sleek and straight with subtle layering', color: 'keep the person\'s natural hair color', volume: 'smooth and refined', faceShapeNote: 'Great for oval and heart. For round: long layers past chin. For square: add layers below jaw with C-curl ends.' },
+      { length: 'medium to long length', texture: 'soft natural waves with body', color: 'keep the person\'s natural hair color, add subtle warmth', volume: 'natural body and bounce', faceShapeNote: 'Good for round (elongates). Heart: add volume below ears. Square: softens angles with movement.' },
+      { length: 'medium layered cut', texture: 'natural and effortless with face-framing layers', color: 'keep the person\'s natural hair color', volume: 'natural movement and body', faceShapeNote: 'Versatile for most faces. Round: long layers past chin. Square: diagonal layers soften jaw. Oblong: add side volume.' },
     ]
 
     const variations = gender === 'female' ? femaleVariations : maleVariations
     const v = variations[styleIndex % variations.length]
 
-    const editPrompt = `You are a world-class hair designer at a top salon. Analyze this person's face shape, skin tone, and features, then show them how they would look with the perfect hairstyle — beautiful, stylish, and practical for everyday life.
+    const editPrompt = `You are a world-class hair designer at a premium salon in Seoul/Tokyo. Show this person how they would look with a beautiful, natural hairstyle — the kind that makes people say "your hair looks amazing, where did you go?"
 
-FRAMING RULE (CRITICAL — READ FIRST):
-The output image MUST have the EXACT same framing, zoom level, and composition as the input photo.
-Do NOT zoom in on the face. Do NOT zoom out. Do NOT crop the head or body.
-The person's head, shoulders, and body must be at the EXACT same position and size as the original.
-If the input shows head-to-chest, output shows head-to-chest at the same scale.
-ZERO framing changes allowed. This is the #1 rule.
+⚠️ FRAMING & COMPOSITION LOCK (CRITICAL — #1 RULE):
+The output image MUST be a PIXEL-PERFECT match of the input photo's framing, zoom, and composition.
+- SAME camera distance, SAME angle, SAME crop boundaries — ZERO deviation
+- The person's HEAD, FACE, and BODY must be at the EXACT same position, size, and scale
+- If input shows head-to-chest, output shows head-to-chest at IDENTICAL scale
+- If input shows full body, output shows full body at IDENTICAL scale
+- Do NOT zoom in on the face. Do NOT zoom out. Do NOT crop ANY part of the person.
+- The person must occupy the EXACT same percentage of the frame as the original
+- Output image dimensions and aspect ratio MUST match the input EXACTLY
+- VIOLATION of framing = COMPLETE FAILURE. Return the original unchanged rather than changing the frame.
 
 EDIT this photo - change ONLY the HAIRSTYLE to: "${styleName}"
 
@@ -92,22 +92,33 @@ FACE SHAPE ANALYSIS — classify this face and apply the correction:
 Face shape adaptation: ${v.faceShapeNote}
 
 STYLING APPROACH:
-- Choose a style that flatters THIS person's specific face shape and features using the classification above
-- HAIR-SKIN CONTRAST: Lower contrast between hair and skin looks more natural and attractive. Keep shifts subtle.
-- The result must look like a real premium salon visit — polished, modern, and wearable
+- Choose a style that flatters THIS person's specific face shape and features
+- HAIR-SKIN CONTRAST: Lower contrast between hair and skin looks more natural. Keep shifts subtle.
+- The result must look like a real premium salon visit — polished, modern, and WEARABLE
 - Think everyday beautiful — a style this person would love wearing to work, dates, or weekends
-- NO extreme, avant-garde, or impractical styles
+- The person should look MORE ATTRACTIVE than the original — better groomed, more stylish, more confident
+- NO extreme, avant-garde, theatrical, or impractical styles
+- NO dramatic volume changes that look unnatural on this person's head shape
+- The hair must look NATURAL — like real hair styled by a professional, NOT like a wig or digital art
+- Subtle, tasteful changes that enhance the person's features — NOT a dramatic transformation
 
-CRITICAL RULES — VIOLATION IS FAILURE:
-1. Face MUST remain PIXEL-PERFECT identical (same eyes, nose, mouth, expression)
-2. Skin tone, pose, and background must NOT change
-3. Only the HAIR should change
-4. KEEP the person's NATURAL HAIR COLOR — do NOT dramatically change hair color
-5. NO unnatural colors, NO hair accessories (clips, pins, ribbons, bows)
-6. NEVER crop, zoom, or change the framing of the photo — the person must stay the SAME SIZE in the image
-7. Output resolution MUST match input resolution exactly
+⚠️ FACE PRESERVATION — ABSOLUTE REQUIREMENT:
+1. The FACE must remain 100% PIXEL-PERFECT IDENTICAL — same eyes, nose, mouth, jawline, expression, skin texture
+2. Do NOT regenerate, redraw, or reinterpret the face in ANY way
+3. Do NOT make the face look different — no reshaping, no smoothing, no feature changes
+4. If you cannot preserve the face EXACTLY, return the original photo UNCHANGED
+5. The person must be CLEARLY RECOGNIZABLE as the same person — if a friend saw this photo, they'd say "nice hair!" not "who is this?"
+6. Skin tone, pose, and background must NOT change
+7. KEEP the person's NATURAL HAIR COLOR — do NOT dramatically change hair color
+8. NO unnatural colors, NO hair accessories (clips, pins, ribbons, bows)
 
-Apply subtle beauty retouching: smooth clear skin, even skin tone, soft studio lighting.
+Apply subtle beauty retouching: smooth clear skin, even skin tone, soft studio lighting — but the face MUST still look like the SAME person.
+
+⚠️ FINAL CHECK before outputting:
+1. Is the FACE identical to the input photo? If not → return original unchanged
+2. Is the framing/zoom IDENTICAL to input? If not → REDO
+3. Does the hairstyle look NATURAL and wearable? If not → make it more subtle
+4. Would this person recognize themselves? If not → REDO
 
 Generate the edited photo.`
 

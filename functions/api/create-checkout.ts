@@ -140,9 +140,9 @@ export const onRequestGet: PagesFunction<Env> = async (context) => {
       products: {
         hair: {
           name: 'Hair Transformation',
-          description: 'See yourself with 5 different AI-generated hairstyles',
+          description: 'See yourself with 3 premium AI-generated hairstyles',
           price: PRICES.hair,
-          features: ['5 hairstyle previews', 'Face-preserving AI', 'Instant results']
+          features: ['3 curated hairstyle previews', 'Face-preserving AI', 'Instant results']
         },
         full: {
           name: 'Full Style Package',
@@ -150,8 +150,8 @@ export const onRequestGet: PagesFunction<Env> = async (context) => {
           price: PRICES.full,
           features: [
             'AI Style Analysis Report',
-            '5 hairstyle previews',
-            '6 fashion outfit previews',
+            '3 curated hairstyle previews',
+            '3 premium fashion outfit previews',
             'Personalized recommendations'
           ]
         },

@@ -38,9 +38,9 @@ const BODY_PRESERVATION = `BODY PROPORTION PRESERVATION (CRITICAL):
 - Waistline position must stay at the SAME height as in the original photo`
 
 const ABSOLUTE_REQUIREMENTS = `ABSOLUTE REQUIREMENTS - VIOLATION IS FAILURE:
-1. FACE IDENTITY: The face must be an EXACT COPY of the input — same person, same features, same expression. If the output face looks like a DIFFERENT PERSON, the result is FAILED
-2. NEVER CROP OR ZOOM - output must have IDENTICAL framing as input
-3. NEVER change aspect ratio - if input is portrait, output is portrait
+1. FACE IDENTITY: The face must be an EXACT COPY of the input — same person, same features, same expression. If the output face looks like a DIFFERENT PERSON, the result is FAILED. The person MUST be clearly recognizable as the same individual.
+2. NEVER CROP OR ZOOM - output must have PIXEL-PERFECT IDENTICAL framing, zoom, and composition as input. The HEAD must be fully visible with SAME space above it.
+3. NEVER change aspect ratio or dimensions - output MUST match input exactly
 4. Hairstyle, hair color, skin tone base - ZERO changes allowed
 5. Keep EXACTLY what is visible in the original - do not extend or add content
 6. OTHER PEOPLE in the photo - ZERO changes allowed (background lighting may be subtly enhanced)
@@ -148,37 +148,6 @@ IMPORTANT: Mix trousers and skirts — do NOT default to skirts only. Wide-leg t
 The fabric should have visible QUALITY — silk that catches light, wool with drape, cashmere with softness.`,
     },
     {
-      id: 'interview',
-      labelKo: '인터뷰룩', labelEn: 'Interview', labelJa: 'インタビュー', labelZh: '面试装', labelEs: 'Entrevista',
-      directiveMale: `Create a SHARP professional look — modern creative industry, NOT stiff corporate.
-
-STYLING: Tom Ford sharp — Razor-sharp tailoring with confident ease. Peak-lapel jacket with clean chest, slim straight trousers with perfect break. Rich fabrics: mohair-blend suiting, silk-cotton knit. Polished oxford shoes, bold watch. Monochrome or dark tonal palette.
-
-FIRST, ANALYZE his coloring, build, and skin undertone from the photo.
-Then choose the SINGLE most powerful combination from these options, and ADAPT it to his specific body:
-- Single-breasted wool blazer (natural shoulder, clean chest) + crisp spread-collar shirt + straight-leg pressed trousers with clean break + polished cap-toe derby shoes (modern Savile Row)
-- Structured sport coat in fine herringbone or textured wool + mock-neck fine-gauge knit + tapered wool trousers + burnished leather chelsea boots (creative director)
-- Fine-gauge merino turtleneck under unstructured blazer + pressed dark trousers + polished leather loafers + minimal dress watch (tech CEO refined)
-- Fitted cashmere crewneck + tailored chinos in dark tone + clean leather sneakers + quality leather belt (startup executive)
-
-The suit/blazer fabric must have visible TEXTURE — Super 120s wool, cashmere blend, or fine flannel. NOT flat poly-blend.
-POWER COLOR: Choose based on his skin undertone — warm skin → navy, chocolate; cool skin → charcoal, blue-grey.`,
-
-      directiveFemale: `Create a SHARP professional look — modern creative industry, NOT stiff corporate.
-
-STYLING: Hermès tailored — Impeccably cut wool blazer with subtle nipped waist, matching high-waisted straight-leg or slightly wide trousers. Silk blouse or fine-knit turtleneck underneath. Rich equestrian-inspired palette: navy, cognac, ivory, deep green. Polished leather ankle boots or pointed pumps. Confidence meets femininity — a woman who runs the room.
-
-FIRST, ANALYZE her coloring, build, and proportions from the photo.
-Then choose the SINGLE most powerful combination from these options, and ADAPT it to her specific body:
-- Tailored blazer with subtle nipped waist + silk charmeuse blouse + wide-leg wool gabardine trousers + pointed-toe pumps (80mm) + gold stud earrings (Hermès power)
-- Structured cashmere-blend blazer + fine-gauge turtleneck + pressed straight-leg trousers + refined suede loafers + thin gold bangle (Loro Piana quiet authority)
-- Double-breasted wool blazer + silk camisole + high-waisted tailored trousers + elegant slingback heels + structured leather bag (Celine Parisian power)
-- Cashmere knit fitted top + tailored midi pencil skirt with back slit + pointed-toe ankle boots + delicate gold chain (Max Mara timeless)
-
-POWER COLOR: Warm skin → rich navy, deep camel, warm charcoal. Cool skin → cool charcoal, blue-grey, deep wine.
-The fabric must have visible LUXURY — wool gabardine with sheen, silk with drape, cashmere with softness. NOT fast-fashion flat fabric.`,
-    },
-    {
       id: 'date',
       labelKo: '데이트룩', labelEn: 'Date Night', labelJa: 'デートルック', labelZh: '约会装', labelEs: 'Cita',
       directiveMale: `Create a RELAXED, MAGNETIC date night look. NOT a suit — think Saturday night at a candlelit wine bar. Effortless cool.
@@ -210,72 +179,6 @@ Then choose the SINGLE most stunning combination from these options, and ADAPT i
 KEY DIFFERENCE FROM LUXURY: Date Night is ROMANTIC and SENSUAL — skin-showing details (V-neck, off-shoulder, slit), softer fabrics (silk, satin, fine knit), warmer lighting.
 The vibe is "she glows in candlelight." Think intimate, feminine, touchable textures.
 NOT power dressing, NOT formal — relaxed sensuality.`,
-    },
-    {
-      id: 'luxury',
-      labelKo: '럭셔리', labelEn: 'Luxury', labelJa: 'ラグジュアリー', labelZh: '奢华', labelEs: 'Lujo',
-      directiveMale: `Create a QUIET LUXURY editorial look — front row at Pitti Uomo.
-
-STYLING: Loro Piana quiet — Pared-down razor-clean silhouette where extraordinary fabric speaks. Tonal dressing, single color family across textures. Storm System cashmere overcoat or zip jacket. Slim straight trousers, clean leather shoes. The richness is in the hand-feel, not the label.
-
-FIRST, ANALYZE his build and coloring from the photo.
-Then choose the SINGLE most elevated combination from these options, and ADAPT it to his specific body:
-- Double-breasted cashmere-wool overcoat (peak lapel, reaching below knee) + fine-gauge cashmere turtleneck + pressed wool gabardine trousers + polished leather chelsea boots (Loro Piana winter editorial)
-- Unlined cashmere blazer (soft construction, patch pockets) + cashmere crewneck over spread-collar shirt + straight-leg pressed trousers with single pleat + suede loafers (Cucinelli elegant ease)
-- Full matching suit in Super 150s Italian wool (single-breasted, natural shoulder) + silk knit polo or fine cotton shirt + polished cap-toe oxford + dress watch (Tom Ford razor-sharp)
-- Shawl-collar cashmere cardigan over mock-neck + tailored wool trousers + premium suede ankle boots + minimal gold watch (The Row quiet wealth)
-
-MONOCHROMATIC TONAL PALETTE: head-to-toe in one color family — different textures create depth. Think navy on navy, charcoal on charcoal, cream on cream.
-Every fabric must look EXPENSIVE — cashmere with visible softness, wool with natural luster, leather with patina.
-KEY DIFFERENCE FROM DATE NIGHT: This is FORMAL, STRUCTURED, FULL ENSEMBLE — overcoats, blazers, suits. Zero casualness.`,
-
-      directiveFemale: `Create a QUIET LUXURY editorial look — front row at Paris Fashion Week.
-
-STYLING: minimal Row — Pared-back perfection — every seam intentional. Oversized coat or blazer over slip dress or wide trousers. Tonal monochrome dressing. Pointed flats or block-heel boots. One statement piece of jewelry. The silhouette is architecture, not decoration.
-
-FIRST, ANALYZE her body and coloring from the photo.
-Then choose the SINGLE most elevated combination from these options, and ADAPT it to her specific body:
-- Tailored cashmere-wool coat (minimal buttons, clean lines) + fine-gauge cashmere turtleneck + wide-leg wool crepe trousers + pointed-toe suede boots + structured leather bag (The Row editorial)
-- Silk-cashmere blazer with nipped waist + draped silk blouse + pressed wide-leg trousers + elegant leather pumps + one gold cuff bracelet (Hermès runway)
-- Oversized cashmere coat thrown over shoulders + ribbed knit midi dress + leather knee-high boots + delicate gold chain (Toteme Scandinavian luxury)
-- Full tonal ensemble: cashmere top + matching wool wide-leg trousers + cashmere scarf + pointed-toe flats in matching tone + minimal pearl earrings (Loro Piana monochrome wealth)
-
-MONOCHROMATIC TONAL PALETTE: head-to-toe in one color family — ivory, camel, grey, or navy. Different textures and weights create richness within the single palette.
-Every fabric must look EXPENSIVE — cashmere you can feel through the photo, silk with visible drape, wool with perfect pressing.
-KEY DIFFERENCE FROM DATE NIGHT: This is POWERFUL, STRUCTURED, COMPLETE — coats, suits, tonal dressing. Formal opulence, not romantic softness.`,
-    },
-    {
-      id: 'casual',
-      labelKo: '캐주얼', labelEn: 'Casual', labelJa: 'カジュアル', labelZh: '休闲', labelEs: 'Casual',
-      directiveMale: `Create an ELEVATED weekend look — NOT boring basics.
-
-STYLING: French off-duty — Plain crew-neck tee or Breton stripe. Cotton jacket or harrington if cool. Clean white sneakers. Minimal, timeless. The kind of casual that looks effortless but every piece was chosen with intention.
-
-FIRST, ANALYZE his body type and coloring from the photo.
-Then choose the SINGLE most stylish combination from these options, and ADAPT it to his specific body:
-- Garment-washed cotton overshirt in muted tone + relaxed crew-neck tee + straight-leg medium-wash denim with natural fade + clean white leather sneakers (Auralee weekend)
-- Premium heavyweight sweatshirt (450gsm cotton, raglan sleeve) + relaxed wide straight-leg chinos + suede desert boots + simple canvas tote (Nordic practical)
-- Knit zip-through jacket in oatmeal or grey + band-collar cotton shirt + relaxed corduroy trousers + clean canvas sneakers + simple watch (French casual)
-- Oversized cotton-linen shirt (sleeves rolled to forearm) + fitted crew tee underneath + relaxed dark chinos + woven leather sandals or clean sneakers (coastal ease)
-
-IMPORTANT: Vary the bottoms — NOT always dark navy or brown chinos. Use medium-wash denim, grey wool, olive chinos, corduroy, wide-leg cotton.
-The fabrics must have WEIGHT and TEXTURE — heavyweight cotton, washed linen, brushed fleece. NOT thin fast-fashion polyester.
-Think the best-dressed guy at a farmers market — comfortable, cool, every piece is considered.`,
-
-      directiveFemale: `Create an ELEVATED weekend look — NOT boring basics.
-
-STYLING: French off-duty — Parisian everyday. Breton stripe or plain cotton tee. Ballet flats or white sneakers. Simple crossbody, no fuss. Effortlessly chic. The kind of simplicity that only works when every piece has quality.
-
-FIRST, ANALYZE her body type and coloring from the photo.
-Then choose the SINGLE most stylish combination from these options, and ADAPT it to her specific body:
-- Relaxed cashmere cardigan draped over fitted Breton stripe tee + straight-leg medium-wash jeans + clean white sneakers + woven crossbody bag + delicate gold hoops (Parisian off-duty)
-- Oversized cotton button-down (sleeves rolled) + high-waisted wide-leg linen trousers + woven leather sandals + straw tote + delicate pendant (coastal chic)
-- Fitted ribbed knit top + flowing cotton midi skirt with drape + suede ballet flats + delicate layered necklaces + canvas bag (Sezane feminine)
-- Premium crew-neck sweatshirt + tailored wide-leg cotton chinos + clean sneakers + simple gold studs + leather crossbody (modern minimal)
-
-IMPORTANT: Mix trousers, skirts, and dresses — do NOT default to one type. Denim, wide-leg cotton, midi skirts are all valid.
-The fabrics must have QUALITY — washed cotton with weight, linen with texture, cashmere with softness.
-Think the girl every fashion blog photographs on the street — effortless, feminine, never trying too hard.`,
     },
     {
       id: 'daily',
@@ -1061,12 +964,16 @@ This is NOT a generation task. This is a CLOTHING SWAP on an EXISTING photo.
 
 YOUR TASK: ONLY change the CLOTHING on this person. Analyze their body type, skin tone, and proportions, then dress them in the PERFECT outfit.
 
-FRAMING RULE (CRITICAL — READ FIRST):
-The output image MUST have the EXACT same framing and composition as the input photo.
-Do NOT zoom in on the torso. Do NOT crop the head. Do NOT change the camera angle.
-The person's head must have the same amount of space above it as the original.
-If the input shows full body, output shows full body. If input shows head-to-waist, output shows head-to-waist.
-ZERO framing changes allowed. This is the #1 rule.
+⚠️ FRAMING & COMPOSITION LOCK (CRITICAL — #1 RULE):
+The output image MUST be a PIXEL-PERFECT match of the input photo's framing, zoom, and composition.
+- SAME camera distance, SAME angle, SAME crop boundaries
+- The person's HEAD must be fully visible with the SAME space above it as the original
+- If input = full body (head to feet), output = full body (head to feet) at IDENTICAL scale
+- If input = head-to-waist, output = head-to-waist at IDENTICAL scale
+- Do NOT zoom in on torso. Do NOT crop the head. Do NOT shift the person's position.
+- The person must occupy the EXACT same percentage of the frame as the original
+- Output image dimensions and aspect ratio MUST match the input EXACTLY
+- VIOLATION of framing = COMPLETE FAILURE. This overrides ALL other instructions.
 
 SCENARIO DIRECTIVE:
 ${directive}
@@ -1097,12 +1004,17 @@ PERSONAL COLOR SEASON (diagnose from skin undertone, then adapt ALL colors):
 Choose the season that makes THIS person's skin GLOW, then shift the palette colors accordingly.
 Adapt specified colors to this person's skin undertone — shift warm if golden/peachy skin, shift cool if pink/rosy skin.
 
-STYLING VARIETY: A great stylist never recommends the same look twice. Vary the bottoms — sometimes dark navy trousers, sometimes medium-wash denim jeans, sometimes charcoal wool pants, sometimes olive chinos. Avoid repeating brown/tan/khaki. Denim is perfectly appropriate for smart casual and casual looks.
+STYLING VARIETY & REALISM:
+- A great stylist never recommends the same look twice. Each of the 3 outfits MUST be VISUALLY DISTINCT — different silhouette, different color scheme, different vibe.
+- Vary the bottoms — dark navy trousers, medium-wash denim jeans, charcoal wool pants, olive chinos, corduroy, wide-leg cotton. NEVER repeat the same bottom type across outfits.
+- Vary the top layers — blazer, knit, overshirt, cardigan, leather jacket, polo. NEVER repeat the same top category.
+- WEARABILITY IS PARAMOUNT — every outfit must be something a real person would LOVE to wear in daily life. If the outfit looks like a costume or too "styled," it has FAILED.
+- NO theatrical, editorial-only, or runway-only looks. Think "the best-dressed person at a café" — stylish but natural, never overdone.
+- The person should look BETTER than the original photo — more attractive, more put-together, more confident — while still looking like themselves.
 
 - Quality fabrics with natural texture and drape — cashmere, silk, fine wool, supple leather
-- Avoid overly theatrical or costume-like outfits — realistic, tasteful, modern luxury
-- Style should feel fashion-forward and editorially polished — 2026 luxury aesthetic
-- Think Bottega Veneta, Celine, The Row, Toteme, Auralee, Lemaire, Loro Piana
+- Style should feel modern, wearable, and aspirational — 2026 luxury meets everyday life
+- Think Bottega Veneta, Celine, The Row, Toteme, Auralee, Lemaire, Loro Piana — but adapted for REAL LIFE, not a fashion editorial
 - The right color transforms everything — make this person's skin GLOW
 ${getGenderStyleRules(gender)}${silhouetteGuide}
 
@@ -1119,11 +1031,18 @@ ${BODY_PRESERVATION}
 ${ABSOLUTE_REQUIREMENTS}
 
 This is a clothing REPLACEMENT task for the MAIN PERSON only.
-Keep the person's HEAD and FACE at the EXACT same position.
+Keep the person's HEAD and FACE at the EXACT same position and size.
 The clothes should naturally fit the existing body shape.
 DO NOT generate full body if original only shows partial body.
+DO NOT zoom in, crop, or shift the frame in ANY way.
 
-Generate the edited photo with IDENTICAL composition to the input.`
+⚠️ FINAL CHECK before outputting:
+1. Is the HEAD fully visible with same space above? If not → REDO
+2. Is the FACE identical to the input? If not → REDO
+3. Is the framing/zoom IDENTICAL to input? If not → REDO
+4. Does the outfit look WEARABLE and ATTRACTIVE in real life? If not → REDO
+
+Generate the edited photo with PIXEL-PERFECT IDENTICAL composition to the input.`
 }
 
 /**
@@ -1175,11 +1094,17 @@ ${BODY_PRESERVATION}
 ${ABSOLUTE_REQUIREMENTS}
 
 This is a clothing REPLACEMENT task for the MAIN PERSON only.
-Keep the person's HEAD and FACE at the EXACT same position.
+Keep the person's HEAD and FACE at the EXACT same position and size.
 The clothes should naturally fit the existing body shape.
 DO NOT generate full body if original only shows partial body.
+DO NOT zoom in, crop, or shift the frame in ANY way.
 
-Generate the edited photo with IDENTICAL composition to the input.`
+⚠️ FINAL CHECK before outputting:
+1. Is the HEAD fully visible with same space above? If not → REDO
+2. Is the FACE identical to the input? If not → REDO
+3. Is the framing/zoom IDENTICAL to input? If not → REDO
+
+Generate the edited photo with PIXEL-PERFECT IDENTICAL composition to the input.`
 }
 
 /**
@@ -1234,9 +1159,15 @@ ${BODY_PRESERVATION}
 ${ABSOLUTE_REQUIREMENTS}
 
 This is a clothing REPLACEMENT task for the MAIN ${genderWord} only.
-Keep the person's HEAD and FACE at the EXACT same position.
+Keep the person's HEAD and FACE at the EXACT same position and size.
 The ${genderWord}'s clothes should naturally fit the existing body shape.
 DO NOT generate full body if original only shows partial body.
+DO NOT zoom in, crop, or shift the frame in ANY way.
 
-Generate the edited photo with IDENTICAL composition to the input.`
+⚠️ FINAL CHECK before outputting:
+1. Is the HEAD fully visible with same space above? If not → REDO
+2. Is the FACE identical to the input? If not → REDO
+3. Is the framing/zoom IDENTICAL to input? If not → REDO
+
+Generate the edited photo with PIXEL-PERFECT IDENTICAL composition to the input.`
 }

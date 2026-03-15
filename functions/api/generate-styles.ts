@@ -16,7 +16,7 @@ interface Env {
 }
 
 // ===== Retry & Timeout Helpers =====
-const FETCH_TIMEOUT_MS = 25_000
+const FETCH_TIMEOUT_MS = 55_000
 const RETRY_BASE_MS = 1500
 const RETRY_JITTER_MS = 500
 
@@ -197,7 +197,7 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
     // Build per-scenario prompts with varied color inspiration
     const silhouetteGuide = getSilhouetteGuide(gender, height, weight)
     const diversitySeed = (parseInt(height || '170') + parseInt(weight || '70') + Date.now()) % 10
-    const scenarioOffsets = [0, 2, 4, 6, 1, 3]
+    const scenarioOffsets = [0, 3, 6]
 
     console.log(`[API Styles] Generating ${styleScenarios.length} styles (seed: ${diversitySeed}), hasPhoto: ${hasPhoto}`)
 
