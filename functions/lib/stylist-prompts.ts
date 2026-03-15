@@ -954,26 +954,12 @@ export function buildFashionEditPrompt(opts: {
 
   return `You are the world's top personal stylist with 20 years of experience dressing celebrities, executives, and everyday people. Your superpower: you can look at ANY person and instantly see their most flattering silhouette, colors, and style.
 
-⚠️ FACE IDENTITY LOCK — HIGHEST PRIORITY ⚠️
-This is NOT a generation task. This is a CLOTHING SWAP on an EXISTING photo.
-- The person's FACE must remain 100% IDENTICAL to the input — same eyes, nose, mouth, jawline, skin texture, facial hair, makeup, expression
-- Do NOT regenerate, redraw, or reinterpret the face in ANY way
-- The face must be a PIXEL-LEVEL COPY from the original photo
-- If you cannot preserve the face exactly, return the original photo unchanged rather than altering the face
-- ZERO tolerance for face changes: even subtle smoothing, reshaping, or aging/de-aging is FORBIDDEN unless specified in beauty retouch below
+RULE #1 — DO NOT CROP OR ZOOM. Output MUST have IDENTICAL framing as input. Same head position, same body position, same space above head. If input is full-body, output is full-body.
 
-YOUR TASK: ONLY change the CLOTHING on this person. Analyze their body type, skin tone, and proportions, then dress them in the PERFECT outfit.
+⚠️ FACE IDENTITY LOCK:
+This is a CLOTHING SWAP. The FACE must remain IDENTICAL — same eyes, nose, mouth, expression. Do NOT regenerate the face.
 
-⚠️ FRAMING & COMPOSITION LOCK (CRITICAL — #1 RULE):
-The output image MUST be a PIXEL-PERFECT match of the input photo's framing, zoom, and composition.
-- SAME camera distance, SAME angle, SAME crop boundaries
-- The person's HEAD must be fully visible with the SAME space above it as the original
-- If input = full body (head to feet), output = full body (head to feet) at IDENTICAL scale
-- If input = head-to-waist, output = head-to-waist at IDENTICAL scale
-- Do NOT zoom in on torso. Do NOT crop the head. Do NOT shift the person's position.
-- The person must occupy the EXACT same percentage of the frame as the original
-- Output image dimensions and aspect ratio MUST match the input EXACTLY
-- VIOLATION of framing = COMPLETE FAILURE. This overrides ALL other instructions.
+YOUR TASK: ONLY change the CLOTHING. Analyze body type, skin tone, proportions, then dress them perfectly.
 
 SCENARIO DIRECTIVE:
 ${directive}
@@ -982,40 +968,13 @@ ${colorInspiration}
 
 CRITICAL: This is a ${genderWord}. The outfit MUST be appropriate for a ${genderWord}.
 
-BODY ADAPTATION (adapt the outfit to THIS person's body — analyze from the photo):
-${gender === 'female' ? `- Long legs → show with the right hemline and silhouette
-- Defined waist → emphasize with belts, fitted mid-sections, or wrap elements
-- Broad shoulders → balance with V-necklines, A-line shapes, or wide-leg bottoms
-- Petite frame → elongate with high waist, monochromatic palette, pointed-toe shoes
-- Curvy figure → highlight with X-silhouette, defined waist, vertical lines
-- Fuller build → vertical lines, monochromatic flow, show slim wrists/ankles/collarbone
-- For shorter legs or longer torso: HIGH WAIST bottoms are critical to elongate proportions` : `- Broad shoulders → lean into structured pieces, clean lines
-- Slim build → add visual presence with layered textures, structured shoulders
-- Athletic build → showcase with fitted knits, well-proportioned trousers
-- Fuller build → elongate with vertical lines, V-necks, dark monochromatic tones
-- For shorter legs or longer torso: HIGH WAIST bottoms are critical to elongate proportions
-- Relaxed comfortable silhouette — NOT tight, NOT skinny fit`}
+PERSONAL COLOR: Diagnose skin undertone (SPRING WARM/SUMMER COOL/AUTUMN WARM/WINTER COOL) and adapt all colors to make this person's skin GLOW.
 
-PERSONAL COLOR SEASON (diagnose from skin undertone, then adapt ALL colors):
-  * SPRING WARM (golden/peachy glow) → coral, warm peach, cream, light camel — vivid warm radiance
-  * SUMMER COOL (pink/delicate) → lavender, dusty rose, powder blue, mauve — muted cool elegance
-  * AUTUMN WARM (deep golden/olive) → terracotta, olive, mustard, burgundy — rich depth
-  * WINTER COOL (high contrast, clear) → cobalt, emerald, true red, black/white — bold clarity
-Choose the season that makes THIS person's skin GLOW, then shift the palette colors accordingly.
-Adapt specified colors to this person's skin undertone — shift warm if golden/peachy skin, shift cool if pink/rosy skin.
-
-STYLING VARIETY & REALISM:
-- A great stylist never recommends the same look twice. Each of the 3 outfits MUST be VISUALLY DISTINCT — different silhouette, different color scheme, different vibe.
-- Vary the bottoms — dark navy trousers, medium-wash denim jeans, charcoal wool pants, olive chinos, corduroy, wide-leg cotton. NEVER repeat the same bottom type across outfits.
-- Vary the top layers — blazer, knit, overshirt, cardigan, leather jacket, polo. NEVER repeat the same top category.
-- WEARABILITY IS PARAMOUNT — every outfit must be something a real person would LOVE to wear in daily life. If the outfit looks like a costume or too "styled," it has FAILED.
-- NO theatrical, editorial-only, or runway-only looks. Think "the best-dressed person at a café" — stylish but natural, never overdone.
-- The person should look BETTER than the original photo — more attractive, more put-together, more confident — while still looking like themselves.
-
-- Quality fabrics with natural texture and drape — cashmere, silk, fine wool, supple leather
-- Style should feel modern, wearable, and aspirational — 2026 luxury meets everyday life
-- Think Bottega Veneta, Celine, The Row, Toteme, Auralee, Lemaire, Loro Piana — but adapted for REAL LIFE, not a fashion editorial
-- The right color transforms everything — make this person's skin GLOW
+STYLING RULES:
+- Each outfit MUST be VISUALLY DISTINCT — different silhouette, different color scheme
+- Outfit must be WEARABLE in real life — NOT theatrical or costume-like
+- Quality fabrics: cashmere, silk, fine wool, supple leather
+- Think Bottega Veneta, Celine, The Row, Auralee, Lemaire — adapted for REAL LIFE
 ${getGenderStyleRules(gender)}${silhouetteGuide}
 
 ${getBeautyRetouch(gender)}
@@ -1030,19 +989,9 @@ ${BODY_PRESERVATION}
 
 ${ABSOLUTE_REQUIREMENTS}
 
-This is a clothing REPLACEMENT task for the MAIN PERSON only.
-Keep the person's HEAD and FACE at the EXACT same position and size.
-The clothes should naturally fit the existing body shape.
-DO NOT generate full body if original only shows partial body.
-DO NOT zoom in, crop, or shift the frame in ANY way.
+REMINDER: DO NOT CROP OR ZOOM. Keep IDENTICAL framing as input. Head must be fully visible.
 
-⚠️ FINAL CHECK before outputting:
-1. Is the HEAD fully visible with same space above? If not → REDO
-2. Is the FACE identical to the input? If not → REDO
-3. Is the framing/zoom IDENTICAL to input? If not → REDO
-4. Does the outfit look WEARABLE and ATTRACTIVE in real life? If not → REDO
-
-Generate the edited photo with PIXEL-PERFECT IDENTICAL composition to the input.`
+Generate the edited photo.`
 }
 
 /**

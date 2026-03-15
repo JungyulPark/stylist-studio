@@ -119,50 +119,24 @@ async function transformWithGemini(
       : 'This is a MAN. The hairstyle should suit a man naturally. Perms, soft waves, textured styles are fine. Just avoid overly feminine or women\'s hairstyles.'
 
     const editPrompt = type === 'hairstyle'
-      ? `You are a world-class hair designer at a premium salon in Seoul/Tokyo. Show this person their perfect hairstyle — the kind that makes people say "your hair looks amazing."
+      ? `You are a top hair designer. Show this person a beautiful, natural hairstyle.
 
-⚠️ FRAMING & COMPOSITION LOCK (CRITICAL — #1 RULE):
-The output image MUST be a PIXEL-PERFECT match of the input photo's framing, zoom, and composition.
-- SAME camera distance, SAME angle, SAME crop boundaries — ZERO deviation
-- The person's HEAD, FACE, and BODY must be at the EXACT same position, size, and scale
-- Do NOT zoom in on the face. Do NOT zoom out. Do NOT crop ANY part of the person.
-- The person must occupy the EXACT same percentage of the frame as the original
-- Output image dimensions and aspect ratio MUST match the input EXACTLY
-- VIOLATION of framing = COMPLETE FAILURE. Return the original unchanged rather than changing the frame.
+RULE #1 — DO NOT CROP OR ZOOM. Output MUST have IDENTICAL framing as input. Same head position, same body position, same space above head.
 
 EDIT this photo - ONLY change the HAIRSTYLE to: ${style.prompt}
 
 ${genderGuideHair}
 
-FACE SHAPE ANALYSIS — classify this face and apply:
-- OVAL: Any style works. Avoid heavy full bangs.
-- ROUND: Create VERTICAL elongation. Root volume on top. Expose forehead. Avoid chin-length bobs.
-- OBLONG: Reduce vertical, add horizontal. Eye-level bangs. Side waves add width.
-- SQUARE: Soften angles. Layered cuts below jaw with C-curl ends. Side-swept bangs.
-- HEART/DIAMOND: Volume at jawline to balance. Diagonal bangs.
+FACE SHAPE: Classify (oval/round/oblong/square/heart) and adapt the style to flatter this face shape.
 
-STYLING APPROACH:
-- The result must look like a real premium salon visit — polished, modern, WEARABLE
-- NO extreme, avant-garde, theatrical, or impractical styles
-- The hair must look NATURAL — like real hair, NOT like a wig or digital art
-- The person should look MORE ATTRACTIVE — better groomed, more stylish, more confident
+RULES:
+- FACE must remain IDENTICAL — same eyes, nose, mouth, expression. Do NOT regenerate the face.
+- Keep ORIGINAL natural hair color. NO accessories, NO unnatural colors.
+- Skin tone, pose, background — ZERO changes.
+- Result must look like a real salon visit — natural, wearable, NOT extreme.
+- Apply subtle beauty retouching: smooth skin, even tone, soft lighting.
 
-⚠️ FACE PRESERVATION — ABSOLUTE REQUIREMENT:
-1. The FACE must remain 100% PIXEL-PERFECT IDENTICAL — same eyes, nose, mouth, jawline, expression, skin texture
-2. Do NOT regenerate, redraw, or reinterpret the face in ANY way
-3. If you cannot preserve the face EXACTLY, return the original photo UNCHANGED
-4. The person must be CLEARLY RECOGNIZABLE as the same person
-5. Skin tone, pose, background — ZERO changes
-6. Hair color — KEEP the ORIGINAL natural color, do NOT change it
-7. NO hair accessories, NO unnatural colors
-
-Apply subtle beauty retouching: smooth clear skin, even skin tone, soft studio lighting — but the face MUST still look like the SAME person.
-
-⚠️ FINAL CHECK before outputting:
-1. Is the FACE identical to the input? If not → return original unchanged
-2. Is the framing/zoom IDENTICAL to input? If not → REDO
-3. Does the hairstyle look NATURAL and wearable? If not → make it more subtle
-4. Would this person recognize themselves? If not → REDO
+REMINDER: DO NOT CROP OR ZOOM. Keep IDENTICAL framing as input.
 
 Generate the edited photo.`
       : buildBrandEditPrompt({ brandDirective: style.prompt, gender })

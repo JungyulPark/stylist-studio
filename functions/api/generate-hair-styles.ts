@@ -59,22 +59,11 @@ async function generateHairImageWithGemini(
     const variations = gender === 'female' ? femaleVariations : maleVariations
     const v = variations[styleIndex % variations.length]
 
-    const editPrompt = `You are a world-class hair designer at a premium salon in Seoul/Tokyo. Show this person how they would look with a beautiful, natural hairstyle — the kind that makes people say "your hair looks amazing, where did you go?"
+    const editPrompt = `You are a top hair designer. Show this person a beautiful, natural hairstyle.
 
-⚠️ FRAMING & COMPOSITION LOCK (CRITICAL — #1 RULE):
-The output image MUST be a PIXEL-PERFECT match of the input photo's framing, zoom, and composition.
-- SAME camera distance, SAME angle, SAME crop boundaries — ZERO deviation
-- The person's HEAD, FACE, and BODY must be at the EXACT same position, size, and scale
-- If input shows head-to-chest, output shows head-to-chest at IDENTICAL scale
-- If input shows full body, output shows full body at IDENTICAL scale
-- Do NOT zoom in on the face. Do NOT zoom out. Do NOT crop ANY part of the person.
-- The person must occupy the EXACT same percentage of the frame as the original
-- Output image dimensions and aspect ratio MUST match the input EXACTLY
-- VIOLATION of framing = COMPLETE FAILURE. Return the original unchanged rather than changing the frame.
+RULE #1 — DO NOT CROP OR ZOOM. Output MUST have IDENTICAL framing as input. Same head position, same body position, same space above head. If input is head-to-chest, output is head-to-chest.
 
 EDIT this photo - change ONLY the HAIRSTYLE to: "${styleName}"
-
-STYLE DETAILS:
 - Hair length: ${v.length}
 - Hair texture: ${v.texture}
 - Hair color: ${v.color}
@@ -82,43 +71,16 @@ STYLE DETAILS:
 
 ${genderGuide}
 
-FACE SHAPE ANALYSIS — classify this face and apply the correction:
-- OVAL: Ideal. Any style works. Updos highlight balance. Avoid heavy full bangs.
-- ROUND (wide cheeks, short chin): Create VERTICAL elongation. Root volume on top. Expose forehead (no full bangs). Avoid chin-length bobs. Long layers or waves below shoulders.
-- OBLONG (long, narrow): Reduce vertical, add horizontal. Eye-level bangs shorten face. Side waves add width. NEVER long straight hair.
-- SQUARE (wide jaw, angular): Soften angles. Layered cuts below jaw with C-curl ends. Crown volume. Side-swept or sheer bangs — NEVER blunt straight-across.
-- HEART/DIAMOND (wide forehead/cheekbones, narrow chin): Volume at jawline to balance. Diagonal bangs. Diamond: forehead volume + cheekbone coverage.
+FACE SHAPE: Classify and adapt. ${v.faceShapeNote}
 
-Face shape adaptation: ${v.faceShapeNote}
+RULES:
+- FACE must remain IDENTICAL — same eyes, nose, mouth, expression. Do NOT regenerate the face.
+- Keep ORIGINAL natural hair color. NO accessories, NO unnatural colors.
+- Skin tone, pose, background — ZERO changes.
+- Result must look like a real salon visit — natural, wearable, NOT extreme or theatrical.
+- Apply subtle beauty retouching: smooth skin, even tone, soft lighting.
 
-STYLING APPROACH:
-- Choose a style that flatters THIS person's specific face shape and features
-- HAIR-SKIN CONTRAST: Lower contrast between hair and skin looks more natural. Keep shifts subtle.
-- The result must look like a real premium salon visit — polished, modern, and WEARABLE
-- Think everyday beautiful — a style this person would love wearing to work, dates, or weekends
-- The person should look MORE ATTRACTIVE than the original — better groomed, more stylish, more confident
-- NO extreme, avant-garde, theatrical, or impractical styles
-- NO dramatic volume changes that look unnatural on this person's head shape
-- The hair must look NATURAL — like real hair styled by a professional, NOT like a wig or digital art
-- Subtle, tasteful changes that enhance the person's features — NOT a dramatic transformation
-
-⚠️ FACE PRESERVATION — ABSOLUTE REQUIREMENT:
-1. The FACE must remain 100% PIXEL-PERFECT IDENTICAL — same eyes, nose, mouth, jawline, expression, skin texture
-2. Do NOT regenerate, redraw, or reinterpret the face in ANY way
-3. Do NOT make the face look different — no reshaping, no smoothing, no feature changes
-4. If you cannot preserve the face EXACTLY, return the original photo UNCHANGED
-5. The person must be CLEARLY RECOGNIZABLE as the same person — if a friend saw this photo, they'd say "nice hair!" not "who is this?"
-6. Skin tone, pose, and background must NOT change
-7. KEEP the person's NATURAL HAIR COLOR — do NOT dramatically change hair color
-8. NO unnatural colors, NO hair accessories (clips, pins, ribbons, bows)
-
-Apply subtle beauty retouching: smooth clear skin, even skin tone, soft studio lighting — but the face MUST still look like the SAME person.
-
-⚠️ FINAL CHECK before outputting:
-1. Is the FACE identical to the input photo? If not → return original unchanged
-2. Is the framing/zoom IDENTICAL to input? If not → REDO
-3. Does the hairstyle look NATURAL and wearable? If not → make it more subtle
-4. Would this person recognize themselves? If not → REDO
+REMINDER: DO NOT CROP OR ZOOM. Keep IDENTICAL framing as input.
 
 Generate the edited photo.`
 

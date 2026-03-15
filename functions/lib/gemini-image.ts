@@ -141,19 +141,9 @@ ABSOLUTE REQUIREMENTS - VIOLATION IS FAILURE:
 9. Arms must be THROUGH sleeves - NEVER floating above clothes
 10. Body proportions (especially leg length) - ZERO distortion allowed
 
-This is a clothing REPLACEMENT task for the MAIN PERSON only.
-Keep the person's HEAD and FACE at the EXACT same position and size.
-The clothes should naturally fit the existing body shape.
-DO NOT generate full body if original only shows partial body.
-DO NOT zoom in, crop, or shift the frame in ANY way.
+REMINDER: DO NOT CROP OR ZOOM. Keep IDENTICAL framing as input. Head must be fully visible.
 
-⚠️ FINAL CHECK before outputting:
-1. Is the HEAD fully visible with same space above? If not → REDO
-2. Is the FACE identical to the input? If not → REDO
-3. Is the framing/zoom IDENTICAL to input? If not → REDO
-4. Does the outfit look WEARABLE and ATTRACTIVE in real life? If not → REDO
-
-Generate the edited photo with PIXEL-PERFECT IDENTICAL composition to the input.`
+Generate the edited photo.`
 
     // Try OpenAI gpt-image-1.5 first
     let openaiError = ''
