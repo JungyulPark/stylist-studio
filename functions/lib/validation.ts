@@ -19,7 +19,7 @@ export interface ValidationResult<T> {
 // Valid values
 const VALID_GENDERS = ['male', 'female', 'other'] as const
 const VALID_LANGUAGES = ['ko', 'en', 'ja', 'zh', 'es'] as const
-const VALID_TRANSFORM_TYPES = ['hairstyle', 'fashion'] as const
+const VALID_TRANSFORM_TYPES = ['fashion'] as const
 
 // Limits (relaxed for edge cases)
 const HEIGHT_MIN = 50   // Allow children/short people
@@ -425,13 +425,13 @@ export function validateGenerateStylesRequest(body: unknown): ValidationResult<G
   return validateAnalyzeRequest(body) as ValidationResult<GenerateStylesRequestBody>
 }
 
-export interface HairStylesRequestBody {
+export interface ImageStylesRequestBody {
   photo: string
   styles: string[]
   gender: Gender
 }
 
-export function validateHairStylesRequest(body: unknown): ValidationResult<HairStylesRequestBody> {
+export function validateImageStylesRequest(body: unknown): ValidationResult<ImageStylesRequestBody> {
   const errors: ValidationError[] = []
 
   if (typeof body !== 'object' || body === null) {
@@ -440,21 +440,18 @@ export function validateHairStylesRequest(body: unknown): ValidationResult<HairS
 
   const { photo, styles, gender } = body as Record<string, unknown>
 
-  // Photo validation (required)
   if (!photo) {
     errors.push({ field: 'photo', message: 'Photo is required' })
   } else if (!isValidPhoto(photo)) {
     errors.push({ field: 'photo', message: 'Invalid photo format or size' })
   }
 
-  // Styles validation (required)
   if (!styles) {
     errors.push({ field: 'styles', message: 'Styles array is required' })
   } else if (!isValidStylesArray(styles)) {
     errors.push({ field: 'styles', message: 'Invalid styles array (1-10 items required)' })
   }
 
-  // Gender validation (optional)
   if (gender && !isValidGender(gender)) {
     errors.push({ field: 'gender', message: 'Invalid gender value' })
   }

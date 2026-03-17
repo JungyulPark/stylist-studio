@@ -4,35 +4,23 @@ import { errors } from '../lib/errors'
 interface Env {
   POLAR_API_KEY?: string
   // Product IDs (Polar에서 생성 후 설정)
-  POLAR_PRODUCT_HAIR?: string
   POLAR_PRODUCT_FULL?: string
   POLAR_PRODUCT_DAILY_STYLE?: string
-  POLAR_PRODUCT_CHAT_TOKENS?: string
-  POLAR_PRODUCT_WORK_STYLE?: string
-  POLAR_PRODUCT_TREND_STYLE?: string
 }
 
 // Product 타입 정의
-type ProductType = 'hair' | 'full' | 'daily_style' | 'chat_tokens' | 'work_style' | 'trend_style'
+type ProductType = 'full' | 'daily_style'
 
 // Production Product IDs
 const DEFAULT_PRODUCTS: Record<ProductType, string> = {
-  hair: '3df2c89e-ce52-4792-b735-3eaa164c3927',
   full: '533aed39-303f-4746-afb0-d150aa294f64',
   daily_style: '2c761310-373e-4017-8141-8532748713c0',
-  chat_tokens: '32416265-c924-4176-be02-cbe49bf1294c',
-  work_style: '8e319924-59a4-4cdd-857b-09c5d84b1d70',
-  trend_style: '533aed39-303f-4746-afb0-d150aa294f64',   // TODO: Polar에서 별도 상품 생성 후 교체
 }
 
 // 가격 정보 (표시용)
 const PRICES: Record<ProductType, { amount: number; currency: string; display: string; recurring?: boolean }> = {
-  hair: { amount: 499, currency: 'USD', display: '$4.99' },
-  full: { amount: 999, currency: 'USD', display: '$9.99' },
+  full: { amount: 499, currency: 'USD', display: '$4.99' },
   daily_style: { amount: 699, currency: 'USD', display: '$6.99/mo', recurring: true },
-  chat_tokens: { amount: 99, currency: 'USD', display: '$0.99' },
-  work_style: { amount: 399, currency: 'USD', display: '$3.99' },
-  trend_style: { amount: 499, currency: 'USD', display: '$4.99' },
 }
 
 // 재구매 할인 코드
@@ -52,18 +40,14 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
 
     // Product 타입 검증
     const productType = body.productType || 'full'
-    if (!['hair', 'full', 'daily_style', 'chat_tokens', 'work_style', 'trend_style'].includes(productType)) {
+    if (!['full', 'daily_style'].includes(productType)) {
       return errors.validation('Invalid product type', corsHeaders)
     }
 
     // Product ID 결정 (환경변수 > 요청 파라미터 > 기본값)
     const envProductIds: Record<ProductType, string | undefined> = {
-      hair: context.env.POLAR_PRODUCT_HAIR,
       full: context.env.POLAR_PRODUCT_FULL,
       daily_style: context.env.POLAR_PRODUCT_DAILY_STYLE,
-      chat_tokens: context.env.POLAR_PRODUCT_CHAT_TOKENS,
-      work_style: context.env.POLAR_PRODUCT_WORK_STYLE,
-      trend_style: context.env.POLAR_PRODUCT_TREND_STYLE,
     }
 
     const productId = envProductIds[productType] || body.productId || DEFAULT_PRODUCTS[productType]
@@ -138,19 +122,12 @@ export const onRequestGet: PagesFunction<Env> = async (context) => {
   return new Response(
     JSON.stringify({
       products: {
-        hair: {
-          name: 'Hair Transformation',
-          description: 'See yourself with 3 premium AI-generated hairstyles',
-          price: PRICES.hair,
-          features: ['3 curated hairstyle previews', 'Face-preserving AI', 'Instant results']
-        },
         full: {
           name: 'Full Style Package',
-          description: 'Complete AI styling consultation with hair & fashion',
+          description: 'Complete AI styling consultation with fashion looks',
           price: PRICES.full,
           features: [
             'AI Style Analysis Report',
-            '3 curated hairstyle previews',
             '3 premium fashion outfit previews',
             'Personalized recommendations'
           ]
@@ -164,39 +141,6 @@ export const onRequestGet: PagesFunction<Env> = async (context) => {
             'Daily outfit recommendations',
             'Weather-based styling',
             'Cancel anytime'
-          ]
-        },
-        chat_tokens: {
-          name: 'Style Advisor Chat',
-          description: 'Chat with an AI stylist — 10 messages per purchase',
-          price: PRICES.chat_tokens,
-          features: [
-            '10 chat messages',
-            'Expert styling advice',
-            'Outfit & hair recommendations',
-            'One-time purchase'
-          ]
-        },
-        work_style: {
-          name: 'Work Style Consultation',
-          description: 'AI-powered professional styling — 4 color variations for your workplace',
-          price: PRICES.work_style,
-          features: [
-            'My Best Shade + Bold Alternative + Soft Tonal',
-            'AI skin-tone color analysis',
-            'Off-duty commute look',
-            'Face-preserving technology'
-          ]
-        },
-        trend_style: {
-          name: 'Trend Style Consultation',
-          description: 'AI-powered trend styling — 4 variations of the latest fashion trends',
-          price: PRICES.trend_style,
-          features: [
-            '4 trend outfit variations',
-            'Signature to bold range',
-            'Personalized to your body',
-            'Face-preserving technology'
           ]
         },
       }

@@ -1,5 +1,5 @@
 import { getCorsHeaders, createCorsPreflightResponse } from '../lib/cors'
-import { validateHairStylesRequest, createValidationErrorResponse } from '../lib/validation'
+import { validateImageStylesRequest, createValidationErrorResponse } from '../lib/validation'
 import { errors } from '../lib/errors'
 
 interface Env {
@@ -132,8 +132,8 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
   try {
     const body = await context.request.json()
 
-    // Validate request body (reuse hair styles validation - same structure)
-    const validation = validateHairStylesRequest(body)
+    // Validate request body
+    const validation = validateImageStylesRequest(body)
     if (!validation.valid) {
       return createValidationErrorResponse(validation.errors!, corsHeaders)
     }

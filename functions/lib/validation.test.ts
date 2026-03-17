@@ -183,18 +183,18 @@ describe('validateTransformBatchRequest', () => {
     const photo = 'data:image/jpeg;base64,' + 'A'.repeat(100)
     const result = validateTransformBatchRequest({
       photo,
-      type: 'hairstyle',
+      type: 'fashion',
       gender: 'female',
       language: 'en',
     })
 
     expect(result.valid).toBe(true)
-    expect(result.data?.type).toBe('hairstyle')
+    expect(result.data?.type).toBe('fashion')
   })
 
   it('rejects missing photo', () => {
     const result = validateTransformBatchRequest({
-      type: 'hairstyle',
+      type: 'fashion',
       gender: 'male',
     })
 

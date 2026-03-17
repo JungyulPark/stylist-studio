@@ -22,19 +22,6 @@ interface StyleOption {
   prompt: string
 }
 
-const hairstyles: Record<string, StyleOption[]> = {
-  male: [
-    { id: 'clean-short', ko: '클린 숏컷', en: 'Clean Short', prompt: 'Clean, neat short haircut. Sides tapered short, top 3-4cm, well-groomed. Like leaving a premium Korean barber. Natural hair color. Simple, masculine, sharp.' },
-    { id: 'textured-medium', ko: '내추럴 미디엄', en: 'Natural Medium', prompt: 'Natural medium-length hair. Top 5-6cm with soft texture and gentle movement, sides neatly tapered. The kind of easy, stylish Korean male hairstyle seen on actors. Natural hair color.' },
-    { id: 'comma-part', ko: '가르마 스타일', en: 'Styled Part', prompt: 'Side-parted medium hair with slight volume. Top 5-7cm, parted naturally to one side, styled but not stiff. Clean and modern — like a K-drama lead. Natural hair color.' },
-  ],
-  female: [
-    { id: 'layered-medium', ko: '레이어드 미디', en: 'Layered Medium', prompt: 'Medium layered cut at collarbone length. Soft face-framing layers, natural movement, effortless and modern. Like leaving a premium Seoul salon. Natural hair color.' },
-    { id: 'soft-long', ko: '소프트 롱', en: 'Soft Long', prompt: 'Long hair with soft gentle waves. Past shoulders, natural body and flow, romantic and feminine. Healthy, glossy texture. Natural hair color.' },
-    { id: 'clean-bob', ko: '클린 밥', en: 'Clean Bob', prompt: 'Shoulder-length clean bob. One-length or slight layers, sleek with subtle inward curve at ends. Chic, modern, put-together. Natural hair color.' },
-  ]
-}
-
 const fashionStyles: Record<string, StyleOption[]> = {
   male: [
     { id: 'hermes-exec', ko: '에르메스 비즈니스', en: 'Executive', prompt: `Channel Hermes executive elegance. ANALYZE this man's build and coloring, then create the perfect power-meets-craftsmanship look.
@@ -101,7 +88,6 @@ Clean sneakers or woven sandals. Delicate gold hoop earrings, basket or canvas b
 // ===== Gemini Image Editing =====
 async function transformWithGemini(
   photo: string,
-  type: 'hairstyle' | 'fashion',
   style: StyleOption,
   gender: string,
   apiKey: string,
@@ -114,32 +100,7 @@ async function transformWithGemini(
     const mimeType = `image/${base64Match[1]}`
     const base64Data = base64Match[2]
 
-    const genderGuideHair = gender === 'female'
-      ? 'This is a WOMAN. Style should be feminine and suit women.'
-      : 'This is a MAN. The hairstyle should suit a man naturally. Perms, soft waves, textured styles are fine. Just avoid overly feminine or women\'s hairstyles.'
-
-    const editPrompt = type === 'hairstyle'
-      ? `You are a top hair designer. Show this person a beautiful, natural hairstyle.
-
-RULE #1 — DO NOT CROP OR ZOOM. Output MUST have IDENTICAL framing as input. Same head position, same body position, same space above head.
-
-EDIT this photo - ONLY change the HAIRSTYLE to: ${style.prompt}
-
-${genderGuideHair}
-
-FACE SHAPE: Classify (oval/round/oblong/square/heart) and adapt the style to flatter this face shape.
-
-RULES:
-- FACE must remain IDENTICAL — same eyes, nose, mouth, expression. Do NOT regenerate the face.
-- Keep ORIGINAL natural hair color. NO accessories, NO unnatural colors.
-- Skin tone, pose, background — ZERO changes.
-- Result must look like a real salon visit — natural, wearable, NOT extreme.
-- Apply subtle beauty retouching: smooth skin, even tone, soft lighting.
-
-REMINDER: DO NOT CROP OR ZOOM. Keep IDENTICAL framing as input.
-
-Generate the edited photo.`
-      : buildBrandEditPrompt({ brandDirective: style.prompt, gender })
+    const editPrompt = buildBrandEditPrompt({ brandDirective: style.prompt, gender })
 
     // Try OpenAI gpt-image-1.5 first
     if (openaiKey) {
@@ -233,7 +194,7 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
       return createValidationErrorResponse(validation.errors!, corsHeaders)
     }
 
-    const { photo, type, gender, language } = validation.data!
+    const { photo, gender, language } = validation.data!
 
     const geminiKey = context.env.GEMINI_API_KEY
     const openaiKey = context.env.OPENAI_API_KEY
@@ -244,13 +205,13 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
     }
 
     const genderKey = gender === 'female' ? 'female' : 'male'
-    const styles = type === 'hairstyle' ? hairstyles[genderKey] : fashionStyles[genderKey]
+    const styles = fashionStyles[genderKey]
 
-    console.log(`[transform-batch] Generating ${styles.length} ${type} styles (OpenAI primary, Gemini fallback)`)
+    console.log(`[transform-batch] Generating ${styles.length} fashion styles (OpenAI primary, Gemini fallback)`)
 
     const results = await Promise.all(
       styles.map(async (style) => {
-        const imageUrl = await transformWithGemini(photo, type, style, genderKey, geminiKey, openaiKey)
+        const imageUrl = await transformWithGemini(photo, style, genderKey, geminiKey, openaiKey)
         const label = language === 'ko' ? style.ko : style.en
         return { id: style.id, label, imageUrl }
       })
@@ -261,7 +222,7 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
 
     return new Response(
       JSON.stringify({
-        type,
+        type: 'fashion',
         results,
         successCount
       }),

@@ -50,7 +50,6 @@ function isRateLimited(key: string, maxRequests: number, windowMs: number): bool
 const RATE_LIMITS: Record<string, [number, number]> = {
   // Expensive AI image generation — 5 requests per minute
   '/api/generate-styles':      [5, 60_000],
-  '/api/generate-hair-styles': [5, 60_000],
   '/api/transform-batch':      [5, 60_000],
 
   // Payment/checkout — 10 per minute
