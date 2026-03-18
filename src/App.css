@@ -27,6 +27,26 @@
   transform: translateY(0);
 }
 
+.fade-in-left {
+  opacity: 0;
+  transform: translateX(-30px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+.fade-in-left.visible {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.fade-in-right {
+  opacity: 0;
+  transform: translateX(30px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+.fade-in-right.visible {
+  opacity: 1;
+  transform: translateX(0);
+}
+
 /* ===== LANDING PAGE ===== */
 .landing-page {
   min-height: 100vh;
@@ -222,6 +242,11 @@
   gap: 1.25rem;
 }
 
+@keyframes gold-shimmer {
+  0% { background-position: -200% center; }
+  100% { background-position: 200% center; }
+}
+
 .hero-v2-headline {
   font-family: var(--font-serif);
   font-size: 2.5rem;
@@ -231,8 +256,86 @@
   margin: 0;
   max-width: 640px;
   letter-spacing: -0.02em;
+  background: linear-gradient(
+    90deg,
+    var(--charcoal) 0%,
+    var(--charcoal) 35%,
+    #c9a962 45%,
+    #d4af37 50%,
+    #c9a962 55%,
+    var(--charcoal) 65%,
+    var(--charcoal) 100%
+  );
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: gold-shimmer 6s ease-in-out infinite;
 }
 
+/* ===== MARQUEE TICKER ===== */
+@keyframes marquee-scroll {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+.marquee-strip {
+  width: 100%;
+  overflow: hidden;
+  padding: 1rem 0;
+  border-top: 1px solid rgba(201, 169, 98, 0.15);
+  border-bottom: 1px solid rgba(201, 169, 98, 0.15);
+  background: var(--bg-light);
+}
+
+.marquee-track {
+  display: flex;
+  width: max-content;
+  animation: marquee-scroll 30s linear infinite;
+  will-change: transform;
+}
+
+.marquee-track:hover {
+  animation-play-state: paused;
+}
+
+.marquee-content {
+  display: flex;
+  align-items: center;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.marquee-item {
+  font-family: var(--font-display);
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  background: linear-gradient(135deg, #c9a962, #d4af37);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  padding: 0 1rem;
+}
+
+.marquee-dot {
+  color: rgba(201, 169, 98, 0.4);
+  font-size: 1.2rem;
+  line-height: 1;
+}
+
+@media (max-width: 768px) {
+  .marquee-item {
+    font-size: 0.6rem;
+    padding: 0 0.75rem;
+  }
+  .marquee-strip {
+    padding: 0.75rem 0;
+  }
+}
+
+/* ===== HERO DESC ===== */
 .hero-v2-desc {
   color: rgba(26, 26, 26, 0.6);
   font-size: 1rem;
@@ -492,10 +595,18 @@
 }
 
 .section-divider {
-  width: 80px;
-  height: 4px;
-  background: var(--primary);
-  margin: 0 auto 3rem;
+  width: 120px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, #c9a962, transparent);
+  margin: 0.75rem auto 3rem;
+}
+
+.section-divider-full {
+  width: 100%;
+  max-width: 600px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(201, 169, 98, 0.35), transparent);
+  margin: 0 auto;
 }
 
 .path-grid {
@@ -523,9 +634,26 @@
   transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94), box-shadow 0.4s;
 }
 
+.path-card-v2::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, transparent, #c9a962, #d4af37, #c9a962, transparent);
+  z-index: 5;
+  opacity: 0;
+  transition: opacity 0.4s ease;
+}
+
+.path-card-v2:hover::before {
+  opacity: 1;
+}
+
 .path-card-v2:hover {
   transform: translateY(-10px);
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.35);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3), 0 0 30px rgba(201, 169, 98, 0.15);
 }
 
 .path-card-v2 .path-image {
@@ -551,6 +679,11 @@
   position: absolute;
   inset: 0;
   background: linear-gradient(to top, rgba(10, 10, 10, 0.97) 0%, rgba(10, 10, 10, 0.6) 45%, rgba(10, 10, 10, 0.15) 100%);
+  transition: background 0.6s ease;
+}
+
+.path-card-v2:hover .path-overlay {
+  background: linear-gradient(to top, rgba(10, 10, 10, 0.95) 0%, rgba(10, 10, 10, 0.45) 45%, rgba(10, 10, 10, 0.08) 100%);
 }
 
 .path-popular-badge {
@@ -774,9 +907,10 @@
 .gallery-before img,
 .gallery-after img {
   width: 100%;
-  height: 320px;
-  object-fit: cover;
+  aspect-ratio: 3/4;
+  object-fit: contain;
   display: block;
+  background: #f0efe9;
 }
 .gallery-label {
   position: absolute;
@@ -820,7 +954,7 @@
   }
   .gallery-before img,
   .gallery-after img {
-    height: 220px;
+    aspect-ratio: 3/4;
   }
   .gallery-section {
     padding: 3rem 1rem;
@@ -5347,7 +5481,7 @@
   display: block;
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  object-fit: contain;
 }
 
 .ba-after {

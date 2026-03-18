@@ -5202,6 +5202,28 @@ ${styleImgs.length > 1 ? `<div class="section"><h2>${styleSection}</h2><div clas
           <span className="hero-v2-sub">{t.heroSubCta}</span>
         </section>
 
+        {/* Marquee Ticker */}
+        <div className="marquee-strip" aria-hidden="true">
+          <div className="marquee-track">
+            {[0, 1].map(k => (
+              <span key={k} className="marquee-content">
+                <span className="marquee-item">AI-POWERED STYLING</span>
+                <span className="marquee-dot">&middot;</span>
+                <span className="marquee-item">PERSONAL COLOR</span>
+                <span className="marquee-dot">&middot;</span>
+                <span className="marquee-item">BODY TYPE ANALYSIS</span>
+                <span className="marquee-dot">&middot;</span>
+                <span className="marquee-item">FACE SHAPE MATCHING</span>
+                <span className="marquee-dot">&middot;</span>
+                <span className="marquee-item">3 CURATED LOOKS</span>
+                <span className="marquee-dot">&middot;</span>
+              </span>
+            ))}
+          </div>
+        </div>
+
+        <div className="section-divider-full"></div>
+
         {/* How It Works — 3-step process */}
         <section className="how-it-works-section" ref={(el) => {
           if (el) {
@@ -5242,42 +5264,66 @@ ${styleImgs.length > 1 ? `<div class="section"><h2>${styleSection}</h2><div clas
           </button>
         </section>
 
+        <div className="section-divider-full"></div>
+
         {/* Trust Signals — minimal, no emojis */}
         <section className="trust-section" ref={(el) => {
           if (el) {
+            const items = el.querySelectorAll('.trust-item')
             const observer = new IntersectionObserver(([entry]) => {
-              if (entry.isIntersecting) { trackEvent('trust_section_view'); observer.disconnect() }
-            }, { threshold: 0.3 })
+              if (entry.isIntersecting) {
+                trackEvent('trust_section_view')
+                items.forEach((item, i) => {
+                  setTimeout(() => item.classList.add('visible'), i * 100)
+                })
+                observer.disconnect()
+              }
+            }, { threshold: 0.2 })
             observer.observe(el)
           }
         }}>
           <div className="trust-grid">
-            <div className="trust-item">
+            <div className="trust-item fade-in-up">
               <span className="trust-value">{t.trustRating}</span>
               <span className="trust-desc">{t.trustRatingCount}</span>
             </div>
-            <div className="trust-item">
+            <div className="trust-item fade-in-up">
               <span className="trust-value">{t.trustSpeed}</span>
               <span className="trust-desc">{t.trustSpeedDesc}</span>
             </div>
-            <div className="trust-item">
+            <div className="trust-item fade-in-up">
               <span className="trust-value">{t.trustRefund}</span>
               <span className="trust-desc">{t.trustRefundDesc}</span>
             </div>
-            <div className="trust-item">
+            <div className="trust-item fade-in-up">
               <span className="trust-value">{t.trustAI}</span>
               <span className="trust-desc">{t.trustAIDesc}</span>
             </div>
           </div>
         </section>
 
+        <div className="section-divider-full"></div>
+
         {/* Services Section — unified 3-card grid */}
-        <section className="path-section" id="features">
-          <h2 className="section-title">{t.pathTitle}</h2>
+        <section className="path-section" id="features" ref={(el) => {
+          if (el) {
+            const items = el.querySelectorAll('.section-title, .section-divider, .path-card-v2')
+            const observer = new IntersectionObserver(([entry]) => {
+              if (entry.isIntersecting) {
+                items.forEach((item, i) => {
+                  setTimeout(() => item.classList.add('visible'), i * 150)
+                })
+                observer.disconnect()
+              }
+            }, { threshold: 0.15 })
+            observer.observe(el)
+          }
+        }}>
+          <h2 className="section-title fade-in-up">{t.pathTitle}</h2>
           <div className="section-divider"></div>
           <div className="path-grid-2">
               {/* Card 1: Daily Style Subscription */}
-              <div className="path-card-v2 subscription" onClick={handleSubscription}>
+              <div className="path-card-v2 subscription fade-in-up" onClick={handleSubscription}>
                 <picture className="path-image">
                   <source type="image/avif" srcSet="/dailynew-800w.avif" />
                   <source type="image/webp" srcSet="/dailynew-800w.webp" />
@@ -5301,7 +5347,7 @@ ${styleImgs.length > 1 ? `<div class="section"><h2>${styleSection}</h2><div clas
               </div>
 
               {/* Card 2: Full Package (Featured) */}
-              <div className="path-card-v2 featured" onClick={() => { trackEvent('select_item', { item_category: 'full_style' }); setPage('input') }}>
+              <div className="path-card-v2 featured fade-in-up" onClick={() => { trackEvent('select_item', { item_category: 'full_style' }); setPage('input') }}>
                 <picture className="path-image">
                   <source type="image/avif" srcSet="/full-800w.avif" />
                   <source type="image/webp" srcSet="/full-800w.webp" />
@@ -5328,15 +5374,30 @@ ${styleImgs.length > 1 ? `<div class="section"><h2>${styleSection}</h2><div clas
           </div>
         </section>
 
+        <div className="section-divider-full"></div>
+
         {/* Before/After Gallery */}
-        <section className="gallery-section">
-          <div className="gallery-header">
+        <section className="gallery-section" ref={(el) => {
+          if (el) {
+            const items = el.querySelectorAll('.gallery-header, .gallery-item')
+            const observer = new IntersectionObserver(([entry]) => {
+              if (entry.isIntersecting) {
+                items.forEach((item, i) => {
+                  setTimeout(() => item.classList.add('visible'), i * 120)
+                })
+                observer.disconnect()
+              }
+            }, { threshold: 0.1 })
+            observer.observe(el)
+          }
+        }}>
+          <div className="gallery-header fade-in-up">
             <span className="gallery-tag">BEFORE & AFTER</span>
             <h2 className="gallery-title">{t.galleryTitle}</h2>
             <p className="gallery-subtitle">{t.gallerySubtitle}</p>
           </div>
           <div className="gallery-grid">
-            <div className="gallery-item">
+            <div className="gallery-item fade-in-up">
               <div className="gallery-pair">
                 <div className="gallery-before">
                   <span className="gallery-label">{t.galleryBefore}</span>
@@ -5349,7 +5410,7 @@ ${styleImgs.length > 1 ? `<div class="section"><h2>${styleSection}</h2><div clas
               </div>
               <span className="gallery-occasion">Best Match</span>
             </div>
-            <div className="gallery-item">
+            <div className="gallery-item fade-in-up">
               <div className="gallery-pair">
                 <div className="gallery-before">
                   <span className="gallery-label">{t.galleryBefore}</span>
@@ -5362,7 +5423,7 @@ ${styleImgs.length > 1 ? `<div class="section"><h2>${styleSection}</h2><div clas
               </div>
               <span className="gallery-occasion">Date Night</span>
             </div>
-            <div className="gallery-item">
+            <div className="gallery-item fade-in-up">
               <div className="gallery-pair">
                 <div className="gallery-before">
                   <span className="gallery-label">{t.galleryBefore}</span>
@@ -5375,7 +5436,7 @@ ${styleImgs.length > 1 ? `<div class="section"><h2>${styleSection}</h2><div clas
               </div>
               <span className="gallery-occasion">Best Match</span>
             </div>
-            <div className="gallery-item">
+            <div className="gallery-item fade-in-up">
               <div className="gallery-pair">
                 <div className="gallery-before">
                   <span className="gallery-label">{t.galleryBefore}</span>
@@ -5388,7 +5449,7 @@ ${styleImgs.length > 1 ? `<div class="section"><h2>${styleSection}</h2><div clas
               </div>
               <span className="gallery-occasion">Casual</span>
             </div>
-            <div className="gallery-item">
+            <div className="gallery-item fade-in-up">
               <div className="gallery-pair">
                 <div className="gallery-before">
                   <span className="gallery-label">{t.galleryBefore}</span>
@@ -5430,14 +5491,27 @@ ${styleImgs.length > 1 ? `<div class="section"><h2>${styleSection}</h2><div clas
         )}
 
         {/* Footer */}
-        <footer className="landing-footer">
+        <footer className="landing-footer" ref={(el) => {
+          if (el) {
+            const items = el.querySelectorAll('.footer-brand, .footer-col, .footer-bottom')
+            const observer = new IntersectionObserver(([entry]) => {
+              if (entry.isIntersecting) {
+                items.forEach((item, i) => {
+                  setTimeout(() => item.classList.add('visible'), i * 100)
+                })
+                observer.disconnect()
+              }
+            }, { threshold: 0.2 })
+            observer.observe(el)
+          }
+        }}>
           <div className="footer-content">
-            <div className="footer-brand">
+            <div className="footer-brand fade-in-up">
               <h2 className="footer-logo">{t.title}</h2>
               <p className="footer-desc">{t.subtitle}</p>
             </div>
             <div className="footer-links">
-              <div className="footer-col">
+              <div className="footer-col fade-in-up">
                 <h5>{t.footerLegal}</h5>
                 <a href="#" onClick={(e) => { e.preventDefault(); setPolicyModal('terms') }}>{t.footerTerms}</a>
                 <a href="#" onClick={(e) => { e.preventDefault(); setPolicyModal('privacy') }}>{t.footerPrivacy}</a>
@@ -5445,7 +5519,7 @@ ${styleImgs.length > 1 ? `<div class="section"><h2>${styleSection}</h2><div clas
               </div>
             </div>
           </div>
-          <div className="footer-bottom">
+          <div className="footer-bottom fade-in-up">
             <span>{t.footerCopyright}</span>
           </div>
         </footer>
