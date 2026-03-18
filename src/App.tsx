@@ -5149,28 +5149,6 @@ ${styleImgs.length > 1 ? `<div class="section"><h2>${styleSection}</h2><div clas
           </div>
         </section>
 
-        {/* Marquee Ticker */}
-        <div className="marquee-strip" aria-hidden="true">
-          <div className="marquee-track">
-            {[0, 1].map(k => (
-              <span key={k} className="marquee-content">
-                <span className="marquee-item">AI-POWERED STYLING</span>
-                <span className="marquee-dot">&middot;</span>
-                <span className="marquee-item">PERSONAL COLOR</span>
-                <span className="marquee-dot">&middot;</span>
-                <span className="marquee-item">BODY TYPE ANALYSIS</span>
-                <span className="marquee-dot">&middot;</span>
-                <span className="marquee-item">FACE SHAPE MATCHING</span>
-                <span className="marquee-dot">&middot;</span>
-                <span className="marquee-item">3 CURATED LOOKS</span>
-                <span className="marquee-dot">&middot;</span>
-              </span>
-            ))}
-          </div>
-        </div>
-
-        <div className="section-divider-full"></div>
-
         {/* How It Works — 3-step process */}
         <section className="how-it-works-section" ref={(el) => {
           if (el) {
@@ -5213,44 +5191,6 @@ ${styleImgs.length > 1 ? `<div class="section"><h2>${styleSection}</h2><div clas
 
         <div className="section-divider-full"></div>
 
-        {/* Trust Signals — minimal, no emojis */}
-        <section className="trust-section" ref={(el) => {
-          if (el) {
-            const items = el.querySelectorAll('.trust-item')
-            const observer = new IntersectionObserver(([entry]) => {
-              if (entry.isIntersecting) {
-                trackEvent('trust_section_view')
-                items.forEach((item, i) => {
-                  setTimeout(() => item.classList.add('visible'), i * 100)
-                })
-                observer.disconnect()
-              }
-            }, { threshold: 0.2 })
-            observer.observe(el)
-          }
-        }}>
-          <div className="trust-grid">
-            <div className="trust-item fade-in-up">
-              <span className="trust-value">{t.trustRating}</span>
-              <span className="trust-desc">{t.trustRatingCount}</span>
-            </div>
-            <div className="trust-item fade-in-up">
-              <span className="trust-value">{t.trustSpeed}</span>
-              <span className="trust-desc">{t.trustSpeedDesc}</span>
-            </div>
-            <div className="trust-item fade-in-up">
-              <span className="trust-value">{t.trustRefund}</span>
-              <span className="trust-desc">{t.trustRefundDesc}</span>
-            </div>
-            <div className="trust-item fade-in-up">
-              <span className="trust-value">{t.trustAI}</span>
-              <span className="trust-desc">{t.trustAIDesc}</span>
-            </div>
-          </div>
-        </section>
-
-        <div className="section-divider-full"></div>
-
         {/* Services Section — unified 3-card grid */}
         <section className="path-section" id="features" ref={(el) => {
           if (el) {
@@ -5268,33 +5208,9 @@ ${styleImgs.length > 1 ? `<div class="section"><h2>${styleSection}</h2><div clas
         }}>
           <h2 className="section-title fade-in-up">{t.pathTitle}</h2>
           <div className="section-divider"></div>
-          <div className="path-grid-2">
-              {/* Card 1: Daily Style Subscription */}
-              <div className="path-card-v2 subscription fade-in-up" onClick={handleSubscription}>
-                <picture className="path-image">
-                  <source type="image/avif" srcSet="/dailynew-800w.avif" />
-                  <source type="image/webp" srcSet="/dailynew-800w.webp" />
-                  <img src="/dailynew-800w.webp" alt="Daily Style" className="path-image-img" loading="lazy" width="800" height="600" />
-                </picture>
-                <div className="path-overlay"></div>
-                {isSubscribed && <span className="path-popular-badge active">{t.subscriptionActive}</span>}
-                <div className="path-content-v2">
-                  <div className="path-header-v2">
-                    <span className="path-module-v2">DAILY STYLE</span>
-                    {!isSubscribed && <span className="trial-badge">{t.subscriptionTrialDays}</span>}
-                  </div>
-                  <h3 className="path-title-v2">{t.subscriptionTitle}</h3>
-                  <p className="path-desc-v2">{isSubscribed ? t.dashboardSubtitle : t.subscriptionDesc}</p>
-                  <p className="daily-tagline">{t.dailyTagline}</p>
-                  <div className={`path-cta-v2 ${isSubscribed ? 'green' : ''}`}>
-                    {isSubscribed ? `${t.dashboardTitle} →` : t.subscriptionCta}
-                  </div>
-                  {!isSubscribed && <p className="path-plan-label">Monthly Plan · 7-day free trial</p>}
-                </div>
-              </div>
-
-              {/* Card 2: Full Package (Featured) */}
-              <div className="path-card-v2 featured fade-in-up" onClick={() => { trackEvent('select_item', { item_category: 'full_style' }); setPage('input') }}>
+          <div className="path-grid-2" style={{ maxWidth: '560px' }}>
+              {/* Premium Style Report — single featured card */}
+              <div className="path-card-v2 featured fade-in-up" onClick={() => { trackEvent('select_item', { item_category: 'premium_report' }); setPage('input') }}>
                 <picture className="path-image">
                   <source type="image/avif" srcSet="/full-800w.avif" />
                   <source type="image/webp" srcSet="/full-800w.webp" />
@@ -5842,6 +5758,31 @@ ${styleImgs.length > 1 ? `<div class="section"><h2>${styleSection}</h2><div clas
         </div>
 
         <div className="result-actions">
+          {/* PDF Download — Premium only */}
+          {isFullPaid && report && (
+            <button
+              className="btn-gold"
+              onClick={async () => {
+                trackEvent('pdf_downloaded')
+                const { generatePdfReport } = await import('./utils/pdfReport')
+                const dna = (() => { try { return parseStyleDNA(report) } catch { return null } })()
+                await generatePdfReport({
+                  season: dna?.season || null,
+                  seasonLabel: dna?.season ? t.styleDnaSeasons[dna.season as keyof typeof t.styleDnaSeasons] || dna.season : 'Unknown',
+                  bodyType: dna?.bodyType || null,
+                  colors: dna?.colors || [],
+                  silhouettes: dna?.silhouettes || [],
+                  bestColors: colorPalette?.bestColors || [],
+                  avoidColors: colorPalette?.avoidColors || [],
+                  styleImages: styleImages.map(s => ({ label: t.styleLabels[s.id] || s.label, imageUrl: s.imageUrl })),
+                  reportText: report,
+                  lang
+                })
+              }}
+            >
+              {lang === 'ko' ? 'PDF 리포트 다운로드' : 'Download PDF Report'}
+            </button>
+          )}
           {report && (
             <button
               className="btn-outline"
@@ -5879,6 +5820,32 @@ ${styleImgs.length > 1 ? `<div class="section"><h2>${styleSection}</h2><div clas
             {t.backToHome}
           </button>
         </div>
+
+        {/* Daily Style Upsell — shown after premium purchase, only if not subscribed */}
+        {isFullPaid && !isSubscribed && (
+          <div className="daily-style-upsell">
+            <h3 className="upsell-title">
+              {lang === 'ko' ? '매일 아침 맞춤 스타일 받기' : 'Get Daily Style Recommendations'}
+            </h3>
+            <p className="upsell-desc">
+              {lang === 'ko'
+                ? '날씨와 내 퍼스널 컬러에 맞는 오늘의 코디를 매일 아침 이메일로 받아보세요.'
+                : 'Receive weather-matched outfit recommendations based on your personal colors every morning.'}
+            </p>
+            <p className="upsell-price">
+              $6.99/{lang === 'ko' ? '월' : 'mo'} · {lang === 'ko' ? '첫 7일 무료' : 'First 7 days free'}
+            </p>
+            <button
+              className="btn-gold"
+              onClick={() => {
+                trackEvent('daily_style_upsell_clicked', { trigger: 'after_premium_purchase' })
+                handleSubscription()
+              }}
+            >
+              {lang === 'ko' ? '7일 무료 체험 시작' : 'Start 7-Day Free Trial'}
+            </button>
+          </div>
+        )}
 
         {/* Email Modal */}
         {showEmailModal && (
