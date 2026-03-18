@@ -2355,6 +2355,7 @@ function App() {
     gender: null
   })
   const [report, setReport] = useState<string>('')
+  const [colorPalette, setColorPalette] = useState<{ bestColors: string[]; avoidColors: string[] } | null>(null)
   const [error, setError] = useState<string>('')
   const [isDragging, setIsDragging] = useState(false)
   const [styleImages, setStyleImages] = useState<StyleImage[]>([])
@@ -3115,6 +3116,7 @@ function App() {
         throw new Error('No report generated')
       }
       setReport(analyzeData.report)
+      if (analyzeData.colorPalette) setColorPalette(analyzeData.colorPalette)
 
       setLoadingProgress(100)
       setLoadingStep(lang === 'ko' ? '완료!' : 'Complete!')
@@ -3596,6 +3598,7 @@ function App() {
 
       const analyzeData = await analyzeResponse.json()
       setReport(analyzeData.report)
+      if (analyzeData.colorPalette) setColorPalette(analyzeData.colorPalette)
 
       // Wait for images to finish
       setIsGeneratingStyles(true)
@@ -5626,6 +5629,45 @@ ${styleImgs.length > 1 ? `<div class="section"><h2>${styleSection}</h2><div clas
                         />
                       ))}
                     </div>
+                  </div>
+                )}
+                {/* Extended Color Palette — Premium only (30 best + 10 avoid) */}
+                {isFullPaid && colorPalette && (
+                  <>
+                    {colorPalette.bestColors?.length > 0 && (
+                      <div className="dna-row dna-palette-row">
+                        <span className="dna-label">{lang === 'ko' ? '추천 컬러 팔레트 (30)' : 'Your Best 30 Colors'}</span>
+                        <div className="dna-palette-grid">
+                          {colorPalette.bestColors.map((hex, i) => (
+                            <div key={i} className="dna-palette-swatch" style={{ background: hex }} title={hex} />
+                          ))}
+                        </div>
+                      </div>
+                    )}
+                    {colorPalette.avoidColors?.length > 0 && (
+                      <div className="dna-row dna-palette-row dna-avoid-row">
+                        <span className="dna-label">{lang === 'ko' ? '피해야 할 컬러 (10)' : 'Colors to Avoid'}</span>
+                        <div className="dna-palette-grid">
+                          {colorPalette.avoidColors.map((hex, i) => (
+                            <div key={i} className="dna-palette-swatch dna-avoid-swatch" style={{ background: hex }} title={hex} />
+                          ))}
+                        </div>
+                      </div>
+                    )}
+                  </>
+                )}
+                {/* Palette teaser for free users */}
+                {!isFullPaid && colorPalette && colorPalette.bestColors?.length > 0 && (
+                  <div className="dna-row dna-palette-teaser">
+                    <span className="dna-label">{lang === 'ko' ? '전체 추천 팔레트' : 'Full Color Palette'}</span>
+                    <div className="dna-palette-grid dna-palette-blurred">
+                      {colorPalette.bestColors.slice(0, 15).map((hex, i) => (
+                        <div key={i} className="dna-palette-swatch" style={{ background: hex }} />
+                      ))}
+                    </div>
+                    <p className="dna-palette-lock-hint">
+                      {lang === 'ko' ? '프리미엄 리포트에서 30개 추천 + 10개 비추천 컬러 확인' : '30 best + 10 avoid colors in Premium Report'}
+                    </p>
                   </div>
                 )}
                 {dna.silhouettes.length > 0 && (

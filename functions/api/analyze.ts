@@ -366,8 +366,60 @@ Provide a detailed, personalized style report with general recommendations based
       return errors.externalApi('OpenAI', corsHeaders)
     }
 
+    // --- Extended Color Palette (30 best + 10 avoid) ---
+    // Lightweight text-only call using gpt-4o-mini for cost efficiency
+    let colorPalette: { bestColors: string[]; avoidColors: string[] } | null = null
+    try {
+      const seasonMatch = report.match(/(?:Spring|Summer|Autumn|Winter)\s*(?:Warm|Cool)?/i)
+      const season = seasonMatch ? seasonMatch[0] : 'unknown'
+
+      const paletteResponse = await fetch('https://api.openai.com/v1/chat/completions', {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${apiKey}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          model: 'gpt-4o-mini',
+          messages: [
+            {
+              role: 'system',
+              content: `You are a personal color analyst. Return ONLY valid JSON, no markdown.`
+            },
+            {
+              role: 'user',
+              content: `This person's personal color season is "${season}" (${genderText}).
+
+Generate a comprehensive color palette:
+- bestColors: exactly 30 hex color codes that look BEST on this season type. Include a mix of: neutrals (5), everyday basics (8), accent/statement colors (10), metallics/jewel tones (7). Order from most versatile to most statement.
+- avoidColors: exactly 10 hex color codes this season should AVOID. Colors that wash out or clash with their undertone.
+
+Return JSON only: {"bestColors":["#hex1","#hex2",...],"avoidColors":["#hex1","#hex2",...]}`
+            }
+          ],
+          max_completion_tokens: 500,
+          temperature: 0.3,
+          response_format: { type: 'json_object' }
+        })
+      })
+
+      if (paletteResponse.ok) {
+        const paletteData = await paletteResponse.json() as {
+          choices: Array<{ message: { content: string } }>
+        }
+        const content = paletteData.choices[0]?.message?.content
+        if (content) {
+          colorPalette = JSON.parse(content)
+          console.log(`[analyze] Color palette generated: ${colorPalette?.bestColors?.length} best, ${colorPalette?.avoidColors?.length} avoid`)
+        }
+      }
+    } catch (e) {
+      console.error('[analyze] Color palette generation failed (non-blocking):', e)
+      // Non-blocking — main report still returns successfully
+    }
+
     return new Response(
-      JSON.stringify({ report }),
+      JSON.stringify({ report, colorPalette }),
       { status: 200, headers: { 'Content-Type': 'application/json', ...corsHeaders } }
     )
 
