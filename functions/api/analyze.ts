@@ -14,10 +14,7 @@ const MODELS = ['gpt-5.2', 'gpt-4.1', 'gpt-4o']
 
 const languagePrompts: Record<string, string> = {
   ko: '한국어로 답변해주세요.',
-  en: 'Please respond in English.',
-  ja: '日本語で回答してください。',
-  zh: '请用中文回答。',
-  es: 'Por favor responde en español.'
+  en: 'Please respond in English.'
 }
 
 // 사진이 있을 때 시스템 프롬프트 (얼굴/헤어스타일 분석 포함)

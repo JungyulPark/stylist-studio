@@ -2142,6 +2142,109 @@
   border-top: 1px solid rgba(26, 26, 26, 0.15);
 }
 
+/* Locked/blurred image styles (v2: free users see 1 image, rest blurred) */
+.style-card.locked {
+  cursor: pointer;
+}
+.style-image-blurred {
+  filter: blur(20px) !important;
+  transform: scale(1.05);
+}
+.lock-overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: rgba(26, 26, 26, 0.3);
+  backdrop-filter: blur(2px);
+  cursor: pointer;
+  transition: background 0.3s;
+}
+.lock-overlay:hover {
+  background: rgba(26, 26, 26, 0.45);
+}
+.lock-icon-svg {
+  margin-bottom: 8px;
+  opacity: 0.9;
+}
+.lock-text {
+  color: white;
+  font-family: var(--font-display);
+  font-size: 0.85rem;
+  font-weight: 600;
+  text-shadow: 0 1px 4px rgba(0,0,0,0.3);
+}
+
+/* Premium CTA section (below blurred images) */
+.premium-cta-section {
+  text-align: center;
+  padding: 3rem 1.5rem;
+  margin: 2rem 0;
+  background: linear-gradient(180deg, rgba(201, 169, 98, 0.04) 0%, rgba(201, 169, 98, 0.1) 100%);
+  border: 1px solid rgba(201, 169, 98, 0.2);
+  border-radius: 16px;
+}
+.premium-cta-title {
+  font-family: var(--font-serif);
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: var(--charcoal);
+  margin: 0 0 0.5rem;
+}
+.premium-cta-desc {
+  font-size: 0.9rem;
+  color: var(--primary-light);
+  margin: 0 0 1.5rem;
+  line-height: 1.6;
+}
+.premium-cta-price {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  margin-bottom: 1.25rem;
+}
+.price-compare {
+  font-size: 0.8rem;
+  color: #A3A3A3;
+  text-decoration: line-through;
+}
+.price-main {
+  font-size: 2.5rem;
+  font-weight: 800;
+  background: linear-gradient(135deg, #c9a962, #d4af37);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.price-note {
+  font-size: 0.8rem;
+  color: #737373;
+}
+.premium-cta-button {
+  background: linear-gradient(135deg, #c9a962, #d4af37);
+  color: white;
+  border: none;
+  padding: 14px 40px;
+  font-size: 1.05rem;
+  font-weight: 700;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s;
+  font-family: var(--font-display);
+}
+.premium-cta-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(201, 169, 98, 0.35);
+}
+.premium-cta-guarantee {
+  margin-top: 0.75rem;
+  font-size: 0.8rem;
+  color: #737373;
+}
+
 /* Free analysis CTA — shown when no images generated (free mode) */
 .free-analysis-cta {
   text-align: center;

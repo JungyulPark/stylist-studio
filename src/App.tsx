@@ -3553,7 +3553,7 @@ function App() {
   }
 
   // 실제 분석 수행 함수 (결제 완료 후 or 결제 전 미리보기용)
-  const performAnalysis = async (destinationPage: 'result' | 'preview' = 'result', freeMode: boolean = false) => {
+  const performAnalysis = async (destinationPage: 'result' | 'preview' = 'result') => {
     setPage('loading')
     setError('')
     setStyleImages([])
@@ -3574,10 +3574,8 @@ function App() {
         })
       })
 
-      // Step 2: Image generation (paid only — skip in free mode to save AI cost)
-      let stylesPromise: Promise<Response> | null = null
-      if (!freeMode) {
-        stylesPromise = fetch('/api/generate-styles', {
+      // Step 2: Image generation (always runs — v2: show 1 free, blur rest)
+      const stylesPromise = fetch('/api/generate-styles', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
@@ -3588,7 +3586,6 @@ function App() {
             language: lang
           })
         })
-      }
 
       // Wait for text analysis first
       const analyzeResponse = await analyzePromise
@@ -3600,20 +3597,10 @@ function App() {
       const analyzeData = await analyzeResponse.json()
       setReport(analyzeData.report)
 
-      if (freeMode) {
-        // Free mode: text analysis complete, skip image generation
-        trackEvent('free_analysis_completed', { has_photo: !!profile.photo })
-        setLoadingProgress(100)
-        setLoadingStep(lang === 'ko' ? '분석 완료!' : 'Analysis Complete!')
-        await new Promise(resolve => setTimeout(resolve, 400))
-        setPage(destinationPage)
-        return
-      }
-
-      // Wait for images to finish (paid mode only)
+      // Wait for images to finish
       setIsGeneratingStyles(true)
 
-      const [stylesResult] = await Promise.allSettled([stylesPromise!])
+      const [stylesResult] = await Promise.allSettled([stylesPromise])
 
       // Handle fashion styles
       if (stylesResult.status === 'fulfilled') {
@@ -3649,44 +3636,12 @@ function App() {
     trackEvent('full_input_submit', { has_photo: !!profile.photo, is_paid: isFullPaid })
     trackEvent('funnel_step', { step_name: 'form_submit', step_number: 3, funnel_product: 'full' })
 
-    if (isFullPaid) {
-      // 결제 완료 → 텍스트 분석 + 이미지 생성 → 결과 페이지
-      performAnalysis('result')
-    } else {
-      // 무료 → 텍스트 분석만 실행 → 결과 페이지 (이미지 없이 Style DNA만)
-      trackEvent('free_analysis_started')
-      performAnalysis('result', true)
-    }
+    // v2: 항상 분석 + 이미지 생성 실행, 프론트엔드에서 1장만 공개/나머지 블러
+    trackEvent('analysis_started', { is_paid: isFullPaid })
+    performAnalysis('result')
   }
 
-  const generateStyleImages = async () => {
-    setIsGeneratingStyles(true)
-    try {
-      const response = await fetch('/api/generate-styles', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          height: profile.height,
-          weight: profile.weight,
-          gender: profile.gender,
-          photo: profile.photo,
-          language: lang
-        })
-      })
-
-      if (response.ok) {
-        const data = await response.json()
-        setStyleImages(data.styles || [])
-      }
-    } catch (err) {
-      console.error('Error generating styles:', err)
-    } finally {
-      setStyleGenProgress(100)
-      setStyleGenStep(lang === 'ko' ? '완료!' : 'Complete!')
-      await new Promise(resolve => setTimeout(resolve, 300))
-      setIsGeneratingStyles(false)
-    }
-  }
+  // generateStyleImages removed — v2: images always generated in performAnalysis
 
   // 패션 변환 (3x3 그리드)
   const handleRestart = () => {
@@ -5749,60 +5704,97 @@ ${styleImgs.length > 1 ? `<div class="section"><h2>${styleSection}</h2><div clas
           ) : styleImages.length > 0 && styleImages.some(s => s.imageUrl) ? (
             <>
               <div className="style-grid">
-                {styleImages.map((style) => (
-                  <div key={style.id} className="style-card">
-                    <div className="style-image-container">
-                      {style.imageUrl ? (
-                        <>
-                          <img src={style.imageUrl} alt={t.styleLabels[style.id] || style.label} className="style-image" onClick={() => setFullscreenImage(style.imageUrl)} />
-                          {user && (
-                            <button
-                              className={`favorite-btn-overlay ${favoriteUrls.has(style.imageUrl) ? 'active' : ''}`}
-                              onClick={() => toggleFavorite(style.imageUrl!, 'style', t.styleLabels[style.id] || style.label)}
-                            >
-                              {favoriteUrls.has(style.imageUrl) ? '♥' : '♡'}
-                            </button>
-                          )}
-                        </>
-                      ) : (
-                        <div className="style-placeholder">
-                          <span className="style-icon" aria-hidden="true">S</span>
-                        </div>
-                      )}
+                {styleImages.map((style, index) => {
+                  const isLocked = !isFullPaid && index > 0
+                  return (
+                    <div key={style.id} className={`style-card ${isLocked ? 'locked' : ''}`}>
+                      <div className="style-image-container">
+                        {style.imageUrl ? (
+                          <>
+                            <img
+                              src={style.imageUrl}
+                              alt={t.styleLabels[style.id] || style.label}
+                              className={isLocked ? 'style-image style-image-blurred' : 'style-image'}
+                              onClick={() => !isLocked && setFullscreenImage(style.imageUrl)}
+                            />
+                            {isLocked && (
+                              <div className="lock-overlay" onClick={() => handlePayment('full')}>
+                                <div className="lock-icon-svg">
+                                  <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+                                </div>
+                                <p className="lock-text">
+                                  {lang === 'ko' ? '프리미엄 리포트에서 확인' : 'Available in Premium Report'}
+                                </p>
+                              </div>
+                            )}
+                            {!isLocked && user && (
+                              <button
+                                className={`favorite-btn-overlay ${favoriteUrls.has(style.imageUrl) ? 'active' : ''}`}
+                                onClick={() => toggleFavorite(style.imageUrl!, 'style', t.styleLabels[style.id] || style.label)}
+                              >
+                                {favoriteUrls.has(style.imageUrl) ? '♥' : '♡'}
+                              </button>
+                            )}
+                          </>
+                        ) : (
+                          <div className="style-placeholder">
+                            <span className="style-icon" aria-hidden="true">S</span>
+                          </div>
+                        )}
+                      </div>
+                      <span className="style-label">{t.styleLabels[style.id] || style.label}</span>
                     </div>
-                    <span className="style-label">{t.styleLabels[style.id] || style.label}</span>
+                  )
+                })}
+              </div>
+
+              {/* Premium CTA — 미결제 유저에게 블러 이미지 아래 표시 */}
+              {!isFullPaid && (
+                <div className="premium-cta-section">
+                  <h3 className="premium-cta-title">
+                    {lang === 'ko'
+                      ? '나머지 스타일과 상세 분석을 확인하세요'
+                      : 'Unlock All Styles & Full Analysis'}
+                  </h3>
+                  <p className="premium-cta-desc">
+                    {lang === 'ko'
+                      ? 'AI 아웃핏 전체 + 12타입 컬러 진단 + 체형 가이드 + PDF 리포트'
+                      : 'All AI outfits + 12-type color analysis + body guide + PDF report'}
+                  </p>
+                  <div className="premium-cta-price">
+                    <span className="price-compare">
+                      {lang === 'ko' ? '오프라인 컨설팅 ₩150,000+' : 'In-person consulting $100+'}
+                    </span>
+                    <span className="price-main">$9.99</span>
+                    <span className="price-note">
+                      {lang === 'ko' ? '1회 결제 · 환불 보장' : 'One-time · Money-back guarantee'}
+                    </span>
                   </div>
-                ))}
-              </div>
-              <p className="tap-hint">{lang === 'ko' ? '* 이미지를 클릭하면 원본 크기로 볼 수 있습니다' : '* Tap image to view full size'}</p>
+                  <button
+                    className="premium-cta-button"
+                    onClick={() => {
+                      trackEvent('premium_cta_clicked', { price: 9.99, trigger: 'result_page', images_locked: styleImages.length - 1 })
+                      handlePayment('full')
+                    }}
+                  >
+                    {lang === 'ko' ? '프리미엄 리포트 받기' : 'Get Premium Report'}
+                  </button>
+                  <p className="premium-cta-guarantee">
+                    {lang === 'ko'
+                      ? 'PDF 다운로드 · 불만족 시 환불'
+                      : 'PDF download · Satisfaction guaranteed'}
+                  </p>
+                </div>
+              )}
+
+              {isFullPaid && (
+                <p className="tap-hint">{lang === 'ko' ? '* 이미지를 클릭하면 원본 크기로 볼 수 있습니다' : '* Tap image to view full size'}</p>
+              )}
             </>
-          ) : !isFullPaid ? (
-            <div className="free-analysis-cta">
-              <div className="free-cta-icon">
-                <svg width="48" height="48" viewBox="0 0 48 48" fill="none"><rect width="48" height="48" rx="12" fill="url(#gold-grad)"/><path d="M24 14v20M14 24h20" stroke="#fff" strokeWidth="3" strokeLinecap="round"/><defs><linearGradient id="gold-grad" x1="0" y1="0" x2="48" y2="48"><stop stopColor="#c9a962"/><stop offset="1" stopColor="#d4af37"/></linearGradient></defs></svg>
-              </div>
-              <h3 className="free-cta-title">
-                {lang === 'ko' ? '이 컬러로 나만의 아웃핏을 입어보세요' : 'Try on outfits in your perfect colors'}
-              </h3>
-              <p className="free-cta-desc">
-                {lang === 'ko'
-                  ? 'AI가 퍼스널 컬러에 맞는 3가지 스타일을 만들어 드립니다'
-                  : 'AI creates 3 personalized outfit styles based on your color analysis'}
-              </p>
-              <button className="btn-gold" onClick={() => handlePayment('full')}>
-                {lang === 'ko' ? 'AI 아웃핏 변환 — $4.99' : 'AI Outfit Transform — $4.99'}
-              </button>
-            </div>
           ) : (
-            <div className="style-generate-prompt">
-              <p style={{ marginBottom: '1rem', opacity: 0.7 }}>
-                {lang === 'ko'
-                  ? '패션 스타일 이미지를 생성하려면 아래 버튼을 클릭하세요'
-                  : 'Click below to generate fashion style images'}
-              </p>
-              <button className="btn-gold" onClick={generateStyleImages}>
-                {lang === 'ko' ? '스타일 이미지 생성' : 'Generate Style Images'}
-              </button>
+            <div className="style-loading">
+              <div className="spinner small"></div>
+              <span>{lang === 'ko' ? '스타일 준비 중...' : 'Preparing styles...'}</span>
             </div>
           )}
         </div>
