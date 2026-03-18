@@ -3553,7 +3553,7 @@ function App() {
   }
 
   // 실제 분석 수행 함수 (결제 완료 후 or 결제 전 미리보기용)
-  const performAnalysis = async (destinationPage: 'result' | 'preview' = 'result') => {
+  const performAnalysis = async (destinationPage: 'result' | 'preview' = 'result', freeMode: boolean = false) => {
     setPage('loading')
     setError('')
     setStyleImages([])
@@ -3561,7 +3561,7 @@ function App() {
     setLoadingStep('')
 
     try {
-      // Step 1: Text analysis + image generation in parallel
+      // Step 1: Text analysis (always runs — free or paid)
       const analyzePromise = fetch('/api/analyze', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -3574,17 +3574,21 @@ function App() {
         })
       })
 
-      const stylesPromise = fetch('/api/generate-styles', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          height: profile.height,
-          weight: profile.weight,
-          gender: profile.gender,
-          photo: profile.photo,
-          language: lang
+      // Step 2: Image generation (paid only — skip in free mode to save AI cost)
+      let stylesPromise: Promise<Response> | null = null
+      if (!freeMode) {
+        stylesPromise = fetch('/api/generate-styles', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            height: profile.height,
+            weight: profile.weight,
+            gender: profile.gender,
+            photo: profile.photo,
+            language: lang
+          })
         })
-      })
+      }
 
       // Wait for text analysis first
       const analyzeResponse = await analyzePromise
@@ -3596,10 +3600,20 @@ function App() {
       const analyzeData = await analyzeResponse.json()
       setReport(analyzeData.report)
 
-      // Wait for images to finish
+      if (freeMode) {
+        // Free mode: text analysis complete, skip image generation
+        trackEvent('free_analysis_completed', { has_photo: !!profile.photo })
+        setLoadingProgress(100)
+        setLoadingStep(lang === 'ko' ? '분석 완료!' : 'Analysis Complete!')
+        await new Promise(resolve => setTimeout(resolve, 400))
+        setPage(destinationPage)
+        return
+      }
+
+      // Wait for images to finish (paid mode only)
       setIsGeneratingStyles(true)
 
-      const [stylesResult] = await Promise.allSettled([stylesPromise])
+      const [stylesResult] = await Promise.allSettled([stylesPromise!])
 
       // Handle fashion styles
       if (stylesResult.status === 'fulfilled') {
@@ -3621,7 +3635,7 @@ function App() {
       setLoadingStep(lang === 'ko' ? '완료!' : 'Complete!')
       await new Promise(resolve => setTimeout(resolve, 400))
 
-      // Go to destination: preview (unpaid) or result (paid)
+      // Go to destination page
       setPage(destinationPage)
     } catch (err) {
       console.error('Error:', err)
@@ -3636,11 +3650,12 @@ function App() {
     trackEvent('funnel_step', { step_name: 'form_submit', step_number: 3, funnel_product: 'full' })
 
     if (isFullPaid) {
-      // 결제 완료 → 결과 페이지로
+      // 결제 완료 → 텍스트 분석 + 이미지 생성 → 결과 페이지
       performAnalysis('result')
     } else {
-      // 미결제 → 분석 실행 후 미리보기 페이지로 (1장 무료 공개)
-      performAnalysis('preview')
+      // 무료 → 텍스트 분석만 실행 → 결과 페이지 (이미지 없이 Style DNA만)
+      trackEvent('free_analysis_started')
+      performAnalysis('result', true)
     }
   }
 
@@ -5137,10 +5152,17 @@ ${styleImgs.length > 1 ? `<div class="section"><h2>${styleSection}</h2><div clas
           </div>
         </header>
 
-        {/* Hero Section V2 — center-aligned with B/A slider */}
+        {/* Hero Section — Personal Color focused */}
         <section className="hero-section-v2">
-          <h1 className="hero-v2-headline">{t.heroHeadline}</h1>
-          <p className="hero-v2-desc">{t.heroDesc}</p>
+          <span className="hero-badge">{lang === 'ko' ? 'AI 퍼스널 컬러 진단' : 'AI Personal Color Analysis'}</span>
+          <h1 className="hero-v2-headline">
+            {lang === 'ko' ? '나에게 어울리는\n컬러를 발견하세요' : 'Discover Your\nPerfect Colors'}
+          </h1>
+          <p className="hero-v2-desc">
+            {lang === 'ko'
+              ? '사진 한 장으로 퍼스널 컬러 진단 + AI 스타일 변환. 무료로 시작하세요.'
+              : 'Upload one photo. Get your personal color season and AI-powered styling. Start free.'}
+          </p>
           <div
             className="ba-slider hero-ba-slider"
             ref={heroSliderRef}
@@ -5159,10 +5181,14 @@ ${styleImgs.length > 1 ? `<div class="section"><h2>${styleSection}</h2><div clas
             <span className="ba-label ba-label-before">{t.galleryBefore}</span>
             <span className="ba-label ba-label-after">{t.galleryAfter}</span>
           </div>
-          <button className="free-cta-pulse hero-gold-cta" onClick={() => { trackEvent('hero_cta_click', { type: 'free_trial' }); setPage('input') }}>
-            {t.freeTrialCta}
+          <button className="free-cta-pulse hero-gold-cta" onClick={() => { trackEvent('hero_cta_click', { type: 'free_analysis' }); setPage('input') }}>
+            {lang === 'ko' ? '무료 컬러 분석 시작' : 'Start Free Color Analysis'}
           </button>
-          <span className="hero-v2-sub">{t.heroSubCta}</span>
+          <div className="hero-trust-signals">
+            <span>{lang === 'ko' ? '완전 무료' : 'Completely Free'}</span>
+            <span>{lang === 'ko' ? '30초 완료' : '30 Seconds'}</span>
+            <span>{lang === 'ko' ? '즉시 결과' : 'Instant Results'}</span>
+          </div>
         </section>
 
         {/* Marquee Ticker */}
@@ -5657,14 +5683,38 @@ ${styleImgs.length > 1 ? `<div class="section"><h2>${styleSection}</h2><div clas
                     </div>
                   </div>
                 )}
-                {styleImages.some(s => s.imageUrl) && (
-                  <button
-                    className="btn-gold dna-share-btn"
-                    onClick={() => handleShareCardGenerate(styleImages.find(s => s.imageUrl)!.imageUrl!)}
-                  >
-                    {t.styleDnaShare}
-                  </button>
-                )}
+                <button
+                  className="btn-gold dna-share-btn"
+                  onClick={async () => {
+                    trackEvent('share_color_card', { season: dna?.season || 'unknown' })
+                    try {
+                      const { generateShareCard: genCard } = await import('./utils/shareCard')
+                      const seasonLabel = dna?.season ? (dna.season.charAt(0).toUpperCase() + dna.season.slice(1)) + ' ' + (dna.season === 'spring' || dna.season === 'autumn' ? 'Warm' : 'Cool') : 'Unknown'
+                      const blob = await genCard({
+                        season: seasonLabel,
+                        seasonKo: dna?.season ? t.styleDnaSeasons[dna.season as keyof typeof t.styleDnaSeasons] : undefined,
+                        palette: (dna?.colors || []).map((c: string) => c).filter(Boolean),
+                        bodyType: dna?.bodyType || undefined,
+                        format: '9:16'
+                      })
+                      const file = new File([blob], 'my-personal-color.png', { type: 'image/png' })
+                      if (navigator.share && navigator.canShare?.({ files: [file] })) {
+                        await navigator.share({ files: [file], title: lang === 'ko' ? '나의 퍼스널 컬러' : 'My Personal Color', text: lang === 'ko' ? '나의 퍼스널 컬러를 발견했어요!' : 'I discovered my personal color!' })
+                      } else {
+                        const url = URL.createObjectURL(blob)
+                        const a = document.createElement('a')
+                        a.href = url
+                        a.download = 'my-personal-color.png'
+                        a.click()
+                        URL.revokeObjectURL(url)
+                      }
+                    } catch (err) {
+                      if ((err as Error).name !== 'AbortError') console.error('Share card failed:', err)
+                    }
+                  }}
+                >
+                  {lang === 'ko' ? '컬러 카드 공유' : 'Share Color Card'}
+                </button>
               </div>
             )
           })()}
@@ -5726,6 +5776,23 @@ ${styleImgs.length > 1 ? `<div class="section"><h2>${styleSection}</h2><div clas
               </div>
               <p className="tap-hint">{lang === 'ko' ? '* 이미지를 클릭하면 원본 크기로 볼 수 있습니다' : '* Tap image to view full size'}</p>
             </>
+          ) : !isFullPaid ? (
+            <div className="free-analysis-cta">
+              <div className="free-cta-icon">
+                <svg width="48" height="48" viewBox="0 0 48 48" fill="none"><rect width="48" height="48" rx="12" fill="url(#gold-grad)"/><path d="M24 14v20M14 24h20" stroke="#fff" strokeWidth="3" strokeLinecap="round"/><defs><linearGradient id="gold-grad" x1="0" y1="0" x2="48" y2="48"><stop stopColor="#c9a962"/><stop offset="1" stopColor="#d4af37"/></linearGradient></defs></svg>
+              </div>
+              <h3 className="free-cta-title">
+                {lang === 'ko' ? '이 컬러로 나만의 아웃핏을 입어보세요' : 'Try on outfits in your perfect colors'}
+              </h3>
+              <p className="free-cta-desc">
+                {lang === 'ko'
+                  ? 'AI가 퍼스널 컬러에 맞는 3가지 스타일을 만들어 드립니다'
+                  : 'AI creates 3 personalized outfit styles based on your color analysis'}
+              </p>
+              <button className="btn-gold" onClick={() => handlePayment('full')}>
+                {lang === 'ko' ? 'AI 아웃핏 변환 — $4.99' : 'AI Outfit Transform — $4.99'}
+              </button>
+            </div>
           ) : (
             <div className="style-generate-prompt">
               <p style={{ marginBottom: '1rem', opacity: 0.7 }}>
