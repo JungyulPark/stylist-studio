@@ -185,6 +185,14 @@ async function transformWithGemini(
 export const onRequestPost: PagesFunction<Env> = async (context) => {
   const corsHeaders = getCorsHeaders(context.request)
 
+  // DEPRECATED: This endpoint has been disabled as part of the pivot to personal color platform
+  return new Response(JSON.stringify({ error: 'This endpoint has been deprecated', code: 'NOT_FOUND' }), {
+    status: 404,
+    headers: { 'Content-Type': 'application/json', ...corsHeaders }
+  })
+
+  // Original implementation below (kept for reference)
+  /* eslint-disable no-unreachable */
   try {
     const body = await context.request.json()
 

@@ -55,7 +55,7 @@ const clearIndexedDB = async (): Promise<void> => {
   })
 }
 
-type Language = 'ko' | 'en' | 'ja' | 'zh' | 'es'
+type Language = 'ko' | 'en'
 type Gender = 'male' | 'female' | 'other' | null
 type Page = 'landing' | 'input' | 'loading' | 'result' | 'how-to-use' | 'preview' | 'login' | 'signup' | 'profile' | 'subscription-dashboard'
 
@@ -994,7 +994,17 @@ const translations: Record<Language, {
     styleDnaShare: 'Save Style Card',
     heroHeadline: 'See Your Best Look — AI-Powered Personal Styling',
     heroSubCta: 'No card required · 3x free',
-  },
+  }
+}
+
+// REMOVED: ja, zh, es translations (pivot to ko/en only)
+// languageNames reduced to ko/en
+const languageNames: Record<Language, string> = {
+  ko: '한국어',
+  en: 'EN'
+}
+
+/* DELETED ja/zh/es translation blocks below - search git history for recovery
   ja: {
     title: 'PERSONAL STYLIST',
     subtitle: 'あなただけのスタイリスト',
@@ -1919,15 +1929,7 @@ const translations: Record<Language, {
     heroHeadline: 'Tu mejor look, descubierto por IA',
     heroSubCta: 'Sin tarjeta · 3 veces gratis',
   }
-}
-
-const languageNames: Record<Language, string> = {
-  ko: '한국어',
-  en: 'EN',
-  ja: '日本語',
-  zh: '中文',
-  es: 'ES'
-}
+  END OF DELETED BLOCK */
 
 // Legal Policy Content
 const policyContent = {
@@ -2220,16 +2222,6 @@ function setUserProperties(props: Record<string, string | number>) {
   } catch { /* noop */ }
 }
 
-// A/B test cohort assignment (persistent)
-function getABVariant(testId: string): 'A' | 'B' {
-  const key = `stylist_ab_${testId}`
-  const stored = localStorage.getItem(key)
-  if (stored === 'A' || stored === 'B') return stored
-  const variant = Math.random() < 0.5 ? 'A' : 'B'
-  localStorage.setItem(key, variant)
-  return variant as 'A' | 'B'
-}
-
 // Style DNA parser — extracts structured data from markdown report
 interface StyleDNA {
   season: 'spring' | 'summer' | 'autumn' | 'winter' | null
@@ -2470,10 +2462,6 @@ function App() {
   // Fullscreen image viewer
   const [fullscreenImage, setFullscreenImage] = useState<string | null>(null)
 
-  // A/B Paywall test state
-  const [abPaywallVariant] = useState<'A' | 'B'>(() => getABVariant('paywall_v1'))
-  const [abUrgencyTimer, setAbUrgencyTimer] = useState(15 * 60) // 15 min in seconds
-
   const feetInchesToCm = (feet: string, inches: string): string => {
     const ft = parseFloat(feet) || 0
     const inch = parseFloat(inches) || 0
@@ -2531,11 +2519,6 @@ function App() {
     }
   }, [profile.gender])
 
-  // GA4 A/B variant user property
-  useEffect(() => {
-    setUserProperties({ ab_paywall: abPaywallVariant })
-  }, [abPaywallVariant])
-
   // GA4 Scroll depth tracking (landing page only)
   useEffect(() => {
     if (page !== 'landing') return
@@ -2583,26 +2566,12 @@ function App() {
     return () => document.removeEventListener('visibilitychange', onVisibilityChange)
   }, [page, profile.photo, isFullPaid])
 
-  // Paywall view tracking (fires once per page visit)
+  // Paywall view tracking
   useEffect(() => {
     if (page === 'preview') {
-      trackEvent('paywall_view', { variant: abPaywallVariant, page })
+      trackEvent('paywall_view', { page })
     }
-  }, [page, abPaywallVariant])
-
-  // A/B Urgency timer countdown (Variant B only, on preview pages)
-  useEffect(() => {
-    if (abPaywallVariant !== 'B') return
-    if (page !== 'preview') return
-    setAbUrgencyTimer(15 * 60) // reset on page enter
-    const interval = setInterval(() => {
-      setAbUrgencyTimer(prev => {
-        if (prev <= 0) return 0
-        return prev - 1
-      })
-    }, 1000)
-    return () => clearInterval(interval)
-  }, [page, abPaywallVariant])
+  }, [page])
 
   // Polar Checkout Configuration (Sandbox 환경)
   // Product ID: cca7d48e-6758-4e83-a375-807ab70615ea
@@ -2722,7 +2691,7 @@ function App() {
       // 구독 결제 성공 처리
       const subscriptionParam = urlParams.get('subscription')
       if (subscriptionParam === 'active' || purchasedProductType === 'daily_style') {
-        trackEvent('purchase', { product: 'daily_style', currency: 'USD', value: 6.99, ab_variant: abPaywallVariant })
+        trackEvent('purchase', { product: 'daily_style', currency: 'USD', value: 6.99 })
         localStorage.setItem('stylist_subscription_active', 'true')
         if (polarCheckoutId) {
           localStorage.setItem('stylist_subscription_checkout_id', polarCheckoutId)
@@ -2804,7 +2773,7 @@ function App() {
             } | null
 
             if (savedData) {
-              trackEvent('purchase', { product: 'full_style', currency: 'USD', value: 4.99, ab_variant: abPaywallVariant })
+              trackEvent('purchase', { product: 'full_style', currency: 'USD', value: 4.99 })
               trackEvent('funnel_step', { step_name: 'purchase', step_number: 5, funnel_product: purchasedProductType })
 
               setProfile({
@@ -3032,7 +3001,7 @@ function App() {
 
   // Polar 결제 처리
   const handlePayment = async (productType: 'full' = 'full') => {
-    trackEvent('begin_checkout', { product: productType, currency: 'USD', value: 4.99, ab_variant: abPaywallVariant })
+    trackEvent('begin_checkout', { product: productType, currency: 'USD', value: 4.99 })
     trackEvent('funnel_step', { step_name: 'begin_checkout', step_number: 4, funnel_product: productType })
     setIsProcessingPayment(true)
     try {
@@ -3551,7 +3520,7 @@ function App() {
       localStorage.setItem('pending_subscription_data', JSON.stringify(subscriptionData))
 
       trackEvent('sub_city_submit', { city: subscriptionCity.trim() })
-      trackEvent('begin_checkout', { product: 'daily_style', currency: 'USD', value: 6.99, ab_variant: abPaywallVariant })
+      trackEvent('begin_checkout', { product: 'daily_style', currency: 'USD', value: 6.99 })
       // Polar 결제 생성
       const response = await fetch('/api/create-checkout', {
         method: 'POST',
@@ -3738,7 +3707,7 @@ function App() {
       ? customImages.filter(s => s.imageUrl).map(s => ({ url: s.imageUrl!, label: s.label, type: 'style' }))
       : styleImages.filter(s => s.imageUrl).map(s => ({ url: s.imageUrl!, label: styleLabelsMap[s.id] || s.label, type: 'style' }))
 
-    const reportTitle = lang === 'ko' ? '나의 스타일 리포트' : lang === 'ja' ? 'マイスタイルレポート' : lang === 'zh' ? '我的风格报告' : lang === 'es' ? 'Mi Informe de Estilo' : 'My Style Report'
+    const reportTitle = lang === 'ko' ? '나의 스타일 리포트' : 'My Style Report'
     const reportSubtitle = lang === 'ko' ? `${profile.gender === 'female' ? '여성' : '남성'} · ${profile.height}cm · ${profile.weight}kg` : `${profile.gender === 'female' ? 'Female' : 'Male'} · ${profile.height}cm · ${profile.weight}kg`
     const styleSection = lang === 'ko' ? '패션 스타일링' : 'Fashion Styling'
     const brandLine = 'kstylist.cc'
@@ -3819,18 +3788,12 @@ ${styleImgs.length > 1 ? `<div class="section"><h2>${styleSection}</h2><div clas
   // 소셜 미디어 공유 데이터
   const getShareData = () => {
     const titles: Record<Language, string> = {
-      ko: '런웨이에서 영감받은 나만의 스타일! 🪄',
-      en: 'My runway-inspired personal style! 🪄',
-      ja: 'ランウェイからインスピレーションを受けた私だけのスタイル！🪄',
-      zh: '灵感源自秀场的我的专属风格！🪄',
-      es: '¡Mi estilo personal inspirado en la pasarela! 🪄'
+      ko: '나만의 퍼스널 컬러를 발견했어요!',
+      en: 'I discovered my personal color season!'
     }
     const texts: Record<Language, string> = {
-      ko: '나에게 어울리는 패션 스타일을 찾았어요! 당신도 체험해보세요!',
-      en: 'I found fashion styles that suit me perfectly! Try it yourself!',
-      ja: '自分に似合うファッションスタイルを見つけました！あなたも試してみて！',
-      zh: '我找到了适合我的时尚风格！你也来试试吧！',
-      es: '¡Encontre estilos de moda que me quedan perfectos! ¡Pruebalo tu tambien!'
+      ko: '나에게 어울리는 퍼스널 컬러와 스타일을 찾았어요! 당신도 체험해보세요!',
+      en: 'I found my perfect personal colors and styles! Try it yourself!'
     }
     const baseUrl = referralCode ? `https://kstylist.cc/?ref=${referralCode}` : 'https://kstylist.cc'
     return {
@@ -5239,24 +5202,24 @@ ${styleImgs.length > 1 ? `<div class="section"><h2>${styleSection}</h2><div clas
             observer.observe(el)
           }
         }}>
-          <h2 className="how-title fade-in-up">{lang === 'ko' ? '이렇게 진행됩니다' : lang === 'ja' ? '流れはこちら' : lang === 'zh' ? '使用流程' : lang === 'es' ? 'Cómo funciona' : 'How It Works'}</h2>
+          <h2 className="how-title fade-in-up">{lang === 'ko' ? '이렇게 진행됩니다' : 'How It Works'}</h2>
           <div className="how-steps">
             <div className="how-step fade-in-up">
               <div className="how-step-num">1</div>
-              <h3 className="how-step-title">{lang === 'ko' ? '사진 업로드' : lang === 'ja' ? '写真をアップロード' : lang === 'zh' ? '上传照片' : lang === 'es' ? 'Sube tu foto' : 'Upload Photo'}</h3>
-              <p className="how-step-desc">{lang === 'ko' ? '셀카 또는 전신 사진 한 장이면 충분합니다' : lang === 'ja' ? 'セルフィーまたは全身写真1枚でOK' : lang === 'zh' ? '一张自拍或全身照即可' : lang === 'es' ? 'Una selfie o foto de cuerpo completo' : 'A selfie or full-body photo is all you need'}</p>
+              <h3 className="how-step-title">{lang === 'ko' ? '사진 업로드' : 'Upload Photo'}</h3>
+              <p className="how-step-desc">{lang === 'ko' ? '셀카 또는 전신 사진 한 장이면 충분합니다' : 'A selfie or full-body photo is all you need'}</p>
             </div>
             <div className="how-step-arrow">→</div>
             <div className="how-step fade-in-up">
               <div className="how-step-num">2</div>
-              <h3 className="how-step-title">{lang === 'ko' ? '스타일 분석' : lang === 'ja' ? 'スタイル分析' : lang === 'zh' ? '风格分析' : lang === 'es' ? 'Análisis de estilo' : 'Style Analysis'}</h3>
-              <p className="how-step-desc">{lang === 'ko' ? '얼굴형, 체형, 피부톤을 종합 분석합니다' : lang === 'ja' ? '顔型・体型・肌色を総合分析' : lang === 'zh' ? '综合分析脸型、体型、肤色' : lang === 'es' ? 'Análisis integral de tu rostro, cuerpo y tono de piel' : 'Face shape, body type, and skin tone analyzed'}</p>
+              <h3 className="how-step-title">{lang === 'ko' ? '스타일 분석' : 'Style Analysis'}</h3>
+              <p className="how-step-desc">{lang === 'ko' ? '얼굴형, 체형, 피부톤을 종합 분석합니다' : 'Face shape, body type, and skin tone analyzed'}</p>
             </div>
             <div className="how-step-arrow">→</div>
             <div className="how-step fade-in-up">
               <div className="how-step-num">3</div>
-              <h3 className="how-step-title">{lang === 'ko' ? '맞춤 결과' : lang === 'ja' ? 'パーソナル結果' : lang === 'zh' ? '个性化结果' : lang === 'es' ? 'Resultados personalizados' : 'Your Results'}</h3>
-              <p className="how-step-desc">{lang === 'ko' ? '패션 코디 3종을 받아보세요' : lang === 'ja' ? 'ファッションコーデ3種をお届け' : lang === 'zh' ? '获得3套穿搭推荐' : lang === 'es' ? '3 looks de moda personalizados' : '3 personalized fashion looks delivered'}</p>
+              <h3 className="how-step-title">{lang === 'ko' ? '맞춤 결과' : 'Your Results'}</h3>
+              <p className="how-step-desc">{lang === 'ko' ? '패션 코디 3종을 받아보세요' : '3 personalized fashion looks delivered'}</p>
             </div>
           </div>
           <button className="how-cta fade-in-up" onClick={() => { trackEvent('how_cta_click'); setPage('input') }}>
@@ -5355,7 +5318,7 @@ ${styleImgs.length > 1 ? `<div class="section"><h2>${styleSection}</h2><div clas
                 </picture>
                 <div className="path-overlay"></div>
                 <span className="path-popular-badge">{t.bestValue}</span>
-                {abPaywallVariant === 'B' && <span className="ab-price-badge">$4.99</span>}
+
                 <div className="path-content-v2">
                   <div className="path-header-v2">
                     <span className="path-module-v2">FULL PACKAGE</span>
@@ -5761,7 +5724,7 @@ ${styleImgs.length > 1 ? `<div class="section"><h2>${styleSection}</h2><div clas
                   </div>
                 ))}
               </div>
-              <p className="tap-hint">{lang === 'ko' ? '* 이미지를 클릭하면 원본 크기로 볼 수 있습니다' : lang === 'ja' ? '* 画像をクリックすると原寸で表示' : lang === 'zh' ? '* 点击图片查看原图' : lang === 'es' ? '* Toca la imagen para ver tamaño completo' : '* Tap image to view full size'}</p>
+              <p className="tap-hint">{lang === 'ko' ? '* 이미지를 클릭하면 원본 크기로 볼 수 있습니다' : '* Tap image to view full size'}</p>
             </>
           ) : (
             <div className="style-generate-prompt">
@@ -6328,19 +6291,9 @@ ${styleImgs.length > 1 ? `<div class="section"><h2>${styleSection}</h2><div clas
               </p>
             </div>
 
-            {/* A/B Variant B: Urgency Timer */}
-            {abPaywallVariant === 'B' && abUrgencyTimer > 0 && (
-              <div className="ab-urgency-banner">
-                <span>{t.abUrgencyText}</span>
-                <span className="ab-urgency-timer">
-                  {Math.floor(abUrgencyTimer / 60).toString().padStart(2, '0')}:{(abUrgencyTimer % 60).toString().padStart(2, '0')}
-                </span>
-              </div>
-            )}
-
             {/* CTA Button */}
             <button
-              onClick={() => { trackEvent('paywall_cta_click', { variant: abPaywallVariant, product: 'full' }); handlePayment('full') }}
+              onClick={() => { trackEvent('paywall_cta_click', { product: 'full' }); handlePayment('full') }}
               disabled={isProcessingPayment}
               className="btn-gold submit-btn"
             >

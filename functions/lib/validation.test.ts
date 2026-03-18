@@ -32,9 +32,10 @@ describe('isValidLanguage', () => {
   it('accepts valid languages', () => {
     expect(isValidLanguage('ko')).toBe(true)
     expect(isValidLanguage('en')).toBe(true)
-    expect(isValidLanguage('ja')).toBe(true)
-    expect(isValidLanguage('zh')).toBe(true)
-    expect(isValidLanguage('es')).toBe(true)
+    // ja, zh, es removed — pivot to ko/en only
+    expect(isValidLanguage('ja')).toBe(false)
+    expect(isValidLanguage('zh')).toBe(false)
+    expect(isValidLanguage('es')).toBe(false)
   })
 
   it('rejects invalid languages', () => {

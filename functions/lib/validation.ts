@@ -18,7 +18,7 @@ export interface ValidationResult<T> {
 
 // Valid values
 const VALID_GENDERS = ['male', 'female', 'other'] as const
-const VALID_LANGUAGES = ['ko', 'en', 'ja', 'zh', 'es'] as const
+const VALID_LANGUAGES = ['ko', 'en'] as const
 const VALID_TRANSFORM_TYPES = ['fashion'] as const
 
 // Limits (relaxed for edge cases)

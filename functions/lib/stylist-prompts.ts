@@ -559,8 +559,11 @@ MOOD: Sunday morning at a coastal café or farmers market. She looks like she ru
   },
 }
 
-export function getWorkScenarios(jobType: string): ScenarioConfig[] {
-  const job = workDirectives[jobType]
+export function getWorkScenarios(_jobType: string): ScenarioConfig[] {
+  // DEPRECATED: Work scenarios disabled as part of pivot to personal color platform
+  return []
+  /* Original implementation kept for reference
+  const job = workDirectives[_jobType]
   if (!job) return getWorkScenarios('doctor') // fallback
 
   // FRAMING rule injected into every work scenario to prevent head cropping
@@ -657,6 +660,7 @@ The fit MUST be NOTICEABLY more relaxed and loose than the other variations. Thi
       directiveFemale: `${offDuty.female}${getSeasonGuide()}${FRAMING}`,
     },
   ]
+  */
 }
 
 // ─── Trend Style Types ───────────────────────────────────────────
@@ -832,8 +836,11 @@ MOOD: She doesn't enter rooms — she alters them. People study her the way they
   },
 }
 
-export function getTrendScenarios(trendType: string): ScenarioConfig[] {
-  const trend = trendDirectives[trendType]
+export function getTrendScenarios(_trendType: string): ScenarioConfig[] {
+  // DEPRECATED: Trend scenarios disabled as part of pivot to personal color platform
+  return []
+  /* Original implementation kept for reference
+  const trend = trendDirectives[_trendType]
   if (!trend) return getTrendScenarios('street')
 
   return [
@@ -862,6 +869,7 @@ export function getTrendScenarios(trendType: string): ScenarioConfig[] {
       directiveFemale: `${trend.female}\n\nSTYLE: BOLD STATEMENT — The maximum expression. Push the boundaries of this trend. More daring combinations, statement pieces, head-turning proportions. For someone who wants to stand out.`,
     },
   ]
+  */
 }
 
 // ─── Color Inspiration ──────────────────────────────────────────
