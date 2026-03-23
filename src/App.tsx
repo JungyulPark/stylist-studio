@@ -5191,143 +5191,33 @@ ${styleImgs.length > 1 ? `<div class="section"><h2>${styleSection}</h2><div clas
 
         <div className="section-divider-full"></div>
 
-        {/* Services Section — unified 3-card grid */}
+        {/* Services Section — single hero card */}
         <section className="path-section" id="features" ref={(el) => {
           if (el) {
-            const items = el.querySelectorAll('.section-title, .section-divider, .path-card-v2')
+            const card = el.querySelector('.service-hero-card')
+            if (!card) return
             const observer = new IntersectionObserver(([entry]) => {
               if (entry.isIntersecting) {
-                items.forEach((item, i) => {
-                  setTimeout(() => item.classList.add('visible'), i * 150)
-                })
+                card.classList.add('visible')
                 observer.disconnect()
               }
             }, { threshold: 0.15 })
             observer.observe(el)
           }
         }}>
-          <h2 className="section-title fade-in-up">{t.pathTitle}</h2>
-          <div className="section-divider"></div>
-          <div className="path-grid-2" style={{ maxWidth: '560px' }}>
-              {/* Premium Style Report — single featured card */}
-              <div className="path-card-v2 featured fade-in-up" onClick={() => { trackEvent('select_item', { item_category: 'premium_report' }); setPage('input') }}>
-                <picture className="path-image">
-                  <source type="image/avif" srcSet="/full-800w.avif" />
-                  <source type="image/webp" srcSet="/full-800w.webp" />
-                  <img src="/full-800w.webp" alt="Full Style Package" className="path-image-img" loading="lazy" width="800" height="600" />
-                </picture>
-                <div className="path-overlay"></div>
-                <span className="path-popular-badge">{t.bestValue}</span>
-
-                <div className="path-content-v2">
-                  <div className="path-header-v2">
-                    <span className="path-module-v2">FULL PACKAGE</span>
-                  </div>
-                  <h3 className="path-title-v2">{t.module2Title}</h3>
-                  <p className="path-desc-v2">{t.module2Desc}</p>
-                  <ul className="path-features-v2">
-                    {t.module2Features.map((feature, i) => (
-                      <li key={i}>{feature}</li>
-                    ))}
-                  </ul>
-                  <div className="path-cta-v2 gold">{t.explore} →</div>
-                </div>
+          <div className="service-hero-card fade-in-up" onClick={() => { trackEvent('select_item', { item_category: 'premium_report' }); setPage('input') }}>
+              <img src="/gallery/after-female-date.png" alt="AI Style Transformation" className="service-hero-img" loading="lazy" />
+              <div className="service-hero-overlay"></div>
+              <div className="service-hero-content">
+                <span className="service-hero-tag">AI STYLING</span>
+                <h2 className="service-hero-title">{t.module2Title}</h2>
+                <p className="service-hero-desc">{t.module2Desc}</p>
+                <div className="service-hero-cta">{t.explore} →</div>
               </div>
-
           </div>
         </section>
 
         <div className="section-divider-full"></div>
-
-        {/* Before/After Gallery */}
-        <section className="gallery-section" ref={(el) => {
-          if (el) {
-            const items = el.querySelectorAll('.gallery-header, .gallery-item')
-            const observer = new IntersectionObserver(([entry]) => {
-              if (entry.isIntersecting) {
-                items.forEach((item, i) => {
-                  setTimeout(() => item.classList.add('visible'), i * 120)
-                })
-                observer.disconnect()
-              }
-            }, { threshold: 0.1 })
-            observer.observe(el)
-          }
-        }}>
-          <div className="gallery-header fade-in-up">
-            <span className="gallery-tag">BEFORE & AFTER</span>
-            <h2 className="gallery-title">{t.galleryTitle}</h2>
-            <p className="gallery-subtitle">{t.gallerySubtitle}</p>
-          </div>
-          <div className="gallery-grid">
-            <div className="gallery-item fade-in-up">
-              <div className="gallery-pair">
-                <div className="gallery-before">
-                  <span className="gallery-label">{t.galleryBefore}</span>
-                  <img src="/gallery/before-female.png" alt="Before - Female" loading="lazy" />
-                </div>
-                <div className="gallery-after">
-                  <span className="gallery-label gallery-label-after">{t.galleryAfter}</span>
-                  <img src="/gallery/after-female-best.png" alt="After - Best Match" loading="lazy" />
-                </div>
-              </div>
-              <span className="gallery-occasion">Best Match</span>
-            </div>
-            <div className="gallery-item fade-in-up">
-              <div className="gallery-pair">
-                <div className="gallery-before">
-                  <span className="gallery-label">{t.galleryBefore}</span>
-                  <img src="/gallery/before-female.png" alt="Before - Female" loading="lazy" />
-                </div>
-                <div className="gallery-after">
-                  <span className="gallery-label gallery-label-after">{t.galleryAfter}</span>
-                  <img src="/gallery/after-female-date.png" alt="After - Date" loading="lazy" />
-                </div>
-              </div>
-              <span className="gallery-occasion">Date Night</span>
-            </div>
-            <div className="gallery-item fade-in-up">
-              <div className="gallery-pair">
-                <div className="gallery-before">
-                  <span className="gallery-label">{t.galleryBefore}</span>
-                  <img src="/gallery/before-male.png" alt="Before - Male" loading="lazy" />
-                </div>
-                <div className="gallery-after">
-                  <span className="gallery-label gallery-label-after">{t.galleryAfter}</span>
-                  <img src="/gallery/after-male-best.png" alt="After - Best Match" loading="lazy" />
-                </div>
-              </div>
-              <span className="gallery-occasion">Best Match</span>
-            </div>
-            <div className="gallery-item fade-in-up">
-              <div className="gallery-pair">
-                <div className="gallery-before">
-                  <span className="gallery-label">{t.galleryBefore}</span>
-                  <img src="/gallery/before-male.png" alt="Before - Male" loading="lazy" />
-                </div>
-                <div className="gallery-after">
-                  <span className="gallery-label gallery-label-after">{t.galleryAfter}</span>
-                  <img src="/gallery/after-male-casual.png" alt="After - Casual" loading="lazy" />
-                </div>
-              </div>
-              <span className="gallery-occasion">Casual</span>
-            </div>
-            <div className="gallery-item fade-in-up">
-              <div className="gallery-pair">
-                <div className="gallery-before">
-                  <span className="gallery-label">{t.galleryBefore}</span>
-                  <img src="/gallery/before-male-founder.jpeg" alt="Before - Founder" loading="lazy" />
-                </div>
-                <div className="gallery-after">
-                  <span className="gallery-label gallery-label-after">{t.galleryAfter}</span>
-                  <img src="/gallery/after-male-founder.jpg" alt="After - Winter Style" loading="lazy" />
-                </div>
-              </div>
-              <span className="gallery-occasion">Winter Style</span>
-            </div>
-          </div>
-
-        </section>
 
         {/* Referral Section — logged-in users only */}
         {user && referralCode && (
@@ -5723,7 +5613,7 @@ ${styleImgs.length > 1 ? `<div class="section"><h2>${styleSection}</h2><div clas
                     <span className="price-compare">
                       {lang === 'ko' ? '오프라인 컨설팅 ₩150,000+' : 'In-person consulting $100+'}
                     </span>
-                    <span className="price-main">$9.99</span>
+                    <span className="price-main">$4.99</span>
                     <span className="price-note">
                       {lang === 'ko' ? '1회 결제 · 환불 보장' : 'One-time · Money-back guarantee'}
                     </span>
@@ -5731,7 +5621,7 @@ ${styleImgs.length > 1 ? `<div class="section"><h2>${styleSection}</h2><div clas
                   <button
                     className="premium-cta-button"
                     onClick={() => {
-                      trackEvent('premium_cta_clicked', { price: 9.99, trigger: 'result_page', images_locked: styleImages.length - 1 })
+                      trackEvent('premium_cta_clicked', { price: 4.99, trigger: 'result_page', images_locked: styleImages.length - 1 })
                       handlePayment('full')
                     }}
                   >
