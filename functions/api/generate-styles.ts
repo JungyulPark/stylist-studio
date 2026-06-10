@@ -183,7 +183,7 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
     if (!geminiKey && !openaiKey) {
       const demoResults = styleScenarios.map(scenario => ({
         id: scenario.id,
-        label: scenario[`label${language === 'ko' ? 'Ko' : language === 'ja' ? 'Ja' : language === 'zh' ? 'Zh' : language === 'es' ? 'Es' : 'En'}` as keyof ScenarioConfig] as string,
+        label: scenario[`label${language === 'ko' ? 'Ko' : 'En'}` as keyof ScenarioConfig] as string,
         imageUrl: null,
         isDemo: true
       }))
@@ -218,7 +218,7 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
           imageUrl = await editPhotoWithModel(photo, scenario.id, editPrompt, geminiKey, openaiKey)
         }
 
-        const labelKey = `label${language === 'ko' ? 'Ko' : language === 'ja' ? 'Ja' : language === 'zh' ? 'Zh' : language === 'es' ? 'Es' : 'En'}` as keyof ScenarioConfig
+        const labelKey = `label${language === 'ko' ? 'Ko' : 'En'}` as keyof ScenarioConfig
 
         return {
           id: scenario.id,

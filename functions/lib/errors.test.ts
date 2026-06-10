@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { errorResponse, errors, ErrorCode } from './errors'
+import { errorResponse, errors, ErrorCode, type ErrorResponse } from './errors'
 
 const mockCorsHeaders = {
   'Access-Control-Allow-Origin': 'http://localhost:5173',
@@ -26,7 +26,7 @@ describe('errorResponse', () => {
       mockCorsHeaders
     )
 
-    const body = await response.json()
+    const body = await response.json() as ErrorResponse
 
     expect(body.error).toBe('Something went wrong')
     expect(body.code).toBe('INTERNAL_ERROR')
@@ -48,7 +48,7 @@ describe('errorResponse', () => {
   it('includes timestamp in ISO format', async () => {
     const before = new Date().toISOString()
     const response = errorResponse(ErrorCode.INTERNAL_ERROR, 'Test', 500, mockCorsHeaders)
-    const body = await response.json()
+    const body = await response.json() as ErrorResponse
     const after = new Date().toISOString()
 
     expect(body.timestamp >= before).toBe(true)
@@ -62,7 +62,7 @@ describe('errors helper functions', () => {
       const response = errors.validation('Field required', mockCorsHeaders)
 
       expect(response.status).toBe(400)
-      const body = await response.json()
+      const body = await response.json() as ErrorResponse
       expect(body.code).toBe('VALIDATION_ERROR')
     })
   })
@@ -72,7 +72,7 @@ describe('errors helper functions', () => {
       const response = errors.invalidRequest('Malformed JSON', mockCorsHeaders)
 
       expect(response.status).toBe(400)
-      const body = await response.json()
+      const body = await response.json() as ErrorResponse
       expect(body.code).toBe('INVALID_REQUEST')
     })
   })
@@ -82,7 +82,7 @@ describe('errors helper functions', () => {
       const response = errors.unauthorized(mockCorsHeaders)
 
       expect(response.status).toBe(401)
-      const body = await response.json()
+      const body = await response.json() as ErrorResponse
       expect(body.code).toBe('UNAUTHORIZED')
     })
   })
@@ -92,7 +92,7 @@ describe('errors helper functions', () => {
       const response = errors.forbidden(mockCorsHeaders)
 
       expect(response.status).toBe(403)
-      const body = await response.json()
+      const body = await response.json() as ErrorResponse
       expect(body.code).toBe('FORBIDDEN')
     })
   })
@@ -102,7 +102,7 @@ describe('errors helper functions', () => {
       const response = errors.notFound('User', mockCorsHeaders)
 
       expect(response.status).toBe(404)
-      const body = await response.json()
+      const body = await response.json() as ErrorResponse
       expect(body.code).toBe('NOT_FOUND')
       expect(body.error).toBe('User not found')
     })
@@ -113,7 +113,7 @@ describe('errors helper functions', () => {
       const response = errors.rateLimit(mockCorsHeaders)
 
       expect(response.status).toBe(429)
-      const body = await response.json()
+      const body = await response.json() as ErrorResponse
       expect(body.code).toBe('RATE_LIMIT')
     })
   })
@@ -123,7 +123,7 @@ describe('errors helper functions', () => {
       const response = errors.internal(mockCorsHeaders)
 
       expect(response.status).toBe(500)
-      const body = await response.json()
+      const body = await response.json() as ErrorResponse
       expect(body.code).toBe('INTERNAL_ERROR')
     })
   })
@@ -133,7 +133,7 @@ describe('errors helper functions', () => {
       const response = errors.externalApi('OpenAI', mockCorsHeaders)
 
       expect(response.status).toBe(502)
-      const body = await response.json()
+      const body = await response.json() as ErrorResponse
       expect(body.code).toBe('EXTERNAL_API_ERROR')
       expect(body.error).toContain('OpenAI')
     })
@@ -144,7 +144,7 @@ describe('errors helper functions', () => {
       const response = errors.configError(mockCorsHeaders)
 
       expect(response.status).toBe(503)
-      const body = await response.json()
+      const body = await response.json() as ErrorResponse
       expect(body.code).toBe('CONFIG_ERROR')
     })
   })
@@ -154,7 +154,7 @@ describe('errors helper functions', () => {
       const response = errors.serviceUnavailable(mockCorsHeaders)
 
       expect(response.status).toBe(503)
-      const body = await response.json()
+      const body = await response.json() as ErrorResponse
       expect(body.code).toBe('SERVICE_UNAVAILABLE')
     })
   })

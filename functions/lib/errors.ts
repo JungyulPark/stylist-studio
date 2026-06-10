@@ -54,8 +54,10 @@ export function errorResponse(
     timestamp: new Date().toISOString(),
   }
 
-  // Only include details in non-production environments
-  if (details && process.env.NODE_ENV !== 'production') {
+  // Only include details in non-production environments.
+  // Workers have no `process` global, so production omits details by default.
+  const nodeEnv = (globalThis as { process?: { env?: Record<string, string | undefined> } }).process?.env?.NODE_ENV
+  if (details && nodeEnv && nodeEnv !== 'production') {
     body.details = details
   }
 

@@ -142,7 +142,7 @@ export const onRequestPost: PagesFunction<Env> = async ({ request, env }) => {
       return errors.externalApi('Polar', corsHeaders)
     }
 
-    const refundResult = await refundResponse.json()
+    const refundResult = await refundResponse.json() as { id?: string }
     console.log('[refund] Refund successful:', order.id)
 
     // Step 4: Send refund notification email if we have customer email
