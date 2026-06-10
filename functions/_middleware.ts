@@ -52,6 +52,9 @@ const RATE_LIMITS: Record<string, [number, number]> = {
   '/api/generate-styles':      [5, 60_000],
   '/api/analyze':              [5, 60_000],
 
+  // Chat — token-gated client-side, but cap bursts anyway
+  '/api/style-chat':           [10, 60_000],
+
   // Email-sending endpoints — 5 per minute
   '/api/send-report':          [5, 60_000],
   '/api/send-payment-email':   [5, 60_000],
