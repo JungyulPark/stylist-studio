@@ -3002,6 +3002,32 @@ function App() {
 
   // Polar 결제 처리
   const handlePayment = async (productType: 'full' = 'full') => {
+    // 리퍼럴 크레딧 보유 시 결제 없이 바로 분석 진행
+    if (user && referralStats.credits > 0) {
+      setIsProcessingPayment(true)
+      try {
+        const creditRes = await fetch('/api/referral', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ action: 'use_credit', user_id: user.id })
+        })
+        if (creditRes.ok) {
+          const creditData = await creditRes.json() as { success: boolean; credits_remaining: number }
+          if (creditData.success) {
+            trackEvent('referral_credit_redeemed', { credits_remaining: creditData.credits_remaining })
+            setReferralStats(prev => ({ ...prev, credits: creditData.credits_remaining }))
+            setIsProcessingPayment(false)
+            await startAnalysisAfterPayment(profile)
+            return
+          }
+        }
+        // 크레딧 차감 실패 (이미 소진 등) — 일반 결제로 진행
+      } catch (e) {
+        console.error('Failed to redeem referral credit:', e)
+      }
+      setIsProcessingPayment(false)
+    }
+
     trackEvent('begin_checkout', { product: productType, currency: 'USD', value: 4.99 })
     trackEvent('funnel_step', { step_name: 'begin_checkout', step_number: 4, funnel_product: productType })
     setIsProcessingPayment(true)
@@ -3049,9 +3075,9 @@ function App() {
   // 결제 후 분석 수행 (프로필 데이터를 직접 받음)
   const startAnalysisAfterPayment = async (profileData: typeof profile, paymentCheckoutId?: string | null) => {
     trackEvent('generation_start', { type: 'full_style' })
-    // 결제 1회 사용 제한: 분석 시작 시 결제 상태 제거
+    // 결제 1회 사용 제한: 새로고침 시 재사용 방지를 위해 localStorage만 제거.
+    // isFullPaid는 유지 — 이번 세션의 결과는 프리미엄(블러 해제)으로 보여야 함
     localStorage.removeItem('paidCustomer')
-    setIsFullPaid(false)
 
     setError('')
     setStyleImages([])
@@ -3117,6 +3143,7 @@ function App() {
       }
       setReport(analyzeData.report)
       if (analyzeData.colorPalette) setColorPalette(analyzeData.colorPalette)
+      setIsFullPaid(true)
 
       setLoadingProgress(100)
       setLoadingStep(lang === 'ko' ? '완료!' : 'Complete!')
@@ -3162,6 +3189,8 @@ function App() {
       setCheckoutId(null)
     } catch (err) {
       console.error('Analysis error:', err)
+      // 분석 실패(자동 환불됨) — 프리미엄 상태 해제
+      setIsFullPaid(false)
       setError(t.errorApologyRefund)
       setPage('input')
     }
@@ -5618,6 +5647,9 @@ ${styleImgs.length > 1 ? `<div class="section"><h2>${styleSection}</h2><div clas
                       {lang === 'ko' ? '1회 결제 · 환불 보장' : 'One-time · Money-back guarantee'}
                     </span>
                   </div>
+                  {user && referralStats.credits > 0 && (
+                    <p className="referral-credit-hint">{t.referralCreditAvailable} · {referralStats.credits}</p>
+                  )}
                   <button
                     className="premium-cta-button"
                     onClick={() => {
@@ -6250,6 +6282,9 @@ ${styleImgs.length > 1 ? `<div class="section"><h2>${styleSection}</h2><div clas
             </div>
 
             {/* CTA Button */}
+            {user && referralStats.credits > 0 && (
+              <p className="referral-credit-hint">{t.referralCreditAvailable} · {referralStats.credits}</p>
+            )}
             <button
               onClick={() => { trackEvent('paywall_cta_click', { product: 'full' }); handlePayment('full') }}
               disabled={isProcessingPayment}

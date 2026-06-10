@@ -5681,6 +5681,19 @@
   font-size: 1rem;
 }
 
+.referral-credit-hint {
+  display: inline-block;
+  margin: 0 0 0.75rem;
+  padding: 0.35rem 0.9rem;
+  background: rgba(201, 169, 98, 0.12);
+  border: 1px solid rgba(201, 169, 98, 0.4);
+  border-radius: 999px;
+  color: #c9a962;
+  font-size: 0.85rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+}
+
 .referral-toast {
   position: fixed;
   bottom: 2rem;
