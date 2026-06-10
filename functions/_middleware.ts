@@ -57,6 +57,9 @@ const RATE_LIMITS: Record<string, [number, number]> = {
   '/api/subscribe':            [10, 60_000],
   '/api/customer-portal':      [10, 60_000],
 
+  // Refunds move real money — 3 per hour
+  '/api/refund':               [3, 3600_000],
+
   // Auth/profile — 20 per minute
   '/api/update-subscriber-profile': [20, 60_000],
   '/api/cancel-subscription':       [10, 60_000],

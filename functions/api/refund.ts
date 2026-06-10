@@ -11,6 +11,11 @@ interface RefundRequest {
   reason?: string
 }
 
+// Auto-refunds fire right after a failed generation, which happens within
+// minutes of payment. Anything older is not a legitimate auto-refund.
+const REFUND_WINDOW_MS = 24 * 60 * 60 * 1000
+const MAX_REASON_LENGTH = 200
+
 export const onRequestPost: PagesFunction<Env> = async ({ request, env }) => {
   const corsHeaders = getCorsHeaders(request)
 
@@ -26,9 +31,10 @@ export const onRequestPost: PagesFunction<Env> = async ({ request, env }) => {
       return errors.invalidJson(corsHeaders)
     }
 
-    const { checkoutId, reason } = body
+    const { checkoutId } = body
+    const reason = body.reason?.slice(0, MAX_REASON_LENGTH)
 
-    if (!checkoutId) {
+    if (!checkoutId || typeof checkoutId !== 'string') {
       return errors.validation('Checkout ID is required', corsHeaders)
     }
 
@@ -79,7 +85,7 @@ export const onRequestPost: PagesFunction<Env> = async ({ request, env }) => {
     }
 
     const ordersData = await ordersResponse.json() as {
-      items: Array<{ id: string; amount: number; currency: string }>
+      items: Array<{ id: string; amount: number; currency: string; created_at?: string }>
     }
 
     if (!ordersData.items || ordersData.items.length === 0) {
@@ -94,6 +100,16 @@ export const onRequestPost: PagesFunction<Env> = async ({ request, env }) => {
     }
 
     const order = ordersData.items[0]
+
+    // Only allow auto-refunds shortly after purchase. Older orders must go
+    // through support — this blocks replayed/leaked checkout IDs.
+    if (order.created_at) {
+      const orderAge = Date.now() - new Date(order.created_at).getTime()
+      if (Number.isFinite(orderAge) && orderAge > REFUND_WINDOW_MS) {
+        console.warn('[refund] Rejected: order too old for auto-refund:', order.id)
+        return errors.forbidden(corsHeaders)
+      }
+    }
 
     // Step 3: Issue refund
     const refundResponse = await fetch(`https://api.polar.sh/v1/orders/${order.id}/refund`, {

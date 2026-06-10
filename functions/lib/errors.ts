@@ -85,6 +85,12 @@ export const errors = {
     errorResponse(ErrorCode.INVALID_REQUEST, message, 400, corsHeaders),
 
   /**
+   * 400 Bad Request - Request body is not valid JSON
+   */
+  invalidJson: (corsHeaders: Record<string, string>) =>
+    errorResponse(ErrorCode.INVALID_REQUEST, 'Request body must be valid JSON', 400, corsHeaders),
+
+  /**
    * 401 Unauthorized
    */
   unauthorized: (corsHeaders: Record<string, string>) =>
