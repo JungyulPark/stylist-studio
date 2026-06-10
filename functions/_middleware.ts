@@ -48,9 +48,13 @@ function isRateLimited(key: string, maxRequests: number, windowMs: number): bool
 
 // Rate limit tiers: [maxRequests, windowMs]
 const RATE_LIMITS: Record<string, [number, number]> = {
-  // Expensive AI image generation — 5 requests per minute
+  // Expensive AI endpoints — 5 requests per minute
   '/api/generate-styles':      [5, 60_000],
-  '/api/transform-batch':      [5, 60_000],
+  '/api/analyze':              [5, 60_000],
+
+  // Email-sending endpoints — 5 per minute
+  '/api/send-report':          [5, 60_000],
+  '/api/send-payment-email':   [5, 60_000],
 
   // Payment/checkout — 10 per minute
   '/api/create-checkout':      [10, 60_000],
