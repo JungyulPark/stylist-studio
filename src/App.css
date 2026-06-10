@@ -6,8 +6,8 @@
   --bg-dark: #111111;
   --charcoal: #1a1a1a;
   --white: #ffffff;
-  --font-display: 'Manrope', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-  --font-serif: 'Playfair Display', Georgia, serif;
+  --font-display: 'Manrope', 'Pretendard Variable', 'Pretendard', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --font-serif: 'Playfair Display', 'Pretendard Variable', 'Pretendard', Georgia, serif;
   --spring: cubic-bezier(0.16, 1, 0.3, 1);
   --shadow-warm: 0 8px 32px rgba(26, 20, 12, 0.08);
   --shadow-warm-lg: 0 20px 60px rgba(26, 20, 12, 0.12);
@@ -1460,6 +1460,7 @@
 /* ===== APP PAGES ===== */
 .app-container {
   min-height: 100vh;
+  min-height: 100dvh;
   background: var(--bg-light);
   color: var(--charcoal);
 }
@@ -1503,6 +1504,7 @@
   max-width: 100%;
   background: linear-gradient(180deg, var(--bg-light) 0%, #f8f5f0 100%);
   min-height: 100vh;
+  min-height: 100dvh;
 }
 
 .input-page-content {
@@ -1936,6 +1938,7 @@
   padding-bottom: 4rem;
   background: linear-gradient(180deg, #faf9f6 0%, #f5f3ef 100%);
   min-height: 100vh;
+  min-height: 100dvh;
   overflow-x: hidden;
 }
 
@@ -3894,6 +3897,7 @@
 /* ===== AUTH PAGES ===== */
 .auth-page {
   min-height: 100vh;
+  min-height: 100dvh;
   background: var(--bg-light);
 }
 
@@ -6160,6 +6164,7 @@
 /* ===== STYLE CHAT PAGE ===== */
 .chat-page {
   min-height: 100vh;
+  min-height: 100dvh;
   display: flex;
   flex-direction: column;
   background: var(--bg-light);
@@ -6439,6 +6444,7 @@
 /* ===== SELECTION PAGE (Work + Trend) ===== */
 .selection-page {
   min-height: 100vh;
+  min-height: 100dvh;
   background: var(--bg-light);
   padding: 0 1rem 3rem;
 }
@@ -6625,6 +6631,7 @@
 /* ===== RESULT PAGES ===== */
 .result-page {
   min-height: 100vh;
+  min-height: 100dvh;
   background: var(--bg-light);
   padding: 0 1rem 3rem;
 }
@@ -7177,4 +7184,29 @@
     padding: 1.5rem;
     margin: 1.25rem 1rem 0;
   }
+}
+
+/* ─── Supanova polish pass ────────────────────────────────────── */
+
+/* Ambient warm mesh on hero — texture without breaking the cream tone */
+.hero-section-v2 {
+  background:
+    radial-gradient(ellipse 60% 50% at 18% 0%, rgba(201, 169, 98, 0.08), transparent 60%),
+    radial-gradient(ellipse 50% 40% at 85% 12%, rgba(212, 175, 55, 0.05), transparent 55%),
+    var(--bg-light);
+}
+
+/* Metrics and prices align vertically */
+.price-main,
+.price-compare,
+.upsell-price,
+.premium-cta-price,
+.referral-stat,
+.chat-token-badge {
+  font-variant-numeric: tabular-nums;
+}
+
+/* Tactile press feedback everywhere */
+button:not(:disabled):active {
+  transform: scale(0.98);
 }
