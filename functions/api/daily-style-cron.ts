@@ -2,6 +2,7 @@ import { getCorsHeaders, createCorsPreflightResponse } from '../lib/cors'
 import { errors } from '../lib/errors'
 import { editPhotoWithGemini, type ImageScenario } from '../lib/gemini-image'
 import { getDailyScenarios, dailyScenarioLabels } from '../lib/daily-style-scenarios'
+import { createUnsubscribeToken } from '../lib/unsubscribe-token'
 import { Resend } from 'resend'
 
 interface Env {
@@ -403,16 +404,14 @@ function buildEmailHtml(
   recommendation: string,
   weather: WeatherData,
   subscriber: Subscriber,
-  outfitImages: OutfitImage[]
+  outfitImages: OutfitImage[],
+  unsubLink: string
 ): string {
   const weatherEmoji: Record<string, string> = {
     'Clear': '☀️', 'Clouds': '☁️', 'Rain': '🌧️', 'Drizzle': '🌦️',
     'Thunderstorm': '⛈️', 'Snow': '❄️', 'Mist': '🌫️', 'Fog': '🌫️',
   }
   const emoji = weatherEmoji[weather.condition] || '🌤️'
-
-  const unsubToken = btoa(`${subscriber.id}:${subscriber.email}`)
-  const unsubLink = `https://kstylist.cc/api/unsubscribe?token=${unsubToken}`
 
   const unsubscribeText: Record<string, string> = {
     ko: '구독 해지',
@@ -750,11 +749,11 @@ export const onRequestGet: PagesFunction<Env> = async (context) => {
 
         if (resend) {
           try {
-            const html = buildEmailHtml(recommendation, weather, sub, outfitImages)
-            const subject = emailSubjects[sub.preferred_language] || emailSubjects.en
+            const unsubToken = await createUnsubscribeToken(sub.id, sub.email, context.env.CRON_SECRET)
+            const unsubUrl = `https://kstylist.cc/api/unsubscribe?token=${encodeURIComponent(unsubToken)}`
 
-            const unsubToken = btoa(`${sub.id}:${sub.email}`)
-            const unsubUrl = `https://kstylist.cc/api/unsubscribe?token=${unsubToken}`
+            const html = buildEmailHtml(recommendation, weather, sub, outfitImages, unsubUrl)
+            const subject = emailSubjects[sub.preferred_language] || emailSubjects.en
 
             await resend.emails.send({
               from: 'PERSONAL STYLIST <noreply@kstylist.cc>',
