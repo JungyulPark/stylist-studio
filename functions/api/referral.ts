@@ -1,4 +1,5 @@
 import { getCorsHeaders, createCorsPreflightResponse } from '../lib/cors'
+import { verifySupabaseUser } from '../lib/auth'
 import { errors } from '../lib/errors'
 
 interface Env {
@@ -155,10 +156,13 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
 
     // ===== Action: use_credit (atomic via RPC) =====
     if (body.action === 'use_credit') {
-      const userId = body.user_id
-      if (!userId) {
-        return errors.validation('user_id is required', corsHeaders)
+      // Credits are money — identity must come from the verified session,
+      // or anyone could drain another user's credits by guessing their UUID
+      const verified = await verifySupabaseUser(context.request, context.env)
+      if (!verified) {
+        return errors.unauthorized(corsHeaders)
       }
+      const userId = verified.id
 
       // Call atomic RPC function
       const rpcRes = await fetch(

@@ -48,14 +48,24 @@ function isRateLimited(key: string, maxRequests: number, windowMs: number): bool
 
 // Rate limit tiers: [maxRequests, windowMs]
 const RATE_LIMITS: Record<string, [number, number]> = {
-  // Expensive AI image generation — 5 requests per minute
+  // Expensive AI endpoints — 5 requests per minute
   '/api/generate-styles':      [5, 60_000],
-  '/api/transform-batch':      [5, 60_000],
+  '/api/analyze':              [5, 60_000],
+
+  // Chat — token-gated client-side, but cap bursts anyway
+  '/api/style-chat':           [10, 60_000],
+
+  // Email-sending endpoints — 5 per minute
+  '/api/send-report':          [5, 60_000],
+  '/api/send-payment-email':   [5, 60_000],
 
   // Payment/checkout — 10 per minute
   '/api/create-checkout':      [10, 60_000],
   '/api/subscribe':            [10, 60_000],
   '/api/customer-portal':      [10, 60_000],
+
+  // Refunds move real money — 3 per hour
+  '/api/refund':               [3, 3600_000],
 
   // Auth/profile — 20 per minute
   '/api/update-subscriber-profile': [20, 60_000],
@@ -107,7 +117,7 @@ export const onRequest: PagesFunction = async (context) => {
           'Retry-After': String(Math.ceil(windowMs / 1000)),
           'Access-Control-Allow-Origin': origin,
           'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
-          'Access-Control-Allow-Headers': 'Content-Type',
+          'Access-Control-Allow-Headers': 'Content-Type, Authorization',
         },
       }
     )

@@ -6,21 +6,24 @@ interface Env {
   // Product IDs (Polar에서 생성 후 설정)
   POLAR_PRODUCT_FULL?: string
   POLAR_PRODUCT_DAILY_STYLE?: string
+  POLAR_PRODUCT_CHAT_TOKENS?: string
 }
 
 // Product 타입 정의
-type ProductType = 'full' | 'daily_style'
+type ProductType = 'full' | 'daily_style' | 'chat_tokens'
 
 // Production Product IDs
 const DEFAULT_PRODUCTS: Record<ProductType, string> = {
   full: '533aed39-303f-4746-afb0-d150aa294f64',
   daily_style: '2c761310-373e-4017-8141-8532748713c0',
+  chat_tokens: '32416265-c924-4176-be02-cbe49bf1294c',
 }
 
 // 가격 정보 (표시용)
 const PRICES: Record<ProductType, { amount: number; currency: string; display: string; recurring?: boolean }> = {
   full: { amount: 499, currency: 'USD', display: '$4.99' },
   daily_style: { amount: 699, currency: 'USD', display: '$6.99/mo', recurring: true },
+  chat_tokens: { amount: 99, currency: 'USD', display: '$0.99' },
 }
 
 // 재구매 할인 코드
@@ -40,7 +43,7 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
 
     // Product 타입 검증
     const productType = body.productType || 'full'
-    if (!['full', 'daily_style'].includes(productType)) {
+    if (!['full', 'daily_style', 'chat_tokens'].includes(productType)) {
       return errors.validation('Invalid product type', corsHeaders)
     }
 
@@ -48,6 +51,7 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
     const envProductIds: Record<ProductType, string | undefined> = {
       full: context.env.POLAR_PRODUCT_FULL,
       daily_style: context.env.POLAR_PRODUCT_DAILY_STYLE,
+      chat_tokens: context.env.POLAR_PRODUCT_CHAT_TOKENS,
     }
 
     const productId = envProductIds[productType] || body.productId || DEFAULT_PRODUCTS[productType]
@@ -65,7 +69,11 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
     }
 
     // 할인 코드 결정 (재구매 고객이면 자동 적용)
-    const discountCode = body.discountCode || (body.isRepeatCustomer ? REPEAT_DISCOUNT_CODE : undefined)
+    // 구독 상품 제외: 반복 결제에 50% 할인이 계속 적용되면 마진이 사라짐
+    const isSubscription = productType === 'daily_style'
+    const discountCode = isSubscription
+      ? undefined
+      : body.discountCode || (body.isRepeatCustomer ? REPEAT_DISCOUNT_CODE : undefined)
 
     // Polar Checkout Session API 호출
     const checkoutBody: Record<string, unknown> = {

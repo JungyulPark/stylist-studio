@@ -6,7 +6,7 @@ interface Env {
 }
 
 // Model fallback chain (fast models for chat)
-const MODELS = ['gpt-4.1', 'gpt-4o']
+const MODELS = ['gpt-5-mini', 'gpt-4.1', 'gpt-4o']
 
 const languagePrompts: Record<string, string> = {
   ko: '한국어로 답변해주세요.',
@@ -106,7 +106,8 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
             model,
             messages,
             max_completion_tokens: 500,
-            temperature: 0.8
+            // gpt-5 family only supports default temperature
+            ...(model.startsWith('gpt-5') ? {} : { temperature: 0.8 })
           }),
           signal: controller.signal
         })

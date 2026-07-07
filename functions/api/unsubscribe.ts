@@ -1,9 +1,42 @@
 import { getCorsHeaders, createCorsPreflightResponse } from '../lib/cors'
 import { errors } from '../lib/errors'
+import { verifyUnsubscribeToken } from '../lib/unsubscribe-token'
 
 interface Env {
   SUPABASE_URL: string
   SUPABASE_SERVICE_KEY: string
+  CRON_SECRET: string
+}
+
+async function cancelSubscription(
+  env: Env,
+  token: string
+): Promise<'success' | 'invalid' | 'error'> {
+  const payload = await verifyUnsubscribeToken(token, env.CRON_SECRET)
+  if (!payload) return 'invalid'
+
+  const res = await fetch(
+    `${env.SUPABASE_URL}/rest/v1/subscribers?id=eq.${encodeURIComponent(payload.subscriberId)}&email=eq.${encodeURIComponent(payload.email)}`,
+    {
+      method: 'PATCH',
+      headers: {
+        'apikey': env.SUPABASE_SERVICE_KEY,
+        'Authorization': `Bearer ${env.SUPABASE_SERVICE_KEY}`,
+        'Content-Type': 'application/json',
+        'Prefer': 'return=minimal',
+      },
+      body: JSON.stringify({
+        status: 'canceled',
+        canceled_at: new Date().toISOString(),
+      }),
+    }
+  )
+
+  if (!res.ok) {
+    console.error('[unsubscribe] Supabase error:', res.status)
+    return 'error'
+  }
+  return 'success'
 }
 
 // GET /api/unsubscribe?token=xxx — browser click from email link
@@ -17,40 +50,13 @@ export const onRequestGet: PagesFunction<Env> = async (context) => {
       return new Response('Missing token', { status: 400, headers: corsHeaders })
     }
 
-    const decoded = atob(token)
-    const [subscriberId, email] = decoded.split(':')
-    if (!subscriberId || !email) {
+    const result = await cancelSubscription(context.env, token)
+    if (result === 'invalid') {
       return new Response('Invalid token', { status: 400, headers: corsHeaders })
     }
 
-    // Cancel subscription in Supabase
-    const res = await fetch(
-      `${context.env.SUPABASE_URL}/rest/v1/subscribers?id=eq.${subscriberId}&email=eq.${encodeURIComponent(email)}`,
-      {
-        method: 'PATCH',
-        headers: {
-          'apikey': context.env.SUPABASE_SERVICE_KEY,
-          'Authorization': `Bearer ${context.env.SUPABASE_SERVICE_KEY}`,
-          'Content-Type': 'application/json',
-          'Prefer': 'return=minimal',
-        },
-        body: JSON.stringify({
-          status: 'canceled',
-          canceled_at: new Date().toISOString(),
-        }),
-      }
-    )
-
-    if (!res.ok) {
-      console.error('[unsubscribe] Supabase error:', res.status)
-      return new Response(unsubPage('error'), {
-        status: 500,
-        headers: { 'Content-Type': 'text/html; charset=utf-8', ...corsHeaders },
-      })
-    }
-
-    return new Response(unsubPage('success'), {
-      status: 200,
+    return new Response(unsubPage(result), {
+      status: result === 'success' ? 200 : 500,
       headers: { 'Content-Type': 'text/html; charset=utf-8', ...corsHeaders },
     })
   } catch (error) {
@@ -70,28 +76,13 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
       return new Response('Missing token', { status: 400, headers: corsHeaders })
     }
 
-    const decoded = atob(token)
-    const [subscriberId, email] = decoded.split(':')
-    if (!subscriberId || !email) {
+    const result = await cancelSubscription(context.env, token)
+    if (result === 'invalid') {
       return new Response('Invalid token', { status: 400, headers: corsHeaders })
     }
-
-    await fetch(
-      `${context.env.SUPABASE_URL}/rest/v1/subscribers?id=eq.${subscriberId}&email=eq.${encodeURIComponent(email)}`,
-      {
-        method: 'PATCH',
-        headers: {
-          'apikey': context.env.SUPABASE_SERVICE_KEY,
-          'Authorization': `Bearer ${context.env.SUPABASE_SERVICE_KEY}`,
-          'Content-Type': 'application/json',
-          'Prefer': 'return=minimal',
-        },
-        body: JSON.stringify({
-          status: 'canceled',
-          canceled_at: new Date().toISOString(),
-        }),
-      }
-    )
+    if (result === 'error') {
+      return new Response('Failed to unsubscribe', { status: 500, headers: corsHeaders })
+    }
 
     return new Response('Unsubscribed', { status: 200, headers: corsHeaders })
   } catch (error) {

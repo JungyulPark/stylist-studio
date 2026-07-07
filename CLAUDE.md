@@ -113,7 +113,7 @@ The design follows a "Platinum Editorial" aesthetic -- luxury fashion magazine o
 ### 1. NEVER use white text (#fff / #ffffff / white) on landing page sections
 The landing page background is `#FAFAF8` (light cream). White text is invisible against it. ALL text on landing page sections MUST be dark (`#1A1A1A` or `var(--charcoal)`).
 
-**Exception**: Service cards (`.path-card-v2`) have dark gradient overlays -- white text is correct ONLY inside those dark overlay areas.
+**Exception**: Service cards (`.path-card-v2`) have dark gradient overlays -- white text is correct ONLY inside those dark overlay areas. The landing hero (`.hero-cinema`) is intentionally DARK (#101018, cinematic style matching the daily email's dark-navy + gold look) -- light text (#F5F2E9) and gold accents are correct inside it. Sections BELOW the hero remain light cream.
 
 ### 2. NEVER add emojis to the UI
 The design is luxury/editorial. No emojis in visible UI text, buttons, or headings. Emojis are acceptable ONLY in internal data structures (like `hairOccasions` icon field) that render as selection options, never in marketing copy or headings.

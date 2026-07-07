@@ -57,7 +57,7 @@ const clearIndexedDB = async (): Promise<void> => {
 
 type Language = 'ko' | 'en'
 type Gender = 'male' | 'female' | 'other' | null
-type Page = 'landing' | 'input' | 'loading' | 'result' | 'how-to-use' | 'preview' | 'login' | 'signup' | 'profile' | 'subscription-dashboard'
+type Page = 'landing' | 'input' | 'loading' | 'result' | 'how-to-use' | 'preview' | 'login' | 'signup' | 'profile' | 'subscription-dashboard' | 'style-chat'
 
 const translations: Record<Language, {
   title: string
@@ -314,6 +314,18 @@ const translations: Record<Language, {
   referralCopyLink: string
   referralInlineText: string
   referralCreditAvailable: string
+  chatTitle: string
+  chatPlaceholder: string
+  chatSend: string
+  chatBuyTokens: string
+  chatTokensLeft: string
+  chatWelcome: string
+  chatExample1: string
+  chatExample2: string
+  chatExample3: string
+  chatNoTokens: string
+  chatCardTitle: string
+  chatCardDesc: string
   // Before/After Gallery & CTA
   beforeAfterTitle: string
   beforeLabel: string
@@ -631,6 +643,18 @@ const translations: Record<Language, {
     referralCopyLink: '초대 링크 복사',
     referralInlineText: '친구 초대하고 무료 스타일 받기',
     referralCreditAvailable: '리퍼럴 크레딧 사용 가능',
+    chatTitle: 'Style Advisor',
+    chatPlaceholder: '스타일 질문을 입력하세요...',
+    chatSend: '전송',
+    chatBuyTokens: '$0.99로 10회 충전',
+    chatTokensLeft: '회 남음',
+    chatWelcome: '안녕하세요! 저는 Tom Ford, Grace Coddington 등 세계 최고 스타일리스트들의 전문성을 결합한 AI 스타일 어드바이저입니다. 무엇이든 물어보세요.',
+    chatExample1: '오늘 뭐 입지?',
+    chatExample2: '이 옷에 어울리는 신발은?',
+    chatExample3: '직장 면접 코디 추천해줘',
+    chatNoTokens: '메시지 토큰이 없습니다. 충전 후 이용해주세요.',
+    chatCardTitle: 'Style Advisor',
+    chatCardDesc: 'AI 스타일리스트와 실시간 대화로 맞춤 패션 조언을 받아보세요',
     beforeAfterTitle: 'Before & After',
     beforeLabel: 'BEFORE',
     afterLabel: 'AFTER',
@@ -939,6 +963,18 @@ const translations: Record<Language, {
     referralCopyLink: 'Copy Invite Link',
     referralInlineText: 'Invite friends & get free styles',
     referralCreditAvailable: 'Referral credit available',
+    chatTitle: 'Style Advisor',
+    chatPlaceholder: 'Ask your style question...',
+    chatSend: 'Send',
+    chatBuyTokens: 'Get 10 messages for $0.99',
+    chatTokensLeft: ' left',
+    chatWelcome: 'Hello! I\'m an AI style advisor combining the expertise of Tom Ford, Grace Coddington, and the world\'s top stylists. Ask me anything about fashion, outfits, or styling.',
+    chatExample1: 'What should I wear today?',
+    chatExample2: 'What shoes go with this outfit?',
+    chatExample3: 'Style me for a job interview',
+    chatNoTokens: 'No messages remaining. Purchase tokens to continue.',
+    chatCardTitle: 'Style Advisor',
+    chatCardDesc: 'Chat with an AI stylist for personalized fashion advice in real time',
     beforeAfterTitle: 'Before & After',
     beforeLabel: 'BEFORE',
     afterLabel: 'AFTER',
@@ -1257,6 +1293,18 @@ const languageNames: Record<Language, string> = {
     referralCopyLink: '招待リンクをコピー',
     referralInlineText: '友達を招待して無料スタイルをゲット',
     referralCreditAvailable: 'リファラルクレジット利用可能',
+    chatTitle: 'Style Advisor',
+    chatPlaceholder: 'スタイルの質問を入力...',
+    chatSend: '送信',
+    chatBuyTokens: '$0.99で10回チャージ',
+    chatTokensLeft: '回残り',
+    chatWelcome: 'こんにちは！トム・フォード、グレース・コディントンなど世界最高のスタイリストの専門知識を融合したAIスタイルアドバイザーです。何でもお気軽にどうぞ。',
+    chatExample1: '今日何を着ればいい？',
+    chatExample2: 'この服に合う靴は？',
+    chatExample3: '面接のコーデを提案して',
+    chatNoTokens: 'メッセージトークンがありません。チャージしてください。',
+    chatCardTitle: 'Style Advisor',
+    chatCardDesc: 'AIスタイリストとリアルタイムチャットでパーソナルファッションアドバイス',
     beforeAfterTitle: 'ビフォー＆アフター',
     beforeLabel: 'BEFORE',
     afterLabel: 'AFTER',
@@ -1565,6 +1613,18 @@ const languageNames: Record<Language, string> = {
     referralCopyLink: '复制邀请链接',
     referralInlineText: '邀请好友获得免费造型',
     referralCreditAvailable: '推荐积分可用',
+    chatTitle: 'Style Advisor',
+    chatPlaceholder: '输入你的穿搭问题...',
+    chatSend: '发送',
+    chatBuyTokens: '$0.99充值10次',
+    chatTokensLeft: '次剩余',
+    chatWelcome: '你好！我是融合了Tom Ford、Grace Coddington等世界顶级造型师专业知识的AI风格顾问。随时提问吧。',
+    chatExample1: '今天穿什么好？',
+    chatExample2: '这件衣服配什么鞋？',
+    chatExample3: '推荐面试穿搭',
+    chatNoTokens: '消息次数已用完，请充值后继续。',
+    chatCardTitle: 'Style Advisor',
+    chatCardDesc: '与AI造型师实时对话，获取个性化时尚建议',
     beforeAfterTitle: '变身前后对比',
     beforeLabel: '变身前',
     afterLabel: '变身后',
@@ -1873,6 +1933,18 @@ const languageNames: Record<Language, string> = {
     referralCopyLink: 'Copiar enlace de invitación',
     referralInlineText: 'Invita amigos y obtén estilos gratis',
     referralCreditAvailable: 'Crédito de referido disponible',
+    chatTitle: 'Style Advisor',
+    chatPlaceholder: 'Escribe tu pregunta de estilo...',
+    chatSend: 'Enviar',
+    chatBuyTokens: '10 mensajes por $0.99',
+    chatTokensLeft: ' restantes',
+    chatWelcome: 'Hola! Soy un asesor de estilo AI que combina la experiencia de Tom Ford, Grace Coddington y los mejores estilistas del mundo. Pregunta lo que quieras.',
+    chatExample1: 'Que me pongo hoy?',
+    chatExample2: 'Que zapatos van con este outfit?',
+    chatExample3: 'Look para entrevista de trabajo',
+    chatNoTokens: 'No quedan mensajes. Compra tokens para continuar.',
+    chatCardTitle: 'Style Advisor',
+    chatCardDesc: 'Chatea con un estilista AI para consejos de moda personalizados en tiempo real',
     beforeAfterTitle: 'Antes y Después',
     beforeLabel: 'ANTES',
     afterLabel: 'DESPUÉS',
@@ -2201,6 +2273,76 @@ interface StyleImage {
 }
 
 // GA4 custom event tracking
+// ─── 360° frame-sequence spin viewer ─────────────────────────────
+// Expects frames at `${basePath}/frame-00.webp` … zero-padded, evenly
+// spaced rotations (see docs/MODEL_PROMPTS.md). Renders nothing until
+// the first frame actually exists, so the section is safe to ship
+// before the assets do.
+function SpinViewer({ basePath, frameCount, hint }: { basePath: string; frameCount: number; hint: string }) {
+  const [frame, setFrame] = useState(0)
+  const [ready, setReady] = useState(false)
+  const [interacted, setInteracted] = useState(false)
+  const dragRef = useRef<{ startX: number; startFrame: number } | null>(null)
+
+  const frameSrc = useCallback(
+    (i: number) => `${basePath}/frame-${String(((i % frameCount) + frameCount) % frameCount).padStart(2, '0')}.webp`,
+    [basePath, frameCount]
+  )
+
+  useEffect(() => {
+    const img = new Image()
+    img.onload = () => {
+      setReady(true)
+      for (let i = 1; i < frameCount; i++) {
+        const pre = new Image()
+        pre.src = frameSrc(i)
+      }
+    }
+    img.onerror = () => setReady(false)
+    img.src = frameSrc(0)
+  }, [frameSrc, frameCount])
+
+  // Slow auto-rotate until the user grabs it (skipped under reduced motion)
+  useEffect(() => {
+    if (!ready || interacted) return
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
+    const id = window.setInterval(() => setFrame(f => f + 1), 180)
+    return () => window.clearInterval(id)
+  }, [ready, interacted])
+
+  if (!ready) return null
+
+  const onPointerDown = (e: React.PointerEvent) => {
+    setInteracted(true)
+    dragRef.current = { startX: e.clientX, startFrame: frame }
+    ;(e.target as HTMLElement).setPointerCapture(e.pointerId)
+  }
+  const onPointerMove = (e: React.PointerEvent) => {
+    if (!dragRef.current) return
+    const deltaFrames = Math.round((e.clientX - dragRef.current.startX) / 12)
+    setFrame(dragRef.current.startFrame + deltaFrames)
+  }
+  const onPointerUp = () => { dragRef.current = null }
+
+  return (
+    <div className="spin-viewer-wrap">
+      <div
+        className="spin-viewer"
+        onPointerDown={onPointerDown}
+        onPointerMove={onPointerMove}
+        onPointerUp={onPointerUp}
+        onPointerCancel={onPointerUp}
+        role="img"
+        aria-label="360 degree style view"
+      >
+        <img src={frameSrc(frame)} alt="" className="spin-frame" draggable={false} />
+        <span className="spin-badge">360°</span>
+      </div>
+      <p className="spin-hint">{hint}</p>
+    </div>
+  )
+}
+
 function trackEvent(eventName: string, params?: Record<string, string | number | boolean>) {
   try {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -2316,7 +2458,7 @@ function parseStyleDNA(report: string): StyleDNA {
   for (const pat of silhouettePatterns) {
     const m = report.match(pat)
     if (m) {
-      result.silhouettes = m[1].split(/[,·•\-]/).map(s => s.trim()).filter(s => s.length > 1 && s.length < 40).slice(0, 5)
+      result.silhouettes = m[1].split(/[,·•-]/).map(s => s.trim()).filter(s => s.length > 1 && s.length < 40).slice(0, 5)
       break
     }
   }
@@ -2356,6 +2498,8 @@ function App() {
   })
   const [report, setReport] = useState<string>('')
   const [colorPalette, setColorPalette] = useState<{ bestColors: string[]; avoidColors: string[] } | null>(null)
+  // 12타입 시즌 라벨 (API 제공, parseStyleDNA는 폴백) — 공유 카드의 정체성 헤드라인
+  const [seasonInfo, setSeasonInfo] = useState<{ base: string; label_en: string; label_ko: string } | null>(null)
   const [error, setError] = useState<string>('')
   const [isDragging, setIsDragging] = useState(false)
   const [styleImages, setStyleImages] = useState<StyleImage[]>([])
@@ -2382,7 +2526,13 @@ function App() {
   const t = translations[lang]
 
   // Auth state
-  const { user, signIn, signUp, signInWithGoogle, signOut, resetPassword, updatePassword, deleteAccount, profile: authProfile, isSupabaseConfigured } = useAuth()
+  const { user, session, signIn, signUp, signInWithGoogle, signOut, resetPassword, updatePassword, deleteAccount, profile: authProfile, isSupabaseConfigured } = useAuth()
+
+  // 인증 필요 API 호출용 헤더 — 세션 JWT를 서버가 검증 (body의 email/user_id는 신뢰 안 함)
+  const authHeaders = (): Record<string, string> => ({
+    'Content-Type': 'application/json',
+    ...(session?.access_token ? { Authorization: `Bearer ${session.access_token}` } : {}),
+  })
   const [newPassword, setNewPassword] = useState('')
   const [confirmNewPassword, setConfirmNewPassword] = useState('')
   const [authEmail, setAuthEmail] = useState('')
@@ -2462,6 +2612,16 @@ function App() {
 
   // Fullscreen image viewer
   const [fullscreenImage, setFullscreenImage] = useState<string | null>(null)
+
+  // Style Chat state
+  const [chatMessages, setChatMessages] = useState<{role: 'user' | 'assistant', content: string}[]>([])
+  const [chatInput, setChatInput] = useState('')
+  const [chatTokens, setChatTokens] = useState(() => {
+    const stored = localStorage.getItem('stylist_chat_tokens')
+    return stored ? parseInt(stored, 10) || 0 : 0
+  })
+  const [chatLoading, setChatLoading] = useState(false)
+  const chatMessagesEndRef = useRef<HTMLDivElement>(null)
 
   const feetInchesToCm = (feet: string, inches: string): string => {
     const ft = parseFloat(feet) || 0
@@ -2573,6 +2733,14 @@ function App() {
       trackEvent('paywall_view', { page })
     }
   }, [page])
+
+  // Paywall impression on the result page's locked-images panel —
+  // premium_cta_clicked had no matching impression, so CTR was unmeasurable
+  useEffect(() => {
+    if (page === 'result' && !isFullPaid) {
+      trackEvent('paywall_impression', { placement: 'result_locked' })
+    }
+  }, [page, isFullPaid])
 
   // Polar Checkout Configuration (Sandbox 환경)
   // Product ID: cca7d48e-6758-4e83-a375-807ab70615ea
@@ -2687,6 +2855,20 @@ function App() {
             console.error('Failed to record referral:', e)
           }
         })()
+      }
+
+      // 챗 토큰 결제 성공 처리
+      if (purchasedProductType === 'chat_tokens') {
+        trackEvent('purchase', { product: 'chat_tokens', currency: 'USD', value: 0.99 })
+        setChatTokens(prev => {
+          const newTokens = prev + 10
+          localStorage.setItem('stylist_chat_tokens', String(newTokens))
+          return newTokens
+        })
+        localStorage.removeItem('productType')
+        window.history.replaceState({ page: 'style-chat' }, '', '#style-chat')
+        setPageState('style-chat')
+        return
       }
 
       // 구독 결제 성공 처리
@@ -2852,7 +3034,7 @@ function App() {
     const timer = setTimeout(() => {
       fetch('/api/update-subscriber-profile', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: authHeaders(),
         body: JSON.stringify({
           email: user.email,
           user_id: user.id || undefined,
@@ -3002,6 +3184,32 @@ function App() {
 
   // Polar 결제 처리
   const handlePayment = async (productType: 'full' = 'full') => {
+    // 리퍼럴 크레딧 보유 시 결제 없이 바로 분석 진행
+    if (user && referralStats.credits > 0) {
+      setIsProcessingPayment(true)
+      try {
+        const creditRes = await fetch('/api/referral', {
+          method: 'POST',
+          headers: authHeaders(),
+          body: JSON.stringify({ action: 'use_credit', user_id: user.id })
+        })
+        if (creditRes.ok) {
+          const creditData = await creditRes.json() as { success: boolean; credits_remaining: number }
+          if (creditData.success) {
+            trackEvent('referral_credit_redeemed', { credits_remaining: creditData.credits_remaining })
+            setReferralStats(prev => ({ ...prev, credits: creditData.credits_remaining }))
+            setIsProcessingPayment(false)
+            await startAnalysisAfterPayment(profile)
+            return
+          }
+        }
+        // 크레딧 차감 실패 (이미 소진 등) — 일반 결제로 진행
+      } catch (e) {
+        console.error('Failed to redeem referral credit:', e)
+      }
+      setIsProcessingPayment(false)
+    }
+
     trackEvent('begin_checkout', { product: productType, currency: 'USD', value: 4.99 })
     trackEvent('funnel_step', { step_name: 'begin_checkout', step_number: 4, funnel_product: productType })
     setIsProcessingPayment(true)
@@ -3049,9 +3257,9 @@ function App() {
   // 결제 후 분석 수행 (프로필 데이터를 직접 받음)
   const startAnalysisAfterPayment = async (profileData: typeof profile, paymentCheckoutId?: string | null) => {
     trackEvent('generation_start', { type: 'full_style' })
-    // 결제 1회 사용 제한: 분석 시작 시 결제 상태 제거
+    // 결제 1회 사용 제한: 새로고침 시 재사용 방지를 위해 localStorage만 제거.
+    // isFullPaid는 유지 — 이번 세션의 결과는 프리미엄(블러 해제)으로 보여야 함
     localStorage.removeItem('paidCustomer')
-    setIsFullPaid(false)
 
     setError('')
     setStyleImages([])
@@ -3117,12 +3325,14 @@ function App() {
       }
       setReport(analyzeData.report)
       if (analyzeData.colorPalette) setColorPalette(analyzeData.colorPalette)
+      if (analyzeData.season) setSeasonInfo(analyzeData.season)
+      setIsFullPaid(true)
 
       setLoadingProgress(100)
       setLoadingStep(lang === 'ko' ? '완료!' : 'Complete!')
       await new Promise(resolve => setTimeout(resolve, 400))
       trackEvent('generation_complete', { type: 'full_style' })
-      trackEvent('result_view', { type: 'full_style' })
+      trackEvent('result_view', { type: 'full_style', is_paid: true })
       trackEvent('funnel_step', { step_name: 'result_view', step_number: 6, funnel_product: 'full' })
       setPage('result')
 
@@ -3162,6 +3372,8 @@ function App() {
       setCheckoutId(null)
     } catch (err) {
       console.error('Analysis error:', err)
+      // 분석 실패(자동 환불됨) — 프리미엄 상태 해제
+      setIsFullPaid(false)
       setError(t.errorApologyRefund)
       setPage('input')
     }
@@ -3234,7 +3446,7 @@ function App() {
               if (data.preferred_language !== lang) {
                 fetch('/api/update-subscriber-profile', {
                   method: 'POST',
-                  headers: { 'Content-Type': 'application/json' },
+                  headers: authHeaders(),
                   body: JSON.stringify({ email: user.email, preferred_language: lang }),
                 }).catch(() => {})
               }
@@ -3262,7 +3474,7 @@ function App() {
       try {
         const res = await fetch('/api/update-subscriber-profile', {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
+          headers: authHeaders(),
           body: JSON.stringify({
             email,
             user_id: user?.id || undefined,
@@ -3294,7 +3506,7 @@ function App() {
     try {
       const res = await fetch('/api/update-subscriber-profile', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: authHeaders(),
         body: JSON.stringify({
           email,
           user_id: user?.id || undefined,
@@ -3333,7 +3545,7 @@ function App() {
     try {
       const res = await fetch('/api/customer-portal', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: authHeaders(),
         body: JSON.stringify({ email: user.email }),
       })
       if (res.ok) {
@@ -3599,6 +3811,7 @@ function App() {
       const analyzeData = await analyzeResponse.json()
       setReport(analyzeData.report)
       if (analyzeData.colorPalette) setColorPalette(analyzeData.colorPalette)
+      if (analyzeData.season) setSeasonInfo(analyzeData.season)
 
       // Wait for images to finish
       setIsGeneratingStyles(true)
@@ -3626,6 +3839,10 @@ function App() {
       await new Promise(resolve => setTimeout(resolve, 400))
 
       // Go to destination page
+      if (destinationPage === 'result') {
+        trackEvent('result_view', { type: 'full_style', is_paid: isFullPaid })
+        trackEvent('funnel_step', { step_name: 'result_view', step_number: 6, funnel_product: 'full' })
+      }
       setPage(destinationPage)
     } catch (err) {
       console.error('Error:', err)
@@ -3828,6 +4045,72 @@ ${styleImgs.length > 1 ? `<div class="section"><h2>${styleSection}</h2><div clas
       setTimeout(() => setReferralToast(''), 2000)
     } catch (err) {
       console.error('Copy failed:', err)
+    }
+  }
+
+  // Style Chat — 새 메시지 시 스크롤
+  useEffect(() => {
+    chatMessagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
+  }, [chatMessages, chatLoading])
+
+  // Style Chat — 메시지 전송
+  const handleChatSend = async () => {
+    const msg = chatInput.trim()
+    if (!msg || chatLoading) return
+    if (chatTokens <= 0) return
+
+    trackEvent('chat_message_sent', { tokens_remaining: chatTokens - 1 })
+    const newUserMessage = { role: 'user' as const, content: msg }
+    const updatedMessages = [...chatMessages, newUserMessage]
+    setChatMessages(updatedMessages)
+    setChatInput('')
+    setChatLoading(true)
+
+    // 토큰 차감
+    const newTokens = chatTokens - 1
+    setChatTokens(newTokens)
+    localStorage.setItem('stylist_chat_tokens', String(newTokens))
+
+    try {
+      const res = await fetch('/api/style-chat', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          message: msg,
+          history: updatedMessages.slice(-10),
+          language: lang,
+        })
+      })
+
+      if (!res.ok) throw new Error(`API error: ${res.status}`)
+      const data = await res.json() as { reply: string }
+      setChatMessages(prev => [...prev, { role: 'assistant', content: data.reply }])
+    } catch {
+      setChatMessages(prev => [...prev, { role: 'assistant', content: lang === 'ko' ? '죄송합니다. 일시적인 오류가 발생했습니다. 다시 시도해주세요.' : 'Sorry, something went wrong. Please try again.' }])
+      // 오류 시 토큰 복구
+      const restoredTokens = newTokens + 1
+      setChatTokens(restoredTokens)
+      localStorage.setItem('stylist_chat_tokens', String(restoredTokens))
+    } finally {
+      setChatLoading(false)
+    }
+  }
+
+  // Style Chat — 토큰 구매
+  const handleChatBuyTokens = async () => {
+    trackEvent('begin_checkout', { product: 'chat_tokens', currency: 'USD', value: 0.99 })
+    try {
+      localStorage.setItem('productType', 'chat_tokens')
+      const res = await fetch('/api/create-checkout', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ productType: 'chat_tokens' })
+      })
+      if (!res.ok) throw new Error('Checkout failed')
+      const data = await res.json() as { url: string }
+      if (data.url) window.location.href = data.url
+    } catch {
+      setError('Payment service temporarily unavailable')
     }
   }
 
@@ -4114,6 +4397,98 @@ ${styleImgs.length > 1 ? `<div class="section"><h2>${styleSection}</h2><div clas
   }, [page, user, loadFavorites])
 
   const isFormValid = profile.photo && profile.height && profile.weight && profile.gender
+
+  // Style Chat Page
+  if (page === 'style-chat') {
+    return (
+      <div className="chat-page">
+        <header className="chat-header">
+          <button className="back-btn" onClick={() => setPage('landing')}>
+            ← {t.backToHome}
+          </button>
+          <h1 className="chat-title">{t.chatTitle}</h1>
+          <div className="chat-token-badge">
+            {chatTokens > 0 ? `${chatTokens}${t.chatTokensLeft}` : '0'}
+          </div>
+        </header>
+
+        <div className="chat-container">
+          <div className="chat-messages">
+            {/* Welcome message */}
+            {chatMessages.length === 0 && (
+              <div className="chat-welcome">
+                <div className="chat-bubble-assistant">
+                  <p>{t.chatWelcome}</p>
+                </div>
+                <div className="chat-examples">
+                  <button className="chat-example-btn" onClick={() => { setChatInput(t.chatExample1) }}>
+                    {t.chatExample1}
+                  </button>
+                  <button className="chat-example-btn" onClick={() => { setChatInput(t.chatExample2) }}>
+                    {t.chatExample2}
+                  </button>
+                  <button className="chat-example-btn" onClick={() => { setChatInput(t.chatExample3) }}>
+                    {t.chatExample3}
+                  </button>
+                </div>
+              </div>
+            )}
+
+            {/* Chat messages */}
+            {chatMessages.map((msg, i) => (
+              msg.role === 'assistant' ? (
+                <div key={i} className="chat-bubble-assistant"
+                  dangerouslySetInnerHTML={{ __html: renderMarkdownToHtml(msg.content) }}
+                />
+              ) : (
+                <div key={i} className="chat-bubble-user">
+                  <p>{msg.content}</p>
+                </div>
+              )
+            ))}
+
+            {/* Loading indicator */}
+            {chatLoading && (
+              <div className="chat-bubble-assistant chat-typing">
+                <span></span><span></span><span></span>
+              </div>
+            )}
+            <div ref={chatMessagesEndRef} />
+          </div>
+
+          {/* Input bar */}
+          {chatTokens > 0 ? (
+            <div className="chat-input-bar">
+              <input
+                type="text"
+                className="chat-input"
+                placeholder={t.chatPlaceholder}
+                value={chatInput}
+                onChange={(e) => setChatInput(e.target.value)}
+                onKeyDown={(e) => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); handleChatSend() } }}
+                disabled={chatLoading}
+                maxLength={1000}
+              />
+              <button
+                className="chat-send-btn"
+                onClick={handleChatSend}
+                disabled={!chatInput.trim() || chatLoading}
+              >
+                {t.chatSend}
+              </button>
+            </div>
+          ) : (
+            <div className="chat-input-bar chat-no-tokens">
+              <p className="chat-no-tokens-text">{t.chatNoTokens}</p>
+              <button className="btn-gold chat-buy-btn" onClick={handleChatBuyTokens}>
+                {t.chatBuyTokens}
+              </button>
+            </div>
+          )}
+        </div>
+      </div>
+    )
+  }
 
   // How to Use Page
   if (page === 'how-to-use') {
@@ -5110,13 +5485,22 @@ ${styleImgs.length > 1 ? `<div class="section"><h2>${styleSection}</h2><div clas
           </div>
         </header>
 
-        {/* Hero Section — Personal Color focused */}
-        <section className="hero-section-v2">
-          <span className="hero-badge">{lang === 'ko' ? 'AI 퍼스널 컬러 진단' : 'AI Personal Color Analysis'}</span>
-          <h1 className="hero-v2-headline">
-            {lang === 'ko' ? '나에게 어울리는\n컬러를 발견하세요' : 'Discover Your\nPerfect Colors'}
+        {/* Hero Section — cinematic dark, word-by-word reveal */}
+        <section className="hero-cinema">
+          <span className="hero-cinema-badge">{lang === 'ko' ? 'AI 퍼스널 컬러 진단' : 'AI PERSONAL COLOR ANALYSIS'}</span>
+          <h1 className="hero-cinema-headline" aria-label={lang === 'ko' ? '오늘, 뭐 입지?' : 'What to wear today'}>
+            {(lang === 'ko' ? ['오늘,', '뭐', '입지?'] : ['WHAT', 'TO', 'WEAR', 'TODAY']).map((word, i, arr) => (
+              <span
+                key={i}
+                aria-hidden="true"
+                className={`hero-word${i === arr.length - 1 ? ' hero-word-accent' : ''}`}
+                style={{ animationDelay: `${0.15 + i * 0.14}s` }}
+              >
+                {word}
+              </span>
+            ))}
           </h1>
-          <p className="hero-v2-desc">
+          <p className="hero-cinema-sub">
             {lang === 'ko'
               ? '사진 한 장으로 퍼스널 컬러 진단 + AI 스타일 변환. 무료로 시작하세요.'
               : 'Upload one photo. Get your personal color season and AI-powered styling. Start free.'}
@@ -5138,14 +5522,19 @@ ${styleImgs.length > 1 ? `<div class="section"><h2>${styleSection}</h2><div clas
             </div>
             <span className="ba-label ba-label-before">{t.galleryBefore}</span>
             <span className="ba-label ba-label-after">{t.galleryAfter}</span>
+            <div className="hero-scan" aria-hidden="true"></div>
           </div>
           <button className="free-cta-pulse hero-gold-cta" onClick={() => { trackEvent('hero_cta_click', { type: 'free_analysis' }); setPage('input') }}>
             {lang === 'ko' ? '무료 컬러 분석 시작' : 'Start Free Color Analysis'}
           </button>
-          <div className="hero-trust-signals">
-            <span>{lang === 'ko' ? '완전 무료' : 'Completely Free'}</span>
+          <div className="hero-trust-signals hero-trust-dark">
+            <span>{lang === 'ko' ? '첫 분석 무료' : 'First Analysis Free'}</span>
             <span>{lang === 'ko' ? '30초 완료' : '30 Seconds'}</span>
             <span>{lang === 'ko' ? '즉시 결과' : 'Instant Results'}</span>
+          </div>
+          <div className="hero-scroll-cue" aria-hidden="true">
+            <span className="hero-scroll-line"></span>
+            <span className="hero-scroll-text">{lang === 'ko' ? '스크롤' : 'SCROLL'}</span>
           </div>
         </section>
 
@@ -5214,6 +5603,22 @@ ${styleImgs.length > 1 ? `<div class="section"><h2>${styleSection}</h2><div clas
                 <p className="service-hero-desc">{t.module2Desc}</p>
                 <div className="service-hero-cta">{t.explore} →</div>
               </div>
+          </div>
+
+          {/* 360° style view — renders only when /public/spin frames exist */}
+          <SpinViewer
+            basePath="/spin/look-01"
+            frameCount={24}
+            hint={lang === 'ko' ? '드래그해서 360도로 스타일을 살펴보세요' : 'Drag to view the look in 360°'}
+          />
+
+          {/* Style Advisor — real-time chat */}
+          <div className="chat-strip fade-in-up" onClick={() => { trackEvent('select_item', { item_category: 'style_chat' }); setPage('style-chat') }}>
+            <div className="chat-strip-text">
+              <h3 className="chat-strip-title">{t.chatCardTitle}</h3>
+              <p className="chat-strip-desc">{t.chatCardDesc}</p>
+            </div>
+            <div className="chat-strip-cta">{t.explore} →</div>
           </div>
         </section>
 
@@ -5492,10 +5897,11 @@ ${styleImgs.length > 1 ? `<div class="section"><h2>${styleSection}</h2><div clas
                     trackEvent('share_color_card', { season: dna?.season || 'unknown' })
                     try {
                       const { generateShareCard: genCard } = await import('./utils/shareCard')
-                      const seasonLabel = dna?.season ? (dna.season.charAt(0).toUpperCase() + dna.season.slice(1)) + ' ' + (dna.season === 'spring' || dna.season === 'autumn' ? 'Warm' : 'Cool') : 'Unknown'
+                      // API의 12타입 라벨 우선, parseStyleDNA 4계절 추론은 폴백
+                      const fallbackLabel = dna?.season ? (dna.season.charAt(0).toUpperCase() + dna.season.slice(1)) + ' ' + (dna.season === 'spring' || dna.season === 'autumn' ? 'Warm' : 'Cool') : 'Unknown'
                       const blob = await genCard({
-                        season: seasonLabel,
-                        seasonKo: dna?.season ? t.styleDnaSeasons[dna.season as keyof typeof t.styleDnaSeasons] : undefined,
+                        season: seasonInfo?.label_en || fallbackLabel,
+                        seasonKo: seasonInfo?.label_ko || (dna?.season ? t.styleDnaSeasons[dna.season as keyof typeof t.styleDnaSeasons] : undefined),
                         palette: (dna?.colors || []).map((c: string) => c).filter(Boolean),
                         bodyType: dna?.bodyType || undefined,
                         format: '9:16'
@@ -5618,6 +6024,9 @@ ${styleImgs.length > 1 ? `<div class="section"><h2>${styleSection}</h2><div clas
                       {lang === 'ko' ? '1회 결제 · 환불 보장' : 'One-time · Money-back guarantee'}
                     </span>
                   </div>
+                  {user && referralStats.credits > 0 && (
+                    <p className="referral-credit-hint">{t.referralCreditAvailable} · {referralStats.credits}</p>
+                  )}
                   <button
                     className="premium-cta-button"
                     onClick={() => {
@@ -5706,6 +6115,9 @@ ${styleImgs.length > 1 ? `<div class="section"><h2>${styleSection}</h2><div clas
               </button>
             </>
           )}
+          <button className="btn-outline" onClick={() => { trackEvent('chat_open', { from_page: 'result' }); setPage('style-chat') }}>
+            {t.chatCardTitle}
+          </button>
           <button className="btn-dark" onClick={() => { trackEvent('back_to_home_click', { from_page: 'result' }); handleRestart() }}>
             {t.backToHome}
           </button>
@@ -6250,6 +6662,9 @@ ${styleImgs.length > 1 ? `<div class="section"><h2>${styleSection}</h2><div clas
             </div>
 
             {/* CTA Button */}
+            {user && referralStats.credits > 0 && (
+              <p className="referral-credit-hint">{t.referralCreditAvailable} · {referralStats.credits}</p>
+            )}
             <button
               onClick={() => { trackEvent('paywall_cta_click', { product: 'full' }); handlePayment('full') }}
               disabled={isProcessingPayment}

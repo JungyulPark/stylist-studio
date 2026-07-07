@@ -10,6 +10,17 @@ export interface ImageScenario {
   prompt: string
 }
 
+export interface ImageGenOptions {
+  /**
+   * Cost tier. 'premium' (default): OpenAI auto-quality first, Gemini 3 Pro
+   * -> 2.5 Flash fallback — used by paid one-time products.
+   * 'economy': Gemini 2.5 Flash first, OpenAI medium-quality fallback — used
+   * by the daily cron, where images render at 240px in email and per-image
+   * cost decides whether the $6.99/mo subscription is profitable at all.
+   */
+  tier?: 'premium' | 'economy'
+}
+
 const FETCH_TIMEOUT_MS = 55_000
 const RETRY_BASE_MS = 1500
 const RETRY_JITTER_MS = 500
@@ -44,7 +55,8 @@ export async function editPhotoWithGemini(
   gender: string,
   apiKey: string,
   openaiKey?: string,
-  retryCount: number = 0
+  retryCount: number = 0,
+  options?: ImageGenOptions
 ): Promise<string | null> {
   const MAX_RETRIES = 2
 
@@ -145,26 +157,37 @@ REMINDER: DO NOT CROP OR ZOOM. Keep IDENTICAL framing as input. Head must be ful
 
 Generate the edited photo.`
 
-    // Try OpenAI gpt-image-1.5 first
-    let openaiError = ''
-    if (openaiKey) {
+    const economy = options?.tier === 'economy'
+
+    const tryOpenAI = async (): Promise<string | null> => {
+      if (!openaiKey) return null
       try {
-        console.log(`[OpenAI] Trying gpt-image-1.5 for ${scenario.id}`)
-        const openaiResult = await editPhotoWithOpenAI(base64Data, mimeType, editPrompt, openaiKey)
+        console.log(`[OpenAI] Trying gpt-image-1.5 (${economy ? 'medium' : 'auto'}) for ${scenario.id}`)
+        const openaiResult = await editPhotoWithOpenAI(
+          base64Data, mimeType, editPrompt, openaiKey, 0,
+          { quality: economy ? 'medium' : 'auto' }
+        )
         if (openaiResult) {
           console.log(`[OpenAI] Success for ${scenario.id}`)
           return openaiResult
         }
-        openaiError = 'returned null'
       } catch (e) {
-        openaiError = e instanceof Error ? e.message : String(e)
-        console.log(`[OpenAI] Error for ${scenario.id}: ${openaiError}`)
+        console.log(`[OpenAI] Error for ${scenario.id}: ${e instanceof Error ? e.message : String(e)}`)
       }
-      console.log(`[OpenAI] Failed for ${scenario.id}, falling back to Gemini`)
+      return null
     }
 
-    // Fallback to Gemini
-    const geminiModels = ['gemini-3-pro-image-preview', 'gemini-2.5-flash-image']
+    // Premium: OpenAI first. Economy: skip straight to cheap Gemini Flash.
+    if (!economy) {
+      const openaiResult = await tryOpenAI()
+      if (openaiResult) return openaiResult
+      if (openaiKey) console.log(`[OpenAI] Failed for ${scenario.id}, falling back to Gemini`)
+    }
+
+    // Gemini attempt — economy uses Flash only (Pro preview costs as much as OpenAI high)
+    const geminiModels = economy
+      ? ['gemini-2.5-flash-image']
+      : ['gemini-3-pro-image-preview', 'gemini-2.5-flash-image']
     const requestBody = JSON.stringify({
       contents: [{
         role: 'user',
@@ -204,6 +227,12 @@ Generate the edited photo.`
       const errorBody = response ? await response.text() : 'No response'
       console.error(`[Gemini] All models failed for ${scenario.id}: ${errorBody.substring(0, 500)}`)
 
+      // Economy tier: Gemini was primary, so fall back to OpenAI (medium) before retrying
+      if (economy) {
+        const openaiResult = await tryOpenAI()
+        if (openaiResult) return openaiResult
+      }
+
       // Don't retry on quota/billing errors (429, 402) — they won't resolve on retry
       if (statusCode === 429 || statusCode === 402) {
         return null
@@ -213,7 +242,7 @@ Generate the edited photo.`
         const delay = retryDelay(retryCount)
         console.log(`[Gemini] Retrying ${scenario.id} in ${Math.round(delay)}ms (attempt ${retryCount + 2}/${MAX_RETRIES + 1})`)
         await sleep(delay)
-        return editPhotoWithGemini(photo, scenario, gender, apiKey, openaiKey, retryCount + 1)
+        return editPhotoWithGemini(photo, scenario, gender, apiKey, openaiKey, retryCount + 1, options)
       }
       return null
     }
@@ -237,7 +266,7 @@ Generate the edited photo.`
       const delay = retryDelay(retryCount)
       console.log(`[Gemini] No image returned for ${scenario.id}, retrying in ${Math.round(delay)}ms`)
       await sleep(delay)
-      return editPhotoWithGemini(photo, scenario, gender, apiKey, openaiKey, retryCount + 1)
+      return editPhotoWithGemini(photo, scenario, gender, apiKey, openaiKey, retryCount + 1, options)
     }
 
     return null
@@ -245,7 +274,7 @@ Generate the edited photo.`
     console.error(`[Gemini] Error for ${scenario.id}:`, error)
     if (retryCount < MAX_RETRIES) {
       await sleep(retryDelay(retryCount))
-      return editPhotoWithGemini(photo, scenario, gender, apiKey, openaiKey, retryCount + 1)
+      return editPhotoWithGemini(photo, scenario, gender, apiKey, openaiKey, retryCount + 1, options)
     }
     return null
   }

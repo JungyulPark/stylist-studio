@@ -54,8 +54,10 @@ export function errorResponse(
     timestamp: new Date().toISOString(),
   }
 
-  // Only include details in non-production environments
-  if (details && process.env.NODE_ENV !== 'production') {
+  // Only include details in non-production environments.
+  // Workers have no `process` global, so production omits details by default.
+  const nodeEnv = (globalThis as { process?: { env?: Record<string, string | undefined> } }).process?.env?.NODE_ENV
+  if (details && nodeEnv && nodeEnv !== 'production') {
     body.details = details
   }
 
@@ -83,6 +85,12 @@ export const errors = {
    */
   invalidRequest: (message: string, corsHeaders: Record<string, string>) =>
     errorResponse(ErrorCode.INVALID_REQUEST, message, 400, corsHeaders),
+
+  /**
+   * 400 Bad Request - Request body is not valid JSON
+   */
+  invalidJson: (corsHeaders: Record<string, string>) =>
+    errorResponse(ErrorCode.INVALID_REQUEST, 'Request body must be valid JSON', 400, corsHeaders),
 
   /**
    * 401 Unauthorized

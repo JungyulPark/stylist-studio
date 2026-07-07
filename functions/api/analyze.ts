@@ -366,12 +366,17 @@ Provide a detailed, personalized style report with general recommendations based
       return errors.externalApi('OpenAI', corsHeaders)
     }
 
-    // --- Extended Color Palette (30 best + 10 avoid) ---
+    // --- Extended Color Palette (30 best + 10 avoid) + canonical season label ---
     // Lightweight text-only call using gpt-4o-mini for cost efficiency
     let colorPalette: { bestColors: string[]; avoidColors: string[] } | null = null
+    let seasonInfo: { base: string; label_en: string; label_ko: string } | null = null
     try {
       const seasonMatch = report.match(/(?:Spring|Summer|Autumn|Winter)\s*(?:Warm|Cool)?/i)
       const season = seasonMatch ? seasonMatch[0] : 'unknown'
+      if (season !== 'unknown') {
+        // Baseline from the report regex — upgraded to a 12-type label below if the palette call succeeds
+        seasonInfo = { base: season.split(/\s/)[0], label_en: season, label_ko: season }
+      }
 
       const paletteResponse = await fetch('https://api.openai.com/v1/chat/completions', {
         method: 'POST',
@@ -393,8 +398,9 @@ Provide a detailed, personalized style report with general recommendations based
 Generate a comprehensive color palette:
 - bestColors: exactly 30 hex color codes that look BEST on this season type. Include a mix of: neutrals (5), everyday basics (8), accent/statement colors (10), metallics/jewel tones (7). Order from most versatile to most statement.
 - avoidColors: exactly 10 hex color codes this season should AVOID. Colors that wash out or clash with their undertone.
+- season: the canonical 12-type Korean personal color classification for "${season}". Fields: base (Spring|Summer|Autumn|Winter), label_en (e.g. "Autumn Warm Mute"), label_ko (e.g. "가을 웜 뮤트").
 
-Return JSON only: {"bestColors":["#hex1","#hex2",...],"avoidColors":["#hex1","#hex2",...]}`
+Return JSON only: {"bestColors":["#hex1",...],"avoidColors":["#hex1",...],"season":{"base":"Autumn","label_en":"Autumn Warm Mute","label_ko":"가을 웜 뮤트"}}`
             }
           ],
           max_completion_tokens: 500,
@@ -409,8 +415,18 @@ Return JSON only: {"bestColors":["#hex1","#hex2",...],"avoidColors":["#hex1","#h
         }
         const content = paletteData.choices[0]?.message?.content
         if (content) {
-          colorPalette = JSON.parse(content)
-          console.log(`[analyze] Color palette generated: ${colorPalette?.bestColors?.length} best, ${colorPalette?.avoidColors?.length} avoid`)
+          const parsed = JSON.parse(content) as {
+            bestColors?: string[]
+            avoidColors?: string[]
+            season?: { base?: string; label_en?: string; label_ko?: string }
+          }
+          if (parsed.bestColors && parsed.avoidColors) {
+            colorPalette = { bestColors: parsed.bestColors, avoidColors: parsed.avoidColors }
+          }
+          if (parsed.season?.base && parsed.season.label_en && parsed.season.label_ko) {
+            seasonInfo = { base: parsed.season.base, label_en: parsed.season.label_en, label_ko: parsed.season.label_ko }
+          }
+          console.log(`[analyze] Color palette generated: ${colorPalette?.bestColors?.length} best, ${colorPalette?.avoidColors?.length} avoid, season: ${seasonInfo?.label_en || 'none'}`)
         }
       }
     } catch (e) {
@@ -419,7 +435,7 @@ Return JSON only: {"bestColors":["#hex1","#hex2",...],"avoidColors":["#hex1","#h
     }
 
     return new Response(
-      JSON.stringify({ report, colorPalette }),
+      JSON.stringify({ report, colorPalette, season: seasonInfo }),
       { status: 200, headers: { 'Content-Type': 'application/json', ...corsHeaders } }
     )
 
