@@ -5393,13 +5393,22 @@ ${styleImgs.length > 1 ? `<div class="section"><h2>${styleSection}</h2><div clas
           </div>
         </header>
 
-        {/* Hero Section — Personal Color focused */}
-        <section className="hero-section-v2">
-          <span className="hero-badge">{lang === 'ko' ? 'AI 퍼스널 컬러 진단' : 'AI Personal Color Analysis'}</span>
-          <h1 className="hero-v2-headline">
-            {lang === 'ko' ? '나에게 어울리는\n컬러를 발견하세요' : 'Discover Your\nPerfect Colors'}
+        {/* Hero Section — cinematic dark, word-by-word reveal */}
+        <section className="hero-cinema">
+          <span className="hero-cinema-badge">{lang === 'ko' ? 'AI 퍼스널 컬러 진단' : 'AI PERSONAL COLOR ANALYSIS'}</span>
+          <h1 className="hero-cinema-headline" aria-label={lang === 'ko' ? '오늘, 뭐 입지?' : 'What to wear today'}>
+            {(lang === 'ko' ? ['오늘,', '뭐', '입지?'] : ['WHAT', 'TO', 'WEAR', 'TODAY']).map((word, i, arr) => (
+              <span
+                key={i}
+                aria-hidden="true"
+                className={`hero-word${i === arr.length - 1 ? ' hero-word-accent' : ''}`}
+                style={{ animationDelay: `${0.15 + i * 0.14}s` }}
+              >
+                {word}
+              </span>
+            ))}
           </h1>
-          <p className="hero-v2-desc">
+          <p className="hero-cinema-sub">
             {lang === 'ko'
               ? '사진 한 장으로 퍼스널 컬러 진단 + AI 스타일 변환. 무료로 시작하세요.'
               : 'Upload one photo. Get your personal color season and AI-powered styling. Start free.'}
@@ -5421,14 +5430,19 @@ ${styleImgs.length > 1 ? `<div class="section"><h2>${styleSection}</h2><div clas
             </div>
             <span className="ba-label ba-label-before">{t.galleryBefore}</span>
             <span className="ba-label ba-label-after">{t.galleryAfter}</span>
+            <div className="hero-scan" aria-hidden="true"></div>
           </div>
           <button className="free-cta-pulse hero-gold-cta" onClick={() => { trackEvent('hero_cta_click', { type: 'free_analysis' }); setPage('input') }}>
             {lang === 'ko' ? '무료 컬러 분석 시작' : 'Start Free Color Analysis'}
           </button>
-          <div className="hero-trust-signals">
-            <span>{lang === 'ko' ? '완전 무료' : 'Completely Free'}</span>
+          <div className="hero-trust-signals hero-trust-dark">
+            <span>{lang === 'ko' ? '첫 분석 무료' : 'First Analysis Free'}</span>
             <span>{lang === 'ko' ? '30초 완료' : '30 Seconds'}</span>
             <span>{lang === 'ko' ? '즉시 결과' : 'Instant Results'}</span>
+          </div>
+          <div className="hero-scroll-cue" aria-hidden="true">
+            <span className="hero-scroll-line"></span>
+            <span className="hero-scroll-text">{lang === 'ko' ? '스크롤' : 'SCROLL'}</span>
           </div>
         </section>
 
