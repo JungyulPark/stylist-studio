@@ -4497,7 +4497,7 @@ ${styleImgs.length > 1 ? `<div class="section"><h2>${styleSection}</h2><div clas
         <header className="app-header">
           <div className="logo" onClick={handleRestart} style={{ cursor: 'pointer' }}>
             <div className="logo-icon">
-              <span className="logo-k">K</span>
+              <svg className="logo-mark" viewBox="0 0 1024 1024" width="26" height="26" aria-hidden="true"><rect x="442" y="300" width="140" height="480" rx="70" fill="#4a4a63" transform="rotate(-20 512 780)"/><rect x="442" y="300" width="140" height="480" rx="70" fill="#8d7442" transform="rotate(20 512 780)"/><rect x="442" y="248" width="140" height="532" rx="70" fill="#d3b269"/></svg>
             </div>
             <span className="logo-text">{t.title}</span>
           </div>
@@ -4723,7 +4723,7 @@ ${styleImgs.length > 1 ? `<div class="section"><h2>${styleSection}</h2><div clas
         <header className="app-header">
           <div className="logo" onClick={() => setPage('landing')} style={{ cursor: 'pointer' }}>
             <div className="logo-icon">
-              <span className="logo-k">K</span>
+              <svg className="logo-mark" viewBox="0 0 1024 1024" width="26" height="26" aria-hidden="true"><rect x="442" y="300" width="140" height="480" rx="70" fill="#4a4a63" transform="rotate(-20 512 780)"/><rect x="442" y="300" width="140" height="480" rx="70" fill="#8d7442" transform="rotate(20 512 780)"/><rect x="442" y="248" width="140" height="532" rx="70" fill="#d3b269"/></svg>
             </div>
             <span className="logo-text">{t.title}</span>
           </div>
@@ -4851,7 +4851,7 @@ ${styleImgs.length > 1 ? `<div class="section"><h2>${styleSection}</h2><div clas
         <header className="app-header">
           <div className="logo" onClick={() => setPage('landing')} style={{ cursor: 'pointer' }}>
             <div className="logo-icon">
-              <span className="logo-k">K</span>
+              <svg className="logo-mark" viewBox="0 0 1024 1024" width="26" height="26" aria-hidden="true"><rect x="442" y="300" width="140" height="480" rx="70" fill="#4a4a63" transform="rotate(-20 512 780)"/><rect x="442" y="300" width="140" height="480" rx="70" fill="#8d7442" transform="rotate(20 512 780)"/><rect x="442" y="248" width="140" height="532" rx="70" fill="#d3b269"/></svg>
             </div>
             <span className="logo-text">{t.title}</span>
           </div>
@@ -5273,7 +5273,7 @@ ${styleImgs.length > 1 ? `<div class="section"><h2>${styleSection}</h2><div clas
         <header className="app-header">
           <div className="logo" onClick={() => setPage('landing')} style={{ cursor: 'pointer' }}>
             <div className="logo-icon">
-              <span className="logo-k">K</span>
+              <svg className="logo-mark" viewBox="0 0 1024 1024" width="26" height="26" aria-hidden="true"><rect x="442" y="300" width="140" height="480" rx="70" fill="#4a4a63" transform="rotate(-20 512 780)"/><rect x="442" y="300" width="140" height="480" rx="70" fill="#8d7442" transform="rotate(20 512 780)"/><rect x="442" y="248" width="140" height="532" rx="70" fill="#d3b269"/></svg>
             </div>
             <span className="logo-text">{t.title}</span>
           </div>
@@ -5440,7 +5440,7 @@ ${styleImgs.length > 1 ? `<div class="section"><h2>${styleSection}</h2><div clas
         <header className="landing-header">
           <div className="logo">
             <div className="logo-icon">
-              <span className="logo-k">K</span>
+              <svg className="logo-mark" viewBox="0 0 1024 1024" width="26" height="26" aria-hidden="true"><rect x="442" y="300" width="140" height="480" rx="70" fill="#4a4a63" transform="rotate(-20 512 780)"/><rect x="442" y="300" width="140" height="480" rx="70" fill="#8d7442" transform="rotate(20 512 780)"/><rect x="442" y="248" width="140" height="532" rx="70" fill="#d3b269"/></svg>
             </div>
             <span className="logo-text">{t.title}</span>
           </div>
@@ -5620,6 +5620,32 @@ ${styleImgs.length > 1 ? `<div class="section"><h2>${styleSection}</h2><div clas
             </div>
             <div className="chat-strip-cta">{t.explore} →</div>
           </div>
+
+          {/* What to Wear Today — daily subscription entry */}
+          <div
+            className="chat-strip daily-strip fade-in-up"
+            onClick={() => {
+              if (isSubscribed) {
+                trackEvent('select_item', { item_category: 'daily_dashboard' })
+                setPage('subscription-dashboard')
+              } else {
+                trackEvent('select_item', { item_category: 'daily_subscribe' })
+                handleSubscription()
+              }
+            }}
+          >
+            <div className="chat-strip-text">
+              <h3 className="chat-strip-title">{lang === 'ko' ? '매일 아침, 오늘의 코디' : 'What to Wear Today'}</h3>
+              <p className="chat-strip-desc">
+                {isSubscribed
+                  ? (lang === 'ko' ? '구독 중 — 오늘의 추천과 지난 스타일을 확인하세요' : 'Subscribed — see today\'s look and your style history')
+                  : (lang === 'ko' ? '날씨와 내 퍼스널 컬러에 맞춘 코디를 매일 아침 이메일로 · $6.99/월 · 첫 7일 무료' : 'Weather-matched daily outfits in your inbox · $6.99/mo · First 7 days free')}
+              </p>
+            </div>
+            <div className="chat-strip-cta">
+              {isSubscribed ? (lang === 'ko' ? '오늘의 스타일 →' : "Today's Style →") : `${t.explore} →`}
+            </div>
+          </div>
         </section>
 
         <div className="section-divider-full"></div>
@@ -5770,7 +5796,7 @@ ${styleImgs.length > 1 ? `<div class="section"><h2>${styleSection}</h2><div clas
         <header className="app-header">
           <div className="logo" onClick={handleRestart} style={{ cursor: 'pointer' }}>
             <div className="logo-icon">
-              <span className="logo-k">K</span>
+              <svg className="logo-mark" viewBox="0 0 1024 1024" width="26" height="26" aria-hidden="true"><rect x="442" y="300" width="140" height="480" rx="70" fill="#4a4a63" transform="rotate(-20 512 780)"/><rect x="442" y="300" width="140" height="480" rx="70" fill="#8d7442" transform="rotate(20 512 780)"/><rect x="442" y="248" width="140" height="532" rx="70" fill="#d3b269"/></svg>
             </div>
             <span className="logo-text">{t.title}</span>
           </div>
@@ -6484,7 +6510,7 @@ ${styleImgs.length > 1 ? `<div class="section"><h2>${styleSection}</h2><div clas
           </button>
           <div className="logo" onClick={handleRestart} style={{ cursor: 'pointer' }}>
             <div className="logo-icon">
-              <span className="logo-k">K</span>
+              <svg className="logo-mark" viewBox="0 0 1024 1024" width="26" height="26" aria-hidden="true"><rect x="442" y="300" width="140" height="480" rx="70" fill="#4a4a63" transform="rotate(-20 512 780)"/><rect x="442" y="300" width="140" height="480" rx="70" fill="#8d7442" transform="rotate(20 512 780)"/><rect x="442" y="248" width="140" height="532" rx="70" fill="#d3b269"/></svg>
             </div>
             <span className="logo-text">{t.title}</span>
           </div>
@@ -6684,7 +6710,7 @@ ${styleImgs.length > 1 ? `<div class="section"><h2>${styleSection}</h2><div clas
       <header className="app-header">
         <div className="logo" onClick={handleRestart} style={{ cursor: 'pointer' }}>
           <div className="logo-icon">
-            <span className="logo-k">K</span>
+            <svg className="logo-mark" viewBox="0 0 1024 1024" width="26" height="26" aria-hidden="true"><rect x="442" y="300" width="140" height="480" rx="70" fill="#4a4a63" transform="rotate(-20 512 780)"/><rect x="442" y="300" width="140" height="480" rx="70" fill="#8d7442" transform="rotate(20 512 780)"/><rect x="442" y="248" width="140" height="532" rx="70" fill="#d3b269"/></svg>
           </div>
           <span className="logo-text">{t.title}</span>
         </div>

@@ -4441,37 +4441,23 @@
 
 /* Green pulse CTA button */
 .free-cta-pulse {
-  padding: 1rem 2.25rem;
+  padding: 1.05rem 2.5rem;
   font-size: 1rem;
-  font-weight: 700;
-  color: #fff;
-  background: linear-gradient(135deg, #c9a962, #d4af37);
+  font-weight: 600;
+  color: #14120c;
+  background: linear-gradient(160deg, #e6cb84, #c9a962);
   border: none;
   border-radius: 100px;
   cursor: pointer;
   position: relative;
   transition: all 0.4s var(--spring);
-  box-shadow: 0 4px 20px rgba(201, 169, 98, 0.35);
-  letter-spacing: 0.02em;
-}
-
-.free-cta-pulse::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  border-radius: inherit;
-  box-shadow: 0 4px 30px rgba(201, 169, 98, 0.6), 0 0 0 8px rgba(201, 169, 98, 0.1);
-  animation: pulse-gold 2s ease-in-out infinite;
+  box-shadow: 0 6px 24px rgba(201, 169, 98, 0.28);
+  letter-spacing: 0.03em;
 }
 
 .free-cta-pulse:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 8px 32px rgba(201, 169, 98, 0.5);
-}
-
-@keyframes pulse-gold {
-  0%, 100% { opacity: 0; }
-  50% { opacity: 1; }
+  transform: translateY(-2px);
+  box-shadow: 0 10px 32px rgba(201, 169, 98, 0.4);
 }
 
 /* Share Result section */
@@ -7449,4 +7435,9 @@ button:not(:disabled):active {
   color: var(--primary-light);
   margin: 0;
   word-break: keep-all;
+}
+
+/* Daily strip — distinguished from chat strip by a gold edge */
+.daily-strip {
+  border-left: 3px solid #c9a962;
 }
