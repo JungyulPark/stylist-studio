@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "include": ["/api/*", "/sitemap.xml"],
+  "include": ["/api/*", "/share/*", "/sitemap.xml"],
   "exclude": [
     "/robots.txt",
     "/manifest.json",

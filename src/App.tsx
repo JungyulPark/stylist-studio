@@ -2498,6 +2498,8 @@ function App() {
   })
   const [report, setReport] = useState<string>('')
   const [colorPalette, setColorPalette] = useState<{ bestColors: string[]; avoidColors: string[] } | null>(null)
+  // 12타입 시즌 라벨 (API 제공, parseStyleDNA는 폴백) — 공유 카드의 정체성 헤드라인
+  const [seasonInfo, setSeasonInfo] = useState<{ base: string; label_en: string; label_ko: string } | null>(null)
   const [error, setError] = useState<string>('')
   const [isDragging, setIsDragging] = useState(false)
   const [styleImages, setStyleImages] = useState<StyleImage[]>([])
@@ -3309,6 +3311,7 @@ function App() {
       }
       setReport(analyzeData.report)
       if (analyzeData.colorPalette) setColorPalette(analyzeData.colorPalette)
+      if (analyzeData.season) setSeasonInfo(analyzeData.season)
       setIsFullPaid(true)
 
       setLoadingProgress(100)
@@ -3794,6 +3797,7 @@ function App() {
       const analyzeData = await analyzeResponse.json()
       setReport(analyzeData.report)
       if (analyzeData.colorPalette) setColorPalette(analyzeData.colorPalette)
+      if (analyzeData.season) setSeasonInfo(analyzeData.season)
 
       // Wait for images to finish
       setIsGeneratingStyles(true)
@@ -5875,10 +5879,11 @@ ${styleImgs.length > 1 ? `<div class="section"><h2>${styleSection}</h2><div clas
                     trackEvent('share_color_card', { season: dna?.season || 'unknown' })
                     try {
                       const { generateShareCard: genCard } = await import('./utils/shareCard')
-                      const seasonLabel = dna?.season ? (dna.season.charAt(0).toUpperCase() + dna.season.slice(1)) + ' ' + (dna.season === 'spring' || dna.season === 'autumn' ? 'Warm' : 'Cool') : 'Unknown'
+                      // API의 12타입 라벨 우선, parseStyleDNA 4계절 추론은 폴백
+                      const fallbackLabel = dna?.season ? (dna.season.charAt(0).toUpperCase() + dna.season.slice(1)) + ' ' + (dna.season === 'spring' || dna.season === 'autumn' ? 'Warm' : 'Cool') : 'Unknown'
                       const blob = await genCard({
-                        season: seasonLabel,
-                        seasonKo: dna?.season ? t.styleDnaSeasons[dna.season as keyof typeof t.styleDnaSeasons] : undefined,
+                        season: seasonInfo?.label_en || fallbackLabel,
+                        seasonKo: seasonInfo?.label_ko || (dna?.season ? t.styleDnaSeasons[dna.season as keyof typeof t.styleDnaSeasons] : undefined),
                         palette: (dna?.colors || []).map((c: string) => c).filter(Boolean),
                         bodyType: dna?.bodyType || undefined,
                         format: '9:16'
