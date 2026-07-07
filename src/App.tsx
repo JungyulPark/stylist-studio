@@ -2273,6 +2273,76 @@ interface StyleImage {
 }
 
 // GA4 custom event tracking
+// ─── 360° frame-sequence spin viewer ─────────────────────────────
+// Expects frames at `${basePath}/frame-00.webp` … zero-padded, evenly
+// spaced rotations (see docs/MODEL_PROMPTS.md). Renders nothing until
+// the first frame actually exists, so the section is safe to ship
+// before the assets do.
+function SpinViewer({ basePath, frameCount, hint }: { basePath: string; frameCount: number; hint: string }) {
+  const [frame, setFrame] = useState(0)
+  const [ready, setReady] = useState(false)
+  const [interacted, setInteracted] = useState(false)
+  const dragRef = useRef<{ startX: number; startFrame: number } | null>(null)
+
+  const frameSrc = useCallback(
+    (i: number) => `${basePath}/frame-${String(((i % frameCount) + frameCount) % frameCount).padStart(2, '0')}.webp`,
+    [basePath, frameCount]
+  )
+
+  useEffect(() => {
+    const img = new Image()
+    img.onload = () => {
+      setReady(true)
+      for (let i = 1; i < frameCount; i++) {
+        const pre = new Image()
+        pre.src = frameSrc(i)
+      }
+    }
+    img.onerror = () => setReady(false)
+    img.src = frameSrc(0)
+  }, [frameSrc, frameCount])
+
+  // Slow auto-rotate until the user grabs it (skipped under reduced motion)
+  useEffect(() => {
+    if (!ready || interacted) return
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
+    const id = window.setInterval(() => setFrame(f => f + 1), 180)
+    return () => window.clearInterval(id)
+  }, [ready, interacted])
+
+  if (!ready) return null
+
+  const onPointerDown = (e: React.PointerEvent) => {
+    setInteracted(true)
+    dragRef.current = { startX: e.clientX, startFrame: frame }
+    ;(e.target as HTMLElement).setPointerCapture(e.pointerId)
+  }
+  const onPointerMove = (e: React.PointerEvent) => {
+    if (!dragRef.current) return
+    const deltaFrames = Math.round((e.clientX - dragRef.current.startX) / 12)
+    setFrame(dragRef.current.startFrame + deltaFrames)
+  }
+  const onPointerUp = () => { dragRef.current = null }
+
+  return (
+    <div className="spin-viewer-wrap">
+      <div
+        className="spin-viewer"
+        onPointerDown={onPointerDown}
+        onPointerMove={onPointerMove}
+        onPointerUp={onPointerUp}
+        onPointerCancel={onPointerUp}
+        role="img"
+        aria-label="360 degree style view"
+      >
+        <img src={frameSrc(frame)} alt="" className="spin-frame" draggable={false} />
+        <span className="spin-badge">360°</span>
+      </div>
+      <p className="spin-hint">{hint}</p>
+    </div>
+  )
+}
+
 function trackEvent(eventName: string, params?: Record<string, string | number | boolean>) {
   try {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -5512,6 +5582,13 @@ ${styleImgs.length > 1 ? `<div class="section"><h2>${styleSection}</h2><div clas
                 <div className="service-hero-cta">{t.explore} →</div>
               </div>
           </div>
+
+          {/* 360° style view — renders only when /public/spin frames exist */}
+          <SpinViewer
+            basePath="/spin/look-01"
+            frameCount={24}
+            hint={lang === 'ko' ? '드래그해서 360도로 스타일을 살펴보세요' : 'Drag to view the look in 360°'}
+          />
 
           {/* Style Advisor — real-time chat */}
           <div className="chat-strip fade-in-up" onClick={() => { trackEvent('select_item', { item_category: 'style_chat' }); setPage('style-chat') }}>
