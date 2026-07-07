@@ -2343,6 +2343,42 @@ function SpinViewer({ basePath, frameCount, hint }: { basePath: string; frameCou
   )
 }
 
+// Web Push — VAPID 공개키 (개인키는 Cloudflare env VAPID_PRIVATE_JWK)
+const VAPID_PUBLIC_KEY = 'BLE73tVfXimofiQLw_mR2ypde8zZH3Dmj_cmYfFQbdH3c4yr16f9O3CEhzAdL8txTVC-dzQLYwLNVCztSVCEVBM'
+
+function urlBase64ToUint8Array(base64String: string): Uint8Array {
+  const padding = '='.repeat((4 - (base64String.length % 4)) % 4)
+  const base64 = (base64String + padding).replace(/-/g, '+').replace(/_/g, '/')
+  const raw = atob(base64)
+  const output = new Uint8Array(raw.length)
+  for (let i = 0; i < raw.length; i++) output[i] = raw.charCodeAt(i)
+  return output
+}
+
+// 날씨 → 한 줄 코디 팁 (정적 매핑 — AI 비용 없음)
+function getWeatherTip(temp: number, condition: string, lang: 'ko' | 'en'): string {
+  const rain = condition === 'Rain' || condition === 'Drizzle' || condition === 'Thunderstorm'
+  const snow = condition === 'Snow'
+  if (lang === 'ko') {
+    if (snow) return '방수 아우터와 따뜻한 부츠의 날'
+    if (rain) return '레인 아우터와 딥톤이 어울리는 날'
+    if (temp >= 28) return '린넨과 밝은 컬러가 어울리는 날'
+    if (temp >= 22) return '가벼운 셔츠 한 장이면 충분한 날'
+    if (temp >= 15) return '얇은 니트나 가디건이 어울리는 날'
+    if (temp >= 8) return '트렌치나 가벼운 코트의 날'
+    if (temp >= 0) return '울 코트와 레이어링의 날'
+    return '패딩과 목도리가 필요한 날'
+  }
+  if (snow) return 'a day for waterproof outers and warm boots'
+  if (rain) return 'a day for rain shells and deep tones'
+  if (temp >= 28) return 'a day for linen and light colors'
+  if (temp >= 22) return 'a light shirt kind of day'
+  if (temp >= 15) return 'a day for fine knits and cardigans'
+  if (temp >= 8) return 'trench and light coat weather'
+  if (temp >= 0) return 'wool coat and layering weather'
+  return 'a day for padded coats and scarves'
+}
+
 function trackEvent(eventName: string, params?: Record<string, string | number | boolean>) {
   try {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -2500,6 +2536,14 @@ function App() {
   const [colorPalette, setColorPalette] = useState<{ bestColors: string[]; avoidColors: string[] } | null>(null)
   // 12타입 시즌 라벨 (API 제공, parseStyleDNA는 폴백) — 공유 카드의 정체성 헤드라인
   const [seasonInfo, setSeasonInfo] = useState<{ base: string; label_en: string; label_ko: string } | null>(null)
+  // 히어로 날씨 미리보기 (Cloudflare 위치 기반, 권한 팝업 없음)
+  const [weatherPreview, setWeatherPreview] = useState<{ city: string; temp: number; condition: string } | null>(null)
+  // 아침 푸시 알림 상태
+  const [pushStatus, setPushStatus] = useState<'idle' | 'working' | 'enabled' | 'unsupported'>('idle')
+  // 내 옷장
+  const [wardrobeItems, setWardrobeItems] = useState<Array<{ id: string; description: string; category: string | null; image_url: string }>>([])
+  const [wardrobeUploading, setWardrobeUploading] = useState(false)
+  const wardrobeInputRef = useRef<HTMLInputElement>(null)
   const [error, setError] = useState<string>('')
   const [isDragging, setIsDragging] = useState(false)
   const [styleImages, setStyleImages] = useState<StyleImage[]>([])
@@ -2741,6 +2785,151 @@ function App() {
       trackEvent('paywall_impression', { placement: 'result_locked' })
     }
   }, [page, isFullPaid])
+
+  // 홈 = 오늘: 구독자가 파라미터 없이 열면 랜딩 대신 오늘의 코디로 —
+  // "오늘 뭐 입지?"의 답이 첫 화면이어야 한다. 결제 리다이렉트(?payment=...)나
+  // 딥링크 해시가 있으면 기존 흐름을 방해하지 않는다.
+  useEffect(() => {
+    const hasParams = window.location.search.length > 1
+    const hash = window.location.hash
+    const hasDeepLink = hash && hash !== '#landing' && !hash.includes('access_token')
+    if (!hasParams && !hasDeepLink && localStorage.getItem('stylist_subscription_active') === 'true') {
+      window.history.replaceState({ page: 'subscription-dashboard' }, '', '#subscription-dashboard')
+      setPageState('subscription-dashboard')
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+
+  // 푸시 지원 여부 + 기존 구독 확인 (대시보드 진입 시)
+  useEffect(() => {
+    if (page !== 'subscription-dashboard') return
+    if (!('serviceWorker' in navigator) || !('PushManager' in window) || !('Notification' in window)) {
+      setPushStatus('unsupported')
+      return
+    }
+    navigator.serviceWorker.ready
+      .then(reg => reg.pushManager.getSubscription())
+      .then(sub => {
+        if (sub && Notification.permission === 'granted') setPushStatus('enabled')
+      })
+      .catch(() => { /* ignore */ })
+  }, [page])
+
+  // 내 옷장 로드 (대시보드 진입 시)
+  useEffect(() => {
+    if (page !== 'subscription-dashboard' || !user || !session?.access_token) return
+    fetch('/api/wardrobe', { headers: authHeaders() })
+      .then(r => (r.ok ? r.json() : null))
+      .then((data: { items?: Array<{ id: string; description: string; category: string | null; image_url: string }> } | null) => {
+        if (data?.items) setWardrobeItems(data.items)
+      })
+      .catch(() => { /* 옷장은 부가 기능 */ })
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [page, user?.id, session?.access_token])
+
+  // 옷 사진 업로드 → 서버가 비전으로 아이템 설명 생성
+  const handleWardrobeUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
+    e.target.value = ''
+    if (!file) return
+    setWardrobeUploading(true)
+    trackEvent('wardrobe_upload_start', { count: wardrobeItems.length })
+    try {
+      // 클라이언트 다운스케일 — 옷 인식엔 1024px면 충분
+      const dataUri = await new Promise<string>((resolve, reject) => {
+        const img = new Image()
+        const url = URL.createObjectURL(file)
+        img.onload = () => {
+          URL.revokeObjectURL(url)
+          const maxDim = 1024
+          const scale = Math.min(1, maxDim / Math.max(img.width, img.height))
+          const canvas = document.createElement('canvas')
+          canvas.width = Math.round(img.width * scale)
+          canvas.height = Math.round(img.height * scale)
+          canvas.getContext('2d')!.drawImage(img, 0, 0, canvas.width, canvas.height)
+          resolve(canvas.toDataURL('image/jpeg', 0.82))
+        }
+        img.onerror = reject
+        img.src = url
+      })
+      const res = await fetch('/api/wardrobe', {
+        method: 'POST',
+        headers: authHeaders(),
+        body: JSON.stringify({ photo: dataUri }),
+      })
+      if (!res.ok) throw new Error(`wardrobe ${res.status}`)
+      const data = await res.json() as { item: { id: string; description: string; category: string | null; image_url: string } }
+      setWardrobeItems(prev => [data.item, ...prev])
+      trackEvent('wardrobe_item_added', { category: data.item.category || 'unknown' })
+    } catch (err) {
+      console.error('Wardrobe upload failed:', err)
+      setError(lang === 'ko' ? '옷 등록에 실패했어요. 다시 시도해주세요.' : 'Failed to add item. Please try again.')
+    } finally {
+      setWardrobeUploading(false)
+    }
+  }
+
+  const handleWardrobeDelete = async (id: string) => {
+    setWardrobeItems(prev => prev.filter(i => i.id !== id))
+    try {
+      await fetch('/api/wardrobe', {
+        method: 'DELETE',
+        headers: authHeaders(),
+        body: JSON.stringify({ id }),
+      })
+    } catch { /* 목록에선 이미 제거됨 — 다음 로드에서 동기화 */ }
+  }
+
+  // 아침 알림 켜기 — 권한 요청 → 푸시 구독 → 서버 저장
+  const enableMorningPush = async () => {
+    try {
+      setPushStatus('working')
+      const permission = await Notification.requestPermission()
+      if (permission !== 'granted') {
+        setPushStatus('idle')
+        return
+      }
+      const reg = await navigator.serviceWorker.ready
+      const sub = await reg.pushManager.subscribe({
+        userVisibleOnly: true,
+        applicationServerKey: urlBase64ToUint8Array(VAPID_PUBLIC_KEY) as BufferSource,
+      })
+      const res = await fetch('/api/push-subscribe', {
+        method: 'POST',
+        headers: authHeaders(),
+        body: JSON.stringify({ subscription: sub.toJSON() }),
+      })
+      if (!res.ok) throw new Error(`push-subscribe ${res.status}`)
+      trackEvent('push_enabled')
+      setPushStatus('enabled')
+    } catch (e) {
+      console.error('Push setup failed:', e)
+      setPushStatus('idle')
+    }
+  }
+
+  // 히어로 날씨 미리보기 — 30분 캐시, 실패 시 조용히 생략
+  useEffect(() => {
+    try {
+      const cached = localStorage.getItem('stylist_weather_preview')
+      if (cached) {
+        const { data, ts } = JSON.parse(cached) as { data: { city: string; temp: number; condition: string }; ts: number }
+        if (Date.now() - ts < 30 * 60 * 1000) {
+          setWeatherPreview(data)
+          return
+        }
+      }
+    } catch { /* ignore corrupt cache */ }
+    fetch('/api/weather-preview')
+      .then(r => (r.ok ? r.json() : null))
+      .then((data: { city: string; temp: number; condition: string } | null) => {
+        if (data && typeof data.temp === 'number') {
+          setWeatherPreview(data)
+          localStorage.setItem('stylist_weather_preview', JSON.stringify({ data, ts: Date.now() }))
+        }
+      })
+      .catch(() => { /* 위젯은 필수가 아님 */ })
+  }, [])
 
   // Polar Checkout Configuration (Sandbox 환경)
   // Product ID: cca7d48e-6758-4e83-a375-807ab70615ea
@@ -4981,6 +5170,19 @@ ${styleImgs.length > 1 ? `<div class="section"><h2>${styleSection}</h2><div clas
           <div className="dashboard-header">
             <h1 className="dashboard-title">{t.dashboardTitle}</h1>
             <p className="dashboard-subtitle">{t.dashboardSubtitle}</p>
+            {user && pushStatus !== 'unsupported' && (
+              <button
+                className={`push-toggle-btn${pushStatus === 'enabled' ? ' push-on' : ''}`}
+                disabled={pushStatus === 'enabled' || pushStatus === 'working'}
+                onClick={enableMorningPush}
+              >
+                {pushStatus === 'enabled'
+                  ? (lang === 'ko' ? '아침 알림 켜짐' : 'Morning alerts on')
+                  : pushStatus === 'working'
+                    ? (lang === 'ko' ? '설정 중...' : 'Setting up...')
+                    : (lang === 'ko' ? '아침 알림 받기' : 'Get morning alerts')}
+              </button>
+            )}
           </div>
 
           {/* Hidden file input for profile photo (always rendered) */}
@@ -5206,6 +5408,51 @@ ${styleImgs.length > 1 ? `<div class="section"><h2>${styleSection}</h2><div clas
 
               <p className="dashboard-footer-note">{t.dashboardNewDay}</p>
             </>
+          )}
+
+          {/* My Wardrobe — 실제 보유한 옷 위주로 데일리 코디 조합 */}
+          {user && (
+            <div className="wardrobe-section">
+              <h3 className="dashboard-gallery-title">{lang === 'ko' ? '내 옷장' : 'My Wardrobe'}</h3>
+              <p className="wardrobe-desc">
+                {lang === 'ko'
+                  ? '가지고 있는 옷을 등록하면, 매일 아침 코디가 내 옷 위주로 조합돼요. 전부 등록할 필요 없이 자주 입는 옷 몇 벌이면 충분해요.'
+                  : 'Add clothes you actually own and your daily looks will be built around them. A few favorites are enough — no need to catalog everything.'}
+              </p>
+              <div className="wardrobe-grid">
+                {wardrobeItems.map((item) => (
+                  <div key={item.id} className="wardrobe-item">
+                    <img src={item.image_url} alt={item.description} loading="lazy" />
+                    <button
+                      className="wardrobe-delete"
+                      aria-label={lang === 'ko' ? '삭제' : 'Delete'}
+                      onClick={() => handleWardrobeDelete(item.id)}
+                    >×</button>
+                  </div>
+                ))}
+                {wardrobeItems.length < 12 && (
+                  <button
+                    className="wardrobe-add"
+                    disabled={wardrobeUploading}
+                    onClick={() => wardrobeInputRef.current?.click()}
+                  >
+                    {wardrobeUploading
+                      ? (lang === 'ko' ? '분석 중...' : 'Analyzing...')
+                      : `+ ${lang === 'ko' ? '옷 추가' : 'Add item'}`}
+                  </button>
+                )}
+              </div>
+              {wardrobeItems.length > 0 && (
+                <p className="wardrobe-count">{wardrobeItems.length}/12 · {lang === 'ko' ? '내일 아침 코디부터 반영돼요' : 'Applied from tomorrow\'s look'}</p>
+              )}
+              <input
+                ref={wardrobeInputRef}
+                type="file"
+                accept="image/*"
+                onChange={handleWardrobeUpload}
+                style={{ display: 'none' }}
+              />
+            </div>
           )}
 
           {/* Favorites Section */}
@@ -5505,6 +5752,13 @@ ${styleImgs.length > 1 ? `<div class="section"><h2>${styleSection}</h2><div clas
               ? '사진 한 장으로 퍼스널 컬러 진단 + AI 스타일 변환. 무료로 시작하세요.'
               : 'Upload one photo. Get your personal color season and AI-powered styling. Start free.'}
           </p>
+          {weatherPreview && (
+            <div className="hero-weather-pill">
+              <span className="hero-weather-temp">{weatherPreview.city} {weatherPreview.temp}°C</span>
+              <span className="hero-weather-divider" aria-hidden="true"></span>
+              <span className="hero-weather-tip">{getWeatherTip(weatherPreview.temp, weatherPreview.condition, lang)}</span>
+            </div>
+          )}
           <div
             className="ba-slider hero-ba-slider"
             ref={heroSliderRef}

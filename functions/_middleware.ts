@@ -71,8 +71,12 @@ const RATE_LIMITS: Record<string, [number, number]> = {
   '/api/update-subscriber-profile': [20, 60_000],
   '/api/cancel-subscription':       [10, 60_000],
 
+  // Wardrobe uploads hit OpenAI vision — 10 per minute
+  '/api/wardrobe':             [10, 60_000],
+
   // Read endpoints — 30 per minute
   '/api/subscription-status':  [30, 60_000],
+  '/api/weather-preview':      [30, 60_000],
   '/api/daily-style':          [30, 60_000],
   '/api/favorite-image':       [30, 60_000],
 }
@@ -116,7 +120,7 @@ export const onRequest: PagesFunction = async (context) => {
           'Content-Type': 'application/json',
           'Retry-After': String(Math.ceil(windowMs / 1000)),
           'Access-Control-Allow-Origin': origin,
-          'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
+          'Access-Control-Allow-Methods': 'GET, POST, DELETE, OPTIONS',
           'Access-Control-Allow-Headers': 'Content-Type, Authorization',
         },
       }

@@ -3,6 +3,7 @@ import { errors } from '../lib/errors'
 import { editPhotoWithGemini, type ImageScenario } from '../lib/gemini-image'
 import { getDailyScenarios, dailyScenarioLabels } from '../lib/daily-style-scenarios'
 import { createUnsubscribeToken } from '../lib/unsubscribe-token'
+import { sendEmptyPush } from '../lib/web-push'
 import { Resend } from 'resend'
 
 interface Env {
@@ -13,6 +14,8 @@ interface Env {
   OPENAI_API_KEY: string
   RESEND_API_KEY: string
   CRON_SECRET: string
+  VAPID_PRIVATE_JWK?: string
+  VAPID_SUBJECT?: string
   PHOTOS_BUCKET: R2Bucket
   DAILY_IMAGES_BUCKET: R2Bucket
 }
@@ -691,6 +694,36 @@ export const onRequestGet: PagesFunction<Env> = async (context) => {
           ? getDailyScenarios(weather, sub.gender)
           : undefined
 
+        // 내 옷장: 구독자가 실제 보유한 옷이 등록돼 있으면 시나리오에 주입 —
+        // 텍스트와 이미지가 같은 시나리오를 쓰므로 둘 다 자동 반영된다.
+        // (경쟁 앱 최대 불만: "내가 없는 옷을 추천한다")
+        if (scenarios) {
+          try {
+            const wRes = await fetch(
+              `${context.env.SUPABASE_URL}/rest/v1/wardrobe_items?email=eq.${encodeURIComponent(sub.email)}&select=description&order=created_at.desc&limit=12`,
+              {
+                headers: {
+                  'apikey': context.env.SUPABASE_SERVICE_KEY,
+                  'Authorization': `Bearer ${context.env.SUPABASE_SERVICE_KEY}`,
+                },
+              }
+            )
+            if (wRes.ok) {
+              const items = await wRes.json() as Array<{ description: string }>
+              if (items.length > 0) {
+                const owned = items.map(i => i.description).join('; ')
+                const wardrobeDirective = `\n\nOWNED WARDROBE (IMPORTANT): The wearer owns these garments: ${owned}. Build the outfit PRIMARILY from these owned pieces whenever they suit today's weather and the look — you may add at most one or two complementary items they don't own, and clearly favor owned items for the main pieces.`
+                for (const s of scenarios) {
+                  s.prompt += wardrobeDirective
+                }
+                console.log(`[cron] Injected ${items.length} wardrobe items for ${sub.email}`)
+              }
+            }
+          } catch (e) {
+            console.warn(`[cron] Wardrobe fetch failed for ${sub.email} (non-blocking):`, e)
+          }
+        }
+
         // Generate text recommendation with OpenAI gpt-5-mini
         const recResult = await generateStyleRecommendation(sub, weather, context.env.OPENAI_API_KEY || '', scenarios)
         const recommendation = recResult.text
@@ -773,6 +806,42 @@ export const onRequestGet: PagesFunction<Env> = async (context) => {
           } catch (e) {
             emailError = e instanceof Error ? e.message : 'Email send failed'
             console.error(`[cron] Email failed for ${sub.email}:`, e)
+          }
+        }
+
+        // 아침 푸시 알림 (있으면) — 실패해도 이메일 발송에 영향 없음
+        if (emailSent) {
+          try {
+            const pushRes = await fetch(
+              `${context.env.SUPABASE_URL}/rest/v1/push_subscriptions?email=eq.${encodeURIComponent(sub.email)}&select=endpoint`,
+              {
+                headers: {
+                  'apikey': context.env.SUPABASE_SERVICE_KEY,
+                  'Authorization': `Bearer ${context.env.SUPABASE_SERVICE_KEY}`,
+                },
+              }
+            )
+            if (pushRes.ok) {
+              const rows = await pushRes.json() as Array<{ endpoint: string }>
+              for (const row of rows) {
+                const status = await sendEmptyPush(row.endpoint, context.env)
+                // 404/410 = 만료된 구독 — 정리
+                if (status === 404 || status === 410) {
+                  await fetch(
+                    `${context.env.SUPABASE_URL}/rest/v1/push_subscriptions?endpoint=eq.${encodeURIComponent(row.endpoint)}`,
+                    {
+                      method: 'DELETE',
+                      headers: {
+                        'apikey': context.env.SUPABASE_SERVICE_KEY,
+                        'Authorization': `Bearer ${context.env.SUPABASE_SERVICE_KEY}`,
+                      },
+                    }
+                  )
+                }
+              }
+            }
+          } catch (e) {
+            console.warn(`[cron] Push failed for ${sub.email} (non-blocking):`, e)
           }
         }
 
