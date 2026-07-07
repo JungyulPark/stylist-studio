@@ -117,7 +117,7 @@ export const onRequest: PagesFunction = async (context) => {
           'Retry-After': String(Math.ceil(windowMs / 1000)),
           'Access-Control-Allow-Origin': origin,
           'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
-          'Access-Control-Allow-Headers': 'Content-Type',
+          'Access-Control-Allow-Headers': 'Content-Type, Authorization',
         },
       }
     )

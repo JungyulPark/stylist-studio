@@ -42,7 +42,7 @@ describe('getCorsHeaders', () => {
 
     const headers = getCorsHeaders(request)
 
-    expect(headers['Access-Control-Allow-Origin']).toBe('https://stylist-studio.pages.dev')
+    expect(headers['Access-Control-Allow-Origin']).toBe('https://kstylist.cc')
   })
 })
 

@@ -7,6 +7,8 @@
 
 // Allowed origins for CORS
 const ALLOWED_ORIGINS = [
+  'https://kstylist.cc',
+  'https://www.kstylist.cc',
   'https://stylist-studio.pages.dev',
   'https://personal-stylist-studio.pages.dev',
   'http://localhost:5173',
@@ -39,7 +41,7 @@ export function getCorsHeaders(request: Request): Record<string, string> {
   return {
     'Access-Control-Allow-Origin': allowedOrigin,
     'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
-    'Access-Control-Allow-Headers': 'Content-Type',
+    'Access-Control-Allow-Headers': 'Content-Type, Authorization',
     'Access-Control-Max-Age': '86400', // 24 hours
   }
 }
