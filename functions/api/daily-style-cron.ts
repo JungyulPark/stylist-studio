@@ -355,7 +355,11 @@ async function generateOutfitImages(
         scenario,
         gender,
         geminiApiKey,
-        openaiApiKey
+        openaiApiKey,
+        0,
+        // Daily emails render images at 240px — economy tier (Gemini Flash
+        // first, OpenAI medium fallback) keeps the subscription margin-positive
+        { tier: 'economy' }
       )
 
       if (!resultDataUri) {

@@ -69,7 +69,11 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
     }
 
     // 할인 코드 결정 (재구매 고객이면 자동 적용)
-    const discountCode = body.discountCode || (body.isRepeatCustomer ? REPEAT_DISCOUNT_CODE : undefined)
+    // 구독 상품 제외: 반복 결제에 50% 할인이 계속 적용되면 마진이 사라짐
+    const isSubscription = productType === 'daily_style'
+    const discountCode = isSubscription
+      ? undefined
+      : body.discountCode || (body.isRepeatCustomer ? REPEAT_DISCOUNT_CODE : undefined)
 
     // Polar Checkout Session API 호출
     const checkoutBody: Record<string, unknown> = {
