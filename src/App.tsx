@@ -2734,6 +2734,14 @@ function App() {
     }
   }, [page])
 
+  // Paywall impression on the result page's locked-images panel —
+  // premium_cta_clicked had no matching impression, so CTR was unmeasurable
+  useEffect(() => {
+    if (page === 'result' && !isFullPaid) {
+      trackEvent('paywall_impression', { placement: 'result_locked' })
+    }
+  }, [page, isFullPaid])
+
   // Polar Checkout Configuration (Sandbox 환경)
   // Product ID: cca7d48e-6758-4e83-a375-807ab70615ea
   // 체크아웃은 /api/create-checkout API를 통해 동적으로 생성됨
@@ -3324,7 +3332,7 @@ function App() {
       setLoadingStep(lang === 'ko' ? '완료!' : 'Complete!')
       await new Promise(resolve => setTimeout(resolve, 400))
       trackEvent('generation_complete', { type: 'full_style' })
-      trackEvent('result_view', { type: 'full_style' })
+      trackEvent('result_view', { type: 'full_style', is_paid: true })
       trackEvent('funnel_step', { step_name: 'result_view', step_number: 6, funnel_product: 'full' })
       setPage('result')
 
@@ -3831,6 +3839,10 @@ function App() {
       await new Promise(resolve => setTimeout(resolve, 400))
 
       // Go to destination page
+      if (destinationPage === 'result') {
+        trackEvent('result_view', { type: 'full_style', is_paid: isFullPaid })
+        trackEvent('funnel_step', { step_name: 'result_view', step_number: 6, funnel_product: 'full' })
+      }
       setPage(destinationPage)
     } catch (err) {
       console.error('Error:', err)
