@@ -2458,7 +2458,7 @@ function parseStyleDNA(report: string): StyleDNA {
   for (const pat of silhouettePatterns) {
     const m = report.match(pat)
     if (m) {
-      result.silhouettes = m[1].split(/[,·•\-]/).map(s => s.trim()).filter(s => s.length > 1 && s.length < 40).slice(0, 5)
+      result.silhouettes = m[1].split(/[,·•-]/).map(s => s.trim()).filter(s => s.length > 1 && s.length < 40).slice(0, 5)
       break
     }
   }
