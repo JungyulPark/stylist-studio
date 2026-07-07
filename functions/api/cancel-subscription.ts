@@ -1,4 +1,5 @@
 import { getCorsHeaders, createCorsPreflightResponse } from '../lib/cors'
+import { verifySupabaseUser } from '../lib/auth'
 import { errors } from '../lib/errors'
 
 interface Env {
@@ -11,17 +12,18 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
   const corsHeaders = getCorsHeaders(context.request)
 
   try {
-    const body = await context.request.json() as { email?: string }
-    const email = body.email
-
-    if (!email) {
-      return errors.validation('email is required', corsHeaders)
-    }
-
     const { POLAR_API_KEY, SUPABASE_URL, SUPABASE_SERVICE_KEY } = context.env
     if (!POLAR_API_KEY || !SUPABASE_URL || !SUPABASE_SERVICE_KEY) {
       return errors.configError(corsHeaders)
     }
+
+    // Cancellation is destructive — identity must come from the verified
+    // session, never from a client-supplied email
+    const verified = await verifySupabaseUser(context.request, context.env)
+    if (!verified) {
+      return errors.unauthorized(corsHeaders)
+    }
+    const email = verified.email
 
     // 1. Look up subscriber in Supabase
     const subRes = await fetch(

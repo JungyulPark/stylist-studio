@@ -1,4 +1,5 @@
 import { getCorsHeaders, createCorsPreflightResponse } from '../lib/cors'
+import { verifySupabaseUser } from '../lib/auth'
 import { errors } from '../lib/errors'
 
 interface Env {
@@ -32,9 +33,15 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
       return errors.invalidRequest('Invalid JSON body', corsHeaders)
     }
 
-    if (!body.email) {
-      return errors.validation('email is required', corsHeaders)
+    // Identity from the verified session — a client-supplied email would let
+    // anyone overwrite any subscriber's profile/photo (which the paid daily
+    // emails are generated from)
+    const verified = await verifySupabaseUser(context.request, context.env)
+    if (!verified) {
+      return errors.unauthorized(corsHeaders)
     }
+    body.email = verified.email
+    body.user_id = verified.id
 
     // Look up subscriber — prefer profile_complete record if duplicates exist
     const subRes = await fetch(

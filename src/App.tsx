@@ -2526,7 +2526,13 @@ function App() {
   const t = translations[lang]
 
   // Auth state
-  const { user, signIn, signUp, signInWithGoogle, signOut, resetPassword, updatePassword, deleteAccount, profile: authProfile, isSupabaseConfigured } = useAuth()
+  const { user, session, signIn, signUp, signInWithGoogle, signOut, resetPassword, updatePassword, deleteAccount, profile: authProfile, isSupabaseConfigured } = useAuth()
+
+  // 인증 필요 API 호출용 헤더 — 세션 JWT를 서버가 검증 (body의 email/user_id는 신뢰 안 함)
+  const authHeaders = (): Record<string, string> => ({
+    'Content-Type': 'application/json',
+    ...(session?.access_token ? { Authorization: `Bearer ${session.access_token}` } : {}),
+  })
   const [newPassword, setNewPassword] = useState('')
   const [confirmNewPassword, setConfirmNewPassword] = useState('')
   const [authEmail, setAuthEmail] = useState('')
@@ -3020,7 +3026,7 @@ function App() {
     const timer = setTimeout(() => {
       fetch('/api/update-subscriber-profile', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: authHeaders(),
         body: JSON.stringify({
           email: user.email,
           user_id: user.id || undefined,
@@ -3176,7 +3182,7 @@ function App() {
       try {
         const creditRes = await fetch('/api/referral', {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
+          headers: authHeaders(),
           body: JSON.stringify({ action: 'use_credit', user_id: user.id })
         })
         if (creditRes.ok) {
@@ -3432,7 +3438,7 @@ function App() {
               if (data.preferred_language !== lang) {
                 fetch('/api/update-subscriber-profile', {
                   method: 'POST',
-                  headers: { 'Content-Type': 'application/json' },
+                  headers: authHeaders(),
                   body: JSON.stringify({ email: user.email, preferred_language: lang }),
                 }).catch(() => {})
               }
@@ -3460,7 +3466,7 @@ function App() {
       try {
         const res = await fetch('/api/update-subscriber-profile', {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
+          headers: authHeaders(),
           body: JSON.stringify({
             email,
             user_id: user?.id || undefined,
@@ -3492,7 +3498,7 @@ function App() {
     try {
       const res = await fetch('/api/update-subscriber-profile', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: authHeaders(),
         body: JSON.stringify({
           email,
           user_id: user?.id || undefined,
@@ -3531,7 +3537,7 @@ function App() {
     try {
       const res = await fetch('/api/customer-portal', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: authHeaders(),
         body: JSON.stringify({ email: user.email }),
       })
       if (res.ok) {
