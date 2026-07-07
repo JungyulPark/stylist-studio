@@ -5524,9 +5524,21 @@ ${styleImgs.length > 1 ? `<div class="section"><h2>${styleSection}</h2><div clas
             <span className="ba-label ba-label-after">{t.galleryAfter}</span>
             <div className="hero-scan" aria-hidden="true"></div>
           </div>
-          <button className="free-cta-pulse hero-gold-cta" onClick={() => { trackEvent('hero_cta_click', { type: 'free_analysis' }); setPage('input') }}>
-            {lang === 'ko' ? '무료 컬러 분석 시작' : 'Start Free Color Analysis'}
-          </button>
+          {isSubscribed ? (
+            <div className="hero-cta-row">
+              {/* 구독자의 "오늘 뭐 입지?"에 대한 답은 오늘의 추천 — 그게 첫 번째 버튼 */}
+              <button className="free-cta-pulse hero-gold-cta" onClick={() => { trackEvent('hero_cta_click', { type: 'todays_style' }); setPage('subscription-dashboard') }}>
+                {lang === 'ko' ? '오늘의 코디 보기' : "See Today's Look"}
+              </button>
+              <button className="hero-ghost-cta" onClick={() => { trackEvent('hero_cta_click', { type: 'free_analysis' }); setPage('input') }}>
+                {lang === 'ko' ? '새 분석 시작' : 'New Analysis'}
+              </button>
+            </div>
+          ) : (
+            <button className="free-cta-pulse hero-gold-cta" onClick={() => { trackEvent('hero_cta_click', { type: 'free_analysis' }); setPage('input') }}>
+              {lang === 'ko' ? '무료 컬러 분석 시작' : 'Start Free Color Analysis'}
+            </button>
+          )}
           <div className="hero-trust-signals hero-trust-dark">
             <span>{lang === 'ko' ? '첫 분석 무료' : 'First Analysis Free'}</span>
             <span>{lang === 'ko' ? '30초 완료' : '30 Seconds'}</span>
