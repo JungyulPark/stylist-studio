@@ -5749,9 +5749,14 @@ ${styleImgs.length > 1 ? `<div class="section"><h2>${styleSection}</h2><div clas
           </h1>
           <p className="hero-cinema-sub">
             {lang === 'ko'
-              ? '사진 한 장으로 퍼스널 컬러 진단 + AI 스타일 변환. 무료로 시작하세요.'
-              : 'Upload one photo. Get your personal color season and AI-powered styling. Start free.'}
+              ? '사진 한 장이면, AI가 어울리는 스타일을 입혀서 보여드립니다.'
+              : 'One photo — AI shows you wearing the styles that suit you.'}
           </p>
+          <div className="hero-value-chips">
+            <span className="hero-value-chip">{lang === 'ko' ? '퍼스널 컬러 진단' : 'Color Analysis'}</span>
+            <span className="hero-value-chip">{lang === 'ko' ? '내 사진으로 스타일 변환' : 'AI Restyle on Your Photo'}</span>
+            <span className="hero-value-chip">{lang === 'ko' ? '매일 아침 날씨별 코디' : 'Daily Weather Outfits'}</span>
+          </div>
           {weatherPreview && (
             <div className="hero-weather-pill">
               <span className="hero-weather-temp">{weatherPreview.city} {weatherPreview.temp}°C</span>
@@ -5798,53 +5803,7 @@ ${styleImgs.length > 1 ? `<div class="section"><h2>${styleSection}</h2><div clas
             <span>{lang === 'ko' ? '30초 완료' : '30 Seconds'}</span>
             <span>{lang === 'ko' ? '즉시 결과' : 'Instant Results'}</span>
           </div>
-          <div className="hero-scroll-cue" aria-hidden="true">
-            <span className="hero-scroll-line"></span>
-            <span className="hero-scroll-text">{lang === 'ko' ? '스크롤' : 'SCROLL'}</span>
-          </div>
         </section>
-
-        {/* How It Works — 3-step process */}
-        <section className="how-it-works-section" ref={(el) => {
-          if (el) {
-            const items = el.querySelectorAll('.how-title, .how-step, .how-cta')
-            const observer = new IntersectionObserver(([entry]) => {
-              if (entry.isIntersecting) {
-                items.forEach((item, i) => {
-                  setTimeout(() => item.classList.add('visible'), i * 120)
-                })
-                observer.disconnect()
-              }
-            }, { threshold: 0.2 })
-            observer.observe(el)
-          }
-        }}>
-          <h2 className="how-title fade-in-up">{lang === 'ko' ? '이렇게 진행됩니다' : 'How It Works'}</h2>
-          <div className="how-steps">
-            <div className="how-step fade-in-up">
-              <div className="how-step-num">1</div>
-              <h3 className="how-step-title">{lang === 'ko' ? '사진 업로드' : 'Upload Photo'}</h3>
-              <p className="how-step-desc">{lang === 'ko' ? '셀카 또는 전신 사진 한 장이면 충분합니다' : 'A selfie or full-body photo is all you need'}</p>
-            </div>
-            <div className="how-step-arrow">→</div>
-            <div className="how-step fade-in-up">
-              <div className="how-step-num">2</div>
-              <h3 className="how-step-title">{lang === 'ko' ? '스타일 분석' : 'Style Analysis'}</h3>
-              <p className="how-step-desc">{lang === 'ko' ? '얼굴형, 체형, 피부톤을 종합 분석합니다' : 'Face shape, body type, and skin tone analyzed'}</p>
-            </div>
-            <div className="how-step-arrow">→</div>
-            <div className="how-step fade-in-up">
-              <div className="how-step-num">3</div>
-              <h3 className="how-step-title">{lang === 'ko' ? '맞춤 결과' : 'Your Results'}</h3>
-              <p className="how-step-desc">{lang === 'ko' ? '패션 코디 3종을 받아보세요' : '3 personalized fashion looks delivered'}</p>
-            </div>
-          </div>
-          <button className="how-cta fade-in-up" onClick={() => { trackEvent('how_cta_click'); setPage('input') }}>
-            {t.galleryCta}
-          </button>
-        </section>
-
-        <div className="section-divider-full"></div>
 
         {/* Services Section — single hero card */}
         <section className="path-section" id="features" ref={(el) => {
@@ -5912,6 +5871,48 @@ ${styleImgs.length > 1 ? `<div class="section"><h2>${styleSection}</h2><div clas
               {isSubscribed ? (lang === 'ko' ? '오늘의 스타일 →' : "Today's Style →") : `${t.explore} →`}
             </div>
           </div>
+        </section>
+
+        <div className="section-divider-full"></div>
+
+        {/* How It Works — 3-step process */}
+        <section className="how-it-works-section" ref={(el) => {
+          if (el) {
+            const items = el.querySelectorAll('.how-title, .how-step, .how-cta')
+            const observer = new IntersectionObserver(([entry]) => {
+              if (entry.isIntersecting) {
+                items.forEach((item, i) => {
+                  setTimeout(() => item.classList.add('visible'), i * 120)
+                })
+                observer.disconnect()
+              }
+            }, { threshold: 0.2 })
+            observer.observe(el)
+          }
+        }}>
+          <h2 className="how-title fade-in-up">{lang === 'ko' ? '이렇게 진행됩니다' : 'How It Works'}</h2>
+          <div className="how-steps">
+            <div className="how-step fade-in-up">
+              <div className="how-step-num">1</div>
+              <h3 className="how-step-title">{lang === 'ko' ? '사진 업로드' : 'Upload Photo'}</h3>
+              <p className="how-step-desc">{lang === 'ko' ? '셀카 또는 전신 사진 한 장이면 충분합니다' : 'A selfie or full-body photo is all you need'}</p>
+            </div>
+            <div className="how-step-arrow">→</div>
+            <div className="how-step fade-in-up">
+              <div className="how-step-num">2</div>
+              <h3 className="how-step-title">{lang === 'ko' ? '스타일 분석' : 'Style Analysis'}</h3>
+              <p className="how-step-desc">{lang === 'ko' ? '얼굴형, 체형, 피부톤을 종합 분석합니다' : 'Face shape, body type, and skin tone analyzed'}</p>
+            </div>
+            <div className="how-step-arrow">→</div>
+            <div className="how-step fade-in-up">
+              <div className="how-step-num">3</div>
+              <h3 className="how-step-title">{lang === 'ko' ? '맞춤 결과' : 'Your Results'}</h3>
+              <p className="how-step-desc">{lang === 'ko' ? '패션 코디 3종을 받아보세요' : '3 personalized fashion looks delivered'}</p>
+            </div>
+          </div>
+          <button className="how-cta fade-in-up" onClick={() => { trackEvent('how_cta_click'); setPage('input') }}>
+            {t.galleryCta}
+          </button>
         </section>
 
         <div className="section-divider-full"></div>

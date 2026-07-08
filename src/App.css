@@ -7218,10 +7218,8 @@ button:not(:disabled):active {
   align-items: center;
   justify-content: center;
   text-align: center;
-  gap: 1.4rem;
-  padding: 4.5rem 1.5rem 5rem;
-  min-height: 92vh;
-  min-height: 92dvh;
+  gap: 1.1rem;
+  padding: 3rem 1.5rem 3.25rem;
   position: relative;
   overflow: hidden;
   background:
@@ -7250,7 +7248,7 @@ button:not(:disabled):active {
   gap: 0 0.32em;
   font-family: var(--font-display);
   font-weight: 800;
-  font-size: clamp(2.7rem, 9vw, 5.5rem);
+  font-size: clamp(2.2rem, 7.5vw, 4.75rem);
   line-height: 1.05;
   letter-spacing: -0.02em;
   margin: 0;
@@ -7349,9 +7347,7 @@ button:not(:disabled):active {
 
 @media (max-width: 600px) {
   .hero-cinema {
-    min-height: 86vh;
-    min-height: 86dvh;
-    padding: 3.5rem 1.25rem 4.5rem;
+    padding: 2.25rem 1.25rem 2.75rem;
   }
 }
 
@@ -7626,4 +7622,39 @@ button:not(:disabled):active {
 
 .footer-biz-divider {
   opacity: 0.4;
+}
+
+/* ─── Hero value chips + compact slider (first-screen clarity) ── */
+.hero-value-chips {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.hero-value-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.42rem 0.95rem;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: rgba(245, 242, 233, 0.85);
+  background: rgba(245, 242, 233, 0.06);
+  border: 1px solid rgba(245, 242, 233, 0.14);
+  border-radius: 999px;
+  word-break: keep-all;
+  letter-spacing: 0.01em;
+}
+
+.hero-value-chip::before {
+  content: '';
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: #c9a962;
+}
+
+.hero-cinema .hero-ba-slider {
+  max-width: min(340px, 78vw);
 }
