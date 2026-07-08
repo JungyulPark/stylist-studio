@@ -7610,3 +7610,20 @@ button:not(:disabled):active {
   color: var(--primary-light);
   font-variant-numeric: tabular-nums;
 }
+
+/* ─── Business info (전자상거래법 표시) ───────────────────────── */
+.footer-business {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.5rem 0.7rem;
+  padding: 0 1.5rem 0.75rem;
+  font-size: 0.72rem;
+  color: var(--primary-light);
+  opacity: 0.75;
+  word-break: keep-all;
+}
+
+.footer-biz-divider {
+  opacity: 0.4;
+}
