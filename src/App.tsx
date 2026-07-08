@@ -5969,6 +5969,14 @@ ${styleImgs.length > 1 ? `<div class="section"><h2>${styleSection}</h2><div clas
               </div>
             </div>
           </div>
+          <div className="footer-business fade-in-up">
+            {/* 전자상거래법 표시 의무 — 사업자등록번호·통신판매업신고번호는 발급 후 아래에 추가 */}
+            <span>상호: DevPark.MD</span>
+            <span className="footer-biz-divider" aria-hidden="true">|</span>
+            <span>대표: 박정열</span>
+            <span className="footer-biz-divider" aria-hidden="true">|</span>
+            <span>문의: mdjypark@gmail.com</span>
+          </div>
           <div className="footer-bottom fade-in-up">
             <span>{t.footerCopyright}</span>
           </div>
