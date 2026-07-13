@@ -2379,6 +2379,71 @@ function getWeatherTip(temp: number, condition: string, lang: 'ko' | 'en'): stri
   return 'a day for padded coats and scarves'
 }
 
+// 날씨 → 대기(atmosphere) 버킷 — 랜딩 히어로의 분위기를 결정
+type WeatherBucket = 'clear-warm' | 'clear-cold' | 'clouds' | 'rain' | 'snow' | 'night'
+
+function getWeatherBucket(condition: string, temp: number, hour: number): WeatherBucket {
+  if (condition === 'Snow') return 'snow'
+  if (condition === 'Rain' || condition === 'Drizzle' || condition === 'Thunderstorm') return 'rain'
+  const night = hour >= 21 || hour < 6
+  if (night) return 'night'
+  if (condition === 'Clear') return temp >= 15 ? 'clear-warm' : 'clear-cold'
+  return 'clouds'
+}
+
+// 날씨 × 시간대 → 히어로 카피 (정적 매트릭스 — AI 비용 없음)
+// 아침/낮(05-17)은 "오늘" 프레임, 저녁/밤(17-05)은 "내일 아침" 프레임
+function getWeatherCopy(
+  weather: { city: string; temp: number; condition: string },
+  lang: 'ko' | 'en',
+  hour: number
+): { eyebrow: string; sub: string; cta: string } {
+  const { city, temp, condition } = weather
+  const evening = hour >= 17 || hour < 5
+  const condWord: Record<string, [string, string]> = {
+    Clear: ['맑음', 'clear'], Clouds: ['흐림', 'cloudy'], Rain: ['비', 'rain'],
+    Drizzle: ['이슬비', 'drizzle'], Thunderstorm: ['뇌우', 'storms'], Snow: ['눈', 'snow'],
+    Mist: ['안개', 'mist'], Fog: ['안개', 'fog'], Haze: ['연무', 'haze'],
+  }
+  const cw = condWord[condition] || (lang === 'ko' ? ['흐림', 'cloudy'] : ['흐림', 'cloudy'])
+  const now = new Date()
+  const dateStr = lang === 'ko'
+    ? `${now.getMonth() + 1}월 ${now.getDate()}일`
+    : now.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })
+  const eyebrow = `${dateStr}${city ? ` ${city}` : ''} · ${temp}°C ${lang === 'ko' ? cw[0] : cw[1]}`
+
+  const rain = condition === 'Rain' || condition === 'Drizzle'
+  const storm = condition === 'Thunderstorm'
+  const snow = condition === 'Snow'
+
+  let sub: string
+  if (lang === 'ko') {
+    if (snow) sub = evening ? '내일 아침 눈길 출근, 옷 고민만은 미리 끝내두세요.' : '눈 오는 날, 방수 아우터에도 내 톤이 있습니다.'
+    else if (storm) sub = evening ? '폭우가 지나가면 내일 아침이 옵니다. 내일 입을 옷, 미리 받아두세요.' : '이런 날 옷 고민은 사치죠. 30초 만에 오늘의 룩을 정해드립니다.'
+    else if (rain) sub = evening ? '내일도 비 소식. 아침에 고민하기 전에 코디를 받아두세요.' : '비 오는 날엔 딥톤이 답입니다. 내 톤에 맞는 레인 룩을 확인하세요.'
+    else if (temp >= 28) sub = evening ? '내일도 더위는 계속됩니다. 내일 아침 코디, 자기 전에 받아두세요.' : '28°C부터는 컬러가 절반입니다. 내게 맞는 밝은 톤을 확인하세요.'
+    else if (temp >= 22) sub = evening ? '내일 아침 옷장 앞 3분, 저희가 없애드립니다.' : '셔츠 한 장의 계절 — 문제는 어떤 색이냐는 것.'
+    else if (temp >= 15) sub = evening ? '환절기 아침은 늘 헷갈리죠. 내일 기온에 맞춘 코디를 받아보세요.' : '얇은 니트의 날씨. 내 퍼스널 컬러로 고르면 달라집니다.'
+    else if (temp >= 8) sub = evening ? '내일 아침은 더 쌀쌀합니다. 레이어링까지 정해서 보내드릴게요.' : '트렌치의 계절입니다. 내 톤의 아우터를 확인하세요.'
+    else sub = evening ? '내일 아침 추운 출근길, 옷 고민 없이 나가세요.' : '추울수록 컬러가 얼굴을 살립니다. 코트 아래 배색을 확인하세요.'
+  } else {
+    if (snow) sub = evening ? 'Snowy commute tomorrow — settle the outfit question tonight.' : 'Snow day — even waterproof outers have your shade.'
+    else if (storm) sub = evening ? 'The storm passes, tomorrow comes. Have tomorrow\'s outfit ready.' : 'No time to debate outfits in this weather. Your look, decided in 30 seconds.'
+    else if (rain) sub = evening ? 'Rain again tomorrow. Get tomorrow\'s outfit before the morning scramble.' : 'Rain calls for deep tones. See the rain look that matches your palette.'
+    else if (temp >= 28) sub = evening ? 'The heat holds tomorrow. Get tomorrow\'s look before bed.' : 'Past 28°C, color does half the work. Find your light tones.'
+    else if (temp >= 22) sub = evening ? 'Tomorrow\'s three minutes at the closet — gone.' : 'One-shirt weather. The question is which color.'
+    else if (temp >= 15) sub = evening ? 'In-between weather confuses every morning. Get tomorrow\'s look, matched to the forecast.' : 'Fine-knit weather. Chosen in your palette, it lands differently.'
+    else if (temp >= 8) sub = evening ? 'Colder tomorrow morning. We\'ll send the look, layers included.' : 'Trench season is here. See outerwear in your tones.'
+    else sub = evening ? 'Freezing commute tomorrow — walk out without the debate.' : 'The colder it gets, the more color carries your face.'
+  }
+
+  const cta = lang === 'ko'
+    ? (evening ? '내일 아침 코디 받기 — 무료' : '오늘의 코디 받기 — 무료')
+    : (evening ? "Get Tomorrow's Look — Free" : "Get Today's Look — Free")
+
+  return { eyebrow, sub, cta }
+}
+
 function trackEvent(eventName: string, params?: Record<string, string | number | boolean>) {
   try {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -2609,6 +2674,13 @@ function App() {
   const [isSubscribed, setIsSubscribed] = useState(() => localStorage.getItem('stylist_subscription_active') === 'true')
   const [showSubscriptionForm, setShowSubscriptionForm] = useState(false)
   const [subscriptionCity, setSubscriptionCity] = useState('')
+
+  // 구독 모달 도시 프리필 — 날씨 프리뷰가 이미 도시를 알고 있음 (확인만 하면 되는 모달로)
+  useEffect(() => {
+    if (weatherPreview?.city) {
+      setSubscriptionCity(prev => prev || weatherPreview.city)
+    }
+  }, [weatherPreview?.city])
   const [subscriptionCityError, setSubscriptionCityError] = useState('')
   const [dailyStyle, setDailyStyle] = useState<{ recommendation: string; weather: { temp: number; feels_like: number; humidity: number; condition: string; description: string; icon: string; wind_speed: number }; city: string; date: string; outfit_images?: Array<{ id: string; label: string; url: string }> } | null>(null)
   const [isDailyStyleLoading, setIsDailyStyleLoading] = useState(false)
@@ -2786,6 +2858,12 @@ function App() {
     }
   }, [page, isFullPaid])
 
+  useEffect(() => {
+    if (page === 'result' && !isSubscribed) {
+      trackEvent('paywall_impression', { placement: 'daily_bridge' })
+    }
+  }, [page, isSubscribed])
+
   // 홈 = 오늘: 구독자가 파라미터 없이 열면 랜딩 대신 오늘의 코디로 —
   // "오늘 뭐 입지?"의 답이 첫 화면이어야 한다. 결제 리다이렉트(?payment=...)나
   // 딥링크 해시가 있으면 기존 흐름을 방해하지 않는다.
@@ -2907,6 +2985,9 @@ function App() {
       setPushStatus('idle')
     }
   }
+
+  // 날씨 카피 (eyebrow/sub/CTA) — weatherPreview 도착 후 파생
+  const weatherCopy = weatherPreview ? getWeatherCopy(weatherPreview, lang, new Date().getHours()) : null
 
   // 히어로 날씨 미리보기 — 30분 캐시, 실패 시 조용히 생략
   useEffect(() => {
@@ -3970,8 +4051,8 @@ function App() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           photo: profile.photo,
-          height: profile.height,
-          weight: profile.weight,
+          height: profile.height || (profile.gender === 'female' ? '162' : '175'),
+          weight: profile.weight || (profile.gender === 'female' ? '55' : '72'),
           gender: profile.gender,
           language: lang
         })
@@ -3982,8 +4063,8 @@ function App() {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
-            height: profile.height,
-            weight: profile.weight,
+            height: profile.height || (profile.gender === 'female' ? '162' : '175'),
+            weight: profile.weight || (profile.gender === 'female' ? '55' : '72'),
             gender: profile.gender,
             photo: profile.photo,
             language: lang
@@ -4585,7 +4666,8 @@ ${styleImgs.length > 1 ? `<div class="section"><h2>${styleSection}</h2><div clas
     }
   }, [page, user, loadFavorites])
 
-  const isFormValid = profile.photo && profile.height && profile.weight && profile.gender
+  // 사진 + 성별만 필수 — 키/몸무게는 선택 (미입력 시 성별 기본값으로 실루엣 가이드만 보정)
+  const isFormValid = profile.photo && profile.gender
 
   // Style Chat Page
   if (page === 'style-chat') {
@@ -5733,8 +5815,34 @@ ${styleImgs.length > 1 ? `<div class="section"><h2>${styleSection}</h2><div clas
         </header>
 
         {/* Hero Section — cinematic dark, word-by-word reveal */}
-        <section className="hero-cinema">
-          <span className="hero-cinema-badge">{lang === 'ko' ? 'AI 퍼스널 컬러 진단' : 'AI PERSONAL COLOR ANALYSIS'}</span>
+        <section
+          className="hero-cinema"
+          data-weather={weatherPreview ? getWeatherBucket(weatherPreview.condition, weatherPreview.temp, new Date().getHours()) : 'clouds'}
+          onPointerMove={(e) => {
+            if (window.matchMedia('(pointer: fine)').matches) {
+              const rect = e.currentTarget.getBoundingClientRect()
+              e.currentTarget.style.setProperty('--mx', `${e.clientX - rect.left}px`)
+              e.currentTarget.style.setProperty('--my', `${e.clientY - rect.top}px`)
+            }
+          }}
+        >
+          {/* Weather atmosphere — 장식 레이어 (콘텐츠 뒤, 상호작용 없음) */}
+          <div className="hero-atmo-sky" aria-hidden="true"></div>
+          <div className={`hero-atmo-active${weatherPreview ? ' on' : ''}`} aria-hidden="true"></div>
+          <div className="hero-atmo-glow" aria-hidden="true"></div>
+          <div className="hero-atmo-fx-a" aria-hidden="true"></div>
+          <div className="hero-atmo-fx-b" aria-hidden="true"></div>
+
+          {/* Weather spine — 데스크톱 좌측 세로 타이포 (에디토리얼 비대칭) */}
+          {weatherCopy && (
+            <div className="hero-weather-spine" aria-hidden="true">
+              <span>{weatherCopy.eyebrow}</span>
+            </div>
+          )}
+
+          <span className="hero-cinema-badge hero-eyebrow-slot">
+            {weatherCopy ? weatherCopy.eyebrow : (lang === 'ko' ? 'AI 퍼스널 컬러 진단' : 'AI PERSONAL COLOR ANALYSIS')}
+          </span>
           <h1 className="hero-cinema-headline" aria-label={lang === 'ko' ? '오늘, 뭐 입지?' : 'What to wear today'}>
             {(lang === 'ko' ? ['오늘,', '뭐', '입지?'] : ['WHAT', 'TO', 'WEAR', 'TODAY']).map((word, i, arr) => (
               <span
@@ -5748,22 +5856,17 @@ ${styleImgs.length > 1 ? `<div class="section"><h2>${styleSection}</h2><div clas
             ))}
           </h1>
           <p className="hero-cinema-sub">
-            {lang === 'ko'
-              ? '사진 한 장이면, AI가 어울리는 스타일을 입혀서 보여드립니다.'
-              : 'One photo — AI shows you wearing the styles that suit you.'}
+            {weatherCopy
+              ? weatherCopy.sub
+              : (lang === 'ko'
+                ? '사진 한 장이면, AI가 어울리는 스타일을 입혀서 보여드립니다.'
+                : 'One photo — AI shows you wearing the styles that suit you.')}
           </p>
           <div className="hero-value-chips">
+            <span className="hero-value-chip">{lang === 'ko' ? '매일 아침 날씨별 코디' : 'Daily Weather Outfits'}</span>
             <span className="hero-value-chip">{lang === 'ko' ? '퍼스널 컬러 진단' : 'Color Analysis'}</span>
             <span className="hero-value-chip">{lang === 'ko' ? '내 사진으로 스타일 변환' : 'AI Restyle on Your Photo'}</span>
-            <span className="hero-value-chip">{lang === 'ko' ? '매일 아침 날씨별 코디' : 'Daily Weather Outfits'}</span>
           </div>
-          {weatherPreview && (
-            <div className="hero-weather-pill">
-              <span className="hero-weather-temp">{weatherPreview.city} {weatherPreview.temp}°C</span>
-              <span className="hero-weather-divider" aria-hidden="true"></span>
-              <span className="hero-weather-tip">{getWeatherTip(weatherPreview.temp, weatherPreview.condition, lang)}</span>
-            </div>
-          )}
           <div
             className="ba-slider hero-ba-slider"
             ref={heroSliderRef}
@@ -5781,7 +5884,6 @@ ${styleImgs.length > 1 ? `<div class="section"><h2>${styleSection}</h2><div clas
             </div>
             <span className="ba-label ba-label-before">{t.galleryBefore}</span>
             <span className="ba-label ba-label-after">{t.galleryAfter}</span>
-            <div className="hero-scan" aria-hidden="true"></div>
           </div>
           {isSubscribed ? (
             <div className="hero-cta-row">
@@ -5794,8 +5896,8 @@ ${styleImgs.length > 1 ? `<div class="section"><h2>${styleSection}</h2><div clas
               </button>
             </div>
           ) : (
-            <button className="free-cta-pulse hero-gold-cta" onClick={() => { trackEvent('hero_cta_click', { type: 'free_analysis' }); setPage('input') }}>
-              {lang === 'ko' ? '무료 컬러 분석 시작' : 'Start Free Color Analysis'}
+            <button className="free-cta-pulse hero-gold-cta" onClick={() => { trackEvent('hero_cta_click', { type: 'free_analysis', weather_copy_variant: weatherPreview ? getWeatherBucket(weatherPreview.condition, weatherPreview.temp, new Date().getHours()) : 'none' }); setPage('input') }}>
+              {weatherCopy ? weatherCopy.cta : (lang === 'ko' ? '무료 컬러 분석 시작' : 'Start Free Color Analysis')}
             </button>
           )}
           <div className="hero-trust-signals hero-trust-dark">
@@ -5853,9 +5955,13 @@ ${styleImgs.length > 1 ? `<div class="section"><h2>${styleSection}</h2><div clas
               if (isSubscribed) {
                 trackEvent('select_item', { item_category: 'daily_dashboard' })
                 setPage('subscription-dashboard')
-              } else {
+              } else if (user) {
                 trackEvent('select_item', { item_category: 'daily_subscribe' })
                 handleSubscription()
+              } else {
+                // 비로그인: 로그인 벽 대신 무료 분석으로 — 스타일 프로필이 데일리의 전제
+                trackEvent('select_item', { item_category: 'daily_via_analysis' })
+                setPage('input')
               }
             }}
           >
@@ -5864,11 +5970,15 @@ ${styleImgs.length > 1 ? `<div class="section"><h2>${styleSection}</h2><div clas
               <p className="chat-strip-desc">
                 {isSubscribed
                   ? (lang === 'ko' ? '구독 중 — 오늘의 추천과 지난 스타일을 확인하세요' : 'Subscribed — see today\'s look and your style history')
-                  : (lang === 'ko' ? '날씨와 내 퍼스널 컬러에 맞춘 코디를 매일 아침 이메일로 · $6.99/월 · 첫 7일 무료' : 'Weather-matched daily outfits in your inbox · $6.99/mo · First 7 days free')}
+                  : weatherPreview
+                    ? (lang === 'ko'
+                      ? `내일 아침 7시, ${weatherPreview.city} 날씨 기준 코디가 도착합니다 — 오늘은 ${getWeatherTip(weatherPreview.temp, weatherPreview.condition, 'ko')} · 첫 7일 무료`
+                      : `Tomorrow 7 AM: an outfit matched to ${weatherPreview.city}'s weather — today is ${getWeatherTip(weatherPreview.temp, weatherPreview.condition, 'en')} · First 7 days free`)
+                    : (lang === 'ko' ? '날씨와 내 퍼스널 컬러에 맞춘 코디를 매일 아침 이메일로 · $6.99/월 · 첫 7일 무료' : 'Weather-matched daily outfits in your inbox · $6.99/mo · First 7 days free')}
               </p>
             </div>
             <div className="chat-strip-cta">
-              {isSubscribed ? (lang === 'ko' ? '오늘의 스타일 →' : "Today's Style →") : `${t.explore} →`}
+              {isSubscribed ? (lang === 'ko' ? '오늘의 스타일 →' : "Today's Style →") : (user ? `${t.explore} →` : (lang === 'ko' ? '무료 분석부터 →' : 'Start Free →'))}
             </div>
           </div>
         </section>
@@ -5908,6 +6018,12 @@ ${styleImgs.length > 1 ? `<div class="section"><h2>${styleSection}</h2><div clas
               <div className="how-step-num">3</div>
               <h3 className="how-step-title">{lang === 'ko' ? '맞춤 결과' : 'Your Results'}</h3>
               <p className="how-step-desc">{lang === 'ko' ? '패션 코디 3종을 받아보세요' : '3 personalized fashion looks delivered'}</p>
+            </div>
+            <div className="how-step-arrow">→</div>
+            <div className="how-step how-step-daily fade-in-up">
+              <div className="how-step-num">4</div>
+              <h3 className="how-step-title">{lang === 'ko' ? '매일 아침' : 'Every Morning'}</h3>
+              <p className="how-step-desc">{lang === 'ko' ? '날씨에 맞춘 코디가 이메일로 도착' : 'Weather-matched looks in your inbox'}</p>
             </div>
           </div>
           <button className="how-cta fade-in-up" onClick={() => { trackEvent('how_cta_click'); setPage('input') }}>
@@ -6280,6 +6396,9 @@ ${styleImgs.length > 1 ? `<div class="section"><h2>${styleSection}</h2><div clas
                                 <p className="lock-text">
                                   {lang === 'ko' ? '프리미엄 리포트에서 확인' : 'Available in Premium Report'}
                                 </p>
+                                <p className="lock-subtext">
+                                  {lang === 'ko' ? '이런 코디가 매일 아침 도착합니다' : 'Looks like this arrive every morning'}
+                                </p>
                               </div>
                             )}
                             {!isLocked && user && (
@@ -6347,6 +6466,44 @@ ${styleImgs.length > 1 ? `<div class="section"><h2>${styleSection}</h2><div clas
 
               {isFullPaid && (
                 <p className="tap-hint">{lang === 'ko' ? '* 이미지를 클릭하면 원본 크기로 볼 수 있습니다' : '* Tap image to view full size'}</p>
+              )}
+
+              {/* Daily bridge — 방금 자신의 변신을 본 순간이 데일리 전환의 최적점.
+                  무료 사용자 포함 모든 비구독자에게 노출 (기존엔 유료 결제자만 봤음) */}
+              {!isSubscribed && (
+                <div className="daily-style-upsell daily-bridge">
+                  <span className="daily-bridge-eyebrow">WHAT TO WEAR TODAY</span>
+                  <h3 className="upsell-title">
+                    {(() => {
+                      const evening = new Date().getHours() >= 17 || new Date().getHours() < 5
+                      if (lang === 'ko') {
+                        return evening
+                          ? '내일 아침 7시, 옷장 앞에 서기 전에 도착합니다'
+                          : '내일 아침엔 내일 날씨에 맞춘 코디가 도착합니다'
+                      }
+                      return evening
+                        ? 'Tomorrow 7 AM — before you face the closet'
+                        : "Tomorrow's look arrives matched to tomorrow's weather"
+                    })()}
+                  </h3>
+                  <p className="upsell-desc">
+                    {lang === 'ko'
+                      ? `${seasonInfo?.label_ko ? `「${seasonInfo.label_ko}」인 당신에게, ` : ''}매일 아침 그날의 날씨${weatherPreview?.city ? ` (${weatherPreview.city})` : ''}에 맞춘 이 수준의 코디가 이메일로 도착합니다.`
+                      : `${seasonInfo?.label_en ? `For your ${seasonInfo.label_en} palette — ` : ''}outfits at this level, matched to each morning's weather${weatherPreview?.city ? ` in ${weatherPreview.city}` : ''}, in your inbox.`}
+                  </p>
+                  <p className="upsell-price">
+                    $6.99/{lang === 'ko' ? '월' : 'mo'} · {lang === 'ko' ? '첫 7일 무료' : 'First 7 days free'}
+                  </p>
+                  <button
+                    className="btn-gold"
+                    onClick={() => {
+                      trackEvent('daily_style_upsell_clicked', { trigger: isFullPaid ? 'after_premium_purchase' : 'free_result' })
+                      handleSubscription()
+                    }}
+                  >
+                    {lang === 'ko' ? '7일 무료 체험 시작' : 'Start 7-Day Free Trial'}
+                  </button>
+                </div>
               )}
             </>
           ) : (
@@ -6423,32 +6580,6 @@ ${styleImgs.length > 1 ? `<div class="section"><h2>${styleSection}</h2><div clas
             {t.backToHome}
           </button>
         </div>
-
-        {/* Daily Style Upsell — shown after premium purchase, only if not subscribed */}
-        {isFullPaid && !isSubscribed && (
-          <div className="daily-style-upsell">
-            <h3 className="upsell-title">
-              {lang === 'ko' ? '매일 아침 맞춤 스타일 받기' : 'Get Daily Style Recommendations'}
-            </h3>
-            <p className="upsell-desc">
-              {lang === 'ko'
-                ? '날씨와 내 퍼스널 컬러에 맞는 오늘의 코디를 매일 아침 이메일로 받아보세요.'
-                : 'Receive weather-matched outfit recommendations based on your personal colors every morning.'}
-            </p>
-            <p className="upsell-price">
-              $6.99/{lang === 'ko' ? '월' : 'mo'} · {lang === 'ko' ? '첫 7일 무료' : 'First 7 days free'}
-            </p>
-            <button
-              className="btn-gold"
-              onClick={() => {
-                trackEvent('daily_style_upsell_clicked', { trigger: 'after_premium_purchase' })
-                handleSubscription()
-              }}
-            >
-              {lang === 'ko' ? '7일 무료 체험 시작' : 'Start 7-Day Free Trial'}
-            </button>
-          </div>
-        )}
 
         {/* Email Modal */}
         {showEmailModal && (
@@ -6996,7 +7127,16 @@ ${styleImgs.length > 1 ? `<div class="section"><h2>${styleSection}</h2><div clas
 
       <div className="input-page-content">
         <div className="input-hero">
-          <span className="input-tag">STYLE ANALYSIS</span>
+          <span className="input-tag">
+            {weatherCopy ? weatherCopy.eyebrow : 'STYLE ANALYSIS'}
+          </span>
+          {weatherCopy && (
+            <p className="input-weather-note">
+              {lang === 'ko'
+                ? '분석이 끝나면 오늘 날씨 기준 코디부터 보여드립니다'
+                : "When the analysis finishes, we'll start with looks for today's weather"}
+            </p>
+          )}
           <h1 className="input-title">
             {t.heroTitle1} <span className="text-gradient">{t.heroTitle2}</span>
           </h1>
@@ -7194,8 +7334,15 @@ ${styleImgs.length > 1 ? `<div class="section"><h2>${styleSection}</h2><div clas
                   ? t.processingPayment
                   : isFullPaid
                     ? t.startAnalysis
-                    : t.purchaseBtn}
+                    : (lang === 'ko' ? '무료로 내 코디 보기' : 'See My Looks — Free')}
               </button>
+              {!isFullPaid && freeTrialRemaining > 0 && (
+                <p className="free-trial-caption">
+                  {lang === 'ko'
+                    ? `무료 분석 ${freeTrialRemaining}회 남음 · 결제 정보 필요 없음`
+                    : `${freeTrialRemaining} free ${freeTrialRemaining === 1 ? 'analysis' : 'analyses'} left · No card required`}
+                </p>
+              )}
             </div>
           </div>
         </form>

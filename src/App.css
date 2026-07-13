@@ -7658,3 +7658,286 @@ button:not(:disabled):active {
 .hero-cinema .hero-ba-slider {
   max-width: min(340px, 78vw);
 }
+
+/* ═══ WEATHER ATELIER — 날씨 반응형 히어로 대기 시스템 ═══════════
+   data-weather 버킷이 하늘 그라데이션·틴트·효과 레이어를 결정한다.
+   골드는 모든 버킷에서 유일한 액센트로 유지 (텍스트/CTA 불변). */
+
+.hero-cinema {
+  --wx-sky-1: #1B1D24;
+  --wx-sky-2: #14151C;
+  --wx-sky-3: #101018;
+  --wx-tint: #9BA3B4;
+  --wx-glow: rgba(155, 163, 180, 0.12);
+  --mx: 50%;
+  --my: 30%;
+}
+
+.hero-cinema[data-weather="clear-warm"] {
+  --wx-sky-1: #2B1F12; --wx-sky-2: #171310; --wx-sky-3: #100F14;
+  --wx-tint: #E8B04B; --wx-glow: rgba(232, 176, 75, 0.16);
+}
+.hero-cinema[data-weather="clear-cold"] {
+  --wx-sky-1: #16202E; --wx-sky-2: #111420; --wx-sky-3: #0F1018;
+  --wx-tint: #7FA8D9; --wx-glow: rgba(127, 168, 217, 0.14);
+}
+.hero-cinema[data-weather="rain"] {
+  --wx-sky-1: #131A22; --wx-sky-2: #0F141C; --wx-sky-3: #0D1016;
+  --wx-tint: #6E8CA0; --wx-glow: rgba(110, 140, 160, 0.14);
+}
+.hero-cinema[data-weather="snow"] {
+  --wx-sky-1: #1A1E28; --wx-sky-2: #131722; --wx-sky-3: #10121A;
+  --wx-tint: #C9D4E4; --wx-glow: rgba(201, 212, 228, 0.18);
+}
+.hero-cinema[data-weather="night"] {
+  --wx-sky-1: #0D1024; --wx-sky-2: #0D0E1C; --wx-sky-3: #0B0C14;
+  --wx-tint: #8B93C9; --wx-glow: rgba(139, 147, 201, 0.16);
+}
+
+/* 대기 레이어 공통 */
+.hero-atmo-sky, .hero-atmo-active, .hero-atmo-glow,
+.hero-atmo-fx-a, .hero-atmo-fx-b {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+/* 베이스(clouds) — 첫 페인트부터 존재, FOUC 없음 */
+.hero-atmo-sky {
+  background:
+    radial-gradient(ellipse 70% 55% at 50% 0%, rgba(155, 163, 180, 0.12), transparent 62%),
+    linear-gradient(to bottom, #1B1D24 0%, #14151C 55%, #101018 100%);
+}
+
+/* 실제 버킷 그라데이션 — 데이터 도착 시 1.2s 크로스페이드 */
+.hero-atmo-active {
+  background:
+    radial-gradient(ellipse 70% 55% at 50% 0%, var(--wx-glow), transparent 62%),
+    linear-gradient(to bottom, var(--wx-sky-1) 0%, var(--wx-sky-2) 55%, var(--wx-sky-3) 100%);
+  opacity: 0;
+  transition: opacity 1.2s cubic-bezier(0.45, 0, 0.55, 1);
+}
+.hero-atmo-active.on { opacity: 1; }
+
+/* 포인터 추적 글로우 (데스크톱만) */
+@media (pointer: fine) {
+  .hero-atmo-glow {
+    background: radial-gradient(600px circle at var(--mx) var(--my), var(--wx-glow), transparent 70%);
+    opacity: 0.7;
+  }
+}
+
+/* 히어로 콘텐츠는 대기 위에 */
+.hero-cinema > *:not([aria-hidden]) { position: relative; z-index: 1; }
+.hero-cinema { background: #101018; }
+
+/* ── 조건별 효과 ── */
+/* 비: 두 속도의 사선 빗줄기 */
+.hero-cinema[data-weather="rain"] .hero-atmo-fx-a {
+  background: repeating-linear-gradient(112deg, transparent 0 9px, rgba(110, 140, 160, 0.14) 9px 10px, transparent 10px 22px);
+  background-size: 100% 320px;
+  animation: wxRainA 0.9s linear infinite;
+  mix-blend-mode: screen;
+}
+.hero-cinema[data-weather="rain"] .hero-atmo-fx-b {
+  background: repeating-linear-gradient(108deg, transparent 0 13px, rgba(110, 140, 160, 0.10) 13px 14px, transparent 14px 30px);
+  background-size: 100% 320px;
+  animation: wxRainA 1.4s linear infinite;
+  opacity: 0.5;
+  mix-blend-mode: screen;
+}
+@keyframes wxRainA { to { background-position: 0 320px; } }
+
+/* 눈: 두 깊이의 점 하강 */
+.hero-cinema[data-weather="snow"] .hero-atmo-fx-a {
+  background-image:
+    radial-gradient(2px 2px at 12% 18%, rgba(201,212,228,0.55), transparent 60%),
+    radial-gradient(2px 2px at 38% 62%, rgba(201,212,228,0.5), transparent 60%),
+    radial-gradient(2px 2px at 61% 30%, rgba(201,212,228,0.55), transparent 60%),
+    radial-gradient(2px 2px at 82% 74%, rgba(201,212,228,0.5), transparent 60%),
+    radial-gradient(2px 2px at 27% 88%, rgba(201,212,228,0.45), transparent 60%),
+    radial-gradient(2px 2px at 92% 44%, rgba(201,212,228,0.5), transparent 60%);
+  background-size: 380px 380px;
+  animation: wxSnowA 11s linear infinite;
+}
+.hero-cinema[data-weather="snow"] .hero-atmo-fx-b {
+  background-image:
+    radial-gradient(1.5px 1.5px at 22% 34%, rgba(201,212,228,0.4), transparent 60%),
+    radial-gradient(1.5px 1.5px at 55% 78%, rgba(201,212,228,0.35), transparent 60%),
+    radial-gradient(1.5px 1.5px at 74% 12%, rgba(201,212,228,0.4), transparent 60%),
+    radial-gradient(1.5px 1.5px at 44% 52%, rgba(201,212,228,0.35), transparent 60%);
+  background-size: 520px 520px;
+  filter: blur(0.6px);
+  animation: wxSnowB 17s linear infinite;
+}
+@keyframes wxSnowA {
+  from { background-position: 0 0; }
+  to { background-position: 30px 380px; }
+}
+@keyframes wxSnowB {
+  from { background-position: 0 0; }
+  to { background-position: -30px 520px; }
+}
+
+/* 맑음(따뜻): 태양광 레이 + 숨 쉬는 웜 헤이즈 */
+.hero-cinema[data-weather="clear-warm"] .hero-atmo-fx-a {
+  background: conic-gradient(from 0deg at 50% -20%, transparent 0 40%, rgba(232, 176, 75, 0.07) 47%, transparent 54%, rgba(232, 176, 75, 0.05) 61%, transparent 68%);
+  animation: wxRays 24s ease-in-out infinite alternate;
+  transform-origin: 50% -20%;
+}
+.hero-cinema[data-weather="clear-warm"] .hero-atmo-fx-b {
+  background: radial-gradient(ellipse 60% 45% at 50% -10%, rgba(232, 176, 75, 0.12), transparent 70%);
+  animation: wxBreathe 9s ease-in-out infinite;
+}
+@keyframes wxRays {
+  from { transform: rotate(-4deg); }
+  to { transform: rotate(4deg); }
+}
+@keyframes wxBreathe {
+  0%, 100% { opacity: 0.7; }
+  50% { opacity: 1; }
+}
+
+/* 맑음(추움): 차고 선명한 광원 + 반짝임 */
+.hero-cinema[data-weather="clear-cold"] .hero-atmo-fx-a {
+  background:
+    radial-gradient(ellipse 50% 35% at 50% -5%, rgba(127, 168, 217, 0.14), transparent 70%),
+    radial-gradient(1.5px 1.5px at 22% 28%, rgba(200, 220, 245, 0.6), transparent 60%),
+    radial-gradient(1.5px 1.5px at 68% 16%, rgba(200, 220, 245, 0.5), transparent 60%),
+    radial-gradient(1.5px 1.5px at 84% 52%, rgba(200, 220, 245, 0.55), transparent 60%),
+    radial-gradient(1.5px 1.5px at 40% 64%, rgba(200, 220, 245, 0.45), transparent 60%);
+  animation: wxTwinkle 4s ease-in-out infinite;
+}
+@keyframes wxTwinkle {
+  0%, 100% { opacity: 0.55; }
+  50% { opacity: 1; }
+}
+
+/* 흐림: 느리게 흐르는 두 겹 구름 */
+.hero-cinema[data-weather="clouds"] .hero-atmo-fx-a {
+  background: radial-gradient(ellipse 55% 30% at 30% 25%, rgba(155, 163, 180, 0.10), transparent 70%);
+  animation: wxDriftA 60s ease-in-out infinite alternate;
+}
+.hero-cinema[data-weather="clouds"] .hero-atmo-fx-b {
+  background: radial-gradient(ellipse 55% 30% at 75% 40%, rgba(155, 163, 180, 0.08), transparent 70%);
+  animation: wxDriftB 90s ease-in-out infinite alternate;
+}
+@keyframes wxDriftA { from { transform: translateX(-6%); } to { transform: translateX(6%); } }
+@keyframes wxDriftB { from { transform: translateX(6%); } to { transform: translateX(-6%); } }
+
+/* 밤: 별 + 달무리 */
+.hero-cinema[data-weather="night"] .hero-atmo-fx-a {
+  background-image:
+    radial-gradient(180px circle at 82% 18%, rgba(139, 147, 201, 0.20), transparent 70%),
+    radial-gradient(1.5px 1.5px at 15% 22%, rgba(220, 225, 250, 0.7), transparent 60%),
+    radial-gradient(1px 1px at 34% 12%, rgba(220, 225, 250, 0.5), transparent 60%),
+    radial-gradient(1.5px 1.5px at 52% 30%, rgba(220, 225, 250, 0.6), transparent 60%),
+    radial-gradient(1px 1px at 68% 8%, rgba(220, 225, 250, 0.5), transparent 60%),
+    radial-gradient(1.5px 1.5px at 90% 38%, rgba(220, 225, 250, 0.55), transparent 60%),
+    radial-gradient(1px 1px at 8% 48%, rgba(220, 225, 250, 0.45), transparent 60%);
+  animation: wxTwinkle 5s ease-in-out infinite;
+}
+
+/* 슬라이더 림 — 날씨 틴트 상속 */
+.hero-cinema .hero-ba-slider {
+  box-shadow: 0 24px 80px rgba(0, 0, 0, 0.55), 0 0 0 1px var(--wx-glow);
+}
+
+/* Weather spine — 데스크톱 좌측 세로 타이포 */
+.hero-weather-spine {
+  display: none;
+}
+@media (min-width: 900px) {
+  .hero-weather-spine {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.9rem;
+    position: absolute;
+    left: 2rem;
+    top: 3rem;
+    writing-mode: vertical-rl;
+    font-family: var(--font-display);
+    font-size: 0.78rem;
+    font-weight: 600;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: rgba(245, 242, 233, 0.55);
+    font-variant-numeric: tabular-nums;
+    animation: heroWordRise 0.8s var(--spring) 0.15s both;
+  }
+  .hero-weather-spine::after {
+    content: '';
+    width: 1px;
+    height: 90px;
+    background: linear-gradient(to bottom, var(--wx-tint), transparent);
+    opacity: 0.4;
+  }
+}
+
+/* eyebrow 슬롯 — 날씨 도착 전후 지오메트리 고정 (CLS 0) */
+.hero-eyebrow-slot {
+  min-height: 2.1rem;
+  display: inline-flex;
+  align-items: center;
+  font-variant-numeric: tabular-nums;
+}
+
+/* 첫 라이트 섹션 상단 워시 — 하늘이 크림으로 스며드는 연결부 */
+.hero-cinema[data-weather="clear-warm"] + .path-section { background: linear-gradient(to bottom, #FBF8F0, var(--bg-light) 140px); }
+.hero-cinema[data-weather="clear-cold"] + .path-section { background: linear-gradient(to bottom, #F7F9FB, var(--bg-light) 140px); }
+.hero-cinema[data-weather="clouds"] + .path-section { background: linear-gradient(to bottom, #F8F8F7, var(--bg-light) 140px); }
+.hero-cinema[data-weather="rain"] + .path-section { background: linear-gradient(to bottom, #F6F8F8, var(--bg-light) 140px); }
+.hero-cinema[data-weather="snow"] + .path-section { background: linear-gradient(to bottom, #F8FAFB, var(--bg-light) 140px); }
+.hero-cinema[data-weather="night"] + .path-section { background: linear-gradient(to bottom, #F7F7FB, var(--bg-light) 140px); }
+
+/* Reduced motion: 효과 레이어 제거, 최종 그라데이션은 유지 */
+@media (prefers-reduced-motion: reduce) {
+  .hero-atmo-fx-a, .hero-atmo-fx-b { display: none; }
+  .hero-atmo-active { transition: none; }
+}
+
+/* ─── Weather-threaded funnel elements ───────────────────────── */
+.input-weather-note {
+  font-size: 0.85rem;
+  color: #8d7442;
+  margin: 0.4rem 0 0;
+  word-break: keep-all;
+}
+
+.lock-subtext {
+  font-size: 0.75rem;
+  color: rgba(255, 255, 255, 0.75);
+  margin: 0.3rem 0 0;
+  word-break: keep-all;
+}
+
+.free-trial-caption {
+  margin: 0.6rem 0 0;
+  font-size: 0.8rem;
+  color: var(--primary-light);
+  text-align: center;
+  font-variant-numeric: tabular-nums;
+  word-break: keep-all;
+}
+
+.daily-bridge {
+  border: 1px solid rgba(201, 169, 98, 0.35);
+  position: relative;
+}
+
+.daily-bridge-eyebrow {
+  display: block;
+  font-family: var(--font-display);
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.3em;
+  color: #c9a962;
+  margin-bottom: 0.6rem;
+}
+
+.how-step-daily .how-step-num {
+  background: linear-gradient(160deg, #e6cb84, #c9a962);
+  color: #14120c;
+  border-color: transparent;
+}
