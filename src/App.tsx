@@ -57,7 +57,7 @@ const clearIndexedDB = async (): Promise<void> => {
 
 type Language = 'ko' | 'en'
 type Gender = 'male' | 'female' | 'other' | null
-type Page = 'landing' | 'input' | 'loading' | 'result' | 'how-to-use' | 'preview' | 'login' | 'signup' | 'profile' | 'subscription-dashboard' | 'style-chat'
+type Page = 'landing' | 'input' | 'loading' | 'result' | 'how-to-use' | 'preview' | 'login' | 'signup' | 'profile' | 'subscription-dashboard' | 'style-chat' | 'hair-selection' | 'hair-result'
 
 const translations: Record<Language, {
   title: string
@@ -2379,6 +2379,44 @@ function getWeatherTip(temp: number, condition: string, lang: 'ko' | 'en'): stri
   return 'a day for padded coats and scarves'
 }
 
+// ─── Hair styling (restored) ─────────────────────────────────────
+// 아이콘 이모지는 선택 옵션 데이터로만 사용 (CLAUDE.md 허용 범위)
+const hairOccasions = [
+  { id: 'daily', icon: '☀️', labelKo: '데일리', labelEn: 'Daily' },
+  { id: 'date', icon: '💕', labelKo: '데이트', labelEn: 'Date' },
+  { id: 'interview', icon: '💼', labelKo: '면접', labelEn: 'Interview' },
+  { id: 'party', icon: '🎉', labelKo: '파티', labelEn: 'Party' },
+  { id: 'wedding', icon: '💒', labelKo: '결혼식', labelEn: 'Wedding' },
+  { id: 'vacation', icon: '🏖️', labelKo: '휴가', labelEn: 'Vacation' },
+] as const
+
+const hairVibes = [
+  { id: 'elegant', icon: '✨', labelKo: '우아한', labelEn: 'Elegant' },
+  { id: 'cute', icon: '🎀', labelKo: '귀여운', labelEn: 'Cute' },
+  { id: 'chic', icon: '🖤', labelKo: '시크한', labelEn: 'Chic' },
+  { id: 'natural', icon: '🌿', labelKo: '자연스러운', labelEn: 'Natural' },
+  { id: 'trendy', icon: '🔥', labelKo: '트렌디', labelEn: 'Trendy' },
+  { id: 'classic', icon: '👑', labelKo: '클래식', labelEn: 'Classic' },
+] as const
+
+// 상황×느낌×성별 → 백엔드 스타일명 3종 (+UI 라벨). 백엔드가 인덱스별
+// 기장/질감 변주를 더하므로 이름은 방향만 제시하면 된다.
+function buildHairStyles(occasion: string, vibe: string, gender: string, lang: 'ko' | 'en') {
+  const base = `${vibe} ${occasion}`
+  if (gender === 'female') {
+    return [
+      { name: `${base} face-framing layered medium cut`, label: lang === 'ko' ? '레이어드 미디엄' : 'Layered Medium' },
+      { name: `${base} soft waved long style`, label: lang === 'ko' ? '소프트 웨이브' : 'Soft Waves' },
+      { name: `${base} sleek shoulder-length bob`, label: lang === 'ko' ? '슬릭 보브' : 'Sleek Bob' },
+    ]
+  }
+  return [
+    { name: `${base} clean tapered short cut`, label: lang === 'ko' ? '클린 테이퍼드' : 'Clean Taper' },
+    { name: `${base} natural textured medium cut`, label: lang === 'ko' ? '내추럴 미디엄' : 'Natural Medium' },
+    { name: `${base} refined side-part style`, label: lang === 'ko' ? '사이드 파트' : 'Side Part' },
+  ]
+}
+
 // 날씨 → 대기(atmosphere) 버킷 — 랜딩 히어로의 분위기를 결정
 type WeatherBucket = 'clear-warm' | 'clear-cold' | 'clouds' | 'rain' | 'snow' | 'night'
 
@@ -2609,6 +2647,12 @@ function App() {
   const [wardrobeItems, setWardrobeItems] = useState<Array<{ id: string; description: string; category: string | null; image_url: string }>>([])
   const [wardrobeUploading, setWardrobeUploading] = useState(false)
   const wardrobeInputRef = useRef<HTMLInputElement>(null)
+  // 헤어 스타일 (복구): 선택 상태 + 결과
+  const [hairOccasion, setHairOccasion] = useState('daily')
+  const [hairVibe, setHairVibe] = useState('natural')
+  const [hairImages, setHairImages] = useState<Array<{ style: string; label: string; imageUrl: string | null }>>([])
+  const [isGeneratingHair, setIsGeneratingHair] = useState(false)
+  const hairPhotoInputRef = useRef<HTMLInputElement>(null)
   const [error, setError] = useState<string>('')
   const [isDragging, setIsDragging] = useState(false)
   const [styleImages, setStyleImages] = useState<StyleImage[]>([])
@@ -2956,6 +3000,60 @@ function App() {
         body: JSON.stringify({ id }),
       })
     } catch { /* 목록에선 이미 제거됨 — 다음 로드에서 동기화 */ }
+  }
+
+  // 헤어 스타일 생성 — 무료 체험 카운터 공유 (3회), 3종 모두 공개 (바이럴 훅)
+  const handleHairGenerate = async () => {
+    if (!profile.photo || !profile.gender) return
+    if (!isFullPaid && freeTrialRemaining <= 0) {
+      setError(lang === 'ko' ? '무료 체험을 모두 사용했어요. 프리미엄으로 계속하세요.' : 'Free tries used up — continue with Premium.')
+      setPage('preview')
+      return
+    }
+    trackEvent('generation_start', { type: 'hair', paid: isFullPaid })
+    setIsGeneratingHair(true)
+    setError('')
+    const styles = buildHairStyles(hairOccasion, hairVibe, profile.gender, lang)
+    try {
+      const res = await fetch('/api/generate-hair-styles', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          photo: profile.photo,
+          styles: styles.map(s => s.name),
+          gender: profile.gender,
+        }),
+      })
+      if (!res.ok) throw new Error(`API ${res.status}`)
+      const data = await res.json() as { images: Array<{ style: string; imageUrl: string | null }> }
+      const merged = data.images.map((img, i) => ({ ...img, label: styles[i]?.label || img.style }))
+      if (!merged.some(m => m.imageUrl)) throw new Error('no images')
+      setHairImages(merged)
+      if (!isFullPaid) {
+        const newCount = freeTrialCount + 1
+        setFreeTrialCount(newCount)
+        localStorage.setItem('stylist_free_trial_count', String(newCount))
+      }
+      trackEvent('generation_complete', { type: 'hair' })
+      trackEvent('result_view', { type: 'hair', is_paid: isFullPaid })
+      setPage('hair-result')
+    } catch (e) {
+      console.error('Hair generation failed:', e)
+      trackEvent('generation_error', { type: 'hair' })
+      setError(lang === 'ko' ? '헤어 스타일 생성에 실패했어요. 다시 시도해주세요.' : 'Hair generation failed. Please try again.')
+    } finally {
+      setIsGeneratingHair(false)
+    }
+  }
+
+  // 헤어용 사진 업로드 (프로필 사진 재사용, 없으면 새로 업로드)
+  const handleHairPhotoUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
+    e.target.value = ''
+    if (!file) return
+    const reader = new FileReader()
+    reader.onload = () => setProfile(prev => ({ ...prev, photo: reader.result as string }))
+    reader.readAsDataURL(file)
   }
 
   // 아침 알림 켜기 — 권한 요청 → 푸시 구독 → 서버 저장
@@ -4669,6 +4767,153 @@ ${styleImgs.length > 1 ? `<div class="section"><h2>${styleSection}</h2><div clas
   // 사진 + 성별만 필수 — 키/몸무게는 선택 (미입력 시 성별 기본값으로 실루엣 가이드만 보정)
   const isFormValid = profile.photo && profile.gender
 
+  // Hair Selection Page — 상황/느낌 선택 후 생성
+  if (page === 'hair-selection') {
+    return (
+      <div className="app-container hair-page">
+        <header className="app-header">
+          <button className="back-btn" onClick={() => setPage('landing')}>← {t.backToHome}</button>
+        </header>
+        <div className="hair-selection-content">
+          <span className="input-tag">HAIR STUDIO</span>
+          <h1 className="hair-title">{lang === 'ko' ? '어울리는 헤어를 미리 봅니다' : 'Preview the hair that suits you'}</h1>
+          <p className="hair-desc">
+            {lang === 'ko'
+              ? '사진 한 장으로, 시술 전에 내 얼굴로 확인하세요. 상황과 느낌만 고르면 3가지 스타일을 보여드립니다.'
+              : 'One photo — see it on your own face before the salon. Pick an occasion and a vibe; we show three styles.'}
+          </p>
+
+          {/* 사진: 프로필 사진 재사용 or 새 업로드 */}
+          <div className="hair-photo-row">
+            {profile.photo ? (
+              <div className="hair-photo-preview">
+                <img src={profile.photo} alt="" />
+                <button className="hair-photo-change" onClick={() => hairPhotoInputRef.current?.click()}>
+                  {lang === 'ko' ? '사진 변경' : 'Change photo'}
+                </button>
+              </div>
+            ) : (
+              <button className="hair-photo-add" onClick={() => hairPhotoInputRef.current?.click()}>
+                + {lang === 'ko' ? '사진 업로드' : 'Upload photo'}
+              </button>
+            )}
+            <input ref={hairPhotoInputRef} type="file" accept="image/*" onChange={handleHairPhotoUpload} style={{ display: 'none' }} />
+          </div>
+
+          {/* 성별 */}
+          <div className="hair-gender-row">
+            {(['female', 'male'] as const).map(g => (
+              <button
+                key={g}
+                className={`hair-chip${profile.gender === g ? ' selected' : ''}`}
+                onClick={() => setProfile(prev => ({ ...prev, gender: g }))}
+              >
+                {g === 'female' ? (lang === 'ko' ? '여성' : 'Female') : (lang === 'ko' ? '남성' : 'Male')}
+              </button>
+            ))}
+          </div>
+
+          <h3 className="hair-group-label">{lang === 'ko' ? '어떤 상황인가요?' : 'What is the occasion?'}</h3>
+          <div className="hair-chip-grid">
+            {hairOccasions.map(o => (
+              <button
+                key={o.id}
+                className={`hair-chip${hairOccasion === o.id ? ' selected' : ''}`}
+                onClick={() => setHairOccasion(o.id)}
+              >
+                <span className="hair-chip-icon">{o.icon}</span>
+                {lang === 'ko' ? o.labelKo : o.labelEn}
+              </button>
+            ))}
+          </div>
+
+          <h3 className="hair-group-label">{lang === 'ko' ? '어떤 느낌을 원하세요?' : 'What vibe do you want?'}</h3>
+          <div className="hair-chip-grid">
+            {hairVibes.map(v => (
+              <button
+                key={v.id}
+                className={`hair-chip${hairVibe === v.id ? ' selected' : ''}`}
+                onClick={() => setHairVibe(v.id)}
+              >
+                <span className="hair-chip-icon">{v.icon}</span>
+                {lang === 'ko' ? v.labelKo : v.labelEn}
+              </button>
+            ))}
+          </div>
+
+          {error && <div className="error-message">{error}<button onClick={() => setError('')}>{t.retry}</button></div>}
+
+          <button
+            className="btn-gold submit-btn hair-generate-btn"
+            disabled={!profile.photo || !profile.gender || isGeneratingHair}
+            onClick={handleHairGenerate}
+          >
+            {isGeneratingHair
+              ? (lang === 'ko' ? '내 얼굴로 만드는 중... (30초-1분)' : 'Creating on your face... (30-60s)')
+              : (lang === 'ko' ? '무료로 헤어 미리보기' : 'Preview Hair — Free')}
+          </button>
+          {!isFullPaid && (
+            <p className="free-trial-caption">
+              {lang === 'ko' ? `무료 ${freeTrialRemaining}회 남음` : `${freeTrialRemaining} free left`}
+            </p>
+          )}
+        </div>
+      </div>
+    )
+  }
+
+  // Hair Result Page — 3종 그리드 + 크로스셀
+  if (page === 'hair-result') {
+    return (
+      <div className="app-container hair-page">
+        <header className="app-header">
+          <button className="back-btn" onClick={() => setPage('hair-selection')}>← {lang === 'ko' ? '다시 고르기' : 'Pick again'}</button>
+        </header>
+        <div className="hair-result-content">
+          <span className="input-tag">HAIR STUDIO</span>
+          <h1 className="hair-title">{lang === 'ko' ? '오늘의 헤어 제안 3가지' : 'Three hair directions for you'}</h1>
+          <div className="hair-result-grid">
+            {hairImages.map((img, i) => (
+              <div key={i} className="hair-result-card">
+                {img.imageUrl ? (
+                  <img src={img.imageUrl} alt={img.label} onClick={() => setFullscreenImage(img.imageUrl)} />
+                ) : (
+                  <div className="hair-result-missing">{lang === 'ko' ? '생성 실패' : 'Failed'}</div>
+                )}
+                <div className="hair-result-label">{img.label}</div>
+                {img.imageUrl && (
+                  <button className="btn-outline hair-save-btn" onClick={() => downloadImage(img.imageUrl!, `hair-${i + 1}.jpg`)}>
+                    {lang === 'ko' ? '저장' : 'Save'}
+                  </button>
+                )}
+              </div>
+            ))}
+          </div>
+
+          {/* 크로스셀: 패션 변환 + 데일리 */}
+          <div className="hair-crosssell">
+            <button className="btn-gold" onClick={() => { trackEvent('hair_to_fashion_click'); setPage('input') }}>
+              {lang === 'ko' ? '패션 스타일도 변환해보기' : 'Try a Fashion Transformation'}
+            </button>
+            {!isSubscribed && (
+              <button className="btn-outline" onClick={() => { trackEvent('hair_to_daily_click'); user ? handleSubscription() : setPage('input') }}>
+                {lang === 'ko' ? '매일 아침 코디 받기 — 첫 7일 무료' : 'Daily Morning Looks — First 7 Days Free'}
+              </button>
+            )}
+            <button className="btn-dark" onClick={handleRestart}>{t.backToHome}</button>
+          </div>
+        </div>
+
+        {/* Fullscreen viewer 재사용 */}
+        {fullscreenImage && (
+          <div className="fullscreen-overlay" onClick={() => setFullscreenImage(null)}>
+            <img src={fullscreenImage} alt="" className="fullscreen-img" />
+          </div>
+        )}
+      </div>
+    )
+  }
+
   // Style Chat Page
   if (page === 'style-chat') {
     return (
@@ -5921,15 +6166,64 @@ ${styleImgs.length > 1 ? `<div class="section"><h2>${styleSection}</h2><div clas
             observer.observe(el)
           }
         }}>
-          <div className="service-hero-card fade-in-up" onClick={() => { trackEvent('select_item', { item_category: 'premium_report' }); setPage('input') }}>
+          <div className="service-split">
+            {/* 좌: 대형 트랜스포메이션 카드 (풀블리드 이미지 + 절제된 타입) */}
+            <div className="service-hero-card fade-in-up" onClick={() => { trackEvent('select_item', { item_category: 'premium_report' }); setPage('input') }}>
               <img src="/gallery/after-female-date.png" alt="AI Style Transformation" className="service-hero-img" loading="lazy" />
               <div className="service-hero-overlay"></div>
               <div className="service-hero-content">
-                <span className="service-hero-tag">AI STYLING</span>
+                <span className="service-hero-tag">SERVICE — TRANSFORM</span>
                 <h2 className="service-hero-title">{t.module2Title}</h2>
                 <p className="service-hero-desc">{t.module2Desc}</p>
                 <div className="service-hero-cta">{t.explore} →</div>
               </div>
+            </div>
+
+            {/* 우: 에디토리얼 인덱스 — 카드 박스 없이 헤어라인 룰로 구분 */}
+            <div className="service-index">
+              <div className="service-index-row fade-in-up" onClick={() => { trackEvent('select_item', { item_category: 'hair' }); setPage('hair-selection') }}>
+                <span className="service-index-label">SERVICE — HAIR</span>
+                <h3 className="service-index-title">{lang === 'ko' ? '헤어 스타일 미리보기' : 'Hair Preview'}</h3>
+                <p className="service-index-desc">
+                  {lang === 'ko' ? '시술 전에 내 얼굴로 3가지 스타일을 확인 — 무료' : 'See three styles on your own face before the salon — free'}
+                </p>
+                <span className="service-index-arrow">→</span>
+              </div>
+              <div className="service-index-row fade-in-up" onClick={() => { trackEvent('select_item', { item_category: 'style_chat' }); setPage('style-chat') }}>
+                <span className="service-index-label">SERVICE — ADVISOR</span>
+                <h3 className="service-index-title">{t.chatCardTitle}</h3>
+                <p className="service-index-desc">{t.chatCardDesc}</p>
+                <span className="service-index-arrow">→</span>
+              </div>
+              <div
+                className="service-index-row service-index-daily fade-in-up"
+                onClick={() => {
+                  if (isSubscribed) {
+                    trackEvent('select_item', { item_category: 'daily_dashboard' })
+                    setPage('subscription-dashboard')
+                  } else if (user) {
+                    trackEvent('select_item', { item_category: 'daily_subscribe' })
+                    handleSubscription()
+                  } else {
+                    trackEvent('select_item', { item_category: 'daily_via_analysis' })
+                    setPage('input')
+                  }
+                }}
+              >
+                <span className="service-index-label">SERVICE — DAILY</span>
+                <h3 className="service-index-title">{lang === 'ko' ? '매일 아침, 오늘의 코디' : 'What to Wear Today'}</h3>
+                <p className="service-index-desc">
+                  {isSubscribed
+                    ? (lang === 'ko' ? '구독 중 — 오늘의 추천 확인하기' : "Subscribed — see today's look")
+                    : weatherPreview
+                      ? (lang === 'ko'
+                        ? `내일 아침 7시, ${weatherPreview.city} 날씨 기준 코디 도착 — 오늘은 ${getWeatherTip(weatherPreview.temp, weatherPreview.condition, 'ko')} · 첫 7일 무료`
+                        : `Tomorrow 7 AM: an outfit for ${weatherPreview.city} — today is ${getWeatherTip(weatherPreview.temp, weatherPreview.condition, 'en')} · First 7 days free`)
+                      : (lang === 'ko' ? '날씨와 내 컬러에 맞춘 코디를 매일 아침 이메일로 · 첫 7일 무료' : 'Weather-matched looks in your inbox every morning · First 7 days free')}
+                </p>
+                <span className="service-index-arrow">→</span>
+              </div>
+            </div>
           </div>
 
           {/* 360° style view — renders only when /public/spin frames exist */}
@@ -5938,49 +6232,6 @@ ${styleImgs.length > 1 ? `<div class="section"><h2>${styleSection}</h2><div clas
             frameCount={24}
             hint={lang === 'ko' ? '드래그해서 360도로 스타일을 살펴보세요' : 'Drag to view the look in 360°'}
           />
-
-          {/* Style Advisor — real-time chat */}
-          <div className="chat-strip fade-in-up" onClick={() => { trackEvent('select_item', { item_category: 'style_chat' }); setPage('style-chat') }}>
-            <div className="chat-strip-text">
-              <h3 className="chat-strip-title">{t.chatCardTitle}</h3>
-              <p className="chat-strip-desc">{t.chatCardDesc}</p>
-            </div>
-            <div className="chat-strip-cta">{t.explore} →</div>
-          </div>
-
-          {/* What to Wear Today — daily subscription entry */}
-          <div
-            className="chat-strip daily-strip fade-in-up"
-            onClick={() => {
-              if (isSubscribed) {
-                trackEvent('select_item', { item_category: 'daily_dashboard' })
-                setPage('subscription-dashboard')
-              } else if (user) {
-                trackEvent('select_item', { item_category: 'daily_subscribe' })
-                handleSubscription()
-              } else {
-                // 비로그인: 로그인 벽 대신 무료 분석으로 — 스타일 프로필이 데일리의 전제
-                trackEvent('select_item', { item_category: 'daily_via_analysis' })
-                setPage('input')
-              }
-            }}
-          >
-            <div className="chat-strip-text">
-              <h3 className="chat-strip-title">{lang === 'ko' ? '매일 아침, 오늘의 코디' : 'What to Wear Today'}</h3>
-              <p className="chat-strip-desc">
-                {isSubscribed
-                  ? (lang === 'ko' ? '구독 중 — 오늘의 추천과 지난 스타일을 확인하세요' : 'Subscribed — see today\'s look and your style history')
-                  : weatherPreview
-                    ? (lang === 'ko'
-                      ? `내일 아침 7시, ${weatherPreview.city} 날씨 기준 코디가 도착합니다 — 오늘은 ${getWeatherTip(weatherPreview.temp, weatherPreview.condition, 'ko')} · 첫 7일 무료`
-                      : `Tomorrow 7 AM: an outfit matched to ${weatherPreview.city}'s weather — today is ${getWeatherTip(weatherPreview.temp, weatherPreview.condition, 'en')} · First 7 days free`)
-                    : (lang === 'ko' ? '날씨와 내 퍼스널 컬러에 맞춘 코디를 매일 아침 이메일로 · $6.99/월 · 첫 7일 무료' : 'Weather-matched daily outfits in your inbox · $6.99/mo · First 7 days free')}
-              </p>
-            </div>
-            <div className="chat-strip-cta">
-              {isSubscribed ? (lang === 'ko' ? '오늘의 스타일 →' : "Today's Style →") : (user ? `${t.explore} →` : (lang === 'ko' ? '무료 분석부터 →' : 'Start Free →'))}
-            </div>
-          </div>
         </section>
 
         <div className="section-divider-full"></div>

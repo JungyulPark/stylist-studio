@@ -50,6 +50,7 @@ function isRateLimited(key: string, maxRequests: number, windowMs: number): bool
 const RATE_LIMITS: Record<string, [number, number]> = {
   // Expensive AI endpoints — 5 requests per minute
   '/api/generate-styles':      [5, 60_000],
+  '/api/generate-hair-styles': [5, 60_000],
   '/api/analyze':              [5, 60_000],
 
   // Chat — token-gated client-side, but cap bursts anyway
