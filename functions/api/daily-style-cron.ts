@@ -724,6 +724,38 @@ export const onRequestGet: PagesFunction<Env> = async (context) => {
           }
         }
 
+        // 학습된 취향: 최근 좋아요/별로예요 피드백을 시나리오에 주입 —
+        // 추천이 매일 조금씩 그 사람에게 수렴한다 (Alta식 루프)
+        if (scenarios) {
+          try {
+            const fbRes = await fetch(
+              `${context.env.SUPABASE_URL}/rest/v1/outfit_feedback?email=eq.${encodeURIComponent(sub.email)}&select=verdict,outfit_desc&order=created_at.desc&limit=12`,
+              {
+                headers: {
+                  'apikey': context.env.SUPABASE_SERVICE_KEY,
+                  'Authorization': `Bearer ${context.env.SUPABASE_SERVICE_KEY}`,
+                },
+              }
+            )
+            if (fbRes.ok) {
+              const rows = await fbRes.json() as Array<{ verdict: string; outfit_desc: string | null }>
+              const liked = rows.filter(r => r.verdict === 'like' && r.outfit_desc).slice(0, 4).map(r => r.outfit_desc)
+              const disliked = rows.filter(r => r.verdict === 'dislike' && r.outfit_desc).slice(0, 4).map(r => r.outfit_desc)
+              if (liked.length || disliked.length) {
+                let pref = '\n\nLEARNED PREFERENCES (from this subscriber\'s own feedback):'
+                if (liked.length) pref += `\n- They LIKED these past outfits — lean toward similar silhouettes, colors, and formality: ${liked.join(' | ')}`
+                if (disliked.length) pref += `\n- They DISLIKED these — avoid repeating similar looks: ${disliked.join(' | ')}`
+                for (const s of scenarios) {
+                  s.prompt += pref
+                }
+                console.log(`[cron] Injected feedback for ${sub.email}: ${liked.length} liked, ${disliked.length} disliked`)
+              }
+            }
+          } catch (e) {
+            console.warn(`[cron] Feedback fetch failed for ${sub.email} (non-blocking):`, e)
+          }
+        }
+
         // Generate text recommendation with OpenAI gpt-5-mini
         const recResult = await generateStyleRecommendation(sub, weather, context.env.OPENAI_API_KEY || '', scenarios)
         const recommendation = recResult.text

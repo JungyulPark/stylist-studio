@@ -2653,6 +2653,8 @@ function App() {
   const [hairImages, setHairImages] = useState<Array<{ style: string; label: string; imageUrl: string | null }>>([])
   const [isGeneratingHair, setIsGeneratingHair] = useState(false)
   const hairPhotoInputRef = useRef<HTMLInputElement>(null)
+  // 아웃핏 피드백 (오늘의 룩 학습 루프)
+  const [outfitFeedback, setOutfitFeedback] = useState<Record<string, 'like' | 'dislike'>>({})
   const [error, setError] = useState<string>('')
   const [isDragging, setIsDragging] = useState(false)
   const [styleImages, setStyleImages] = useState<StyleImage[]>([])
@@ -3054,6 +3056,27 @@ function App() {
     const reader = new FileReader()
     reader.onload = () => setProfile(prev => ({ ...prev, photo: reader.result as string }))
     reader.readAsDataURL(file)
+  }
+
+  // 오늘의 룩 피드백 — 다음 추천이 이 기록을 학습한다
+  const handleOutfitFeedback = async (scenarioId: string, verdict: 'like' | 'dislike', label: string) => {
+    if (!dailyStyle?.date) return
+    setOutfitFeedback(prev => ({ ...prev, [scenarioId]: verdict }))
+    trackEvent('outfit_feedback', { scenario: scenarioId, verdict })
+    try {
+      await fetch('/api/outfit-feedback', {
+        method: 'POST',
+        headers: authHeaders(),
+        body: JSON.stringify({
+          sent_date: dailyStyle.date,
+          scenario_id: scenarioId,
+          verdict,
+          outfit_label: label,
+        }),
+      })
+    } catch (e) {
+      console.error('Outfit feedback failed:', e)
+    }
   }
 
   // 아침 알림 켜기 — 권한 요청 → 푸시 구독 → 서버 저장
@@ -5714,6 +5737,26 @@ ${styleImgs.length > 1 ? `<div class="section"><h2>${styleSection}</h2><div clas
                             </button>
                           )}
                         </div>
+                        {/* 피드백 → 내일 추천이 학습 */}
+                        <div className="outfit-feedback-row">
+                          <button
+                            className={`outfit-fb-btn${outfitFeedback[img.id] === 'like' ? ' fb-on' : ''}`}
+                            onClick={() => handleOutfitFeedback(img.id, 'like', img.label)}
+                          >
+                            {lang === 'ko' ? '좋아요' : 'Love it'}
+                          </button>
+                          <button
+                            className={`outfit-fb-btn fb-neg${outfitFeedback[img.id] === 'dislike' ? ' fb-on' : ''}`}
+                            onClick={() => handleOutfitFeedback(img.id, 'dislike', img.label)}
+                          >
+                            {lang === 'ko' ? '별로예요' : 'Not for me'}
+                          </button>
+                        </div>
+                        {outfitFeedback[img.id] && (
+                          <p className="outfit-fb-note">
+                            {lang === 'ko' ? '내일 추천에 반영돼요' : "We'll factor this in tomorrow"}
+                          </p>
+                        )}
                       </div>
                     ))}
                   </div>

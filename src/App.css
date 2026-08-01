@@ -8207,3 +8207,42 @@ button:not(:disabled):active {
 .hair-crosssell button {
   width: 100%;
 }
+
+/* ─── Outfit feedback (학습 루프) ─────────────────────────────── */
+.outfit-feedback-row {
+  display: flex;
+  gap: 0.4rem;
+  padding: 0.5rem 0.6rem 0.2rem;
+}
+
+.outfit-fb-btn {
+  flex: 1;
+  padding: 0.4rem 0.5rem;
+  font-size: 0.78rem;
+  font-weight: 600;
+  border-radius: 8px;
+  border: 1px solid rgba(26, 26, 26, 0.15);
+  background: var(--white);
+  color: var(--primary-light);
+  cursor: pointer;
+  transition: all 0.25s var(--spring);
+  word-break: keep-all;
+}
+
+.outfit-fb-btn.fb-on {
+  background: linear-gradient(160deg, #e6cb84, #c9a962);
+  border-color: transparent;
+  color: #14120c;
+}
+
+.outfit-fb-btn.fb-neg.fb-on {
+  background: rgba(26, 26, 26, 0.85);
+  color: #F5F2E9;
+}
+
+.outfit-fb-note {
+  margin: 0.35rem 0 0.2rem;
+  font-size: 0.72rem;
+  color: #8d7442;
+  text-align: center;
+}
