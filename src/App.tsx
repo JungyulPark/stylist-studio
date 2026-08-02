@@ -2655,6 +2655,8 @@ function App() {
   const hairPhotoInputRef = useRef<HTMLInputElement>(null)
   // 아웃핏 피드백 (오늘의 룩 학습 루프)
   const [outfitFeedback, setOutfitFeedback] = useState<Record<string, 'like' | 'dislike'>>({})
+  // 히어로 필름 (에셋 배치 전이면 슬라이더로 폴백)
+  const [heroVideoOk, setHeroVideoOk] = useState(true)
   const [error, setError] = useState<string>('')
   const [isDragging, setIsDragging] = useState(false)
   const [styleImages, setStyleImages] = useState<StyleImage[]>([])
@@ -6155,6 +6157,22 @@ ${styleImgs.length > 1 ? `<div class="section"><h2>${styleSection}</h2><div clas
             <span className="hero-value-chip">{lang === 'ko' ? '퍼스널 컬러 진단' : 'Color Analysis'}</span>
             <span className="hero-value-chip">{lang === 'ko' ? '내 사진으로 스타일 변환' : 'AI Restyle on Your Photo'}</span>
           </div>
+          {heroVideoOk && (
+            <video
+              className="hero-film"
+              autoPlay
+              muted
+              loop
+              playsInline
+              preload="metadata"
+              poster="/gallery/after-female-date.png"
+              onError={() => setHeroVideoOk(false)}
+              aria-label="AI styled fashion film"
+            >
+              <source src="/hero-loop.mp4" type="video/mp4" onError={() => setHeroVideoOk(false)} />
+            </video>
+          )}
+          {!heroVideoOk && (
           <div
             className="ba-slider hero-ba-slider"
             ref={heroSliderRef}
@@ -6173,6 +6191,7 @@ ${styleImgs.length > 1 ? `<div class="section"><h2>${styleSection}</h2><div clas
             <span className="ba-label ba-label-before">{t.galleryBefore}</span>
             <span className="ba-label ba-label-after">{t.galleryAfter}</span>
           </div>
+          )}
           {isSubscribed ? (
             <div className="hero-cta-row">
               {/* 구독자의 "오늘 뭐 입지?"에 대한 답은 오늘의 추천 — 그게 첫 번째 버튼 */}

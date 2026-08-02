@@ -8246,3 +8246,13 @@ button:not(:disabled):active {
   color: #8d7442;
   text-align: center;
 }
+
+/* ─── Hero fashion film ──────────────────────────────────────── */
+.hero-film {
+  width: min(340px, 78vw);
+  aspect-ratio: 3 / 4;
+  object-fit: cover;
+  border-radius: 18px;
+  box-shadow: 0 24px 80px rgba(0, 0, 0, 0.55), 0 0 0 1px var(--wx-glow);
+  background: #101018;
+}
