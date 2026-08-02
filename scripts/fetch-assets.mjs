@@ -9,11 +9,14 @@ import { execSync } from 'node:child_process'
 import { mkdirSync, writeFileSync, existsSync, readdirSync, unlinkSync } from 'node:fs'
 import { join } from 'node:path'
 
+// 히어로 모델 = 크림 스튜디오 화이트 드레스 (사장님 픽).
+// before는 같은 모델의 청바지 버전 (nano-banana 아이덴티티 에딧) — 슬라이더 성립 조건.
 const ASSETS = {
-  before: 'https://d8j0ntlcm91z4.cloudfront.net/user_3GIv65H6DuhK0liNxN44tHwauC0/hf_20260802_134020_d4378507-98e2-4224-8019-c305e4fc4414.png',
-  after: 'https://d8j0ntlcm91z4.cloudfront.net/user_3GIv65H6DuhK0liNxN44tHwauC0/hf_20260802_134129_6dfc15a3-e9f1-42fa-82c2-c5744394f4e8.png',
+  before: 'https://d8j0ntlcm91z4.cloudfront.net/user_3GIv65H6DuhK0liNxN44tHwauC0/hf_20260802_134850_ee5a110a-dc25-415b-87a7-e3d6bd69ff14.png',
+  after: 'https://d8j0ntlcm91z4.cloudfront.net/user_3GIv65H6DuhK0liNxN44tHwauC0/hf_20260802_134257_20007be0-7b99-49df-a095-c182d07eebb5.png',
   serviceWide: 'https://d8j0ntlcm91z4.cloudfront.net/user_3GIv65H6DuhK0liNxN44tHwauC0/hf_20260802_134257_20007be0-7b99-49df-a095-c182d07eebb5.png',
   spinVideo: 'https://d8j0ntlcm91z4.cloudfront.net/user_3GIv65H6DuhK0liNxN44tHwauC0/hf_20260802_134244_ed158898-6734-430e-8855-21416047b700.mp4',
+  heroVideo: 'https://d8j0ntlcm91z4.cloudfront.net/user_3GIv65H6DuhK0liNxN44tHwauC0/hf_20260802_134854_8cb519f3-f542-4747-b61f-ca3b1fff4408.mp4',
 }
 
 async function download(url, dest) {
@@ -30,8 +33,8 @@ async function main() {
   // 1. 히어로 before/after — 960x1200 (4:5), 같은 크롭
   await download(ASSETS.before, tmp('before.png'))
   await download(ASSETS.after, tmp('after.png'))
-  await sharp(tmp('before.png')).resize(960, 1200, { fit: 'cover' }).png().toFile('public/gallery/before-female.png')
-  await sharp(tmp('after.png')).resize(960, 1200, { fit: 'cover' }).png().toFile('public/gallery/after-female-date.png')
+  await sharp(tmp('before.png')).resize(960, 1200, { fit: 'cover', position: 'attention' }).png().toFile('public/gallery/before-female.png')
+  await sharp(tmp('after.png')).resize(960, 1200, { fit: 'cover', position: 'attention' }).png().toFile('public/gallery/after-female-date.png')
   console.log('hero before/after placed (960x1200)')
 
   // 2. 서비스 카드 — 1600x1000
@@ -39,7 +42,11 @@ async function main() {
   await sharp(tmp('wide.png')).resize(1600, 1000, { fit: 'cover' }).webp({ quality: 84 }).toFile('public/gallery/service-wide.webp')
   console.log('service card placed (1600x1000)')
 
-  // 3. 360 스핀 — 5초 영상에서 24프레임 (900x1200)
+  // 3. 히어로 패션 필름 루프
+  await download(ASSETS.heroVideo, 'public/hero-loop.mp4')
+  console.log('hero film placed (public/hero-loop.mp4)')
+
+  // 4. 360 스핀 — 5초 영상에서 24프레임 (900x1200)
   await download(ASSETS.spinVideo, tmp('spin.mp4'))
   try {
     execSync('ffmpeg -version', { stdio: 'ignore' })
