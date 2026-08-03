@@ -15,7 +15,8 @@ const ASSETS = {
   before: 'https://d8j0ntlcm91z4.cloudfront.net/user_3GIv65H6DuhK0liNxN44tHwauC0/hf_20260802_134850_ee5a110a-dc25-415b-87a7-e3d6bd69ff14.png',
   after: 'https://d8j0ntlcm91z4.cloudfront.net/user_3GIv65H6DuhK0liNxN44tHwauC0/hf_20260802_134257_20007be0-7b99-49df-a095-c182d07eebb5.png',
   serviceWide: 'https://d8j0ntlcm91z4.cloudfront.net/user_3GIv65H6DuhK0liNxN44tHwauC0/hf_20260802_134257_20007be0-7b99-49df-a095-c182d07eebb5.png',
-  spinVideo: 'https://d8j0ntlcm91z4.cloudfront.net/user_3GIv65H6DuhK0liNxN44tHwauC0/hf_20260802_134244_ed158898-6734-430e-8855-21416047b700.mp4',
+  // 360 스핀도 히어로와 같은 화이트 드레스 모델로 통일
+  spinVideo: 'https://d8j0ntlcm91z4.cloudfront.net/user_3GIv65H6DuhK0liNxN44tHwauC0/hf_20260803_100932_16bcd30f-58bd-41bf-86fc-7b5ef9dcfc2c.mp4',
   heroVideo: 'https://d8j0ntlcm91z4.cloudfront.net/user_3GIv65H6DuhK0liNxN44tHwauC0/hf_20260802_134854_8cb519f3-f542-4747-b61f-ca3b1fff4408.mp4',
 }
 
