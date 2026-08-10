@@ -4,6 +4,7 @@ import { editPhotoWithGemini, type ImageScenario } from '../lib/gemini-image'
 import { getDailyScenarios, dailyScenarioLabels } from '../lib/daily-style-scenarios'
 import { createUnsubscribeToken } from '../lib/unsubscribe-token'
 import { sendEmptyPush } from '../lib/web-push'
+import { logOpsEvent, notifyOwner } from '../lib/ops-log'
 import { Resend } from 'resend'
 
 interface Env {
@@ -934,15 +935,30 @@ export const onRequestGet: PagesFunction<Env> = async (context) => {
       }
     }
 
+    const sentCount = results.filter(r => r.status === 'sent').length
+    const errorCount = results.filter(r => r.status === 'error').length
+    const summary = {
+      raw_subscribers: rawCount,
+      total_active: subscribers.length,
+      eligible_6am: eligibleSubscribers.length,
+      sent: sentCount,
+      images_generated: results.reduce((sum, r) => sum + (r.images || 0), 0),
+    }
+
+    // 크론 요약은 영구 저장 — 로그 증발 방지 (유료 제품의 발송 이력)
+    await logOpsEvent(context.env, 'cron.summary', { payload: { ...summary, errors: errorCount } })
+
+    // 사람이 봐야 하는 실패: 보낼 대상이 있는데 전부 실패했거나 실패율 30% 초과
+    if (eligibleSubscribers.length > 0 && (sentCount === 0 || errorCount / eligibleSubscribers.length > 0.3)) {
+      await notifyOwner(
+        context.env,
+        `데일리 크론 이상 — ${sentCount}/${eligibleSubscribers.length} 발송`,
+        `발송 ${sentCount} / 대상 ${eligibleSubscribers.length} / 오류 ${errorCount}\n\n상세: ${JSON.stringify(results.filter(r => r.status === 'error').slice(0, 5))}`
+      )
+    }
+
     return new Response(
-      JSON.stringify({
-        raw_subscribers: rawCount,
-        total_active: subscribers.length,
-        eligible_6am: eligibleSubscribers.length,
-        sent: results.filter(r => r.status === 'sent').length,
-        images_generated: results.reduce((sum, r) => sum + (r.images || 0), 0),
-        results,
-      }),
+      JSON.stringify({ ...summary, results }),
       { status: 200, headers: { 'Content-Type': 'application/json', ...corsHeaders } }
     )
 
