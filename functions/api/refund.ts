@@ -1,9 +1,13 @@
 import { getCorsHeaders, createCorsPreflightResponse } from '../lib/cors'
 import { errors } from '../lib/errors'
+import { logOpsEvent, notifyOwner } from '../lib/ops-log'
 
 interface Env {
   POLAR_API_KEY: string
   RESEND_API_KEY: string
+  SUPABASE_URL: string
+  SUPABASE_SERVICE_KEY: string
+  OWNER_ALERT_EMAIL?: string
 }
 
 interface RefundRequest {
@@ -107,6 +111,11 @@ export const onRequestPost: PagesFunction<Env> = async ({ request, env }) => {
       const orderAge = Date.now() - new Date(order.created_at).getTime()
       if (Number.isFinite(orderAge) && orderAge > REFUND_WINDOW_MS) {
         console.warn('[refund] Rejected: order too old for auto-refund:', order.id)
+        await logOpsEvent(env, 'refund.rejected', {
+          email: checkout.customer_email,
+          refId: order.id,
+          payload: { reason: 'outside_window', order_age_ms: orderAge },
+        })
         return errors.forbidden(corsHeaders)
       }
     }
@@ -144,6 +153,18 @@ export const onRequestPost: PagesFunction<Env> = async ({ request, env }) => {
 
     const refundResult = await refundResponse.json() as { id?: string }
     console.log('[refund] Refund successful:', order.id)
+
+    // 영구 기록 + 오너 즉시 알림 — 환불은 드물어야 정상이다
+    await logOpsEvent(env, 'refund.issued', {
+      email: checkout.customer_email,
+      refId: order.id,
+      payload: { amount: order.amount, currency: order.currency, reason: reason || 'generation failed' },
+    })
+    await notifyOwner(
+      env,
+      `환불 발생 — $${(order.amount / 100).toFixed(2)}`,
+      `주문: ${order.id}\n고객: ${checkout.customer_email || 'unknown'}\n사유: ${reason || 'generation failed'}\n\n환불이 잦다면 이미지 생성 실패율을 확인하세요.`
+    )
 
     // Step 4: Send refund notification email if we have customer email
     if (checkout.customer_email && env.RESEND_API_KEY) {

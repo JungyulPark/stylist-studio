@@ -1,4 +1,5 @@
 import { errors } from '../lib/errors'
+import { logOpsEvent } from '../lib/ops-log'
 
 interface Env {
   SUPABASE_URL: string
@@ -130,6 +131,17 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
       default:
         console.log(`[polar-webhook] Unhandled event: ${event.type}`)
     }
+
+    // 영구 감사 기록 — 결제·구독 라이프사이클의 서버사이드 진실원장
+    await logOpsEvent(context.env, `polar.${event.type}`, {
+      email,
+      refId: event.data.id,
+      payload: {
+        product: event.data.product?.name || null,
+        current_period_end: event.data.current_period_end || null,
+        cancel_at_period_end: event.data.cancel_at_period_end ?? null,
+      },
+    })
 
     return new Response('OK', { status: 200 })
 
