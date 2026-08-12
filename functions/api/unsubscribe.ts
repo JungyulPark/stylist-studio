@@ -102,7 +102,7 @@ function unsubPage(status: 'success' | 'error'): string {
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>${isSuccess ? 'Unsubscribed' : 'Error'} — PERSONAL STYLIST</title>
+  <title>${isSuccess ? 'Unsubscribed' : 'Error'} — ATELIER HUE</title>
   <style>
     body { font-family: -apple-system, BlinkMacSystemFont, sans-serif; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; background: #0a0a0a; color: #fff; }
     .container { text-align: center; max-width: 400px; padding: 40px 20px; }
@@ -114,8 +114,8 @@ function unsubPage(status: 'success' | 'error'): string {
 <body>
   <div class="container">
     ${isSuccess
-      ? `<h1>Unsubscribed</h1><p>You've been unsubscribed from daily style emails. We'll miss styling you!</p><p><a href="https://kstylist.cc">Back to PERSONAL STYLIST</a></p>`
-      : `<h1>Something went wrong</h1><p>We couldn't process your unsubscribe request. Please try again or contact support.</p><p><a href="https://kstylist.cc">Back to PERSONAL STYLIST</a></p>`
+      ? `<h1>Unsubscribed</h1><p>You've been unsubscribed from daily style emails. We'll miss styling you!</p><p><a href="https://kstylist.cc">Back to ATELIER HUE</a></p>`
+      : `<h1>Something went wrong</h1><p>We couldn't process your unsubscribe request. Please try again or contact support.</p><p><a href="https://kstylist.cc">Back to ATELIER HUE</a></p>`
     }
   </div>
 </body>

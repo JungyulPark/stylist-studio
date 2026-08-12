@@ -173,9 +173,9 @@ export const onRequestPost: PagesFunction<Env> = async ({ request, env }) => {
         const resend = new Resend(env.RESEND_API_KEY)
 
         await resend.emails.send({
-          from: 'PERSONAL STYLIST <noreply@kstylist.cc>',
+          from: 'ATELIER HUE <noreply@kstylist.cc>',
           to: checkout.customer_email,
-          subject: 'Refund Processed - PERSONAL STYLIST',
+          subject: 'Refund Processed - ATELIER HUE',
           html: `
 <!DOCTYPE html>
 <html>
@@ -185,7 +185,7 @@ export const onRequestPost: PagesFunction<Env> = async ({ request, env }) => {
     <tr><td align="center">
       <table width="600" cellpadding="0" cellspacing="0" style="max-width:600px;background-color:#111;border-radius:12px;overflow:hidden;">
         <tr><td style="padding:40px;text-align:center;border-bottom:1px solid #222;">
-          <div style="font-size:24px;font-weight:bold;color:#c9a962;letter-spacing:2px;">PERSONAL STYLIST</div>
+          <div style="font-size:24px;font-weight:bold;color:#c9a962;letter-spacing:2px;">ATELIER HUE</div>
         </td></tr>
         <tr><td style="padding:40px;">
           <h1 style="color:#fff;font-size:1.5em;margin:0 0 20px;">Refund Processed</h1>
@@ -201,7 +201,7 @@ export const onRequestPost: PagesFunction<Env> = async ({ request, env }) => {
           </p>
         </td></tr>
         <tr><td style="padding:20px 40px;background-color:#0a0a0a;text-align:center;">
-          <p style="color:#555;font-size:11px;margin:0;">© 2026 PERSONAL STYLIST. All rights reserved.</p>
+          <p style="color:#555;font-size:11px;margin:0;">© 2026 ATELIER HUE. All rights reserved.</p>
         </td></tr>
       </table>
     </td></tr>

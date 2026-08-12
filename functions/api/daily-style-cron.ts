@@ -486,7 +486,7 @@ function buildEmailHtml(
           <!-- Header -->
           <tr>
             <td align="center" style="padding:0 0 28px;">
-              <h1 style="color:#c9a962;font-size:14px;letter-spacing:3px;margin:0;font-family:Georgia,serif;">PERSONAL STYLIST</h1>
+              <h1 style="color:#c9a962;font-size:14px;letter-spacing:3px;margin:0;font-family:Georgia,serif;">ATELIER HUE</h1>
               <p style="color:#888888;font-size:12px;margin:4px 0 0;">What to Wear Today</p>
             </td>
           </tr>
@@ -838,7 +838,7 @@ export const onRequestGet: PagesFunction<Env> = async (context) => {
             const subject = emailSubjects[sub.preferred_language] || emailSubjects.en
 
             await resend.emails.send({
-              from: 'PERSONAL STYLIST <noreply@kstylist.cc>',
+              from: 'ATELIER HUE <noreply@kstylist.cc>',
               to: sub.email,
               subject: `${subject} — ${sub.city} ${weather.temp}°C`,
               html,

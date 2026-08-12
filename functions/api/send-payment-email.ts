@@ -33,9 +33,9 @@ const productNames: Record<string, Record<string, string>> = {
 
 const emailContent: Record<string, { subject: string; greeting: string; thankYou: string; productLabel: string; amountLabel: string; instructions: string; warning: string; footer: string }> = {
   ko: {
-    subject: '결제 완료 - PERSONAL STYLIST',
+    subject: '결제 완료 - ATELIER HUE',
     greeting: '안녕하세요!',
-    thankYou: 'PERSONAL STYLIST를 이용해 주셔서 감사합니다. 결제가 완료되었습니다.',
+    thankYou: 'ATELIER HUE를 이용해 주셔서 감사합니다. 결제가 완료되었습니다.',
     productLabel: '구매 상품',
     amountLabel: '결제 금액',
     instructions: '이제 스타일 분석이 자동으로 시작됩니다. 잠시만 기다려주세요.',
@@ -43,9 +43,9 @@ const emailContent: Record<string, { subject: string; greeting: string; thankYou
     footer: '분석 결과는 완료 후 "이메일로 받기" 버튼을 통해 받아보실 수 있습니다.'
   },
   en: {
-    subject: 'Payment Confirmed - PERSONAL STYLIST',
+    subject: 'Payment Confirmed - ATELIER HUE',
     greeting: 'Hello!',
-    thankYou: 'Thank you for using PERSONAL STYLIST. Your payment has been confirmed.',
+    thankYou: 'Thank you for using ATELIER HUE. Your payment has been confirmed.',
     productLabel: 'Product',
     amountLabel: 'Amount',
     instructions: 'Your style analysis will now begin automatically. Please wait a moment.',
@@ -53,9 +53,9 @@ const emailContent: Record<string, { subject: string; greeting: string; thankYou
     footer: 'After the analysis is complete, you can receive your results via email using the "Email Report" button.'
   },
   ja: {
-    subject: '決済完了 - PERSONAL STYLIST',
+    subject: '決済完了 - ATELIER HUE',
     greeting: 'こんにちは！',
-    thankYou: 'PERSONAL STYLISTをご利用いただきありがとうございます。お支払いが完了しました。',
+    thankYou: 'ATELIER HUEをご利用いただきありがとうございます。お支払いが完了しました。',
     productLabel: '購入商品',
     amountLabel: 'お支払い金額',
     instructions: 'スタイル分析が自動的に開始されます。しばらくお待ちください。',
@@ -63,9 +63,9 @@ const emailContent: Record<string, { subject: string; greeting: string; thankYou
     footer: '分析完了後、「メールで受け取る」ボタンから結果を受け取ることができます。'
   },
   zh: {
-    subject: '支付成功 - PERSONAL STYLIST',
+    subject: '支付成功 - ATELIER HUE',
     greeting: '您好！',
-    thankYou: '感谢使用PERSONAL STYLIST。您的付款已确认。',
+    thankYou: '感谢使用ATELIER HUE。您的付款已确认。',
     productLabel: '购买商品',
     amountLabel: '支付金额',
     instructions: '您的风格分析将自动开始。请稍候。',
@@ -73,9 +73,9 @@ const emailContent: Record<string, { subject: string; greeting: string; thankYou
     footer: '分析完成后，您可以通过"发送到邮箱"按钮接收结果。'
   },
   es: {
-    subject: 'Pago Confirmado - PERSONAL STYLIST',
+    subject: 'Pago Confirmado - ATELIER HUE',
     greeting: '¡Hola!',
-    thankYou: 'Gracias por usar PERSONAL STYLIST. Tu pago ha sido confirmado.',
+    thankYou: 'Gracias por usar ATELIER HUE. Tu pago ha sido confirmado.',
     productLabel: 'Producto',
     amountLabel: 'Monto',
     instructions: 'Tu análisis de estilo comenzará automáticamente. Por favor espera un momento.',
@@ -103,7 +103,7 @@ function createPaymentEmailHtml(
       <table width="600" cellpadding="0" cellspacing="0" style="max-width:600px;background-color:#111;border-radius:12px;overflow:hidden;">
         <!-- Header -->
         <tr><td style="padding:40px 40px 20px;text-align:center;border-bottom:1px solid #222;">
-          <div style="font-size:24px;font-weight:bold;color:#c9a962;letter-spacing:2px;">PERSONAL STYLIST</div>
+          <div style="font-size:24px;font-weight:bold;color:#c9a962;letter-spacing:2px;">ATELIER HUE</div>
           <div style="font-size:12px;color:#888;margin-top:8px;letter-spacing:1px;">PAYMENT CONFIRMED</div>
         </td></tr>
 
@@ -138,7 +138,7 @@ function createPaymentEmailHtml(
         <!-- Footer -->
         <tr><td style="padding:30px 40px;background-color:#0a0a0a;text-align:center;">
           <a href="https://kstylist.cc" style="display:inline-block;padding:12px 32px;background-color:#c9a962;color:#000;text-decoration:none;font-weight:bold;font-size:12px;letter-spacing:1px;border-radius:4px;">VISIT KSTYLIST.CC</a>
-          <p style="color:#555;font-size:11px;margin:20px 0 0;">© 2026 PERSONAL STYLIST. All rights reserved.</p>
+          <p style="color:#555;font-size:11px;margin:20px 0 0;">© 2026 ATELIER HUE. All rights reserved.</p>
         </td></tr>
       </table>
     </td></tr>
@@ -180,7 +180,7 @@ export const onRequestPost: PagesFunction<Env> = async ({ request, env }) => {
     const content = emailContent[language] || emailContent.en
 
     const { data, error } = await resend.emails.send({
-      from: 'PERSONAL STYLIST <noreply@kstylist.cc>',
+      from: 'ATELIER HUE <noreply@kstylist.cc>',
       to: email,
       subject: content.subject,
       html: createPaymentEmailHtml(productType, amount, currency, language)
