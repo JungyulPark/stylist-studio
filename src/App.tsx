@@ -2659,8 +2659,8 @@ function App() {
   const hairPhotoInputRef = useRef<HTMLInputElement>(null)
   // 아웃핏 피드백 (오늘의 룩 학습 루프)
   const [outfitFeedback, setOutfitFeedback] = useState<Record<string, 'like' | 'dislike'>>({})
-  // 히어로 필름 (에셋 배치 전이면 슬라이더로 폴백)
-  const [heroVideoOk, setHeroVideoOk] = useState(true)
+  // 히어로 필름 — 파일이 실제로 있을 때만 렌더 (없으면 before/after 슬라이더)
+  const [heroVideoOk, setHeroVideoOk] = useState(false)
   const [error, setError] = useState<string>('')
   const [isDragging, setIsDragging] = useState(false)
   const [styleImages, setStyleImages] = useState<StyleImage[]>([])
@@ -3115,6 +3115,16 @@ function App() {
 
   // 날씨 카피 (eyebrow/sub/CTA) — weatherPreview 도착 후 파생
   const weatherCopy = weatherPreview ? getWeatherCopy(weatherPreview, lang, new Date().getHours()) : null
+
+  // 히어로 필름 존재 확인 — <source> 404는 video onError로 안 올라오는 경우가 있어
+  // 렌더 전에 확인한다 (없으면 슬라이더가 그대로 히어로를 채운다)
+  useEffect(() => {
+    let alive = true
+    fetch('/hero-loop.mp4', { method: 'HEAD' })
+      .then(r => { if (alive && r.ok) setHeroVideoOk(true) })
+      .catch(() => { /* 없으면 슬라이더 */ })
+    return () => { alive = false }
+  }, [])
 
   // 히어로 날씨 미리보기 — 30분 캐시, 실패 시 조용히 생략
   useEffect(() => {
@@ -4836,6 +4846,12 @@ ${styleImgs.length > 1 ? `<div class="section"><h2>${styleSection}</h2><div clas
   }
 
   // Journal — 개별 글
+  if (page === 'journal-post' && !activePost) {
+    // 딥링크·새로고침으로 글 없이 진입한 경우 — 저널 인덱스로
+    setPage('journal')
+    return null
+  }
+
   if (page === 'journal-post' && activePost) {
     const body = lang === 'ko' ? activePost.bodyKo : activePost.body
     return (
@@ -4997,7 +5013,7 @@ ${styleImgs.length > 1 ? `<div class="section"><h2>${styleSection}</h2><div clas
               {lang === 'ko' ? '패션 스타일도 변환해보기' : 'Try a Fashion Transformation'}
             </button>
             {!isSubscribed && (
-              <button className="btn-outline" onClick={() => { trackEvent('hair_to_daily_click'); user ? handleSubscription() : setPage('input') }}>
+              <button className="btn-outline" onClick={() => { trackEvent('hair_to_daily_click'); if (user) { handleSubscription() } else { setPage('input') } }}>
                 {lang === 'ko' ? '매일 아침 코디 받기 — 첫 7일 무료' : 'Daily Morning Looks — First 7 Days Free'}
               </button>
             )}
@@ -6390,6 +6406,49 @@ ${styleImgs.length > 1 ? `<div class="section"><h2>${styleSection}</h2><div clas
             frameCount={24}
             hint={lang === 'ko' ? '드래그해서 360도로 스타일을 살펴보세요' : 'Drag to view the look in 360°'}
           />
+        </section>
+
+        <div className="section-divider-full"></div>
+
+        {/* Showcase — 실제 생성 결과물. 텍스트 설명보다 결과가 설득력이 크다 */}
+        <section className="showcase-section" ref={(el) => {
+          if (el) {
+            const items = el.querySelectorAll('.showcase-head, .showcase-item')
+            const observer = new IntersectionObserver(([entry]) => {
+              if (entry.isIntersecting) {
+                items.forEach((item, i) => setTimeout(() => item.classList.add('visible'), i * 70))
+                observer.disconnect()
+              }
+            }, { threshold: 0.15 })
+            observer.observe(el)
+          }
+        }}>
+          <div className="showcase-head fade-in-up">
+            <span className="collection-eyebrow">THE RESULTS</span>
+            <h2 className="showcase-title">
+              {lang === 'ko' ? '모델이 아니라, 당신의 사진 위에' : 'On your photo — not a model\'s'}
+            </h2>
+            <p className="showcase-desc">
+              {lang === 'ko'
+                ? '아래는 실제 생성 결과입니다. 같은 얼굴, 같은 체형, 바뀌는 것은 스타일뿐.'
+                : 'Real generated results. Same face, same body — only the styling changes.'}
+            </p>
+          </div>
+          <div className="showcase-grid">
+            {['look-01', 'look-02', 'look-03', 'look-04', 'look-05', 'look-06'].map((look, i) => (
+              <figure key={look} className="showcase-item fade-in-up">
+                <img src={`/gallery/showcase/${look}.webp`} alt="" loading="lazy" width="800" height="1000" />
+                <figcaption className="showcase-cap">
+                  {lang === 'ko'
+                    ? ['럭셔리', '비즈니스', '베스트 매치', '캐주얼', '데이트', '이브닝'][i]
+                    : ['Luxury', 'Business', 'Best Match', 'Casual', 'Date', 'Evening'][i]}
+                </figcaption>
+              </figure>
+            ))}
+          </div>
+          <button className="free-cta-pulse showcase-cta" onClick={() => { trackEvent('showcase_cta_click'); setPage('input') }}>
+            {lang === 'ko' ? '내 사진으로 만들어보기 — 무료' : 'See It On Your Photo — Free'}
+          </button>
         </section>
 
         <div className="section-divider-full"></div>
