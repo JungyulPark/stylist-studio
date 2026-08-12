@@ -64,4 +64,20 @@ curl -X POST "$B" -H "Content-Type: application/json" -d '{"tier":"casual","name
 5. M — dark-olive wool overshirt, white heavyweight tee, beige carpenter pants, retro sneakers
 6. M — black puffer vest over charcoal knit, medium-grey wool trousers, white minimal sneakers
 
-생성 후: 각 result_url을 `/api/style-refs` POST로 임포트 (이름: fw26-atl-01.. / fw26-ess-01..).
+### ✅ 생성 완료 — 임포트 방법
+
+12룩 전부 생성됨 (soul_2, 3:4, 로고 없음). 한 줄로 임포트:
+
+```bash
+CRON_SECRET=your_secret bash scripts/import-fw26.sh
+```
+
+스크립트가 12장을 R2 `style-refs/premium|casual/`로 넣고 목록을 출력한다.
+서버가 URL을 직접 가져오므로 로컬 다운로드 불필요. 임포트 즉시 다음
+데일리 발송과 $4.99 상품이 FW26 룩으로 스타일링된다.
+
+이전 시즌을 걷어내려면 목록의 key를 DELETE 하면 된다 (시드 4장 등):
+```bash
+curl -X DELETE "https://kstylist.cc/api/style-refs?secret=$CRON_SECRET" \
+  -H "Content-Type: application/json" -d '{"key":"style-refs/premium/seed-f-camel.png"}'
+```
