@@ -42,3 +42,26 @@ curl -X POST "$B" -H "Content-Type: application/json" -d '{"tier":"casual","name
 |---|---|---|
 | 데일리 이메일 | Dressy 룩 | Casual 룩 |
 | $4.99 단건 (3컷) | 1·3번째 컷 | 2번째 컷 |
+
+## FW26 컬렉션 — 12룩 프롬프트 (생성 대기)
+
+법적 안전 명명: premium = **FW26 Atelier**, casual = **FW26 Essentials** (브랜드명 없음).
+공통 프리픽스: "Full-body fashion catalog photograph of a complete outfit on a Korean [female/male] model, face turned away from camera, neutral seamless studio, soft even catalog lighting, garment textures crisp, no visible logos, photorealistic, 3:4"
+
+### FW26 Atelier (premium 6)
+1. F — double-faced camel cashmere wrap coat, chocolate turtleneck, ivory wide wool trousers, suede boots
+2. F — dove-grey belted shearling-collar coat, cream ribbed knit dress, leather gloves
+3. F — deep forest-green heavy cashmere cape coat, black fine knit, charcoal straight trousers
+4. M — charcoal double-breasted flannel overcoat, oatmeal cashmere turtleneck, grey pleated trousers
+5. M — dark-brown suede blouson, ecru chunky rollneck, olive heavy wool trousers, leather boots
+6. M — midnight-navy cashmere chesterfield, ivory brushed knit, dark denim, polished loafers
+
+### FW26 Essentials (casual 6)
+1. F — cream boxy wool-blend short jacket, white tee, medium-wash straight jeans, white sneakers
+2. F — light-grey longline padded coat, black knit, black straight trousers, chunky sneakers
+3. F — camel oversized knit cardigan, ivory turtleneck, dark straight denim, ankle boots
+4. M — navy quilted liner jacket, grey hoodie-free crewneck sweat, washed black jeans, trainers
+5. M — dark-olive wool overshirt, white heavyweight tee, beige carpenter pants, retro sneakers
+6. M — black puffer vest over charcoal knit, medium-grey wool trousers, white minimal sneakers
+
+생성 후: 각 result_url을 `/api/style-refs` POST로 임포트 (이름: fw26-atl-01.. / fw26-ess-01..).

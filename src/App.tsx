@@ -6228,6 +6228,14 @@ ${styleImgs.length > 1 ? `<div class="section"><h2>${styleSection}</h2><div clas
             observer.observe(el)
           }
         }}>
+          <div className="collection-header fade-in-up">
+            <span className="collection-eyebrow">THE COLLECTION — FW26</span>
+            <p className="collection-line">
+              {lang === 'ko'
+                ? '이번 시즌의 아틀리에 룩과 에센셜로 스타일링됩니다 · 시즌마다 컬렉션이 바뀝니다'
+                : 'Styled with this season\'s atelier looks and essentials · The collection changes every season'}
+            </p>
+          </div>
           <div className="service-split">
             {/* 좌: 대형 트랜스포메이션 카드 (풀블리드 이미지 + 절제된 타입) */}
             <div className="service-hero-card fade-in-up" onClick={() => { trackEvent('select_item', { item_category: 'premium_report' }); setPage('input') }}>
@@ -6244,6 +6252,7 @@ ${styleImgs.length > 1 ? `<div class="section"><h2>${styleSection}</h2><div clas
             {/* 우: 에디토리얼 인덱스 — 카드 박스 없이 헤어라인 룰로 구분 */}
             <div className="service-index">
               <div className="service-index-row fade-in-up" onClick={() => { trackEvent('select_item', { item_category: 'hair' }); setPage('hair-selection') }}>
+                <svg className="service-index-icon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="#c9a962" strokeWidth="1.5" strokeLinecap="round" aria-hidden="true"><circle cx="6" cy="6" r="2.6"/><circle cx="6" cy="18" r="2.6"/><path d="M8.2 7.6 20 19M8.2 16.4 20 5"/></svg>
                 <span className="service-index-label">SERVICE — HAIR</span>
                 <h3 className="service-index-title">{lang === 'ko' ? '헤어 스타일 미리보기' : 'Hair Preview'}</h3>
                 <p className="service-index-desc">
@@ -6252,6 +6261,7 @@ ${styleImgs.length > 1 ? `<div class="section"><h2>${styleSection}</h2><div clas
                 <span className="service-index-arrow">→</span>
               </div>
               <div className="service-index-row fade-in-up" onClick={() => { trackEvent('select_item', { item_category: 'style_chat' }); setPage('style-chat') }}>
+                <svg className="service-index-icon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="#c9a962" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M21 12a8 8 0 0 1-8 8H4l2.3-2.9A8 8 0 1 1 21 12Z"/></svg>
                 <span className="service-index-label">SERVICE — ADVISOR</span>
                 <h3 className="service-index-title">{t.chatCardTitle}</h3>
                 <p className="service-index-desc">{t.chatCardDesc}</p>
@@ -6272,6 +6282,7 @@ ${styleImgs.length > 1 ? `<div class="section"><h2>${styleSection}</h2><div clas
                   }
                 }}
               >
+                <svg className="service-index-icon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="#c9a962" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><rect x="3" y="6" width="18" height="13" rx="2"/><path d="m3 8 9 6 9-6"/></svg>
                 <span className="service-index-label">SERVICE — DAILY</span>
                 <h3 className="service-index-title">{lang === 'ko' ? '매일 아침, 오늘의 코디' : 'What to Wear Today'}</h3>
                 <p className="service-index-desc">
