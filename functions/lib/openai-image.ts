@@ -25,6 +25,8 @@ export interface OpenAIImageOptions {
    * (resolves high); the daily cron pins 'medium' — emails render the
    * image at 240px, so high quality is invisible but 3-4x the cost. */
   quality?: 'low' | 'medium' | 'high' | 'auto'
+  /** 시즌 컬렉션 레퍼런스 — 입힐 옷을 보여주는 두 번째 입력 이미지 */
+  styleRef?: { base64: string; mimeType: string }
 }
 
 /**
@@ -53,7 +55,17 @@ export async function editPhotoWithOpenAI(
     const file = new File([bytes], `photo.${extension}`, { type: mimeType })
 
     const formData = new FormData()
-    formData.append('image', file)
+    if (options?.styleRef) {
+      // gpt-image edit는 image[] 다중 입력을 지원: [사람, 레퍼런스 옷]
+      formData.append('image[]', file)
+      const refBin = atob(options.styleRef.base64)
+      const refBytes = new Uint8Array(refBin.length)
+      for (let i = 0; i < refBin.length; i++) refBytes[i] = refBin.charCodeAt(i)
+      const refExt = options.styleRef.mimeType.split('/')[1] || 'jpeg'
+      formData.append('image[]', new File([refBytes], `style-ref.${refExt}`, { type: options.styleRef.mimeType }))
+    } else {
+      formData.append('image', file)
+    }
     formData.append('prompt', prompt)
     formData.append('model', 'gpt-image-1.5')
     formData.append('n', '1')

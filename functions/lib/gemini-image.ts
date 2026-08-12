@@ -4,6 +4,7 @@
  */
 
 import { editPhotoWithOpenAI } from './openai-image'
+import { STYLE_REF_DIRECTIVE, type StyleRef } from './style-refs'
 
 export interface ImageScenario {
   id: string
@@ -19,6 +20,8 @@ export interface ImageGenOptions {
    * cost decides whether the $6.99/mo subscription is profitable at all.
    */
   tier?: 'premium' | 'economy'
+  /** 시즌 컬렉션 레퍼런스 — 있으면 사람 사진과 함께 모델에 입력되어 그 옷을 입힌다 */
+  styleRef?: StyleRef | null
 }
 
 const FETCH_TIMEOUT_MS = 55_000
@@ -159,13 +162,18 @@ Generate the edited photo.`
 
     const economy = options?.tier === 'economy'
 
+    const finalPrompt = options?.styleRef ? editPrompt + STYLE_REF_DIRECTIVE : editPrompt
+
     const tryOpenAI = async (): Promise<string | null> => {
       if (!openaiKey) return null
       try {
         console.log(`[OpenAI] Trying gpt-image-1.5 (${economy ? 'medium' : 'auto'}) for ${scenario.id}`)
         const openaiResult = await editPhotoWithOpenAI(
-          base64Data, mimeType, editPrompt, openaiKey, 0,
-          { quality: economy ? 'medium' : 'auto' }
+          base64Data, mimeType, finalPrompt, openaiKey, 0,
+          {
+            quality: economy ? 'medium' : 'auto',
+            styleRef: options?.styleRef ? { base64: options.styleRef.base64, mimeType: options.styleRef.mimeType } : undefined,
+          }
         )
         if (openaiResult) {
           console.log(`[OpenAI] Success for ${scenario.id}`)
@@ -188,13 +196,18 @@ Generate the edited photo.`
     const geminiModels = economy
       ? ['gemini-2.5-flash-image']
       : ['gemini-3-pro-image-preview', 'gemini-2.5-flash-image']
+    const parts: Array<Record<string, unknown>> = [
+      { inlineData: { mimeType, data: base64Data } },
+    ]
+    if (options?.styleRef) {
+      parts.push({ inlineData: { mimeType: options.styleRef.mimeType, data: options.styleRef.base64 } })
+    }
+    parts.push({ text: finalPrompt })
+
     const requestBody = JSON.stringify({
       contents: [{
         role: 'user',
-        parts: [
-          { inlineData: { mimeType, data: base64Data } },
-          { text: editPrompt }
-        ]
+        parts
       }],
       generationConfig: {
         responseModalities: ['IMAGE', 'TEXT']
