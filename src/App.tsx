@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect, useCallback } from 'react'
 import './App.css'
 import { renderMarkdownToHtml } from './utils/markdown'
+import { journalPosts, type JournalPost } from './data/journal'
 import { useAuth } from './contexts/AuthContext'
 // supabase client is initialized in lib/supabase.ts and used by AuthContext
 
@@ -57,7 +58,7 @@ const clearIndexedDB = async (): Promise<void> => {
 
 type Language = 'ko' | 'en'
 type Gender = 'male' | 'female' | 'other' | null
-type Page = 'landing' | 'input' | 'loading' | 'result' | 'how-to-use' | 'preview' | 'login' | 'signup' | 'profile' | 'subscription-dashboard' | 'style-chat' | 'hair-selection' | 'hair-result'
+type Page = 'landing' | 'input' | 'loading' | 'result' | 'how-to-use' | 'preview' | 'login' | 'signup' | 'profile' | 'subscription-dashboard' | 'style-chat' | 'hair-selection' | 'hair-result' | 'journal' | 'journal-post'
 
 const translations: Record<Language, {
   title: string
@@ -392,7 +393,7 @@ const translations: Record<Language, {
   heroSubCta: string
 }> = {
   ko: {
-    title: 'PERSONAL STYLIST',
+    title: 'ATELIER HUE',
     subtitle: '나만의 퍼스널 스타일리스트',
     heroTitle1: 'Your Personal',
     heroTitle2: 'Stylist',
@@ -677,7 +678,7 @@ const translations: Record<Language, {
     trustAIDesc: '듀얼 AI 엔진',
     trustGlobal: '5개 언어',
     trustGlobalDesc: '글로벌 서비스',
-    metaTitle: 'PERSONAL STYLIST | 런웨이 패션 스타일링',
+    metaTitle: 'ATELIER HUE | 런웨이 패션 스타일링',
     metaDescription: '사진 한 장으로 나만의 스타일을 찾으세요. 첫 방문 무료! 럭셔리 브랜드 영감 패션 코디 3종 추천.',
     timerTitle: '첫 방문 특별 할인',
     timerDesc: '후 종료',
@@ -687,7 +688,7 @@ const translations: Record<Language, {
     footerTerms: '이용약관',
     footerPrivacy: '개인정보처리방침',
     footerRefund: '환불 정책',
-    footerCopyright: '© 2026 PERSONAL STYLIST. ALL RIGHTS RESERVED.',
+    footerCopyright: '© 2026 ATELIER HUE. ALL RIGHTS RESERVED.',
     badgeRunway: '런웨이 영감',
     badgePersonalized: '맞춤형',
     badgeWeather: '날씨 연동',
@@ -712,7 +713,7 @@ const translations: Record<Language, {
     heroSubCta: '카드 없이 시작 · 3회 무료',
   },
   en: {
-    title: 'PERSONAL STYLIST',
+    title: 'ATELIER HUE',
     subtitle: 'Your Personal Style Assistant',
     heroTitle1: 'Your Personal',
     heroTitle2: 'Stylist',
@@ -1007,7 +1008,7 @@ const translations: Record<Language, {
     footerTerms: 'Terms of Service',
     footerPrivacy: 'Privacy Policy',
     footerRefund: 'Refund Policy',
-    footerCopyright: '© 2026 PERSONAL STYLIST. ALL RIGHTS RESERVED.',
+    footerCopyright: '© 2026 ATELIER HUE. ALL RIGHTS RESERVED.',
     badgeRunway: 'RUNWAY-INSPIRED',
     badgePersonalized: 'PERSONALIZED',
     badgeWeather: 'WEATHER-AWARE',
@@ -1042,7 +1043,7 @@ const languageNames: Record<Language, string> = {
 
 /* DELETED ja/zh/es translation blocks below - search git history for recovery
   ja: {
-    title: 'PERSONAL STYLIST',
+    title: 'ATELIER HUE',
     subtitle: 'あなただけのスタイリスト',
     heroTitle1: 'Your Personal',
     heroTitle2: 'Stylist',
@@ -1337,7 +1338,7 @@ const languageNames: Record<Language, string> = {
     footerTerms: '利用規約',
     footerPrivacy: 'プライバシーポリシー',
     footerRefund: '返金ポリシー',
-    footerCopyright: '© 2026 PERSONAL STYLIST. ALL RIGHTS RESERVED.',
+    footerCopyright: '© 2026 ATELIER HUE. ALL RIGHTS RESERVED.',
     badgeRunway: 'ランウェイ発',
     badgePersonalized: 'パーソナライズ',
     badgeWeather: '天気連動',
@@ -1362,7 +1363,7 @@ const languageNames: Record<Language, string> = {
     heroSubCta: 'カード不要 · 3回無料',
   },
   zh: {
-    title: 'PERSONAL STYLIST',
+    title: 'ATELIER HUE',
     subtitle: '您的私人造型师',
     heroTitle1: 'Your Personal',
     heroTitle2: 'Stylist',
@@ -1657,7 +1658,7 @@ const languageNames: Record<Language, string> = {
     footerTerms: '服务条款',
     footerPrivacy: '隐私政策',
     footerRefund: '退款政策',
-    footerCopyright: '© 2026 PERSONAL STYLIST. ALL RIGHTS RESERVED.',
+    footerCopyright: '© 2026 ATELIER HUE. ALL RIGHTS RESERVED.',
     badgeRunway: '秀场灵感',
     badgePersonalized: '个性定制',
     badgeWeather: '天气感知',
@@ -1682,7 +1683,7 @@ const languageNames: Record<Language, string> = {
     heroSubCta: '无需绑卡 · 3次免费',
   },
   es: {
-    title: 'PERSONAL STYLIST',
+    title: 'ATELIER HUE',
     subtitle: 'Tu estilista personal',
     heroTitle1: 'Your Personal',
     heroTitle2: 'Stylist',
@@ -1977,7 +1978,7 @@ const languageNames: Record<Language, string> = {
     footerTerms: 'Terminos de Servicio',
     footerPrivacy: 'Politica de Privacidad',
     footerRefund: 'Politica de Reembolso',
-    footerCopyright: '© 2026 PERSONAL STYLIST. ALL RIGHTS RESERVED.',
+    footerCopyright: '© 2026 ATELIER HUE. ALL RIGHTS RESERVED.',
     badgeRunway: 'PASARELA',
     badgePersonalized: 'PERSONALIZADO',
     badgeWeather: 'CLIMA-ADAPTADO',
@@ -2011,11 +2012,11 @@ const policyContent = {
     content: `
 ## 1. Acceptance of Terms
 
-By accessing or using PERSONAL STYLIST ("Service"), you agree to be bound by these Terms of Service. If you do not agree, please do not use the Service.
+By accessing or using ATELIER HUE ("Service"), you agree to be bound by these Terms of Service. If you do not agree, please do not use the Service.
 
 ## 2. Service Description
 
-PERSONAL STYLIST is an AI-powered styling consultation service that provides:
+ATELIER HUE is an AI-powered styling consultation service that provides:
 - Personalized style analysis based on uploaded photos
 - AI-generated fashion outfit recommendations
 
@@ -2159,11 +2160,11 @@ For privacy inquiries, please reach out through our website.
     content: `
 ## Digital Product Refund Policy
 
-Thank you for using PERSONAL STYLIST. Please read our refund policy carefully before making a purchase.
+Thank you for using ATELIER HUE. Please read our refund policy carefully before making a purchase.
 
 ## 1. Nature of Our Products
 
-PERSONAL STYLIST provides **digital services** including:
+ATELIER HUE provides **digital services** including:
 - AI-powered style analysis reports
 - AI-generated fashion outfit previews
 
@@ -2647,6 +2648,9 @@ function App() {
   const [wardrobeItems, setWardrobeItems] = useState<Array<{ id: string; description: string; category: string | null; image_url: string }>>([])
   const [wardrobeUploading, setWardrobeUploading] = useState(false)
   const wardrobeInputRef = useRef<HTMLInputElement>(null)
+  // The Journal (스타일 트렌드)
+  const [activePost, setActivePost] = useState<JournalPost | null>(null)
+
   // 헤어 스타일 (복구): 선택 상태 + 결과
   const [hairOccasion, setHairOccasion] = useState('daily')
   const [hairVibe, setHairVibe] = useState('natural')
@@ -4792,6 +4796,78 @@ ${styleImgs.length > 1 ? `<div class="section"><h2>${styleSection}</h2><div clas
   // 사진 + 성별만 필수 — 키/몸무게는 선택 (미입력 시 성별 기본값으로 실루엣 가이드만 보정)
   const isFormValid = profile.photo && profile.gender
 
+  // Journal — 스타일 트렌드 인덱스
+  if (page === 'journal') {
+    return (
+      <div className="app-container journal-page">
+        <header className="app-header">
+          <button className="back-btn" onClick={() => setPage('landing')}>← {t.backToHome}</button>
+        </header>
+        <div className="journal-content">
+          <span className="input-tag">THE JOURNAL</span>
+          <h1 className="journal-title">{lang === 'ko' ? '스타일 저널' : 'Style Notes & Season Reports'}</h1>
+          <p className="journal-desc">
+            {lang === 'ko'
+              ? '이번 시즌의 흐름과, 그것을 내 색으로 입는 법.'
+              : 'What the season is doing — and how to wear it in your own colors.'}
+          </p>
+          <div className="journal-grid">
+            {journalPosts.map((post) => (
+              <article
+                key={post.slug}
+                className="journal-card fade-in-up"
+                onClick={() => { trackEvent('journal_open', { slug: post.slug }); setActivePost(post); setPage('journal-post') }}
+              >
+                <div className="journal-card-img">
+                  <img src={post.image} alt="" loading="lazy" />
+                </div>
+                <span className="journal-card-tag">{post.tag}</span>
+                <h2 className="journal-card-title">{lang === 'ko' ? post.titleKo : post.title}</h2>
+                <p className="journal-card-excerpt">{lang === 'ko' ? post.excerptKo : post.excerpt}</p>
+                <span className="journal-card-meta">
+                  {new Date(post.date).toLocaleDateString(lang === 'ko' ? 'ko-KR' : 'en-US', { month: 'short', day: 'numeric', year: 'numeric' })} · {post.readMinutes} min
+                </span>
+              </article>
+            ))}
+          </div>
+        </div>
+      </div>
+    )
+  }
+
+  // Journal — 개별 글
+  if (page === 'journal-post' && activePost) {
+    const body = lang === 'ko' ? activePost.bodyKo : activePost.body
+    return (
+      <div className="app-container journal-page">
+        <header className="app-header">
+          <button className="back-btn" onClick={() => setPage('journal')}>← {lang === 'ko' ? '저널' : 'The Journal'}</button>
+        </header>
+        <article className="journal-article">
+          <span className="journal-card-tag">{activePost.tag}</span>
+          <h1 className="journal-article-title">{lang === 'ko' ? activePost.titleKo : activePost.title}</h1>
+          <span className="journal-card-meta">
+            {new Date(activePost.date).toLocaleDateString(lang === 'ko' ? 'ko-KR' : 'en-US', { month: 'long', day: 'numeric', year: 'numeric' })} · {activePost.readMinutes} min read
+          </span>
+          <img className="journal-article-img" src={activePost.image} alt="" />
+          {body.map((para, i) => (
+            <p key={i} className="journal-article-para">{para}</p>
+          ))}
+          <div className="journal-article-cta">
+            <p className="journal-cta-line">
+              {lang === 'ko'
+                ? '이 시즌의 룩을 내 사진으로 확인해보세요.'
+                : 'See this season styled on your own photo.'}
+            </p>
+            <button className="btn-gold" onClick={() => { trackEvent('journal_cta_click', { slug: activePost.slug }); setPage('input') }}>
+              {lang === 'ko' ? '무료로 시작하기' : 'Start Free'}
+            </button>
+          </div>
+        </article>
+      </div>
+    )
+  }
+
   // Hair Selection Page — 상황/느낌 선택 후 생성
   if (page === 'hair-selection') {
     return (
@@ -6265,6 +6341,15 @@ ${styleImgs.length > 1 ? `<div class="section"><h2>${styleSection}</h2><div clas
                 <span className="service-index-label">SERVICE — ADVISOR</span>
                 <h3 className="service-index-title">{t.chatCardTitle}</h3>
                 <p className="service-index-desc">{t.chatCardDesc}</p>
+                <span className="service-index-arrow">→</span>
+              </div>
+              <div className="service-index-row fade-in-up" onClick={() => { trackEvent('select_item', { item_category: 'journal' }); setPage('journal') }}>
+                <svg className="service-index-icon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="#c9a962" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M4 5.5A1.5 1.5 0 0 1 5.5 4H11v16H5.5A1.5 1.5 0 0 1 4 18.5Z"/><path d="M13 4h5.5A1.5 1.5 0 0 1 20 5.5v13a1.5 1.5 0 0 1-1.5 1.5H13Z"/></svg>
+                <span className="service-index-label">JOURNAL</span>
+                <h3 className="service-index-title">{lang === 'ko' ? '스타일 저널' : 'The Journal'}</h3>
+                <p className="service-index-desc">
+                  {lang === 'ko' ? '이번 시즌 트렌드와 내 색으로 입는 법' : "This season's trends and how to wear them in your colors"}
+                </p>
                 <span className="service-index-arrow">→</span>
               </div>
               <div

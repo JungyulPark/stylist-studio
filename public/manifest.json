@@ -1,7 +1,7 @@
 {
-  "name": "PERSONAL STYLIST",
-  "short_name": "Stylist",
-  "description": "Runway-inspired daily style recommendations based on weather and your profile",
+  "name": "ATELIER HUE",
+  "short_name": "Atelier Hue",
+  "description": "AI personal color analysis and a weather-matched outfit every morning",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#FAFAF8",
@@ -31,6 +31,6 @@
     "lifestyle",
     "fashion"
   ],
-  "lang": "ko",
+  "lang": "en",
   "dir": "ltr"
 }

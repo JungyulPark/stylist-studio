@@ -8,19 +8,19 @@ interface Env {
 }
 
 const emailSubjects: Record<string, string> = {
-  ko: '당신의 스타일 분석 리포트 - PERSONAL STYLIST',
-  en: 'Your Style Analysis Report - PERSONAL STYLIST',
-  ja: 'あなたのスタイル分析レポート - PERSONAL STYLIST',
-  zh: '您的风格分析报告 - PERSONAL STYLIST',
-  es: 'Tu Informe de Análisis de Estilo - PERSONAL STYLIST'
+  ko: '당신의 스타일 분석 리포트 - ATELIER HUE',
+  en: 'Your Style Analysis Report - ATELIER HUE',
+  ja: 'あなたのスタイル分析レポート - ATELIER HUE',
+  zh: '您的风格分析报告 - ATELIER HUE',
+  es: 'Tu Informe de Análisis de Estilo - ATELIER HUE'
 }
 
 const emailIntros: Record<string, string> = {
-  ko: '안녕하세요! PERSONAL STYLIST 스타일 분석 결과를 보내드립니다.',
-  en: 'Hello! Here is your style analysis from PERSONAL STYLIST.',
-  ja: 'こんにちは！PERSONAL STYLISTのスタイル分析結果をお届けします。',
-  zh: '您好！这是您的PERSONAL STYLIST风格分析结果。',
-  es: '¡Hola! Aquí está tu análisis de estilo de PERSONAL STYLIST.'
+  ko: '안녕하세요! ATELIER HUE 스타일 분석 결과를 보내드립니다.',
+  en: 'Hello! Here is your style analysis from ATELIER HUE.',
+  ja: 'こんにちは！ATELIER HUEのスタイル分析結果をお届けします。',
+  zh: '您好！这是您的ATELIER HUE风格分析结果。',
+  es: '¡Hola! Aquí está tu análisis de estilo de ATELIER HUE.'
 }
 
 const emailFooters: Record<string, string> = {
@@ -71,7 +71,7 @@ function createEmailHtml(report: string, language: string): string {
           <tr>
             <td style="padding: 40px 40px 20px; text-align: center; border-bottom: 1px solid #222;">
               <div style="font-size: 24px; font-weight: bold; color: #c9a962; letter-spacing: 2px;">
-                PERSONAL STYLIST
+                ATELIER HUE
               </div>
               <div style="font-size: 12px; color: #888; margin-top: 8px; letter-spacing: 1px;">
                 YOUR STYLE ANALYSIS REPORT
@@ -115,7 +115,7 @@ function createEmailHtml(report: string, language: string): string {
           <tr>
             <td style="padding: 20px 40px; background-color: #0a0a0a; text-align: center;">
               <p style="color: #555; font-size: 11px; margin: 0;">
-                © 2026 PERSONAL STYLIST. All rights reserved.
+                © 2026 ATELIER HUE. All rights reserved.
               </p>
             </td>
           </tr>
@@ -167,7 +167,7 @@ export const onRequestPost: PagesFunction<Env> = async ({ request, env }) => {
 
     // Send email
     const { data, error } = await resend.emails.send({
-      from: 'PERSONAL STYLIST <noreply@kstylist.cc>',
+      from: 'ATELIER HUE <noreply@kstylist.cc>',
       to: email,
       subject,
       html: htmlContent
