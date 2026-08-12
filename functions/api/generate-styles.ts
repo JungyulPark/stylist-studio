@@ -2,6 +2,7 @@ import { getCorsHeaders, createCorsPreflightResponse } from '../lib/cors'
 import { validateGenerateStylesRequest, createValidationErrorResponse } from '../lib/validation'
 import { errors } from '../lib/errors'
 import { editPhotoWithOpenAI } from '../lib/openai-image'
+import { getStyleRef, STYLE_REF_DIRECTIVE, type StyleRef } from '../lib/style-refs'
 import {
   type ScenarioConfig,
   getScenarios,
@@ -13,6 +14,7 @@ import {
 interface Env {
   GEMINI_API_KEY: string
   OPENAI_API_KEY?: string
+  DAILY_IMAGES_BUCKET?: R2Bucket
 }
 
 // ===== Retry & Timeout Helpers =====
@@ -41,7 +43,8 @@ async function editPhotoWithModel(
   editPrompt: string,
   apiKey: string,
   openaiKey?: string,
-  retryCount: number = 0
+  retryCount: number = 0,
+  styleRef?: StyleRef | null
 ): Promise<string | null> {
   const MAX_RETRIES = 2
 
@@ -51,12 +54,14 @@ async function editPhotoWithModel(
 
     const mimeType = `image/${base64Match[1]}`
     const base64Data = base64Match[2]
+    const finalPrompt = styleRef ? editPrompt + STYLE_REF_DIRECTIVE : editPrompt
 
     // Try OpenAI gpt-image-1.5 first
     if (openaiKey) {
       try {
         console.log(`[OpenAI] Trying gpt-image-1.5 for ${scenarioId}`)
-        const openaiResult = await editPhotoWithOpenAI(base64Data, mimeType, editPrompt, openaiKey)
+        const openaiResult = await editPhotoWithOpenAI(base64Data, mimeType, finalPrompt, openaiKey, 0,
+          styleRef ? { styleRef: { base64: styleRef.base64, mimeType: styleRef.mimeType } } : undefined)
         if (openaiResult) {
           console.log(`[OpenAI] Success for ${scenarioId}`)
           return openaiResult
@@ -89,7 +94,8 @@ async function editPhotoWithModel(
                 role: 'user',
                 parts: [
                   { inlineData: { mimeType, data: base64Data } },
-                  { text: editPrompt }
+                  ...(styleRef ? [{ inlineData: { mimeType: styleRef.mimeType, data: styleRef.base64 } }] : []),
+                  { text: finalPrompt }
                 ]
               }],
               generationConfig: {
@@ -119,7 +125,7 @@ async function editPhotoWithModel(
         const delay = retryDelay(retryCount) // 2s, 4s
         console.log(`[Gemini] Retrying ${scenarioId} in ${delay}ms (attempt ${retryCount + 2}/${MAX_RETRIES + 1})`)
         await sleep(delay)
-        return editPhotoWithModel(photo, scenarioId, editPrompt, apiKey, openaiKey, retryCount + 1)
+        return editPhotoWithModel(photo, scenarioId, editPrompt, apiKey, openaiKey, retryCount + 1, styleRef)
       }
       return null
     }
@@ -143,7 +149,7 @@ async function editPhotoWithModel(
       const delay = retryDelay(retryCount)
       console.log(`[Gemini] No image returned for ${scenarioId}, retrying in ${delay}ms`)
       await sleep(delay)
-      return editPhotoWithModel(photo, scenarioId, editPrompt, apiKey, openaiKey, retryCount + 1)
+      return editPhotoWithModel(photo, scenarioId, editPrompt, apiKey, openaiKey, retryCount + 1, styleRef)
     }
 
     return null
@@ -154,7 +160,7 @@ async function editPhotoWithModel(
       const delay = retryDelay(retryCount)
       console.log(`[Gemini] Exception for ${scenarioId}, retrying in ${delay}ms`)
       await sleep(delay)
-      return editPhotoWithModel(photo, scenarioId, editPrompt, apiKey, openaiKey, retryCount + 1)
+      return editPhotoWithModel(photo, scenarioId, editPrompt, apiKey, openaiKey, retryCount + 1, styleRef)
     }
     return null
   }
@@ -201,6 +207,16 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
 
     console.log(`[API Styles] Generating ${styleScenarios.length} styles (seed: ${diversitySeed}), hasPhoto: ${hasPhoto}`)
 
+    // 시즌 컬렉션: 짝수 시나리오는 프리미엄(콰이어트 럭셔리), 홀수는 캐주얼 컬렉션.
+    // R2 폴더가 비어 있으면 기존 텍스트 프롬프트 방식으로 동작한다.
+    const daySeed = Math.floor(Date.now() / 86_400_000)
+    const [premiumRef, casualRef] = context.env.DAILY_IMAGES_BUCKET
+      ? await Promise.all([
+          getStyleRef(context.env.DAILY_IMAGES_BUCKET, 'premium', daySeed),
+          getStyleRef(context.env.DAILY_IMAGES_BUCKET, 'casual', daySeed),
+        ])
+      : [null, null]
+
     const results = await Promise.all(
       styleScenarios.map(async (scenario, index) => {
 
@@ -215,7 +231,7 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
             colorInspiration,
             silhouetteGuide,
           })
-          imageUrl = await editPhotoWithModel(photo, scenario.id, editPrompt, geminiKey, openaiKey)
+          imageUrl = await editPhotoWithModel(photo, scenario.id, editPrompt, geminiKey, openaiKey, 0, index % 2 === 0 ? premiumRef : casualRef)
         }
 
         const labelKey = `label${language === 'ko' ? 'Ko' : 'En'}` as keyof ScenarioConfig

@@ -5,6 +5,7 @@ import { getDailyScenarios, dailyScenarioLabels } from '../lib/daily-style-scena
 import { createUnsubscribeToken } from '../lib/unsubscribe-token'
 import { sendEmptyPush } from '../lib/web-push'
 import { logOpsEvent, notifyOwner } from '../lib/ops-log'
+import { getStyleRef } from '../lib/style-refs'
 import { Resend } from 'resend'
 
 interface Env {
@@ -349,6 +350,17 @@ async function generateOutfitImages(
   const scenarioErrors: string[] = []
   const gender = subscriber.gender as string
 
+  // 시즌 컬렉션 레퍼런스: dressy→premium, casual→casual. 날짜 시드로 매일 회전.
+  // 폴더가 비어 있으면 null → 기존 텍스트 프롬프트 방식 그대로.
+  const daySeed = Math.floor(Date.now() / 86_400_000)
+  const [premiumRef, casualRef] = await Promise.all([
+    getStyleRef(imagesBucket, 'premium', daySeed),
+    getStyleRef(imagesBucket, 'casual', daySeed),
+  ])
+  if (premiumRef || casualRef) {
+    console.log(`[cron] Style refs: premium=${premiumRef?.key || 'none'}, casual=${casualRef?.key || 'none'}`)
+  }
+
   // Generate images in parallel for speed
   const runTs = Date.now()
   const results = await Promise.allSettled(
@@ -363,7 +375,7 @@ async function generateOutfitImages(
         0,
         // Daily emails render images at 240px — economy tier (Gemini Flash
         // first, OpenAI medium fallback) keeps the subscription margin-positive
-        { tier: 'economy' }
+        { tier: 'economy', styleRef: scenario.id === 'dressy' ? premiumRef : casualRef }
       )
 
       if (!resultDataUri) {
