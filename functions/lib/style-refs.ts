@@ -42,14 +42,37 @@ export async function listStyleRefKeys(bucket: R2Bucket, tier: StyleTier): Promi
 }
 
 /**
+ * 계절 게이팅 — 27°C에 캐시미어 코트를 입히는 사고를 막는다.
+ * 파일명 규칙: `warm-*`는 18°C 이상에서만, `cold-*`는 18°C 미만에서만 쓴다.
+ * 접두사가 없는 파일은 온도와 무관하게 항상 후보.
+ */
+const WARM_THRESHOLD_C = 18
+
+function matchesTemp(key: string, temp: number | undefined): boolean {
+  if (temp === undefined) return true
+  const name = key.split('/').pop() || ''
+  if (name.startsWith('warm-')) return temp >= WARM_THRESHOLD_C
+  if (name.startsWith('cold-')) return temp < WARM_THRESHOLD_C
+  return true
+}
+
+/**
  * tier의 레퍼런스 중 하나를 seed 기반으로 결정적으로 선택해 로드한다.
  * seed에 날짜 인덱스를 쓰면 매일 다른 룩으로 회전한다.
  */
-export async function getStyleRef(bucket: R2Bucket, tier: StyleTier, seed: number): Promise<StyleRef | null> {
-  const keys = await listStyleRefKeys(bucket, tier)
-  if (keys.length === 0) return null
+export async function getStyleRef(
+  bucket: R2Bucket,
+  tier: StyleTier,
+  seed: number,
+  temp?: number
+): Promise<StyleRef | null> {
+  const all = await listStyleRefKeys(bucket, tier)
+  // 오늘 날씨에 맞는 레퍼런스만 후보로. 하나도 없으면 계절 무관 레퍼런스로 폴백.
+  const keys = all.filter(k => matchesTemp(k, temp))
+  const pool = keys.length > 0 ? keys : all.filter(k => matchesTemp(k, undefined) && !/\/(warm|cold)-/.test(k))
+  if (pool.length === 0) return null
 
-  const key = keys[((seed % keys.length) + keys.length) % keys.length]
+  const key = pool[((seed % pool.length) + pool.length) % pool.length]
   try {
     const obj = await bucket.get(key)
     if (!obj) return null
