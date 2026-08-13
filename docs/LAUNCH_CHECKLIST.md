@@ -14,14 +14,14 @@
 
 - ⬜ 기본 8종 존재 확인: OPENAI/GEMINI/POLAR/RESEND/SUPABASE(URL·SERVICE_KEY)/OPENWEATHER/CRON_SECRET
 - ⬜ `POLAR_WEBHOOK_SECRET` (A에서)
-- ⬜ `VAPID_PRIVATE_JWK` (푸시 — 전달받은 파일 내용)
+- ⬜ `VAPID_PRIVATE_JWK` (푸시 — 채팅으로 전달한 파일 내용. 2026-08-13에 키를 재발급했으니 **새 파일**을 쓰세요. 공개키는 코드에 반영 완료)
 - ⬜ (선택) `OWNER_ALERT_EMAIL` — 미설정 시 mdjypark@gmail.com으로 알림
 - ⬜ 변수 추가 후 **Retry deployment** 1회
 
 ## C. 데이터베이스 (Supabase SQL Editor에서 1회)
 
 - ✅ 001~007 적용됨 (007 outfit_feedback, 005 shared_results 포함)
-- ⬜ **008_ops_events.sql 실행** ← 레포 `supabase/migrations/008_ops_events.sql` 내용 복붙 실행. 안 하면 감사 기록만 조용히 스킵되고 서비스는 정상
+- ⬜ **008_ops_events.sql + 009_journal_subscribers.sql 실행** ← 레포 `supabase/migrations/008_ops_events.sql` 내용 복붙 실행. 안 하면 감사 기록만 조용히 스킵되고 서비스는 정상
 
 ## D. 에셋
 

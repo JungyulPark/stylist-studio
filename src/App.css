@@ -8571,3 +8571,75 @@ button:not(:disabled):active {
 .showcase-cta {
   margin-top: 2.25rem;
 }
+
+/* ─── Journal newsletter signup ──────────────────────────────── */
+.journal-signup {
+  margin-top: 1.5rem;
+  padding: 1.5rem 1.25rem;
+  border: 1px solid rgba(26, 26, 26, 0.12);
+  border-radius: 16px;
+  background: var(--white);
+  text-align: center;
+}
+
+.journal-signup-page {
+  margin: 3.5rem auto 0;
+  max-width: 520px;
+}
+
+.journal-signup-title {
+  font-family: var(--font-serif);
+  font-size: 1.15rem;
+  font-weight: 600;
+  color: var(--primary);
+  margin: 0 0 0.35rem;
+}
+
+.journal-signup-desc {
+  font-size: 0.86rem;
+  color: var(--primary-light);
+  margin: 0 0 1rem;
+  word-break: keep-all;
+}
+
+.journal-signup-row {
+  display: flex;
+  gap: 0.5rem;
+  max-width: 420px;
+  margin: 0 auto;
+}
+
+.journal-signup-input {
+  flex: 1;
+  min-width: 0;
+  padding: 0.7rem 1rem;
+  font-size: 0.9rem;
+  border: 1px solid rgba(26, 26, 26, 0.18);
+  border-radius: 999px;
+  background: var(--bg-light);
+  color: var(--primary);
+  font-family: var(--font-display);
+}
+
+.journal-signup-btn {
+  padding: 0.7rem 1.5rem;
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: #14120c;
+  background: linear-gradient(160deg, #e6cb84, #c9a962);
+  border: none;
+  border-radius: 999px;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: transform 0.3s var(--spring);
+}
+
+.journal-signup-btn:hover:not(:disabled) { transform: translateY(-1px); }
+.journal-signup-btn:disabled { opacity: 0.6; cursor: wait; }
+
+.journal-signup-done {
+  margin: 0;
+  font-family: var(--font-serif);
+  font-style: italic;
+  color: #8d7442;
+}
