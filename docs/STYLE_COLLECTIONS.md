@@ -43,40 +43,34 @@ curl -X POST "$B" -H "Content-Type: application/json" -d '{"tier":"casual","name
 | 데일리 이메일 | Dressy 룩 | Casual 룩 |
 | $4.99 단건 (3컷) | 1·3번째 컷 | 2번째 컷 |
 
-## FW26 컬렉션 — 12룩 프롬프트 (생성 대기)
+## 시즌 컬렉션 — SS26 + FW26 (24룩, 생성 완료)
 
-법적 안전 명명: premium = **FW26 Atelier**, casual = **FW26 Essentials** (브랜드명 없음).
-공통 프리픽스: "Full-body fashion catalog photograph of a complete outfit on a Korean [female/male] model, face turned away from camera, neutral seamless studio, soft even catalog lighting, garment textures crisp, no visible logos, photorealistic, 3:4"
+**온도 게이팅**: 파일명 접두사가 사용 시점을 결정한다.
+`warm-*` → 18°C 이상에서만, `cold-*` → 18°C 미만에서만, 접두사 없음 → 항상.
+27°C 한여름에 캐시미어 코트가 나가는 사고를 구조적으로 막는다.
 
-### FW26 Atelier (premium 6)
-1. F — double-faced camel cashmere wrap coat, chocolate turtleneck, ivory wide wool trousers, suede boots
-2. F — dove-grey belted shearling-collar coat, cream ribbed knit dress, leather gloves
-3. F — deep forest-green heavy cashmere cape coat, black fine knit, charcoal straight trousers
-4. M — charcoal double-breasted flannel overcoat, oatmeal cashmere turtleneck, grey pleated trousers
-5. M — dark-brown suede blouson, ecru chunky rollneck, olive heavy wool trousers, leather boots
-6. M — midnight-navy cashmere chesterfield, ivory brushed knit, dark denim, polished loafers
-
-### FW26 Essentials (casual 6)
-1. F — cream boxy wool-blend short jacket, white tee, medium-wash straight jeans, white sneakers
-2. F — light-grey longline padded coat, black knit, black straight trousers, chunky sneakers
-3. F — camel oversized knit cardigan, ivory turtleneck, dark straight denim, ankle boots
-4. M — navy quilted liner jacket, grey hoodie-free crewneck sweat, washed black jeans, trainers
-5. M — dark-olive wool overshirt, white heavyweight tee, beige carpenter pants, retro sneakers
-6. M — black puffer vest over charcoal knit, medium-grey wool trousers, white minimal sneakers
-
-### ✅ 생성 완료 — 임포트 방법
-
-12룩 전부 생성됨 (soul_2, 3:4, 로고 없음). 한 줄로 임포트:
-
+### 임포트 (배포 불필요)
 ```bash
-CRON_SECRET=your_secret bash scripts/import-fw26.sh
+CRON_SECRET=실제값 bash scripts/import-collections.sh          # SS26 + FW26 24룩
+CRON_SECRET=실제값 bash scripts/import-collections.sh ss26     # 지금 계절만
 ```
 
-스크립트가 12장을 R2 `style-refs/premium|casual/`로 넣고 목록을 출력한다.
-서버가 URL을 직접 가져오므로 로컬 다운로드 불필요. 임포트 즉시 다음
-데일리 발송과 $4.99 상품이 FW26 룩으로 스타일링된다.
+### SS26 (warm — 여름)
+- **Atelier 6**: 오트밀 린넨 블레이저 / 스톤그레이 린넨 셔츠 / 아이보리 실크코튼+린넨와이드 / 샌드 린넨 셔츠드레스 / 도브그레이 니트폴로 / 토프니트+크림미디
+- **Essentials 6**: 화이트티+그레이쇼츠 / 라이트그레이티+블랙팬츠 / 화이트티+라이트데님 / 베이지슬리브리스+에크루와이드 / 블랙티+에크루쇼츠 / 페일그레이셔츠+에크루팬츠
 
-이전 시즌을 걷어내려면 목록의 key를 DELETE 하면 된다 (시드 4장 등):
+### FW26 (cold — 가을·겨울)
+- **Atelier 6**: 카멜 캐시미어 랩코트 / 시어링 벨티드 / 포레스트그린 케이프 / 차콜 플란넬 오버코트 / 스웨이드 블루종 / 네이비 체스터필드
+- **Essentials 6**: 크림 박시 숏재킷 / 라이트그레이 롱패딩 / 카멜 가디건 / 네이비 퀼팅라이너 / 올리브 오버셔츠 / 블랙 푸퍼베스트
+
+### 색 규범 (2026-08 수정)
+텍스트 폴백 팔레트에서 채도 높은 색 25종을 뮤트 뉴트럴로 교체하고
+(coral·teal·burnt orange·electric blue 등 → stone·slate·clay·brass),
+프롬프트에 **채도 상한 규칙**을 넣었다: 전체 룩을 sand·oatmeal·stone·greige·
+taupe·charcoal·navy·ivory·olive 범위로 유지, 밝고 선명한 색 금지, 액센트는
+가죽·금속 디테일에서만. 레퍼런스가 없을 때의 결과도 조용해진다.
+
+이전 시즌 정리:
 ```bash
 curl -X DELETE "https://kstylist.cc/api/style-refs?secret=$CRON_SECRET" \
   -H "Content-Type: application/json" -d '{"key":"style-refs/premium/seed-f-camel.png"}'

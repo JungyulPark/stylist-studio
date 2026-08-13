@@ -354,8 +354,8 @@ async function generateOutfitImages(
   // 폴더가 비어 있으면 null → 기존 텍스트 프롬프트 방식 그대로.
   const daySeed = Math.floor(Date.now() / 86_400_000)
   const [premiumRef, casualRef] = await Promise.all([
-    getStyleRef(imagesBucket, 'premium', daySeed),
-    getStyleRef(imagesBucket, 'casual', daySeed),
+    getStyleRef(imagesBucket, 'premium', daySeed, weather.temp),
+    getStyleRef(imagesBucket, 'casual', daySeed, weather.temp),
   ])
   if (premiumRef || casualRef) {
     console.log(`[cron] Style refs: premium=${premiumRef?.key || 'none'}, casual=${casualRef?.key || 'none'}`)

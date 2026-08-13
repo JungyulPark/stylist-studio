@@ -17,9 +17,9 @@ interface WeatherInfo {
 // ─── 21 Color Palettes (curated from real runway palettes) ───────
 const maleColorPalettes = [
   // Rich jewel-toned (replaces brown-heavy espresso earth)
-  { tone: 'midnight plum', c1: 'dark plum', c2: 'charcoal', c3: 'silver grey', c4: 'deep navy', accent: 'amethyst' },
+  { tone: 'midnight plum', c1: 'dark plum', c2: 'charcoal', c3: 'silver grey', c4: 'deep navy', accent: 'muted plum' },
   // Auralee FW26 inspired
-  { tone: 'royal matte', c1: 'royal blue', c2: 'ink black', c3: 'oatmeal', c4: 'slate', accent: 'mint green' },
+  { tone: 'royal matte', c1: 'royal blue', c2: 'ink black', c3: 'oatmeal', c4: 'slate', accent: 'pale sage' },
   // LV Pre-Spring 2026 heritage
   { tone: 'anglomania', c1: 'tweedy brown', c2: 'herringbone grey', c3: 'cream', c4: 'dark olive', accent: 'burgundy' },
   // Hermès SS26 linen mood
@@ -31,25 +31,25 @@ const maleColorPalettes = [
   // Classic navy
   { tone: 'midnight nav', c1: 'midnight navy', c2: 'chalk white', c3: 'dove grey', c4: 'warm sand', accent: 'old gold' },
   // Auralee boiled wool
-  { tone: 'matte wool', c1: 'dark olive', c2: 'tobacco brown', c3: 'ecru', c4: 'moss green', accent: 'brick red' },
+  { tone: 'matte wool', c1: 'dark olive', c2: 'tobacco brown', c3: 'ecru', c4: 'moss green', accent: 'clay taupe' },
   // Deep green luxury (replaces brown-heavy clay earth)
   { tone: 'emerald shadow', c1: 'deep emerald', c2: 'charcoal', c3: 'ivory', c4: 'dark teal', accent: 'copper' },
   // Hermès chrome green
-  { tone: 'chrome green', c1: 'chrome green', c2: 'pebble grey', c3: 'bone white', c4: 'dark bronze', accent: 'vanilla' },
+  { tone: 'chrome green', c1: 'chrome green', c2: 'pebble grey', c3: 'bone white', c4: 'dark bronze', accent: 'cream' },
   // LV Pharrell futurism
-  { tone: 'graphite modern', c1: 'graphite black', c2: 'silver grey', c3: 'ivory', c4: 'deep indigo', accent: 'electric blue' },
+  { tone: 'graphite modern', c1: 'graphite black', c2: 'silver grey', c3: 'ivory', c4: 'deep indigo', accent: 'steel blue' },
   // Auralee SS26 fresh
-  { tone: 'ocean air', c1: 'faded ocean blue', c2: 'driftwood', c3: 'off-white linen', c4: 'washed sage', accent: 'sunset coral' },
+  { tone: 'ocean air', c1: 'faded ocean blue', c2: 'driftwood', c3: 'off-white linen', c4: 'washed sage', accent: 'brushed brass' },
   // Nordic minimalism
   { tone: 'birch white', c1: 'birch white', c2: 'pale grey', c3: 'cream wool', c4: 'pine green', accent: 'copper' },
   // Tuscan warmth
-  { tone: 'tuscan sun', c1: 'sun-bleached terracotta', c2: 'olive', c3: 'warm cream', c4: 'dried lavender', accent: 'aged gold' },
+  { tone: 'tuscan sun', c1: 'warm sand', c2: 'olive', c3: 'warm cream', c4: 'dried lavender', accent: 'aged gold' },
   // Urban monochrome
   { tone: 'ink mono', c1: 'jet black', c2: 'medium charcoal', c3: 'heather grey', c4: 'off-white', accent: 'matte silver' },
   // Cool neutral (replaces brown-heavy sand dune)
   { tone: 'smoke charcoal', c1: 'dark charcoal', c2: 'medium grey', c3: 'off-white', c4: 'slate blue', accent: 'brushed silver' },
   // Maritime heritage
-  { tone: 'maritime', c1: 'dark navy', c2: 'rope beige', c3: 'crisp white', c4: 'faded indigo', accent: 'red' },
+  { tone: 'maritime', c1: 'dark navy', c2: 'rope beige', c3: 'crisp white', c4: 'faded indigo', accent: 'oxblood' },
   // Deep wine (replaces brown-heavy burnt amber)
   { tone: 'deep burgundy', c1: 'dark burgundy', c2: 'ink black', c3: 'cream', c4: 'deep charcoal', accent: 'old gold' },
   // Soft studio (cool-shifted)
@@ -57,7 +57,7 @@ const maleColorPalettes = [
   // Vintage workwear (indigo-focused)
   { tone: 'worn indigo', c1: 'faded indigo', c2: 'washed navy', c3: 'raw ecru', c4: 'dark denim', accent: 'antique brass' },
   // Slate cool
-  { tone: 'steel blue', c1: 'steel blue', c2: 'slate', c3: 'ice white', c4: 'deep navy', accent: 'teal' },
+  { tone: 'steel blue', c1: 'steel blue', c2: 'slate', c3: 'ice white', c4: 'deep navy', accent: 'slate blue' },
 ]
 
 const femaleColorPalettes = [
@@ -66,43 +66,43 @@ const femaleColorPalettes = [
   // Midnight luxury (replaces brown-heavy cognac polish)
   { tone: 'midnight silk', c1: 'midnight navy', c2: 'silver', c3: 'pearl white', c4: 'deep charcoal', accent: 'gold chain' },
   // Auralee fabric-first soft
-  { tone: 'cashmere blush', c1: 'dusty rose', c2: 'baby cashmere beige', c3: 'pearl white', c4: 'muted lavender', accent: 'rose gold' },
+  { tone: 'cashmere blush', c1: 'dusty rose', c2: 'baby cashmere beige', c3: 'pearl white', c4: 'muted lavender', accent: 'soft bronze' },
   // LV SS26 domestic comfort
   { tone: 'silk plush', c1: 'champagne silk', c2: 'soft camel', c3: 'powder pink', c4: 'warm grey', accent: 'antique gold' },
   // Deep jewel
   { tone: 'jewel depth', c1: 'emerald', c2: 'deep burgundy', c3: 'ivory', c4: 'midnight blue', accent: 'bronze' },
   // Fresh sage
-  { tone: 'garden fresh', c1: 'sage green', c2: 'petal pink', c3: 'cream', c4: 'soft fern', accent: 'coral' },
+  { tone: 'garden fresh', c1: 'sage green', c2: 'pale blush grey', c3: 'cream', c4: 'soft fern', accent: 'warm stone' },
   // Parisian classic
-  { tone: 'parisian', c1: 'navy', c2: 'red', c3: 'cream', c4: 'black', accent: 'gold' },
+  { tone: 'parisian', c1: 'navy', c2: 'oxblood', c3: 'cream', c4: 'black', accent: 'gold' },
   // Auralee mint-pop FW26
-  { tone: 'mint pop', c1: 'mint green', c2: 'ecru', c3: 'light grey', c4: 'royal blue accent', accent: 'silver' },
+  { tone: 'mint pop', c1: 'pale sage', c2: 'ecru', c3: 'light grey', c4: 'royal blue accent', accent: 'silver' },
   // Romantic evening
   { tone: 'mauve romantic', c1: 'mauve', c2: 'soft peach', c3: 'ivory', c4: 'blush', accent: 'pearl' },
   // Nordic ice
-  { tone: 'frost nordic', c1: 'ice white', c2: 'pale blue', c3: 'silver birch', c4: 'frost grey', accent: 'rose gold' },
+  { tone: 'frost nordic', c1: 'ice white', c2: 'pale blue', c3: 'silver birch', c4: 'frost grey', accent: 'soft bronze' },
   // Cool lavender (replaces brown-heavy tuscan earth)
-  { tone: 'lavender dusk', c1: 'deep lavender', c2: 'charcoal', c3: 'soft white', c4: 'steel grey', accent: 'rose gold' },
+  { tone: 'lavender dusk', c1: 'deep lavender', c2: 'charcoal', c3: 'soft white', c4: 'steel grey', accent: 'soft bronze' },
   // Berry winter
   { tone: 'berry rich', c1: 'raspberry', c2: 'plum', c3: 'cream', c4: 'deep wine', accent: 'gold' },
   // Coastal light
-  { tone: 'coastal', c1: 'sand', c2: 'ocean blue', c3: 'white', c4: 'driftwood grey', accent: 'turquoise' },
+  { tone: 'coastal', c1: 'sand', c2: 'ocean blue', c3: 'white', c4: 'driftwood grey', accent: 'pale slate' },
   // Sunset warmth
-  { tone: 'sunset glow', c1: 'burnt orange', c2: 'dusty pink', c3: 'warm cream', c4: 'peach', accent: 'bronze' },
+  { tone: 'muted clay', c1: 'muted clay', c2: 'muted rose grey', c3: 'warm cream', c4: 'soft almond', accent: 'bronze' },
   // Ethereal pastel
   { tone: 'ethereal', c1: 'lilac', c2: 'powder blue', c3: 'cloud white', c4: 'pale mint', accent: 'silver' },
   // Rich autumn
-  { tone: 'autumn leaf', c1: 'deep rust', c2: 'mustard', c3: 'cream', c4: 'burgundy', accent: 'antique gold' },
+  { tone: 'autumn leaf', c1: 'deep rust', c2: 'muted ochre', c3: 'cream', c4: 'burgundy', accent: 'antique gold' },
   // Minimalist greige
   { tone: 'quiet greige', c1: 'greige', c2: 'soft white', c3: 'pale camel', c4: 'dove grey', accent: 'matte gold' },
   // Soft orchid (replaces brown-heavy natural linen)
-  { tone: 'orchid mist', c1: 'soft orchid', c2: 'pale grey', c3: 'ivory', c4: 'dusty lavender', accent: 'rose gold' },
+  { tone: 'orchid mist', c1: 'soft orchid', c2: 'pale grey', c3: 'ivory', c4: 'dusty lavender', accent: 'soft bronze' },
   // Botanical
-  { tone: 'botanical', c1: 'forest green', c2: 'cream', c3: 'terracotta', c4: 'sage', accent: 'dried rose' },
+  { tone: 'botanical', c1: 'forest green', c2: 'cream', c3: 'terracotta', c4: 'sage', accent: 'dusty taupe' },
   // Vintage blue
   { tone: 'vintage blue', c1: 'dusty blue', c2: 'antique rose', c3: 'ivory', c4: 'faded gold', accent: 'copper' },
   // Modern contrast
-  { tone: 'modern mono', c1: 'black', c2: 'white', c3: 'camel', c4: 'red', accent: 'gold' },
+  { tone: 'modern mono', c1: 'black', c2: 'white', c3: 'camel', c4: 'oxblood', accent: 'gold' },
 ]
 
 // ─── 10 Styling Archetypes (brand-informed, 10-day cycle) ────────
@@ -417,6 +417,13 @@ OUTFIT DIRECTION (adapt colors/fabrics to this person's skin undertone):
 ${basePrompt}
 
 ${emotionBlock}
+COLOR RESTRAINT (QUIET LUXURY RULE — HIGHEST PRIORITY FOR COLOR):
+- Keep the whole outfit within a MUTED, LOW-SATURATION neutral range: sand, oatmeal, stone, greige, taupe, charcoal, navy, ivory, olive, soft brown
+- NEVER use bright, vivid or saturated colors (no orange, coral, teal, turquoise, bright green, bright blue, red, pink, yellow)
+- Colors should read as expensive and understated, never eye-catching. If in doubt, choose the greyer, softer version of the color
+- At most ONE quiet accent in the whole look, and it should come from a leather or metal detail — not from a garment
+- The garments must look like fine natural fabrics in their own undyed or softly dyed tones
+
 STYLING VARIETY: A great stylist never recommends the same look twice. Vary the bottoms — sometimes dark navy trousers, sometimes medium-wash denim jeans, sometimes charcoal wool pants, sometimes olive chinos, sometimes black slim trousers. Match the bottom style to the overall mood. Denim is perfectly appropriate for smart casual and casual looks. Avoid repeating the same brown/tan/khaki bottoms — explore the full spectrum.
 The specified colors are SUGGESTIONS — diagnose this person's seasonal color type and adapt:
 SPRING WARM (golden, peachy glow) → coral, warm peach, cream, light camel — vivid warm radiance.
