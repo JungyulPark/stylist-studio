@@ -3,6 +3,7 @@ import { errors } from '../lib/errors'
 import { editPhotoWithGemini, type ImageScenario } from '../lib/gemini-image'
 import { getDailyScenarios, dailyScenarioLabels } from '../lib/daily-style-scenarios'
 import { createUnsubscribeToken } from '../lib/unsubscribe-token'
+import { createFeedbackToken } from '../lib/feedback-token'
 import { sendEmptyPush } from '../lib/web-push'
 import { logOpsEvent, notifyOwner } from '../lib/ops-log'
 import { getStyleRef } from '../lib/style-refs'
@@ -420,13 +421,15 @@ async function generateOutfitImages(
 }
 
 // Build email HTML with outfit images
-function buildEmailHtml(
+async function buildEmailHtml(
   recommendation: string,
   weather: WeatherData,
   subscriber: Subscriber,
   outfitImages: OutfitImage[],
-  unsubLink: string
-): string {
+  unsubLink: string,
+  cronSecret: string | undefined,
+  sentDate: string
+): Promise<string> {
   const weatherEmoji: Record<string, string> = {
     'Clear': '☀️', 'Clouds': '☁️', 'Rain': '🌧️', 'Drizzle': '🌦️',
     'Thunderstorm': '⛈️', 'Snow': '❄️', 'Mist': '🌫️', 'Fog': '🌫️',
@@ -454,17 +457,33 @@ function buildEmailHtml(
   // Build outfit images HTML section — use table layout for email client compatibility
   let imagesHtml = ''
   if (outfitImages.length > 0) {
-    const imageCells = outfitImages.map(img => `
+    const feedbackLabels: Record<string, [string, string]> = {
+      ko: ['좋아요', '별로예요'], en: ['Love it', 'Not for me'],
+    }
+    const [likeLabel, dislikeLabel] = feedbackLabels[lang] || feedbackLabels.en
+
+    const cells = await Promise.all(outfitImages.map(async img => {
+      const likeUrl = `https://kstylist.cc/api/outfit-feedback?t=${encodeURIComponent(
+        await createFeedbackToken({ email: subscriber.email, sentDate, scenarioId: img.id, verdict: 'like' }, cronSecret)
+      )}`
+      const dislikeUrl = `https://kstylist.cc/api/outfit-feedback?t=${encodeURIComponent(
+        await createFeedbackToken({ email: subscriber.email, sentDate, scenarioId: img.id, verdict: 'dislike' }, cronSecret)
+      )}`
+      return `
           <td width="${Math.floor(100 / outfitImages.length)}%" style="text-align:center;padding:0 6px;vertical-align:top;">
             <img src="${img.url}" alt="${img.label}" style="width:100%;max-width:240px;border-radius:12px;border:1px solid rgba(201,169,98,0.3);margin-bottom:8px;display:block;margin-left:auto;margin-right:auto;" />
-            <p style="color:#c9a962;font-size:12px;font-weight:600;margin:0;text-align:center;">${img.label}</p>
+            <p style="color:#c9a962;font-size:12px;font-weight:600;margin:0 0 8px;text-align:center;">${img.label}</p>
+            <a href="${likeUrl}" style="display:inline-block;color:#c9a962;font-size:11px;text-decoration:none;border:1px solid rgba(201,169,98,0.45);border-radius:999px;padding:5px 11px;margin:0 2px;">${likeLabel}</a>
+            <a href="${dislikeUrl}" style="display:inline-block;color:#8a8aa0;font-size:11px;text-decoration:none;border:1px solid rgba(138,138,160,0.4);border-radius:999px;padding:5px 11px;margin:0 2px;">${dislikeLabel}</a>
           </td>
-    `).join('')
+    `}))
+    const imageCells = cells.join('')
 
     imagesHtml = `
     <!-- Outfit Images -->
     <div style="margin-bottom:24px;">
-      <h2 style="color:#c9a962;font-size:14px;letter-spacing:2px;text-align:center;margin-bottom:16px;">${outfitTitle[lang] || outfitTitle.en}</h2>
+      <h2 style="color:#c9a962;font-size:14px;letter-spacing:2px;text-align:center;margin-bottom:6px;">${outfitTitle[lang] || outfitTitle.en}</h2>
+      <p style="color:#8a8aa0;font-size:11px;text-align:center;margin:0 0 16px;">${lang === 'ko' ? '한 번 눌러주시면 내일 추천이 더 정확해져요' : 'One tap makes tomorrow\'s look more yours'}</p>
       <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin:0 auto;">
         <tr>
           ${imageCells}
@@ -834,7 +853,7 @@ export const onRequestGet: PagesFunction<Env> = async (context) => {
             const unsubToken = await createUnsubscribeToken(sub.id, sub.email, context.env.CRON_SECRET)
             const unsubUrl = `https://kstylist.cc/api/unsubscribe?token=${encodeURIComponent(unsubToken)}`
 
-            const html = buildEmailHtml(recommendation, weather, sub, outfitImages, unsubUrl)
+            const html = await buildEmailHtml(recommendation, weather, sub, outfitImages, unsubUrl, context.env.CRON_SECRET, today)
             const subject = emailSubjects[sub.preferred_language] || emailSubjects.en
 
             await resend.emails.send({
