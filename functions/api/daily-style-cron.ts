@@ -873,6 +873,69 @@ export const onRequestGet: PagesFunction<Env> = async (context) => {
           }
         }
 
+        // 체험 종료 D-3 알림 — 지금은 체험이 조용히 끝나고 결제된다.
+        // 그동안 받은 룩 수를 세어 가치를 상기시키고, 대시보드로 부른다.
+        if (emailSent && sub.trial_ends_at && !sub.current_period_end) {
+          try {
+            const daysLeft = Math.ceil(
+              (new Date(sub.trial_ends_at).getTime() - Date.now()) / 86_400_000
+            )
+            if (daysLeft === 3) {
+              const noticeUnsubUrl = `https://kstylist.cc/api/unsubscribe?token=${encodeURIComponent(
+                await createUnsubscribeToken(sub.id, sub.email, context.env.CRON_SECRET)
+              )}`
+              const cntRes = await fetch(
+                `${context.env.SUPABASE_URL}/rest/v1/daily_recommendations?subscriber_id=eq.${sub.id}&select=id`,
+                {
+                  headers: {
+                    'apikey': context.env.SUPABASE_SERVICE_KEY,
+                    'Authorization': `Bearer ${context.env.SUPABASE_SERVICE_KEY}`,
+                    'Prefer': 'count=exact',
+                  },
+                }
+              )
+              const looksSoFar = parseInt(cntRes.headers.get('content-range')?.split('/')[1] || '0', 10) * 2
+              const isKo = sub.preferred_language === 'ko'
+              if (resend) {
+                await resend.emails.send({
+                  from: 'ATELIER HUE <noreply@kstylist.cc>',
+                  to: sub.email,
+                  subject: isKo ? '무료 체험이 3일 남았어요' : 'Three days left in your free trial',
+                  html: `<!DOCTYPE html><html><head><meta charset="utf-8"></head>
+<body style="margin:0;background:#1a1a2e;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;">
+  <table width="100%" cellpadding="0" cellspacing="0" style="background:#1a1a2e;padding:40px 16px;"><tr><td align="center">
+    <table width="520" cellpadding="0" cellspacing="0" style="max-width:520px;width:100%;">
+      <tr><td align="center" style="padding-bottom:24px;">
+        <div style="color:#c9a962;font-size:14px;letter-spacing:3px;font-family:Georgia,serif;">ATELIER HUE</div>
+      </td></tr>
+      <tr><td style="color:#ffffff;font-size:20px;font-weight:700;padding-bottom:14px;text-align:center;">
+        ${isKo ? '무료 체험이 3일 남았습니다' : 'Three days left in your free trial'}
+      </td></tr>
+      <tr><td style="color:#b8b8c8;font-size:14px;line-height:1.75;padding-bottom:22px;text-align:center;">
+        ${isKo
+          ? `지금까지 ${sub.city} 날씨에 맞춘 코디 ${looksSoFar}벌을 보내드렸어요. 4일째부터 $6.99/월로 이어집니다 — 원하지 않으시면 언제든 해지할 수 있고, 지금 해지해도 체험 기간은 그대로 유지됩니다.`
+          : `We've sent you ${looksSoFar} looks matched to ${sub.city}'s weather so far. From day four it continues at $6.99/month — cancel any time, and cancelling now still keeps your trial running to the end.`}
+      </td></tr>
+      <tr><td align="center" style="padding-bottom:18px;">
+        <a href="https://kstylist.cc/#subscription-dashboard" style="display:inline-block;background:#c9a962;color:#1a1a2e;text-decoration:none;font-weight:700;font-size:14px;padding:13px 30px;border-radius:12px;">
+          ${isKo ? '내 스타일 보기' : 'See my looks'}
+        </a>
+      </td></tr>
+      <tr><td align="center" style="border-top:1px solid #3a3a5c;padding-top:18px;">
+        <a href="${noticeUnsubUrl}" style="color:#888888;font-size:11px;">${isKo ? '구독 해지' : 'Unsubscribe'}</a>
+      </td></tr>
+    </table>
+  </td></tr></table>
+</body></html>`,
+                })
+                console.log(`[cron] Trial D-3 notice sent to ${sub.email} (${looksSoFar} looks)`)
+              }
+            }
+          } catch (e) {
+            console.warn(`[cron] Trial notice failed for ${sub.email} (non-blocking):`, e)
+          }
+        }
+
         // 아침 푸시 알림 (있으면) — 실패해도 이메일 발송에 영향 없음
         if (emailSent) {
           try {

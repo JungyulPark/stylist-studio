@@ -2345,7 +2345,7 @@ function SpinViewer({ basePath, frameCount, hint }: { basePath: string; frameCou
 }
 
 // Web Push — VAPID 공개키 (개인키는 Cloudflare env VAPID_PRIVATE_JWK)
-const VAPID_PUBLIC_KEY = 'BLE73tVfXimofiQLw_mR2ypde8zZH3Dmj_cmYfFQbdH3c4yr16f9O3CEhzAdL8txTVC-dzQLYwLNVCztSVCEVBM'
+const VAPID_PUBLIC_KEY = 'BNbvSV70NVdPJPvkSqEw2KVBwDW4mlzB98Td-CgOJEdE7U4LuLbQmjTLYIRIgswTLA1I4OPGjxMiFHi3WCFgsEk'
 
 function urlBase64ToUint8Array(base64String: string): Uint8Array {
   const padding = '='.repeat((4 - (base64String.length % 4)) % 4)
@@ -2650,6 +2650,9 @@ function App() {
   const wardrobeInputRef = useRef<HTMLInputElement>(null)
   // The Journal (스타일 트렌드)
   const [activePost, setActivePost] = useState<JournalPost | null>(null)
+  // 저널 뉴스레터 — 무료 사용자가 돌아올 유일한 이유
+  const [journalEmail, setJournalEmail] = useState('')
+  const [journalSignup, setJournalSignup] = useState<'idle' | 'sending' | 'done'>('idle')
 
   // 헤어 스타일 (복구): 선택 상태 + 결과
   const [hairOccasion, setHairOccasion] = useState('daily')
@@ -3062,6 +3065,27 @@ function App() {
     const reader = new FileReader()
     reader.onload = () => setProfile(prev => ({ ...prev, photo: reader.result as string }))
     reader.readAsDataURL(file)
+  }
+
+  // 저널 구독 — 결제도 로그인도 없이 이메일 하나로 재방문 통로를 만든다
+  const handleJournalSubscribe = async (source: string) => {
+    const email = journalEmail.trim()
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email)) return
+    setJournalSignup('sending')
+    trackEvent('journal_subscribe', { source })
+    try {
+      const res = await fetch('/api/journal-subscribe', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, lang, source, season_label: seasonInfo?.label_en || '' }),
+      })
+      if (!res.ok) throw new Error(`journal-subscribe ${res.status}`)
+      setJournalSignup('done')
+      setJournalEmail('')
+    } catch (e) {
+      console.error('Journal subscribe failed:', e)
+      setJournalSignup('idle')
+    }
   }
 
   // 오늘의 룩 피드백 — 다음 추천이 이 기록을 학습한다
@@ -4859,6 +4883,39 @@ ${styleImgs.length > 1 ? `<div class="section"><h2>${styleSection}</h2><div clas
                 </span>
               </article>
             ))}
+          </div>
+          <div className="journal-signup journal-signup-page">
+            {journalSignup === 'done' ? (
+              <p className="journal-signup-done">
+                {lang === 'ko' ? '구독 완료 — 매주 목요일에 보내드릴게요.' : "You're in — the journal lands every Thursday."}
+              </p>
+            ) : (
+              <>
+                <h4 className="journal-signup-title">
+                  {lang === 'ko' ? '매주 저널 받아보기' : 'Get the weekly journal'}
+                </h4>
+                <p className="journal-signup-desc">
+                  {lang === 'ko' ? '시즌 트렌드와 스타일 노트를 매주 한 통 · 무료' : 'Season notes and style thinking, one letter a week · free'}
+                </p>
+                <div className="journal-signup-row">
+                  <input
+                    type="email"
+                    className="journal-signup-input"
+                    placeholder={lang === 'ko' ? '이메일 주소' : 'Email address'}
+                    value={journalEmail}
+                    onChange={(e) => setJournalEmail(e.target.value)}
+                    onKeyDown={(e) => { if (e.key === 'Enter') handleJournalSubscribe('journal') }}
+                  />
+                  <button
+                    className="journal-signup-btn"
+                    disabled={journalSignup === 'sending'}
+                    onClick={() => handleJournalSubscribe('journal')}
+                  >
+                    {journalSignup === 'sending' ? '...' : (lang === 'ko' ? '구독' : 'Subscribe')}
+                  </button>
+                </div>
+              </>
+            )}
           </div>
         </div>
       </div>
@@ -6949,6 +7006,45 @@ ${styleImgs.length > 1 ? `<div class="section"><h2>${styleSection}</h2><div clas
                       ? 'PDF 다운로드 · 불만족 시 환불'
                       : 'PDF download · Satisfaction guaranteed'}
                   </p>
+                </div>
+              )}
+
+              {/* 저널 뉴스레터 — 결제하지 않는 사람에게도 돌아올 이유를 준다 */}
+              {!isSubscribed && (
+                <div className="journal-signup">
+                  {journalSignup === 'done' ? (
+                    <p className="journal-signup-done">
+                      {lang === 'ko' ? '구독 완료 — 매주 목요일에 보내드릴게요.' : "You're in — the journal lands every Thursday."}
+                    </p>
+                  ) : (
+                    <>
+                      <h4 className="journal-signup-title">
+                        {lang === 'ko' ? '매주 저널 받아보기' : 'Get the weekly journal'}
+                      </h4>
+                      <p className="journal-signup-desc">
+                        {lang === 'ko'
+                          ? `${seasonInfo?.label_ko ? `「${seasonInfo.label_ko}」에 맞는 ` : ''}시즌 트렌드와 스타일 노트를 매주 한 통 · 무료`
+                          : `${seasonInfo?.label_en ? `Season notes for ${seasonInfo.label_en} — ` : ''}one letter a week, free`}
+                      </p>
+                      <div className="journal-signup-row">
+                        <input
+                          type="email"
+                          className="journal-signup-input"
+                          placeholder={lang === 'ko' ? '이메일 주소' : 'Email address'}
+                          value={journalEmail}
+                          onChange={(e) => setJournalEmail(e.target.value)}
+                          onKeyDown={(e) => { if (e.key === 'Enter') handleJournalSubscribe('result_page') }}
+                        />
+                        <button
+                          className="journal-signup-btn"
+                          disabled={journalSignup === 'sending'}
+                          onClick={() => handleJournalSubscribe('result_page')}
+                        >
+                          {journalSignup === 'sending' ? '...' : (lang === 'ko' ? '구독' : 'Subscribe')}
+                        </button>
+                      </div>
+                    </>
+                  )}
                 </div>
               )}
 
