@@ -3116,6 +3116,26 @@ function App() {
   // 날씨 카피 (eyebrow/sub/CTA) — weatherPreview 도착 후 파생
   const weatherCopy = weatherPreview ? getWeatherCopy(weatherPreview, lang, new Date().getHours()) : null
 
+  // 재방문 측정 — 마지막 방문 이후 경과일과 진입 경로를 기록한다.
+  // 무엇이 사람을 돌아오게 하는지 모르면 리텐션은 개선할 수 없다.
+  useEffect(() => {
+    const KEY = 'stylist_last_visit'
+    const now = Date.now()
+    const prev = Number(localStorage.getItem(KEY) || 0)
+    localStorage.setItem(KEY, String(now))
+    if (!prev) {
+      trackEvent('visitor_type', { type: 'new' })
+      return
+    }
+    const days = Math.floor((now - prev) / 86_400_000)
+    const ref = document.referrer || ''
+    const source = /mail\.|gmail|naver|outlook/i.test(ref) ? 'email'
+      : window.matchMedia('(display-mode: standalone)').matches ? 'pwa'
+      : ref ? 'referral' : 'direct'
+    trackEvent('visitor_type', { type: 'returning', days_since_last: days, source })
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+
   // 히어로 필름 존재 확인 — <source> 404는 video onError로 안 올라오는 경우가 있어
   // 렌더 전에 확인한다 (없으면 슬라이더가 그대로 히어로를 채운다)
   useEffect(() => {
