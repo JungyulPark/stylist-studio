@@ -7288,28 +7288,6 @@ button:not(:disabled):active {
   box-shadow: 0 24px 80px rgba(0, 0, 0, 0.55), 0 0 0 1px rgba(201, 169, 98, 0.28);
 }
 
-/* Gold scan line sweeping over the before/after image */
-.hero-scan {
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  border-radius: inherit;
-  background: linear-gradient(
-    to bottom,
-    transparent 44%,
-    rgba(232, 205, 133, 0.30) 50%,
-    transparent 56%
-  );
-  background-size: 100% 300%;
-  animation: heroScan 5.5s ease-in-out infinite alternate;
-  mix-blend-mode: screen;
-}
-
-@keyframes heroScan {
-  from { background-position: 0 0%; }
-  to { background-position: 0 100%; }
-}
-
 .hero-trust-dark span {
   color: rgba(245, 242, 233, 0.62);
 }
@@ -7368,9 +7346,6 @@ button:not(:disabled):active {
   .hero-cinema-sub {
     opacity: 1;
     transform: none;
-  }
-  .hero-scan {
-    display: none;
   }
 }
 
@@ -7731,22 +7706,22 @@ button:not(:disabled):active {
 .hero-cinema > *:not([aria-hidden]) { position: relative; z-index: 1; }
 .hero-cinema { background: #101018; }
 
-/* ── 조건별 효과 ── */
-/* 비: 두 속도의 사선 빗줄기 */
+/* ── 조건별 효과 ──
+   전부 정적(no animation). 무한 루프 애니메이션은 배경이 계속 일렁여
+   눈을 피로하게 만들어 제거했다 — 날씨 무드는 색과 질감만으로 전달한다.
+   다시 움직임을 넣고 싶어도 infinite 루프는 금지. */
+/* 비: 사선 빗줄기 질감 (정지) */
 .hero-cinema[data-weather="rain"] .hero-atmo-fx-a {
   background: repeating-linear-gradient(112deg, transparent 0 9px, rgba(110, 140, 160, 0.14) 9px 10px, transparent 10px 22px);
   background-size: 100% 320px;
-  animation: wxRainA 0.9s linear infinite;
   mix-blend-mode: screen;
 }
 .hero-cinema[data-weather="rain"] .hero-atmo-fx-b {
   background: repeating-linear-gradient(108deg, transparent 0 13px, rgba(110, 140, 160, 0.10) 13px 14px, transparent 14px 30px);
   background-size: 100% 320px;
-  animation: wxRainA 1.4s linear infinite;
   opacity: 0.5;
   mix-blend-mode: screen;
 }
-@keyframes wxRainA { to { background-position: 0 320px; } }
 
 /* 눈: 두 깊이의 점 하강 */
 .hero-cinema[data-weather="snow"] .hero-atmo-fx-a {
@@ -7758,7 +7733,6 @@ button:not(:disabled):active {
     radial-gradient(2px 2px at 27% 88%, rgba(201,212,228,0.45), transparent 60%),
     radial-gradient(2px 2px at 92% 44%, rgba(201,212,228,0.5), transparent 60%);
   background-size: 380px 380px;
-  animation: wxSnowA 11s linear infinite;
 }
 .hero-cinema[data-weather="snow"] .hero-atmo-fx-b {
   background-image:
@@ -7768,34 +7742,16 @@ button:not(:disabled):active {
     radial-gradient(1.5px 1.5px at 44% 52%, rgba(201,212,228,0.35), transparent 60%);
   background-size: 520px 520px;
   filter: blur(0.6px);
-  animation: wxSnowB 17s linear infinite;
-}
-@keyframes wxSnowA {
-  from { background-position: 0 0; }
-  to { background-position: 30px 380px; }
-}
-@keyframes wxSnowB {
-  from { background-position: 0 0; }
-  to { background-position: -30px 520px; }
 }
 
-/* 맑음(따뜻): 태양광 레이 + 숨 쉬는 웜 헤이즈 */
+/* 맑음(따뜻): 태양광 레이 + 웜 헤이즈 (정지) */
 .hero-cinema[data-weather="clear-warm"] .hero-atmo-fx-a {
   background: conic-gradient(from 0deg at 50% -20%, transparent 0 40%, rgba(232, 176, 75, 0.07) 47%, transparent 54%, rgba(232, 176, 75, 0.05) 61%, transparent 68%);
-  animation: wxRays 24s ease-in-out infinite alternate;
   transform-origin: 50% -20%;
 }
 .hero-cinema[data-weather="clear-warm"] .hero-atmo-fx-b {
   background: radial-gradient(ellipse 60% 45% at 50% -10%, rgba(232, 176, 75, 0.12), transparent 70%);
-  animation: wxBreathe 9s ease-in-out infinite;
-}
-@keyframes wxRays {
-  from { transform: rotate(-4deg); }
-  to { transform: rotate(4deg); }
-}
-@keyframes wxBreathe {
-  0%, 100% { opacity: 0.7; }
-  50% { opacity: 1; }
+  opacity: 0.85;
 }
 
 /* 맑음(추움): 차고 선명한 광원 + 반짝임 */
@@ -7806,24 +7762,16 @@ button:not(:disabled):active {
     radial-gradient(1.5px 1.5px at 68% 16%, rgba(200, 220, 245, 0.5), transparent 60%),
     radial-gradient(1.5px 1.5px at 84% 52%, rgba(200, 220, 245, 0.55), transparent 60%),
     radial-gradient(1.5px 1.5px at 40% 64%, rgba(200, 220, 245, 0.45), transparent 60%);
-  animation: wxTwinkle 4s ease-in-out infinite;
-}
-@keyframes wxTwinkle {
-  0%, 100% { opacity: 0.55; }
-  50% { opacity: 1; }
+  opacity: 0.8;
 }
 
-/* 흐림: 느리게 흐르는 두 겹 구름 */
+/* 흐림: 두 겹 구름 (정지) */
 .hero-cinema[data-weather="clouds"] .hero-atmo-fx-a {
   background: radial-gradient(ellipse 55% 30% at 30% 25%, rgba(155, 163, 180, 0.10), transparent 70%);
-  animation: wxDriftA 60s ease-in-out infinite alternate;
 }
 .hero-cinema[data-weather="clouds"] .hero-atmo-fx-b {
   background: radial-gradient(ellipse 55% 30% at 75% 40%, rgba(155, 163, 180, 0.08), transparent 70%);
-  animation: wxDriftB 90s ease-in-out infinite alternate;
 }
-@keyframes wxDriftA { from { transform: translateX(-6%); } to { transform: translateX(6%); } }
-@keyframes wxDriftB { from { transform: translateX(6%); } to { transform: translateX(-6%); } }
 
 /* 밤: 별 + 달무리 */
 .hero-cinema[data-weather="night"] .hero-atmo-fx-a {
@@ -7835,7 +7783,7 @@ button:not(:disabled):active {
     radial-gradient(1px 1px at 68% 8%, rgba(220, 225, 250, 0.5), transparent 60%),
     radial-gradient(1.5px 1.5px at 90% 38%, rgba(220, 225, 250, 0.55), transparent 60%),
     radial-gradient(1px 1px at 8% 48%, rgba(220, 225, 250, 0.45), transparent 60%);
-  animation: wxTwinkle 5s ease-in-out infinite;
+  opacity: 0.85;
 }
 
 /* 슬라이더 림 — 날씨 틴트 상속 */
