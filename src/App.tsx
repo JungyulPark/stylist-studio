@@ -2930,7 +2930,6 @@ function App() {
       window.history.replaceState({ page: 'subscription-dashboard' }, '', '#subscription-dashboard')
       setPageState('subscription-dashboard')
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   // 푸시 지원 여부 + 기존 구독 확인 (대시보드 진입 시)
@@ -3157,7 +3156,6 @@ function App() {
       : window.matchMedia('(display-mode: standalone)').matches ? 'pwa'
       : ref ? 'referral' : 'direct'
     trackEvent('visitor_type', { type: 'returning', days_since_last: days, source })
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   // 히어로 필름 존재 확인 — <source> 404는 video onError로 안 올라오는 경우가 있어
