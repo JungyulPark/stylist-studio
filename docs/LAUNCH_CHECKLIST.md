@@ -20,8 +20,7 @@
 
 ## C. 데이터베이스 (Supabase SQL Editor에서 1회)
 
-- ✅ 001~007 적용됨 (007 outfit_feedback, 005 shared_results 포함)
-- ⬜ **008_ops_events.sql + 009_journal_subscribers.sql 실행** ← 레포 `supabase/migrations/008_ops_events.sql` 내용 복붙 실행. 안 하면 감사 기록만 조용히 스킵되고 서비스는 정상
+- ✅ 001~010 적용됨 (2026-08-19: 008 ops_events + 009 journal_subscribers + 010 보안 하드닝을 프로덕션에 직접 적용·검증 완료 — 사용자 작업 불필요)
 
 ## D. 에셋
 
