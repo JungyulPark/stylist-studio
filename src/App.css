@@ -4823,8 +4823,12 @@
   margin-bottom: 1rem;
 }
 
-.dashboard-weather-emoji {
-  font-size: 2.2rem;
+.dashboard-weather-word {
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: #8d7442;
 }
 
 .dashboard-weather-temp {
@@ -4949,6 +4953,26 @@
   font-size: 0.8rem;
   font-weight: 600;
   color: var(--charcoal);
+}
+
+/* 룩 이름: 시나리오 라벨(작은 금색 키커) 위에 세리프 이름 */
+.dashboard-gallery-label:has(.dashboard-look-kicker) {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  font-family: var(--font-serif);
+  font-size: 1rem;
+  font-weight: 500;
+}
+
+.dashboard-look-kicker {
+  display: block;
+  font-family: var(--font-display);
+  font-size: 0.62rem;
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: #8d7442;
 }
 
 .dashboard-gallery-empty {
@@ -8186,6 +8210,16 @@ button:not(:disabled):active {
 .outfit-fb-btn.fb-neg.fb-on {
   background: rgba(26, 26, 26, 0.85);
   color: #F5F2E9;
+}
+
+.outfit-fb-btn.fb-share {
+  border-color: rgba(201, 169, 98, 0.55);
+  color: #8d7442;
+}
+
+.outfit-fb-btn.fb-share:disabled {
+  opacity: 0.6;
+  cursor: default;
 }
 
 .outfit-fb-note {

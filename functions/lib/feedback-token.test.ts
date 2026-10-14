@@ -33,3 +33,38 @@ describe('feedback token (email one-click)', () => {
     expect(await verifyFeedbackToken(t, undefined)).toBeNull()
   })
 })
+
+import { createShareToken, verifyShareToken, createOwnerSignature, verifyOwnerSignature } from './feedback-token'
+
+describe('share token (email "Share this look")', () => {
+  const S = { email: 'a@b.co', sentDate: '2026-10-14', scenarioId: 'casual' }
+
+  it('round-trips a signed share token', async () => {
+    const t = await createShareToken(S, SECRET)
+    expect(await verifyShareToken(t, SECRET)).toEqual(S)
+  })
+
+  it('is not interchangeable with a feedback token (either direction)', async () => {
+    const share = await createShareToken(S, SECRET)
+    const like = await createFeedbackToken(P, SECRET)
+    expect(await verifyFeedbackToken(share, SECRET)).toBeNull()
+    expect(await verifyShareToken(like, SECRET)).toBeNull()
+  })
+
+  it('rejects tokens signed with another secret or without a secret', async () => {
+    expect(await verifyShareToken(await createShareToken(S, 'other'), SECRET)).toBeNull()
+    expect(await verifyShareToken(await createShareToken(S, SECRET), undefined)).toBeNull()
+  })
+})
+
+describe('owner signature (stop-sharing control)', () => {
+  const ID = '6f1c2b0e-8a7d-4c5e-9f00-1234567890ab'
+
+  it('verifies only for the share it was issued for', async () => {
+    const sig = await createOwnerSignature(ID, SECRET)
+    expect(await verifyOwnerSignature(ID, sig, SECRET)).toBe(true)
+    expect(await verifyOwnerSignature('6f1c2b0e-8a7d-4c5e-9f00-ffffffffffff', sig, SECRET)).toBe(false)
+    expect(await verifyOwnerSignature(ID, '', SECRET)).toBe(false)
+    expect(await verifyOwnerSignature(ID, sig, 'other')).toBe(false)
+  })
+})

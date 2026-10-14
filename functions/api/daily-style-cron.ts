@@ -1,9 +1,19 @@
 import { getCorsHeaders, createCorsPreflightResponse } from '../lib/cors'
 import { errors } from '../lib/errors'
 import { editPhotoWithGemini, type ImageScenario } from '../lib/gemini-image'
-import { getDailyScenarios, dailyScenarioLabels } from '../lib/daily-style-scenarios'
+import { getDailyScenarios, getDailyLookNames, dailyScenarioLabels } from '../lib/daily-style-scenarios'
 import { createUnsubscribeToken } from '../lib/unsubscribe-token'
-import { createFeedbackToken } from '../lib/feedback-token'
+import { createFeedbackToken, createShareToken } from '../lib/feedback-token'
+import {
+  buildDailyEmailHtml,
+  buildSubject,
+  fallbackStyleNote,
+  neutralizeBrands,
+  sanitizeStyleNote,
+  styleNoteToPlainText,
+  type EmailLook,
+  type StyleNote,
+} from '../lib/daily-email'
 import { sendEmptyPush } from '../lib/web-push'
 import { logOpsEvent, notifyOwner } from '../lib/ops-log'
 import { getStyleRef } from '../lib/style-refs'
@@ -57,6 +67,10 @@ interface OutfitImage {
   id: string
   label: string
   url: string
+  /** 노출용 룩 이름 (예: "Porcelain Sand") — 대시보드·공유 카드도 이 값을 쓴다 */
+  name?: string
+  /** 그날 노트의 아이템 목록 — 피드백 학습 스냅샷의 근거 */
+  items?: string[]
 }
 
 function getLocalHour(timezone: string): number {
@@ -178,21 +192,61 @@ async function getWeatherCurrent(lat: number, lon: number, apiKey: string): Prom
 }
 
 interface RecommendationResult {
-  text: string
+  note: StyleNote
   source: 'gpt' | 'fallback'
   error?: string
+}
+
+/** 구독자에 대해 실제로 알고 있는 사실 — "당신을 기억한다" 문장의 유일한 근거 */
+interface PersonalContext {
+  wardrobe: string[]
+  liked: string[]
+  disliked: string[]
+}
+
+const STYLE_NOTE_SCHEMA = {
+  type: 'object',
+  additionalProperties: false,
+  required: ['subject', 'preheader', 'greeting', 'personal_note', 'dressy', 'casual', 'tip'],
+  properties: {
+    subject: { type: 'string' },
+    preheader: { type: 'string' },
+    greeting: { type: 'string' },
+    personal_note: { type: 'string' },
+    dressy: {
+      type: 'object',
+      additionalProperties: false,
+      required: ['items', 'why'],
+      properties: { items: { type: 'array', items: { type: 'string' } }, why: { type: 'string' } },
+    },
+    casual: {
+      type: 'object',
+      additionalProperties: false,
+      required: ['items', 'why'],
+      properties: { items: { type: 'array', items: { type: 'string' } }, why: { type: 'string' } },
+    },
+    tip: { type: 'string' },
+  },
 }
 
 async function generateStyleRecommendation(
   subscriber: Subscriber,
   weather: WeatherData,
   openaiApiKey: string,
-  scenarioPrompts?: { id: string; prompt: string }[]
+  scenarioPrompts: { id: string; prompt: string }[] | undefined,
+  lookNames: { dressy: string; casual: string },
+  personal: PersonalContext
 ): Promise<RecommendationResult> {
   const lang = subscriber.preferred_language || 'en'
   const langName: Record<string, string> = {
     ko: 'Korean', en: 'English', ja: 'Japanese', zh: 'Chinese', es: 'Spanish'
   }
+  const fallback = (error: string): RecommendationResult => ({
+    note: fallbackStyleNote(getFallbackRecommendation(weather, lang)),
+    source: 'fallback',
+    error,
+  })
+  if (!openaiApiKey) return fallback('OPENAI_API_KEY missing')
 
   const profileDesc = [
     subscriber.gender ? `Gender: ${subscriber.gender}` : '',
@@ -200,43 +254,47 @@ async function generateStyleRecommendation(
     subscriber.weight_kg ? `Weight: ${subscriber.weight_kg}kg` : '',
   ].filter(Boolean).join(', ')
 
-  // Build outfit descriptions from the same scenarios used for image generation
-  let outfitSection = ''
-  if (scenarioPrompts && scenarioPrompts.length > 0) {
-    const dressyPrompt = scenarioPrompts.find(s => s.id === 'dressy')?.prompt || ''
-    const casualPrompt = scenarioPrompts.find(s => s.id === 'casual')?.prompt || ''
-    outfitSection = `
-OUTFITS TO DESCRIBE (the email includes images of these EXACT outfits — your text MUST match them):
-- Dressy Look: ${dressyPrompt}
-- Casual Look: ${casualPrompt}
+  // 이미지 생성과 같은 시나리오를 묘사해야 글과 사진이 일치한다.
+  // 아키타입의 실제 하우스명은 여기서 중립어로 바꿔 문장에 새지 않게 한다.
+  const dressyPrompt = neutralizeBrands(scenarioPrompts?.find(s => s.id === 'dressy')?.prompt || '')
+  const casualPrompt = neutralizeBrands(scenarioPrompts?.find(s => s.id === 'casual')?.prompt || '')
+  const outfitSection = dressyPrompt || casualPrompt
+    ? `OUTFITS (the email shows images of these EXACT outfits — describe them faithfully, never invent different ones):
+- dressy, named "${lookNames.dressy}": ${dressyPrompt}
+- casual, named "${lookNames.casual}": ${casualPrompt}`
+    : `No outfit images today. Suggest a dressy and a casual outfit suited to the weather.`
 
-You MUST describe these two specific outfits. Do NOT invent different outfits.`
-  }
+  const hasPersonal = personal.wardrobe.length + personal.liked.length + personal.disliked.length > 0
+  const personalSection = hasPersonal
+    ? `PERSONAL CONTEXT (real data — the ONLY facts you may state about this person):
+- Garments they own: ${personal.wardrobe.join('; ') || 'none registered'}
+- Past looks they loved: ${personal.liked.join(' | ') || 'none yet'}
+- Past looks they disliked: ${personal.disliked.join(' | ') || 'none yet'}`
+    : 'PERSONAL CONTEXT: none yet.'
 
-  const prompt = `You are an expert personal stylist. Write a daily outfit recommendation email (150-200 words) entirely in ${langName[lang] || 'English'}.
+  const prompt = `You are the head stylist at ATELIER HUE, a quiet-luxury personal styling atelier. Write today's styling note for one subscriber, entirely in ${langName[lang] || 'English'}.
 
 CONTEXT:
 - City: ${subscriber.city}
-- Weather: ${weather.temp}°C (feels like ${weather.feels_like}°C), ${weather.description}, humidity ${weather.humidity}%, wind ${weather.wind_speed}m/s
+- Weather at midday: ${weather.temp}°C (feels like ${weather.feels_like}°C), ${weather.description}, humidity ${weather.humidity}%, wind ${weather.wind_speed}m/s
 - Profile: ${profileDesc || 'Not specified'}
 - Date: ${new Date().toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' })}
+
 ${outfitSection}
 
-STYLING EXPERTISE:
-- If height < 165cm: recommend high-waisted bottoms, vertical lines, pointed shoes to elongate
-- If height > 180cm: relaxed proportions and layering look elegant
-- For fuller builds: structured fabrics, monochromatic, defined waistlines
-- ALWAYS explain WHY a color/item works (e.g. "Navy complements warm skin tone")
+${personalSection}
 
-INSTRUCTIONS:
-1. Start with a friendly greeting mentioning today's weather (2-3 sentences)
-2. Present TWO outfit recommendations — "Dressy" and "Casual" — each with specific items (top, bottom, shoes, outerwear if needed, accessories) on their own lines with a dash (-) prefix, including colors and materials. For each outfit, add a brief note about WHY the colors and silhouette suit the wearer.
-3. Add a style tip of the day (1-2 sentences)
-4. End with a warm closing line
-5. Use plain text with line breaks — no markdown headers or asterisks, emoji sparingly
-6. Be warm, practical, and weather-appropriate`
+FIELDS:
+- subject: email subject, at most 55 characters. Specific to today: weave in the dressy look's name or mood and the temperature written like "${weather.temp}°". No emoji, no exclamation marks.
+- preheader: at most 90 characters, a quiet tease of the casual look or the tip.
+- greeting: 1-2 sentences — a stylist's morning note on the weather and how dressing should feel today.
+- personal_note: ONE sentence proving you remember this person — a specific owned garment used today, or a concrete preference you are leaning into or steering away from. Use ONLY facts from PERSONAL CONTEXT. If there are none, return an empty string.
+- dressy.items, casual.items: 3-5 short lines each, one garment per line with color and fabric (e.g. "Oatmeal cashmere crewneck").
+- dressy.why, casual.why: 1-2 sentences on why the colors and silhouette suit this person today. If height < 165cm favor elongating notes; fuller builds favor structure and tonal dressing.
+- tip: one memorable styling tip, at most 25 words.
 
-  // Use OpenAI gpt-5-mini via Responses API (reasoning model, pay-as-you-go)
+VOICE: an editor at a luxury fashion magazine — precise, sensory, assured, never gushing. No emoji, no markdown. Never name any fashion brand, designer or label. Never mention AI.`
+
   try {
     const res = await fetch('https://api.openai.com/v1/responses', {
       method: 'POST',
@@ -249,13 +307,14 @@ INSTRUCTIONS:
         input: [{ role: 'user', content: prompt }],
         reasoning: { effort: 'low' },
         max_output_tokens: 2048,
+        text: { format: { type: 'json_schema', name: 'style_note', strict: true, schema: STYLE_NOTE_SCHEMA } },
       }),
     })
 
     if (!res.ok) {
       const errText = await res.text()
       console.error('[cron] OpenAI text error:', errText)
-      return { text: getFallbackRecommendation(weather, lang), source: 'fallback', error: `OpenAI ${res.status}: ${errText.substring(0, 200)}` }
+      return fallback(`OpenAI ${res.status}: ${errText.substring(0, 200)}`)
     }
 
     const data = await res.json() as {
@@ -269,14 +328,23 @@ INSTRUCTIONS:
       ?.find(o => o.type === 'message')
       ?.content?.find(c => c.type === 'output_text')
       ?.text
-    if (!content) {
-      return { text: getFallbackRecommendation(weather, lang), source: 'fallback', error: 'Empty OpenAI text response' }
+    if (!content) return fallback('Empty OpenAI text response')
+
+    let parsed: unknown
+    try {
+      parsed = JSON.parse(content)
+    } catch {
+      return fallback('Unparseable style note JSON')
     }
-    return { text: content, source: 'gpt' }
+    const note = sanitizeStyleNote(parsed)
+    if (!note) return fallback('Style note missing content')
+    // 근거 없는 "기억"은 신뢰를 깎는다 — 데이터가 없으면 문장 자체를 버린다
+    if (!hasPersonal) note.personal_note = ''
+    return { note, source: 'gpt' }
   } catch (e) {
     const errMsg = e instanceof Error ? e.message : String(e)
     console.error('[cron] OpenAI text error:', e)
-    return { text: getFallbackRecommendation(weather, lang), source: 'fallback', error: errMsg }
+    return fallback(errMsg)
   }
 }
 
@@ -418,159 +486,6 @@ async function generateOutfitImages(
   }
 
   return { images: outfitImages, photoSizeBytes, scenarioErrors }
-}
-
-// Build email HTML with outfit images
-async function buildEmailHtml(
-  recommendation: string,
-  weather: WeatherData,
-  subscriber: Subscriber,
-  outfitImages: OutfitImage[],
-  unsubLink: string,
-  cronSecret: string | undefined,
-  sentDate: string
-): Promise<string> {
-  const weatherEmoji: Record<string, string> = {
-    'Clear': '☀️', 'Clouds': '☁️', 'Rain': '🌧️', 'Drizzle': '🌦️',
-    'Thunderstorm': '⛈️', 'Snow': '❄️', 'Mist': '🌫️', 'Fog': '🌫️',
-  }
-  const emoji = weatherEmoji[weather.condition] || '🌤️'
-
-  const unsubscribeText: Record<string, string> = {
-    ko: '구독 해지',
-    en: 'Unsubscribe',
-    ja: '購読解除',
-    zh: '取消订阅',
-    es: 'Cancelar suscripción',
-  }
-
-  const outfitTitle: Record<string, string> = {
-    ko: '오늘의 스타일 이미지',
-    en: "Today's Style Looks",
-    ja: '今日のスタイルイメージ',
-    zh: '今日穿搭图',
-    es: 'Looks de Hoy',
-  }
-
-  const lang = subscriber.preferred_language || 'en'
-
-  // Build outfit images HTML section — use table layout for email client compatibility
-  let imagesHtml = ''
-  if (outfitImages.length > 0) {
-    const feedbackLabels: Record<string, [string, string]> = {
-      ko: ['좋아요', '별로예요'], en: ['Love it', 'Not for me'],
-    }
-    const [likeLabel, dislikeLabel] = feedbackLabels[lang] || feedbackLabels.en
-
-    const cells = await Promise.all(outfitImages.map(async img => {
-      const likeUrl = `https://kstylist.cc/api/outfit-feedback?t=${encodeURIComponent(
-        await createFeedbackToken({ email: subscriber.email, sentDate, scenarioId: img.id, verdict: 'like' }, cronSecret)
-      )}`
-      const dislikeUrl = `https://kstylist.cc/api/outfit-feedback?t=${encodeURIComponent(
-        await createFeedbackToken({ email: subscriber.email, sentDate, scenarioId: img.id, verdict: 'dislike' }, cronSecret)
-      )}`
-      return `
-          <td width="${Math.floor(100 / outfitImages.length)}%" style="text-align:center;padding:0 6px;vertical-align:top;">
-            <img src="${img.url}" alt="${img.label}" style="width:100%;max-width:240px;border-radius:12px;border:1px solid rgba(201,169,98,0.3);margin-bottom:8px;display:block;margin-left:auto;margin-right:auto;" />
-            <p style="color:#c9a962;font-size:12px;font-weight:600;margin:0 0 8px;text-align:center;">${img.label}</p>
-            <a href="${likeUrl}" style="display:inline-block;color:#c9a962;font-size:11px;text-decoration:none;border:1px solid rgba(201,169,98,0.45);border-radius:999px;padding:5px 11px;margin:0 2px;">${likeLabel}</a>
-            <a href="${dislikeUrl}" style="display:inline-block;color:#8a8aa0;font-size:11px;text-decoration:none;border:1px solid rgba(138,138,160,0.4);border-radius:999px;padding:5px 11px;margin:0 2px;">${dislikeLabel}</a>
-          </td>
-    `}))
-    const imageCells = cells.join('')
-
-    imagesHtml = `
-    <!-- Outfit Images -->
-    <div style="margin-bottom:24px;">
-      <h2 style="color:#c9a962;font-size:14px;letter-spacing:2px;text-align:center;margin-bottom:6px;">${outfitTitle[lang] || outfitTitle.en}</h2>
-      <p style="color:#8a8aa0;font-size:11px;text-align:center;margin:0 0 16px;">${lang === 'ko' ? '한 번 눌러주시면 내일 추천이 더 정확해져요' : 'One tap makes tomorrow\'s look more yours'}</p>
-      <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin:0 auto;">
-        <tr>
-          ${imageCells}
-        </tr>
-      </table>
-    </div>
-    `
-  }
-
-  // Table-based email HTML for maximum email client compatibility (Naver, Gmail, Outlook)
-  return `<!DOCTYPE html>
-<html>
-<head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"></head>
-<body style="margin:0;padding:0;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background-color:#1a1a2e;">
-  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background-color:#1a1a2e;">
-    <tr>
-      <td align="center" style="padding:32px 16px;">
-        <table role="presentation" width="560" cellpadding="0" cellspacing="0" style="max-width:560px;width:100%;background-color:#1a1a2e;">
-          <!-- Header -->
-          <tr>
-            <td align="center" style="padding:0 0 28px;">
-              <h1 style="color:#c9a962;font-size:14px;letter-spacing:3px;margin:0;font-family:Georgia,serif;">ATELIER HUE</h1>
-              <p style="color:#888888;font-size:12px;margin:4px 0 0;">What to Wear Today</p>
-            </td>
-          </tr>
-          <!-- Weather -->
-          <tr>
-            <td align="center" style="padding:0 0 24px;">
-              <table role="presentation" cellpadding="0" cellspacing="0" style="background-color:#252540;border:1px solid #3a3a5c;border-radius:16px;">
-                <tr>
-                  <td style="padding:14px 28px;text-align:center;">
-                    <span style="font-size:28px;">${emoji}</span>
-                    <span style="color:#ffffff;font-size:24px;font-weight:700;margin:0 8px;">${weather.temp}&deg;C</span>
-                    <span style="color:#aaaaaa;font-size:14px;">${subscriber.city}</span>
-                  </td>
-                </tr>
-              </table>
-            </td>
-          </tr>
-          ${imagesHtml ? `<!-- Outfit Images -->
-          <tr>
-            <td style="padding:0 0 24px;">
-              ${imagesHtml}
-            </td>
-          </tr>` : ''}
-          <!-- Recommendation -->
-          <tr>
-            <td style="padding:0 0 24px;">
-              <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background-color:#252540;border:1px solid #3a3a5c;border-radius:16px;">
-                <tr>
-                  <td style="padding:24px;color:#e0e0e0;font-size:15px;line-height:1.7;">
-${recommendation.replace(/\n/g, '<br/>')}
-                  </td>
-                </tr>
-              </table>
-            </td>
-          </tr>
-          <!-- CTA -->
-          <tr>
-            <td align="center" style="padding:0 0 28px;">
-              <a href="https://kstylist.cc" style="display:inline-block;background-color:#c9a962;color:#1a1a2e;text-decoration:none;font-weight:700;font-size:14px;padding:12px 32px;border-radius:12px;">
-                kstylist.cc
-              </a>
-            </td>
-          </tr>
-          <!-- Footer -->
-          <tr>
-            <td align="center" style="border-top:1px solid #3a3a5c;padding-top:20px;">
-              <p style="color:#888888;font-size:11px;margin:0;">
-                <a href="${unsubLink}" style="color:#888888;text-decoration:underline;">${unsubscribeText[lang] || unsubscribeText.en}</a>
-              </p>
-            </td>
-          </tr>
-        </table>
-      </td>
-    </tr>
-  </table>
-</body>
-</html>`
-}
-
-const emailSubjects: Record<string, string> = {
-  ko: '오늘의 스타일 추천',
-  en: 'Your Daily Style Pick',
-  ja: '今日のスタイル提案',
-  zh: '今日穿搭推荐',
-  es: 'Tu Estilo del Día',
 }
 
 // =============================================================
@@ -726,6 +641,8 @@ export const onRequestGet: PagesFunction<Env> = async (context) => {
           ? getDailyScenarios(weather, sub.gender)
           : undefined
 
+        const personal: PersonalContext = { wardrobe: [], liked: [], disliked: [] }
+
         // 내 옷장: 구독자가 실제 보유한 옷이 등록돼 있으면 시나리오에 주입 —
         // 텍스트와 이미지가 같은 시나리오를 쓰므로 둘 다 자동 반영된다.
         // (경쟁 앱 최대 불만: "내가 없는 옷을 추천한다")
@@ -743,7 +660,8 @@ export const onRequestGet: PagesFunction<Env> = async (context) => {
             if (wRes.ok) {
               const items = await wRes.json() as Array<{ description: string }>
               if (items.length > 0) {
-                const owned = items.map(i => i.description).join('; ')
+                personal.wardrobe = items.map(i => i.description)
+                const owned = personal.wardrobe.join('; ')
                 const wardrobeDirective = `\n\nOWNED WARDROBE (IMPORTANT): The wearer owns these garments: ${owned}. Build the outfit PRIMARILY from these owned pieces whenever they suit today's weather and the look — you may add at most one or two complementary items they don't own, and clearly favor owned items for the main pieces.`
                 for (const s of scenarios) {
                   s.prompt += wardrobeDirective
@@ -771,8 +689,10 @@ export const onRequestGet: PagesFunction<Env> = async (context) => {
             )
             if (fbRes.ok) {
               const rows = await fbRes.json() as Array<{ verdict: string; outfit_desc: string | null }>
-              const liked = rows.filter(r => r.verdict === 'like' && r.outfit_desc).slice(0, 4).map(r => r.outfit_desc)
-              const disliked = rows.filter(r => r.verdict === 'dislike' && r.outfit_desc).slice(0, 4).map(r => r.outfit_desc)
+              const liked = rows.filter(r => r.verdict === 'like' && r.outfit_desc).slice(0, 4).map(r => r.outfit_desc as string)
+              const disliked = rows.filter(r => r.verdict === 'dislike' && r.outfit_desc).slice(0, 4).map(r => r.outfit_desc as string)
+              personal.liked = liked
+              personal.disliked = disliked
               if (liked.length || disliked.length) {
                 let pref = '\n\nLEARNED PREFERENCES (from this subscriber\'s own feedback):'
                 if (liked.length) pref += `\n- They LIKED these past outfits — lean toward similar silhouettes, colors, and formality: ${liked.join(' | ')}`
@@ -788,9 +708,12 @@ export const onRequestGet: PagesFunction<Env> = async (context) => {
           }
         }
 
-        // Generate text recommendation with OpenAI gpt-5-mini
-        const recResult = await generateStyleRecommendation(sub, weather, context.env.OPENAI_API_KEY || '', scenarios)
-        const recommendation = recResult.text
+        // 스타일리스트 노트 (gpt-5-mini, 구조화 JSON) — 룩 이름은 팔레트에서 결정적으로
+        const lookNames = getDailyLookNames(sub.gender || '')
+        const recResult = await generateStyleRecommendation(
+          sub, weather, context.env.OPENAI_API_KEY || '', scenarios, lookNames, personal
+        )
+        const note = recResult.note
 
         // Generate outfit images for profile-complete subscribers
         let outfitImages: OutfitImage[] = []
@@ -844,6 +767,19 @@ export const onRequestGet: PagesFunction<Env> = async (context) => {
           }
         }
 
+        // 룩 이름·아이템을 이미지 기록에 붙인다 — 대시보드, 공유 카드, 학습 스냅샷이 모두 이 값을 쓴다
+        const lang = sub.preferred_language || 'en'
+        outfitImages = outfitImages.map(img => ({
+          ...img,
+          name: img.id === 'dressy' ? lookNames.dressy : img.id === 'casual' ? lookNames.casual : img.label,
+          items: img.id === 'dressy' ? note.dressy.items : img.id === 'casual' ? note.casual.items : [],
+        }))
+        const plainLooks = (outfitImages.length > 0
+          ? outfitImages
+          : (['dressy', 'casual'] as const).map(id => ({ id, label: dailyScenarioLabels[id][lang] || id, name: lookNames[id] }))
+        ).map(img => ({ id: img.id, label: img.label, name: img.name || img.label }))
+        const recommendation = styleNoteToPlainText(note, plainLooks)
+
         // Send email
         let emailSent = false
         let emailError: string | null = null
@@ -853,13 +789,59 @@ export const onRequestGet: PagesFunction<Env> = async (context) => {
             const unsubToken = await createUnsubscribeToken(sub.id, sub.email, context.env.CRON_SECRET)
             const unsubUrl = `https://kstylist.cc/api/unsubscribe?token=${encodeURIComponent(unsubToken)}`
 
-            const html = await buildEmailHtml(recommendation, weather, sub, outfitImages, unsubUrl, context.env.CRON_SECRET, today)
-            const subject = emailSubjects[sub.preferred_language] || emailSubjects.en
+            // 호수(No.) = 지금까지 받은 아침 수 + 1 — "쌓이는" 감각
+            let issueNo = 1
+            try {
+              const cntRes = await fetch(
+                `${context.env.SUPABASE_URL}/rest/v1/daily_recommendations?subscriber_id=eq.${sub.id}&select=id`,
+                {
+                  method: 'HEAD',
+                  headers: {
+                    'apikey': context.env.SUPABASE_SERVICE_KEY,
+                    'Authorization': `Bearer ${context.env.SUPABASE_SERVICE_KEY}`,
+                    'Prefer': 'count=exact',
+                  },
+                }
+              )
+              const total = parseInt(cntRes.headers.get('content-range')?.split('/')[1] || '0', 10)
+              if (Number.isFinite(total)) issueNo = total + 1
+            } catch { /* 호수 없이도 발송 */ }
+
+            const secret = context.env.CRON_SECRET
+            const fbLang = encodeURIComponent(lang)
+            const looks: EmailLook[] = await Promise.all(outfitImages.map(async img => ({
+              id: img.id,
+              label: img.label,
+              name: img.name || img.label,
+              url: img.url,
+              likeUrl: `https://kstylist.cc/api/outfit-feedback?l=${fbLang}&t=${encodeURIComponent(
+                await createFeedbackToken({ email: sub.email, sentDate: today, scenarioId: img.id, verdict: 'like' }, secret)
+              )}`,
+              dislikeUrl: `https://kstylist.cc/api/outfit-feedback?l=${fbLang}&t=${encodeURIComponent(
+                await createFeedbackToken({ email: sub.email, sentDate: today, scenarioId: img.id, verdict: 'dislike' }, secret)
+              )}`,
+              shareUrl: `https://kstylist.cc/api/share-look?t=${encodeURIComponent(
+                await createShareToken({ email: sub.email, sentDate: today, scenarioId: img.id }, secret)
+              )}`,
+            })))
+
+            const html = buildDailyEmailHtml({
+              lang,
+              city: sub.city,
+              timezone: sub.timezone,
+              temp: weather.temp,
+              condition: weather.condition,
+              issueNo,
+              note,
+              looks,
+              unsubUrl,
+            })
+            const subject = buildSubject(note, lang, sub.city, weather.temp, lookNames.dressy)
 
             await resend.emails.send({
               from: 'ATELIER HUE <noreply@kstylist.cc>',
               to: sub.email,
-              subject: `${subject} — ${sub.city} ${weather.temp}°C`,
+              subject,
               html,
               headers: {
                 'List-Unsubscribe': `<${unsubUrl}>`,
@@ -901,28 +883,28 @@ export const onRequestGet: PagesFunction<Env> = async (context) => {
                   from: 'ATELIER HUE <noreply@kstylist.cc>',
                   to: sub.email,
                   subject: isKo ? '무료 체험이 3일 남았어요' : 'Three days left in your free trial',
-                  html: `<!DOCTYPE html><html><head><meta charset="utf-8"></head>
-<body style="margin:0;background:#1a1a2e;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;">
-  <table width="100%" cellpadding="0" cellspacing="0" style="background:#1a1a2e;padding:40px 16px;"><tr><td align="center">
+                  html: `<!DOCTYPE html><html><head><meta charset="utf-8"><meta name="color-scheme" content="dark"><meta name="supported-color-schemes" content="dark"></head>
+<body style="margin:0;background:#101018;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;">
+  <table width="100%" cellpadding="0" cellspacing="0" style="background:#101018;padding:40px 16px;"><tr><td align="center">
     <table width="520" cellpadding="0" cellspacing="0" style="max-width:520px;width:100%;">
       <tr><td align="center" style="padding-bottom:24px;">
-        <div style="color:#c9a962;font-size:14px;letter-spacing:3px;font-family:Georgia,serif;">ATELIER HUE</div>
+        <div style="color:#c9a962;font-size:14px;letter-spacing:7px;font-family:Georgia,serif;">ATELIER HUE</div>
       </td></tr>
-      <tr><td style="color:#ffffff;font-size:20px;font-weight:700;padding-bottom:14px;text-align:center;">
+      <tr><td style="color:#F5F2E9;font-size:21px;font-weight:500;font-family:Georgia,'Times New Roman',serif;padding-bottom:14px;text-align:center;">
         ${isKo ? '무료 체험이 3일 남았습니다' : 'Three days left in your free trial'}
       </td></tr>
-      <tr><td style="color:#b8b8c8;font-size:14px;line-height:1.75;padding-bottom:22px;text-align:center;">
+      <tr><td style="color:#A9A497;font-size:14px;line-height:1.75;padding-bottom:22px;text-align:center;">
         ${isKo
           ? `지금까지 ${sub.city} 날씨에 맞춘 코디 ${looksSoFar}벌을 보내드렸어요. 4일째부터 $6.99/월로 이어집니다 — 원하지 않으시면 언제든 해지할 수 있고, 지금 해지해도 체험 기간은 그대로 유지됩니다.`
           : `We've sent you ${looksSoFar} looks matched to ${sub.city}'s weather so far. From day four it continues at $6.99/month — cancel any time, and cancelling now still keeps your trial running to the end.`}
       </td></tr>
       <tr><td align="center" style="padding-bottom:18px;">
-        <a href="https://kstylist.cc/#subscription-dashboard" style="display:inline-block;background:#c9a962;color:#1a1a2e;text-decoration:none;font-weight:700;font-size:14px;padding:13px 30px;border-radius:12px;">
+        <a href="https://kstylist.cc/#subscription-dashboard" style="display:inline-block;border:1px solid #C9A962;color:#C9A962;text-decoration:none;font-size:12px;letter-spacing:3px;text-transform:uppercase;padding:14px 30px;">
           ${isKo ? '내 스타일 보기' : 'See my looks'}
         </a>
       </td></tr>
-      <tr><td align="center" style="border-top:1px solid #3a3a5c;padding-top:18px;">
-        <a href="${noticeUnsubUrl}" style="color:#888888;font-size:11px;">${isKo ? '구독 해지' : 'Unsubscribe'}</a>
+      <tr><td align="center" style="border-top:1px solid rgba(201,169,98,0.35);padding-top:18px;">
+        <a href="${noticeUnsubUrl}" style="color:#77736A;font-size:11px;">${isKo ? '구독 해지' : 'Unsubscribe'}</a>
       </td></tr>
     </table>
   </td></tr></table>
@@ -990,7 +972,10 @@ export const onRequestGet: PagesFunction<Env> = async (context) => {
               weather_condition: weather.condition,
               humidity: weather.humidity,
               recommendation_html: recommendation,
-              outfit_description: recommendation.substring(0, 500),
+              outfit_description: [
+                `${lookNames.dressy}: ${note.dressy.items.join(', ')}`,
+                `${lookNames.casual}: ${note.casual.items.join(', ')}`,
+              ].join(' | ').substring(0, 500),
               outfit_images: outfitImages,
               image_generation_status: imageStatus,
               email_sent: emailSent,
