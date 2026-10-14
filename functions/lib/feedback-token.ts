@@ -40,6 +40,60 @@ export async function createFeedbackToken(p: FeedbackPayload, secret: string | u
   return `${payload}.${await sign(payload, secret)}`
 }
 
+async function verifySignature(payload: string, given: string, secret: string): Promise<boolean> {
+  const expected = await sign(payload, secret)
+  if (given.length !== expected.length) return false
+  let diff = 0
+  for (let i = 0; i < expected.length; i++) diff |= expected.charCodeAt(i) ^ given.charCodeAt(i)
+  return diff === 0
+}
+
+/**
+ * 공유 토큰 — 이메일의 "공유하기" 원클릭 링크.
+ * payload 첫 칸을 'share'로 고정해 피드백 토큰과 서로 대체될 수 없게 한다.
+ */
+export interface SharePayload {
+  email: string
+  sentDate: string
+  scenarioId: string
+}
+
+export async function createShareToken(p: SharePayload, secret: string | undefined): Promise<string> {
+  const payload = b64url(`share|${p.email}|${p.sentDate}|${p.scenarioId}`)
+  if (!secret) return payload
+  return `${payload}.${await sign(payload, secret)}`
+}
+
+export async function verifyShareToken(token: string, secret: string | undefined): Promise<SharePayload | null> {
+  const dot = token.indexOf('.')
+  if (dot === -1 || !secret) return null
+  const payload = token.slice(0, dot)
+  if (!await verifySignature(payload, token.slice(dot + 1), secret)) return null
+
+  let decoded: string
+  try {
+    decoded = b64urlDecode(payload)
+  } catch {
+    return null
+  }
+  const parts = decoded.split('|')
+  if (parts.length !== 4 || parts[0] !== 'share') return null
+  const [, email, sentDate, scenarioId] = parts
+  if (!email || !/^\d{4}-\d{2}-\d{2}$/.test(sentDate) || !scenarioId) return null
+  return { email, sentDate, scenarioId }
+}
+
+/** 공유 페이지 소유자 서명 — 이 값을 가진 사람만 카드 저장·공유 중지 UI를 본다 */
+export async function createOwnerSignature(shareId: string, secret: string | undefined): Promise<string> {
+  if (!secret) return ''
+  return sign(`owner|${shareId}`, secret)
+}
+
+export async function verifyOwnerSignature(shareId: string, sig: string, secret: string | undefined): Promise<boolean> {
+  if (!secret || !sig) return false
+  return verifySignature(`owner|${shareId}`, sig, secret)
+}
+
 export async function verifyFeedbackToken(
   token: string,
   secret: string | undefined

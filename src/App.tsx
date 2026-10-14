@@ -2737,7 +2737,7 @@ function App() {
     }
   }, [weatherPreview?.city])
   const [subscriptionCityError, setSubscriptionCityError] = useState('')
-  const [dailyStyle, setDailyStyle] = useState<{ recommendation: string; weather: { temp: number; feels_like: number; humidity: number; condition: string; description: string; icon: string; wind_speed: number }; city: string; date: string; outfit_images?: Array<{ id: string; label: string; url: string }> } | null>(null)
+  const [dailyStyle, setDailyStyle] = useState<{ recommendation: string; weather: { temp: number; feels_like: number; humidity: number; condition: string; description: string; icon: string; wind_speed: number }; city: string; date: string; outfit_images?: Array<{ id: string; label: string; url: string; name?: string; items?: string[] }> } | null>(null)
   const [isDailyStyleLoading, setIsDailyStyleLoading] = useState(false)
   const [dailyStyleError, setDailyStyleError] = useState('')
 
@@ -3105,6 +3105,27 @@ function App() {
       })
     } catch (e) {
       console.error('Outfit feedback failed:', e)
+    }
+  }
+
+  // 오늘의 룩 공유 — 공유 페이지를 만들고 소유자 화면으로 이동 (카드 저장·공유·중지는 그 페이지에서)
+  const [sharingLookId, setSharingLookId] = useState<string | null>(null)
+  const handleShareLook = async (scenarioId: string) => {
+    if (!dailyStyle?.date || sharingLookId) return
+    setSharingLookId(scenarioId)
+    trackEvent('look_share_start', { scenario: scenarioId, source: 'dashboard' })
+    try {
+      const res = await fetch('/api/share-look', {
+        method: 'POST',
+        headers: authHeaders(),
+        body: JSON.stringify({ sent_date: dailyStyle.date, scenario_id: scenarioId }),
+      })
+      if (!res.ok) throw new Error(`share ${res.status}`)
+      const data = await res.json() as { owner_url: string }
+      window.location.href = data.owner_url
+    } catch (e) {
+      console.error('Share look failed:', e)
+      setSharingLookId(null)
     }
   }
 
@@ -5672,10 +5693,18 @@ ${styleImgs.length > 1 ? `<div class="section"><h2>${styleSection}</h2><div clas
 
   // Subscription Dashboard Page
   if (page === 'subscription-dashboard') {
-    const weatherEmoji: Record<string, string> = {
-      'Clear': '☀️', 'Clouds': '☁️', 'Rain': '🌧️', 'Drizzle': '🌦️',
-      'Thunderstorm': '⛈️', 'Snow': '❄️', 'Mist': '🌫️', 'Fog': '🌫️',
+    const weatherWord: Record<string, Record<string, string>> = {
+      Clear: { ko: '맑음', en: 'Clear', ja: '晴れ', zh: '晴', es: 'Despejado' },
+      Clouds: { ko: '흐림', en: 'Cloudy', ja: 'くもり', zh: '多云', es: 'Nublado' },
+      Rain: { ko: '비', en: 'Rain', ja: '雨', zh: '雨', es: 'Lluvia' },
+      Drizzle: { ko: '이슬비', en: 'Drizzle', ja: '霧雨', zh: '小雨', es: 'Llovizna' },
+      Thunderstorm: { ko: '뇌우', en: 'Storms', ja: '雷雨', zh: '雷雨', es: 'Tormenta' },
+      Snow: { ko: '눈', en: 'Snow', ja: '雪', zh: '雪', es: 'Nieve' },
+      Mist: { ko: '안개', en: 'Mist', ja: '霧', zh: '雾', es: 'Niebla' },
+      Fog: { ko: '안개', en: 'Fog', ja: '霧', zh: '雾', es: 'Niebla' },
     }
+    const shareLabel: Record<string, string> = { ko: '공유', en: 'Share', ja: 'シェア', zh: '分享', es: 'Compartir' }
+    const sharingLabel: Record<string, string> = { ko: '준비 중...', en: 'Preparing...', ja: '準備中...', zh: '准备中...', es: 'Preparando...' }
 
     const outfitImages = dailyStyle?.outfit_images || []
 
@@ -5872,8 +5901,8 @@ ${styleImgs.length > 1 ? `<div class="section"><h2>${styleSection}</h2><div clas
             <>
               <div className="dashboard-weather-card">
                 <div className="dashboard-weather-main">
-                  <span className="dashboard-weather-emoji">
-                    {weatherEmoji[dailyStyle.weather.condition] || '🌤️'}
+                  <span className="dashboard-weather-word">
+                    {weatherWord[dailyStyle.weather.condition]?.[lang] || dailyStyle.weather.condition}
                   </span>
                   <span className="dashboard-weather-temp">{dailyStyle.weather.temp}°C</span>
                   <span className="dashboard-weather-city">{dailyStyle.city}</span>
@@ -5896,7 +5925,9 @@ ${styleImgs.length > 1 ? `<div class="section"><h2>${styleSection}</h2><div clas
                           <img src={img.url} alt={img.label} />
                         </div>
                         <div className="dashboard-gallery-card-footer">
-                          <span className="dashboard-gallery-label">{img.label}</span>
+                          <span className="dashboard-gallery-label">
+                            {img.name ? <><span className="dashboard-look-kicker">{img.label}</span>{img.name}</> : img.label}
+                          </span>
                           {user && (
                             <button
                               className={`favorite-btn ${favoriteUrls.has(img.url) ? 'active' : ''}`}
@@ -5920,6 +5951,15 @@ ${styleImgs.length > 1 ? `<div class="section"><h2>${styleSection}</h2><div clas
                           >
                             {lang === 'ko' ? '별로예요' : 'Not for me'}
                           </button>
+                          {user && (
+                            <button
+                              className="outfit-fb-btn fb-share"
+                              disabled={sharingLookId !== null}
+                              onClick={() => handleShareLook(img.id)}
+                            >
+                              {sharingLookId === img.id ? (sharingLabel[lang] || sharingLabel.en) : (shareLabel[lang] || shareLabel.en)}
+                            </button>
+                          )}
                         </div>
                         {outfitFeedback[img.id] && (
                           <p className="outfit-fb-note">

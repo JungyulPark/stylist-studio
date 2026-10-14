@@ -440,6 +440,43 @@ export function getDailyScenarios(weather: WeatherInfo, gender: string): ImageSc
   ]
 }
 
+// ─── Look names (subscriber-facing) ──────────────────────────────
+// 팔레트 tone은 프롬프트용 내부 키라 일부가 그대로 노출하기 어색하거나
+// 브랜드 라인명과 겹친다 — 노출용 이름은 여기서만 정한다.
+const TONE_DISPLAY_OVERRIDES: Record<string, string> = {
+  'royal matte': 'Matte Ink',
+  'anglomania': 'English Tweed',
+  'midnight nav': 'Midnight Navy',
+  'matte wool': 'Boiled Wool',
+  'graphite modern': 'Graphite',
+  'tuscan sun': 'Tuscan Olive',
+  'ink mono': 'Ink Monochrome',
+  'studio cool': 'Studio Stone',
+  'silk plush': 'Champagne Silk',
+  'garden fresh': 'Garden Sage',
+  'parisian': 'Parisian Navy',
+  'mint pop': 'Pale Sage',
+  'mauve romantic': 'Soft Mauve',
+  'frost nordic': 'Nordic Frost',
+  'berry rich': 'Winter Berry',
+  'coastal': 'Coastal Sand',
+  'ethereal': 'Cloud Lilac',
+  'autumn leaf': 'Autumn Rust',
+}
+
+export function toneDisplayName(tone: string): string {
+  return TONE_DISPLAY_OVERRIDES[tone]
+    || tone.replace(/\b\w/g, c => c.toUpperCase())
+}
+
+/** 오늘 두 룩의 이름 — getDailyScenarios와 같은 날짜 인덱스를 쓴다 */
+export function getDailyLookNames(gender: string): { dressy: string; casual: string } {
+  const palettes = gender === 'female' ? femaleColorPalettes : maleColorPalettes
+  const dressy = palettes[getPaletteIndex() % palettes.length].tone
+  const casual = palettes[((getPaletteIndex() + 7) % 21) % palettes.length].tone
+  return { dressy: toneDisplayName(dressy), casual: toneDisplayName(casual) }
+}
+
 /** Label translations for daily scenarios */
 export const dailyScenarioLabels: Record<string, Record<string, string>> = {
   'dressy': { ko: '격식 스타일', en: 'Dressy', ja: 'ドレッシー', zh: '正式穿搭', es: 'Elegante' },
