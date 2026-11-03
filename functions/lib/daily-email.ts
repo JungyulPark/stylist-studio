@@ -354,3 +354,15 @@ export function buildDailyEmailHtml(input: DailyEmailInput): string {
 </body>
 </html>`
 }
+
+// 주간 에디션 등 다른 메일이 같은 지면 규칙을 쓰도록
+export {
+  COLORS as EMAIL_COLORS,
+  SERIF as EMAIL_SERIF,
+  SANS as EMAIL_SANS,
+  LOCALES as EMAIL_LOCALES,
+  KEEP as EMAIL_KEEP,
+  track as emailTrack,
+  italic as emailItalic,
+  rule as emailRule,
+}

@@ -18,6 +18,7 @@ import { sendEmptyPush } from '../lib/web-push'
 import { logOpsEvent, notifyOwner } from '../lib/ops-log'
 import { getStyleRef } from '../lib/style-refs'
 import { isEntitledToDaily } from '../lib/subscription-access'
+import { runSundayEditions } from '../lib/sunday-edition'
 import { Resend } from 'resend'
 
 interface Env {
@@ -571,6 +572,17 @@ export const onRequestGet: PagesFunction<Env> = async (context) => {
     const rawCount = rawSubscribers.length
     console.log(`[cron] ${rawCount} raw subscribers → ${subscribers.length} after dedup`)
 
+    const resend = context.env.RESEND_API_KEY ? new Resend(context.env.RESEND_API_KEY) : null
+
+    // The Sunday Edition — 현지 일요일 10시 구독자에게 주간 리캡 (매시 실행에 얹혀 돈다).
+    // ?edition_to=<email> 로 한 사람에게 즉시 테스트 발송.
+    const editions = await runSundayEditions(
+      context.env,
+      subscribers.filter(s => s.profile_complete),
+      resend,
+      { forceEmail: url.searchParams.get('edition_to') }
+    )
+
     // 2. Filter subscribers at 7AM local time (skip if force=true)
     let eligibleSubscribers: Subscriber[]
     if (forceTest) {
@@ -590,12 +602,11 @@ export const onRequestGet: PagesFunction<Env> = async (context) => {
           message: 'No subscribers at 7AM right now',
           total_active: subscribers.length,
           sent: 0,
+          editions,
         }),
         { status: 200, headers: { 'Content-Type': 'application/json', ...corsHeaders } }
       )
     }
-
-    const resend = context.env.RESEND_API_KEY ? new Resend(context.env.RESEND_API_KEY) : null
 
     // 3. Process each eligible subscriber
     for (const sub of eligibleSubscribers) {
@@ -1018,6 +1029,7 @@ export const onRequestGet: PagesFunction<Env> = async (context) => {
       eligible_6am: eligibleSubscribers.length,
       sent: sentCount,
       images_generated: results.reduce((sum, r) => sum + (r.images || 0), 0),
+      editions_sent: editions.filter(e => e.status === 'sent').length,
     }
 
     // 크론 요약은 영구 저장 — 로그 증발 방지 (유료 제품의 발송 이력)
