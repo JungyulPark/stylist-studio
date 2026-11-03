@@ -147,3 +147,18 @@ worn as fashion.
 ```
 
 **운영 루프**: 새 레퍼런스(인스타 캡처 등)가 생기면 이 파일에 "브랜드 계열 + 증류 지시문" 형식으로 추가 → 검증된 것부터 `daily-style-scenarios.ts`의 아키타입/팔레트로 편입. 이것이 "스타일 교육"의 지속 경로입니다 (모델 파인튜닝은 gpt-image·Gemini 모두 불가).
+
+## 브랜드 모델 (2026-11 확정)
+
+랜딩 히어로·쇼케이스·서비스 카드는 아래 두 사람만 쓴다. 새 컷이 필요하면 이 레퍼런스를
+`nano_banana_2_1`의 `image_references`로 넣고 "Keep the exact same woman/man from the
+reference image: identical face, hair, skin tone and body proportions."로 시작한다.
+배경은 항상 warm cream seamless studio, soft north-window light, 4:5.
+
+| 역할 | Higgsfield job id (레퍼런스) |
+|---|---|
+| 여자 모델 (후보 3번) | `4ec5f9ce-ec18-4b36-be82-629f911ae6c8` |
+| 남자 모델 (후보 4번) | `765438ec-8f43-44d0-b0ac-072fe04d2055` |
+
+배치된 컷의 원본 주소와 크롭 규격은 `scripts/fetch-assets.mjs`가 기준이다.
+히어로 before는 after에서 옷만 바꾼 편집이라, after를 바꾸면 before도 다시 만들어야 슬라이더가 맞는다.
