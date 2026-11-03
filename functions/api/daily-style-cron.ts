@@ -17,6 +17,7 @@ import {
 import { sendEmptyPush } from '../lib/web-push'
 import { logOpsEvent, notifyOwner } from '../lib/ops-log'
 import { getStyleRef } from '../lib/style-refs'
+import { isEntitledToDaily } from '../lib/subscription-access'
 import { Resend } from 'resend'
 
 interface Env {
@@ -47,6 +48,7 @@ interface Subscriber {
   longitude: number | null
   preferred_language: string
   style_preferences: Record<string, unknown>
+  status: string | null
   canceled_at: string | null
   current_period_end: string | null
   trial_ends_at: string | null
@@ -550,13 +552,7 @@ export const onRequestGet: PagesFunction<Env> = async (context) => {
     const now = new Date()
     const emailMap = new Map<string, Subscriber>()
     for (const sub of rawSubscribers) {
-      // Skip if canceled AND period has ended
-      if (sub.canceled_at) {
-        const periodEnd = sub.current_period_end || sub.trial_ends_at
-        if (periodEnd && new Date(periodEnd) < now) {
-          continue // period expired, skip
-        }
-      }
+      if (!isEntitledToDaily(sub, now)) continue
       const existing = emailMap.get(sub.email)
       if (!existing) {
         emailMap.set(sub.email, sub)
@@ -1026,6 +1022,29 @@ export const onRequestGet: PagesFunction<Env> = async (context) => {
 
     // 크론 요약은 영구 저장 — 로그 증발 방지 (유료 제품의 발송 이력)
     await logOpsEvent(context.env, 'cron.summary', { payload: { ...summary, errors: errorCount } })
+
+    // 이미지 실패는 발송 성공 뒤에 숨는다 (텍스트만 나가도 'sent') — 원인을 영구 기록하고,
+    // 사진 대상자 전원이 실패하면 오너에게 알린다. 핵심 가치가 "내 사진으로 입혀주기"라서.
+    const imageTargets = results.filter(r => r.image_conditions?.profile_complete && r.image_conditions?.has_photo_key)
+    const imageFailures = imageTargets.filter(r => !r.images)
+    for (const f of imageFailures) {
+      await logOpsEvent(context.env, 'cron.image_failed', {
+        email: f.email,
+        payload: { image_status: f.image_status, image_error: f.image_error, scenario_errors: f.scenario_errors },
+      })
+    }
+    if (imageTargets.length > 0 && imageFailures.length === imageTargets.length) {
+      await notifyOwner(
+        context.env,
+        `데일리 이미지 생성 전부 실패 — ${imageFailures.length}명`,
+        `오늘 아침 메일은 사진 없이 발송됐습니다.\n\n` +
+        imageFailures.slice(0, 5).map(f =>
+          `- ${f.image_status}: ${f.image_error || (f.scenario_errors || []).join('; ') || 'no detail'}`
+        ).join('\n') +
+        `\n\n'photo not found in R2' → 구독자 원본 사진이 사라짐(R2 수명주기 규칙 확인)\n` +
+        `'OpenAI+Gemini both failed' → 두 API 키의 결제/쿼터 확인`
+      )
+    }
 
     // 사람이 봐야 하는 실패: 보낼 대상이 있는데 전부 실패했거나 실패율 30% 초과
     if (eligibleSubscribers.length > 0 && (sentCount === 0 || errorCount / eligibleSubscribers.length > 0.3)) {
