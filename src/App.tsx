@@ -2645,6 +2645,11 @@ function App() {
   // 아침 푸시 알림 상태
   const [pushStatus, setPushStatus] = useState<'idle' | 'working' | 'enabled' | 'unsupported'>('idle')
   // 내 옷장
+  const [archiveMonths, setArchiveMonths] = useState<Array<{
+    month: string; looks: number; loved: number
+    items: Array<{ date: string; id: string; label: string; name: string; url: string; loved: boolean }>
+  }>>([])
+  const [archiveExpanded, setArchiveExpanded] = useState(false)
   const [wardrobeItems, setWardrobeItems] = useState<Array<{ id: string; description: string; category: string | null; image_url: string }>>([])
   const [wardrobeUploading, setWardrobeUploading] = useState(false)
   const wardrobeInputRef = useRef<HTMLInputElement>(null)
@@ -2956,6 +2961,18 @@ function App() {
         if (data?.items) setWardrobeItems(data.items)
       })
       .catch(() => { /* 옷장은 부가 기능 */ })
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [page, user?.id, session?.access_token])
+
+  // 아카이브 로드 (대시보드 진입 시) — 지난 룩을 월별 에디션으로
+  useEffect(() => {
+    if (page !== 'subscription-dashboard' || !user || !session?.access_token) return
+    fetch('/api/style-archive', { headers: authHeaders() })
+      .then(r => (r.ok ? r.json() : null))
+      .then((data: { months?: typeof archiveMonths } | null) => {
+        if (data?.months) setArchiveMonths(data.months)
+      })
+      .catch(() => { /* 아카이브는 부가 기능 */ })
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [page, user?.id, session?.access_token])
 
@@ -5988,6 +6005,60 @@ ${styleImgs.length > 1 ? `<div class="section"><h2>${styleSection}</h2><div clas
               <p className="dashboard-footer-note">{t.dashboardNewDay}</p>
             </>
           )}
+
+          {/* The Archive — 지금까지 받은 룩, 월별 에디션 */}
+          {user && archiveMonths.length > 0 && (() => {
+            const locale = ({ ko: 'ko-KR', en: 'en-US', ja: 'ja-JP', zh: 'zh-CN', es: 'es-ES' } as Record<string, string>)[lang] || 'en-US'
+            const archiveCopy = ({
+              ko: { title: '아카이브', edition: (m: string) => `${m}호`, looks: '룩', loved: '좋아요', more: '이전 에디션 보기', less: '접기', lovedTag: '좋아요' },
+              en: { title: 'The Archive', edition: (m: string) => `${m} Edition`, looks: 'looks', loved: 'loved', more: 'Show earlier editions', less: 'Show less', lovedTag: 'Loved' },
+              ja: { title: 'アーカイブ', edition: (m: string) => `${m}号`, looks: 'ルック', loved: '好き', more: '過去の号を見る', less: '閉じる', lovedTag: '好き' },
+              zh: { title: '造型档案', edition: (m: string) => `${m}刊`, looks: '套造型', loved: '喜欢', more: '查看往期', less: '收起', lovedTag: '喜欢' },
+              es: { title: 'El Archivo', edition: (m: string) => `Edición de ${m}`, looks: 'looks', loved: 'favoritos', more: 'Ver ediciones anteriores', less: 'Ver menos', lovedTag: 'Favorito' },
+            } as Record<string, { title: string; edition: (m: string) => string; looks: string; loved: string; more: string; less: string; lovedTag: string }>)[lang]
+              || { title: 'The Archive', edition: (m: string) => `${m} Edition`, looks: 'looks', loved: 'loved', more: 'Show earlier editions', less: 'Show less', lovedTag: 'Loved' }
+            const visible = archiveExpanded ? archiveMonths : archiveMonths.slice(0, 2)
+            const monthName = (ym: string) =>
+              new Intl.DateTimeFormat(locale, { month: 'long', year: 'numeric', timeZone: 'UTC' }).format(new Date(`${ym}-01T00:00:00Z`))
+            const dayName = (d: string) =>
+              new Intl.DateTimeFormat(locale, { month: 'short', day: 'numeric', timeZone: 'UTC' }).format(new Date(`${d}T00:00:00Z`))
+            return (
+              <section className="archive-section" aria-labelledby="archive-title">
+                <h3 id="archive-title" className="dashboard-gallery-title">{archiveCopy.title}</h3>
+                {visible.map((m) => (
+                  <div key={m.month} className="archive-month">
+                    <div className="archive-month-head">
+                      <span className="archive-month-name">{archiveCopy.edition(monthName(m.month))}</span>
+                      <span className="archive-month-meta">
+                        {m.looks} {archiveCopy.looks}{m.loved > 0 ? ` · ${m.loved} ${archiveCopy.loved}` : ''}
+                      </span>
+                    </div>
+                    <div className="archive-grid">
+                      {m.items.map((it) => (
+                        <button
+                          key={`${it.date}-${it.id}`}
+                          className={`archive-tile${it.loved ? ' is-loved' : ''}`}
+                          onClick={() => setFullscreenImage(it.url)}
+                          aria-label={`${it.name}, ${dayName(it.date)}`}
+                        >
+                          <img src={it.url} alt="" loading="lazy" decoding="async" />
+                          <span className="archive-tile-caption">
+                            <span className="archive-tile-name">{it.name}</span>
+                            <span className="archive-tile-date">{dayName(it.date)}{it.loved ? ` · ${archiveCopy.lovedTag}` : ''}</span>
+                          </span>
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                ))}
+                {archiveMonths.length > 2 && (
+                  <button className="archive-more" onClick={() => setArchiveExpanded(v => !v)}>
+                    {archiveExpanded ? archiveCopy.less : archiveCopy.more}
+                  </button>
+                )}
+              </section>
+            )
+          })()}
 
           {/* My Wardrobe — 실제 보유한 옷 위주로 데일리 코디 조합 */}
           {user && (

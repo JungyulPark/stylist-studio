@@ -20,7 +20,7 @@
 
 ## C. 데이터베이스 (Supabase SQL Editor에서 1회)
 
-- ✅ 001~011 적용됨 (008 ops_events, 009 journal_subscribers, 010 보안 하드닝, 011 look_shares 공유 — 모두 프로덕션 적용·검증 완료, 사용자 작업 불필요)
+- ✅ 001~012 적용됨 (008 ops_events, 009 journal_subscribers, 010 보안 하드닝, 011 look_shares 공유, 012 weekly_editions — 모두 프로덕션 적용·검증 완료, 사용자 작업 불필요)
 
 ## D. 에셋
 
