@@ -162,3 +162,7 @@ reference image: identical face, hair, skin tone and body proportions."로 시�
 
 배치된 컷의 원본 주소와 크롭 규격은 `scripts/fetch-assets.mjs`가 기준이다.
 히어로 before는 after에서 옷만 바꾼 편집이라, after를 바꾸면 before도 다시 만들어야 슬라이더가 맞는다.
+
+히어로 패션 필름: 여자 모델의 히어로 after 컷(`30b69033-8a16-4a78-9159-26a1b892b632`)을
+Kling 3.0 pro의 start_image·end_image로 동시에 넣어 5초 무음 루프로 만들었다 — 첫 프레임과
+끝 프레임이 같아 반복 재생이 끊기지 않고, 영상 포스터(after 이미지)와도 이어진다.
