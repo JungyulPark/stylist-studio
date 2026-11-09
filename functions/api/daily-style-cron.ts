@@ -19,6 +19,7 @@ import { logOpsEvent, notifyOwner } from '../lib/ops-log'
 import { getStyleRef } from '../lib/style-refs'
 import { isEntitledToDaily } from '../lib/subscription-access'
 import { runSundayEditions } from '../lib/sunday-edition'
+import { runEditNewsletter } from '../lib/edit-mailer'
 import { Resend } from 'resend'
 
 interface Env {
@@ -522,6 +523,12 @@ export const onRequestGet: PagesFunction<Env> = async (context) => {
   // force=true: bypass 6AM check & already-sent check (for testing)
   const forceTest = url.searchParams.get('force') === 'true'
 
+  const resend = context.env.RESEND_API_KEY ? new Resend(context.env.RESEND_API_KEY) : null
+
+  // The Edit 뉴스레터 — 데일리 구독자가 한 명도 없어도 저널 구독자에게는 나가야 하므로 가장 먼저 돈다.
+  // 내부에서 모든 오류를 삼키므로 데일리 발송을 막지 않는다.
+  const journal = await runEditNewsletter(context.env, resend)
+
   try {
     // 1. Fetch all subscribers (including canceled — period check happens later)
     const subRes = await fetch(
@@ -543,7 +550,7 @@ export const onRequestGet: PagesFunction<Env> = async (context) => {
 
     if (!rawSubscribers || rawSubscribers.length === 0) {
       return new Response(
-        JSON.stringify({ message: 'No active subscribers', sent: 0 }),
+        JSON.stringify({ message: 'No active subscribers', sent: 0, journal }),
         { status: 200, headers: { 'Content-Type': 'application/json', ...corsHeaders } }
       )
     }
@@ -571,8 +578,6 @@ export const onRequestGet: PagesFunction<Env> = async (context) => {
     const subscribers = Array.from(emailMap.values())
     const rawCount = rawSubscribers.length
     console.log(`[cron] ${rawCount} raw subscribers → ${subscribers.length} after dedup`)
-
-    const resend = context.env.RESEND_API_KEY ? new Resend(context.env.RESEND_API_KEY) : null
 
     // The Sunday Edition — 현지 일요일 10시 구독자에게 주간 리캡 (매시 실행에 얹혀 돈다).
     // ?edition_to=<email> 로 한 사람에게 즉시 테스트 발송.
@@ -603,6 +608,7 @@ export const onRequestGet: PagesFunction<Env> = async (context) => {
           total_active: subscribers.length,
           sent: 0,
           editions,
+          journal,
         }),
         { status: 200, headers: { 'Content-Type': 'application/json', ...corsHeaders } }
       )
@@ -1030,6 +1036,7 @@ export const onRequestGet: PagesFunction<Env> = async (context) => {
       sent: sentCount,
       images_generated: results.reduce((sum, r) => sum + (r.images || 0), 0),
       editions_sent: editions.filter(e => e.status === 'sent').length,
+      journal_sent: journal.sent,
     }
 
     // 크론 요약은 영구 저장 — 로그 증발 방지 (유료 제품의 발송 이력)

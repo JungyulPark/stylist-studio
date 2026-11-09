@@ -8222,6 +8222,44 @@ button:not(:disabled):active {
   cursor: default;
 }
 
+/* ─── Journal → The Edit 링크 ─────────────────────────────────── */
+.journal-edit-link {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.4rem 1rem;
+  margin: 0 0 2rem;
+  padding: 1rem 1.2rem;
+  border: 1px solid rgba(201, 169, 98, 0.55);
+  background: var(--white);
+  color: var(--primary);
+  text-decoration: none;
+}
+
+.journal-edit-link:focus-visible {
+  outline: 2px solid #c9a962;
+  outline-offset: 3px;
+}
+
+.journal-edit-kicker {
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: #8d7442;
+}
+
+.journal-edit-title {
+  flex: 1 1 240px;
+  font-family: var(--font-serif);
+  font-size: 1.05rem;
+  word-break: keep-all;
+}
+
+.journal-edit-arrow {
+  color: #8d7442;
+}
+
 /* ─── The Archive (월별 에디션) ──────────────────────────────── */
 .archive-section {
   margin: 2.5rem 0 1rem;

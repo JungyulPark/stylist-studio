@@ -4922,6 +4922,11 @@ ${styleImgs.length > 1 ? `<div class="section"><h2>${styleSection}</h2><div clas
               ? '이번 시즌의 흐름과, 그것을 내 색으로 입는 법.'
               : 'What the season is doing — and how to wear it in your own colors.'}
           </p>
+          <a className="journal-edit-link" href={lang === 'ko' ? '/ko/edit' : '/edit'} onClick={() => trackEvent('journal_edit_click')}>
+            <span className="journal-edit-kicker">{lang === 'ko' ? '매주 월요일 새 글' : 'New every Monday'}</span>
+            <span className="journal-edit-title">{lang === 'ko' ? '주간 트렌드 에디트: 이번 주 트렌드와 입는 법' : 'The Edit: this week\'s trend, and how to wear it'}</span>
+            <span className="journal-edit-arrow" aria-hidden="true">→</span>
+          </a>
           <div className="journal-grid">
             {journalPosts.map((post) => (
               <article
@@ -4944,7 +4949,7 @@ ${styleImgs.length > 1 ? `<div class="section"><h2>${styleSection}</h2><div clas
           <div className="journal-signup journal-signup-page">
             {journalSignup === 'done' ? (
               <p className="journal-signup-done">
-                {lang === 'ko' ? '구독 완료 — 매주 목요일에 보내드릴게요.' : "You're in — the journal lands every Thursday."}
+                {lang === 'ko' ? '구독 완료. 매주 월요일, 트렌드 에디트를 보내드릴게요.' : "You're in. The Edit lands every Monday."}
               </p>
             ) : (
               <>
@@ -6768,6 +6773,9 @@ ${styleImgs.length > 1 ? `<div class="section"><h2>${styleSection}</h2><div clas
                 <a href={lang === 'ko' ? '/ko/what-to-wear' : '/what-to-wear'}>
                   {lang === 'ko' ? '오늘 뭐 입지? 기온별 옷차림' : 'What to wear today'}
                 </a>
+                <a href={lang === 'ko' ? '/ko/edit' : '/edit'}>
+                  {lang === 'ko' ? '주간 트렌드 에디트' : 'The Edit: weekly trends'}
+                </a>
               </div>
             </div>
           </div>
@@ -7154,7 +7162,7 @@ ${styleImgs.length > 1 ? `<div class="section"><h2>${styleSection}</h2><div clas
                 <div className="journal-signup">
                   {journalSignup === 'done' ? (
                     <p className="journal-signup-done">
-                      {lang === 'ko' ? '구독 완료 — 매주 목요일에 보내드릴게요.' : "You're in — the journal lands every Thursday."}
+                      {lang === 'ko' ? '구독 완료. 매주 월요일, 트렌드 에디트를 보내드릴게요.' : "You're in. The Edit lands every Monday."}
                     </p>
                   ) : (
                     <>
