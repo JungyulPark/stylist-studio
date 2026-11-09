@@ -11,7 +11,7 @@ const ROOT = join(__dirname, '..')
 const PUBLIC = join(ROOT, 'public')
 
 /** 런타임에 없어도 폴백이 처리하는 선택적 에셋 (생성 파이프라인 산출물) */
-const OPTIONAL = new Set(['/hero-loop.mp4'])
+const OPTIONAL = new Set(['/hero-loop.mp4', '/hero-loop-m.mp4'])
 
 function collectRefs(file: string): string[] {
   const src = readFileSync(join(ROOT, file), 'utf8')

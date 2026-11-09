@@ -2668,7 +2668,10 @@ function App() {
   // 아웃핏 피드백 (오늘의 룩 학습 루프)
   const [outfitFeedback, setOutfitFeedback] = useState<Record<string, 'like' | 'dislike'>>({})
   // 히어로 필름 — 파일이 실제로 있을 때만 렌더 (없으면 before/after 슬라이더)
-  const [heroVideoOk, setHeroVideoOk] = useState(false)
+  // 히어로 패션 필름 — 존재가 확인된 것만, 여러 편이면 번갈아 재생
+  const [heroFilms, setHeroFilms] = useState<string[]>([])
+  const [heroFilmIdx, setHeroFilmIdx] = useState(0)
+  const heroFilmRef = useRef<HTMLVideoElement>(null)
   const [error, setError] = useState<string>('')
   const [isDragging, setIsDragging] = useState(false)
   const [styleImages, setStyleImages] = useState<StyleImage[]>([])
@@ -3197,14 +3200,25 @@ function App() {
   }, [])
 
   // 히어로 필름 존재 확인 — <source> 404는 video onError로 안 올라오는 경우가 있어
-  // 렌더 전에 확인한다 (없으면 슬라이더가 그대로 히어로를 채운다)
+  // 렌더 전에 확인한다 (없으면 슬라이더가 그대로 히어로를 채운다).
+  // SPA 폴백이 없는 파일에도 200 + index.html을 줄 수 있어 Content-Type까지 본다.
   useEffect(() => {
     let alive = true
-    fetch('/hero-loop.mp4', { method: 'HEAD' })
-      .then(r => { if (alive && r.ok) setHeroVideoOk(true) })
-      .catch(() => { /* 없으면 슬라이더 */ })
+    const candidates = ['/hero-loop.mp4', '/hero-loop-m.mp4']
+    Promise.all(candidates.map(src =>
+      fetch(src, { method: 'HEAD' })
+        .then(r => (r.ok && (r.headers.get('content-type') || '').startsWith('video/') ? src : null))
+        .catch(() => null)
+    )).then(found => {
+      if (alive) setHeroFilms(found.filter((f): f is string => f !== null))
+    })
     return () => { alive = false }
   }, [])
+
+  // 다음 필름으로 넘어가면 이어서 재생 (같은 요소라 깜빡임 없음)
+  useEffect(() => {
+    if (heroFilmIdx > 0) heroFilmRef.current?.play().catch(() => { /* 자동재생 차단 시 정지 화면 */ })
+  }, [heroFilmIdx])
 
   // 히어로 날씨 미리보기 — 30분 캐시, 실패 시 조용히 생략
   useEffect(() => {
@@ -6435,22 +6449,26 @@ ${styleImgs.length > 1 ? `<div class="section"><h2>${styleSection}</h2><div clas
             <span className="hero-value-chip">{lang === 'ko' ? '퍼스널 컬러 진단' : 'Color Analysis'}</span>
             <span className="hero-value-chip">{lang === 'ko' ? '내 사진으로 스타일 변환' : 'AI Restyle on Your Photo'}</span>
           </div>
-          {heroVideoOk && (
+          {heroFilms.length > 0 && (
             <video
+              ref={heroFilmRef}
               className="hero-film"
+              src={heroFilms[heroFilmIdx % heroFilms.length]}
               autoPlay
               muted
-              loop
+              loop={heroFilms.length === 1}
               playsInline
               preload="metadata"
               poster="/gallery/after-female-date.png"
-              onError={() => setHeroVideoOk(false)}
+              onEnded={() => setHeroFilmIdx(i => i + 1)}
+              onError={() => {
+                const bad = heroFilms[heroFilmIdx % heroFilms.length]
+                setHeroFilms(list => list.filter(f => f !== bad))
+              }}
               aria-label="AI styled fashion film"
-            >
-              <source src="/hero-loop.mp4" type="video/mp4" onError={() => setHeroVideoOk(false)} />
-            </video>
+            />
           )}
-          {!heroVideoOk && (
+          {heroFilms.length === 0 && (
           <div
             className="ba-slider hero-ba-slider"
             ref={heroSliderRef}
