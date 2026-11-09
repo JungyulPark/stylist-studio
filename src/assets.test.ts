@@ -3,9 +3,10 @@
  * 랜딩에서 이미지가 통째로 사라졌던 회귀(service-wide.webp, hero-loop.mp4 부재)를 막는다.
  */
 import { describe, it, expect } from 'vitest'
-import { existsSync, readFileSync } from 'node:fs'
-import { join } from 'node:path'
+import { existsSync, readFileSync, readdirSync, statSync } from 'node:fs'
+import { join, relative } from 'node:path'
 import { journalPosts } from './data/journal'
+import { BANDS } from '../functions/lib/wtw-data'
 
 const ROOT = join(__dirname, '..')
 const PUBLIC = join(ROOT, 'public')
@@ -45,5 +46,35 @@ describe('static asset references', () => {
     const missing = ['look-01', 'look-02', 'look-03', 'look-04', 'look-05', 'look-06']
       .filter(l => !existsSync(join(PUBLIC, 'gallery/showcase', `${l}.webp`)))
     expect(missing).toEqual([])
+  })
+})
+
+describe('what-to-wear guide images', () => {
+  it('every temperature band points at images that exist', () => {
+    const missing = BANDS.flatMap(b => b.images).filter(img => !existsSync(join(PUBLIC, img)))
+    expect(missing).toEqual([])
+  })
+})
+
+describe('Cloudflare routing (_routes.json)', () => {
+  // _routes.json의 include에 없는 경로는 Functions가 아니라 SPA로 떨어진다.
+  // /look/* 공유 페이지가 이렇게 조용히 깨졌던 회귀를 막는다.
+  function routeFiles(dir: string): string[] {
+    return readdirSync(dir).flatMap((name: string) => {
+      const p = join(dir, name)
+      if (statSync(p).isDirectory()) return name === 'lib' ? [] : routeFiles(p)
+      return name.endsWith('.ts') && !name.endsWith('.test.ts') && !name.startsWith('_') ? [p] : []
+    })
+  }
+
+  it('sends every Functions route to Functions', () => {
+    const include: string[] = JSON.parse(readFileSync(join(PUBLIC, '_routes.json'), 'utf8')).include
+    const matches = (path: string) => include.some(rule =>
+      rule.endsWith('/*') ? path.startsWith(rule.slice(0, -1)) || path === rule.slice(0, -2) : path === rule)
+    const fnRoot = join(ROOT, 'functions')
+    const uncovered = routeFiles(fnRoot)
+      .map(f => '/' + relative(fnRoot, f).replace(/\.ts$/, '').replace(/\/index$/, '').replace(/^index$/, '').replace(/\[[^\]]+\]/g, 'x'))
+      .filter(path => !matches(path))
+    expect(uncovered).toEqual([])
   })
 })

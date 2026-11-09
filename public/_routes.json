@@ -1,6 +1,15 @@
 {
   "version": 1,
-  "include": ["/api/*", "/share/*", "/sitemap.xml"],
+  "include": [
+    "/api/*",
+    "/share/*",
+    "/sitemap.xml",
+    "/look/*",
+    "/what-to-wear",
+    "/what-to-wear/*",
+    "/ko/what-to-wear",
+    "/ko/what-to-wear/*"
+  ],
   "exclude": [
     "/robots.txt",
     "/manifest.json",

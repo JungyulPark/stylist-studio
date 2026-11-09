@@ -1,11 +1,30 @@
-// Serve sitemap.xml directly via Functions to bypass Cloudflare edge processing
+import { wtwPath, wtwSitemapSlugs } from './lib/wtw-render'
+
+// Serve sitemap.xml directly via Functions to bypass Cloudflare edge processing.
+// "오늘 뭐 입지" 페이지는 데이터에서 생성 — 페이지를 추가하면 사이트맵도 자동으로 따라온다.
+const SITE = 'https://kstylist.cc'
+const LASTMOD = '2026-11-09'
+
 export const onRequestGet: PagesFunction = async () => {
+  const wtw = wtwSitemapSlugs().flatMap(slug => (['en', 'ko'] as const).map(lang => {
+    const isCity = slug !== '' && !slug.endsWith('-degrees')
+    return `  <url>
+    <loc>${SITE}${wtwPath(lang, slug)}</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="${SITE}${wtwPath('en', slug)}"/>
+    <xhtml:link rel="alternate" hreflang="ko" href="${SITE}${wtwPath('ko', slug)}"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="${SITE}${wtwPath('en', slug)}"/>
+    <changefreq>${isCity ? 'daily' : 'monthly'}</changefreq>
+    <lastmod>${LASTMOD}</lastmod>
+  </url>`
+  }))
+
   const sitemap = `<?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
-    <loc>https://kstylist.cc/</loc>
-    <lastmod>2026-03-14</lastmod>
+    <loc>${SITE}/</loc>
+    <lastmod>${LASTMOD}</lastmod>
   </url>
+${wtw.join('\n')}
 </urlset>`
 
   return new Response(sitemap, {
