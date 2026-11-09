@@ -57,7 +57,7 @@ export interface DayForecast {
   condition: string
 }
 
-function localParts(epochSec: number, timezone: string): { date: string; hour: number } {
+export function localParts(epochSec: number, timezone: string): { date: string; hour: number } {
   const d = new Date(epochSec * 1000)
   try {
     const date = new Intl.DateTimeFormat('en-CA', { timeZone: timezone, year: 'numeric', month: '2-digit', day: '2-digit' }).format(d)

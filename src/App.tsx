@@ -2628,7 +2628,14 @@ function trackPageView(pageName: string) {
 }
 
 function App() {
-  const [lang, setLang] = useState<Language>('en')
+  // ?lang=ko 등으로 들어오면 그 언어로 시작 (검색 페이지 CTA가 언어를 이어서 넘긴다)
+  const [lang, setLang] = useState<Language>(() => {
+    try {
+      const q = new URLSearchParams(window.location.search).get('lang')
+      if (q === 'ko' || q === 'en') return q
+    } catch { /* 기본값 */ }
+    return 'en'
+  })
   const [page, setPageState] = useState<Page>('landing')
   const [profile, setProfile] = useState<UserProfile>({
     photo: null,
@@ -6755,6 +6762,12 @@ ${styleImgs.length > 1 ? `<div class="section"><h2>${styleSection}</h2><div clas
                 <a href="#" onClick={(e) => { e.preventDefault(); setPolicyModal('terms') }}>{t.footerTerms}</a>
                 <a href="#" onClick={(e) => { e.preventDefault(); setPolicyModal('privacy') }}>{t.footerPrivacy}</a>
                 <a href="#" onClick={(e) => { e.preventDefault(); setPolicyModal('refund') }}>{t.footerRefund}</a>
+              </div>
+              <div className="footer-col fade-in-up">
+                <h5>{lang === 'ko' ? '가이드' : 'Guides'}</h5>
+                <a href={lang === 'ko' ? '/ko/what-to-wear' : '/what-to-wear'}>
+                  {lang === 'ko' ? '오늘 뭐 입지? 기온별 옷차림' : 'What to wear today'}
+                </a>
               </div>
             </div>
           </div>
