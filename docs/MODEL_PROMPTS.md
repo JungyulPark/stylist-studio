@@ -166,3 +166,7 @@ reference image: identical face, hair, skin tone and body proportions."로 시�
 히어로 패션 필름: 여자 모델의 히어로 after 컷(`30b69033-8a16-4a78-9159-26a1b892b632`)을
 Kling 3.0 pro의 start_image·end_image로 동시에 넣어 5초 무음 루프로 만들었다 — 첫 프레임과
 끝 프레임이 같아 반복 재생이 끊기지 않고, 영상 포스터(after 이미지)와도 이어진다.
+
+남자 필름: 같은 방식으로 남자 모델의 정면 카멜 코트 컷(`f01c0193-1dd1-4445-9c4f-89f3509b75f1`,
+여자 히어로와 같은 구도·여백)을 첫·끝 프레임으로 썼다. 사이트는 `hero-loop.mp4` → `hero-loop-m.mp4`를
+번갈아 재생하고, 하나만 있으면 그 하나를 반복, 둘 다 없으면 비포/애프터 슬라이더를 보여준다.

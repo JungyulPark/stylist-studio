@@ -21,8 +21,12 @@ const HERO = {
   after: `${CDN}/hf_20261103_063649_30b69033-8a16-4a78-9159-26a1b892b632.png`,
 }
 
-// 히어로 패션 필름 — after 컷을 첫·끝 프레임으로 쓴 5초 루프 (Kling 3.0 pro, 무음)
-const HERO_FILM = `${CDN}/hf_20261103_064229_05c6f40e-9796-4635-b9f7-38304d2f22aa.mp4`
+// 히어로 패션 필름 — 각 모델의 정면 컷을 첫·끝 프레임으로 쓴 5초 루프 (Kling 3.0 pro, 무음).
+// 사이트는 존재하는 필름을 여자 → 남자 순으로 번갈아 재생한다.
+const HERO_FILMS = [
+  { src: `${CDN}/hf_20261103_064229_05c6f40e-9796-4635-b9f7-38304d2f22aa.mp4`, out: 'public/hero-loop.mp4' },
+  { src: `${CDN}/hf_20261109_072729_59c9bed2-5335-4881-86dc-b6d0505bdf7c.mp4`, out: 'public/hero-loop-m.mp4' },
+]
 
 // 랜딩 쇼케이스 순서 = 캡션 순서 (Luxury, Business, Best Match, Casual, Date, Evening)
 const SHOWCASE = [
@@ -67,17 +71,21 @@ async function main() {
   console.log('showcase placed (6 × 800x1000)')
 
   // 4. 히어로 패션 필름 — 3:4 카드에 맞춰 720x960, 무음, 빠른 시작
-  await download(HERO_FILM, tmp('film.mp4'))
-  try {
-    execSync('ffmpeg -version', { stdio: 'ignore' })
-    execSync(
-      `ffmpeg -y -i "${tmp('film.mp4')}" -an -vf "scale=720:960:force_original_aspect_ratio=increase,crop=720:960" -c:v libx264 -crf 24 -preset slow -pix_fmt yuv420p -movflags +faststart public/hero-loop.mp4`,
-      { stdio: 'inherit' }
-    )
-    console.log('hero film placed (720x960, compressed)')
-  } catch {
-    copyFileSync(tmp('film.mp4'), 'public/hero-loop.mp4')
-    console.log('hero film placed (원본 그대로 — ffmpeg가 있으면 더 가볍게 압축됩니다)')
+  let hasFfmpeg = true
+  try { execSync('ffmpeg -version', { stdio: 'ignore' }) } catch { hasFfmpeg = false }
+  for (const [i, film] of HERO_FILMS.entries()) {
+    const raw = tmp(`film-${i}.mp4`)
+    await download(film.src, raw)
+    if (hasFfmpeg) {
+      execSync(
+        `ffmpeg -y -i "${raw}" -an -vf "scale=720:960:force_original_aspect_ratio=increase,crop=720:960" -c:v libx264 -crf 24 -preset slow -pix_fmt yuv420p -movflags +faststart ${film.out}`,
+        { stdio: 'inherit' }
+      )
+      console.log(`hero film placed: ${film.out} (720x960, compressed)`)
+    } else {
+      copyFileSync(raw, film.out)
+      console.log(`hero film placed: ${film.out} (원본 그대로 — ffmpeg가 있으면 더 가볍게 압축됩니다)`)
+    }
   }
 
   // 5. 예전 모델의 360 프레임은 새 모델과 얼굴이 달라 내린다 (없으면 360 뷰어는 숨는다)
