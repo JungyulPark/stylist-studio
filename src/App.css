@@ -7656,6 +7656,13 @@ button:not(:disabled):active {
 
 .hero-cinema .hero-ba-slider {
   max-width: min(340px, 78vw);
+  aspect-ratio: 4 / 5; /* 히어로 컷(960x1200)과 같은 비율 — 위아래 여백 없이 */
+}
+
+/* 비포 이미지는 클립(슬라이더 위치 %)의 역수만큼 넓혀 항상 컨테이너 폭과 같게 한다.
+   JS로 폭을 재면 첫 페인트에서 어긋난다. */
+.hero-ba-slider .ba-before-clip .ba-before {
+  max-width: none;
 }
 
 /* ═══ WEATHER ATELIER — 날씨 반응형 히어로 대기 시스템 ═══════════
@@ -8662,14 +8669,7 @@ button:not(:disabled):active {
     grid-template-columns: repeat(3, 1fr);
     gap: 1rem;
   }
-  /* 첫 컷은 크게 — 균일 그리드의 단조로움을 깬다 */
-  .showcase-item:first-child {
-    grid-row: span 2;
-  }
-  .showcase-item:first-child img {
-    aspect-ratio: 4 / 5;
-    height: 100%;
-  }
+  /* 6컷은 3×2 균일 그리드 — 첫 컷을 두 줄로 키우면 전신 컷이 잘리고 여섯 번째가 혼자 떨어진다 */
 }
 
 .showcase-item {

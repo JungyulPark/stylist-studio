@@ -7,6 +7,7 @@ import { existsSync, readFileSync, readdirSync, statSync } from 'node:fs'
 import { join, relative } from 'node:path'
 import { journalPosts } from './data/journal'
 import { BANDS } from '../functions/lib/wtw-data'
+import { EDITIONS } from '../functions/lib/edit-data'
 
 const ROOT = join(__dirname, '..')
 const PUBLIC = join(ROOT, 'public')
@@ -45,6 +46,13 @@ describe('static asset references', () => {
   it('the showcase set is complete (6 looks)', () => {
     const missing = ['look-01', 'look-02', 'look-03', 'look-04', 'look-05', 'look-06']
       .filter(l => !existsSync(join(PUBLIC, 'gallery/showcase', `${l}.webp`)))
+    expect(missing).toEqual([])
+  })
+})
+
+describe('The Edit images', () => {
+  it('every edition has both plates on disk', () => {
+    const missing = EDITIONS.flatMap(e => [e.images.her, e.images.him]).filter(img => !existsSync(join(PUBLIC, img)))
     expect(missing).toEqual([])
   })
 })

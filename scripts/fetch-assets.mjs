@@ -65,8 +65,8 @@ async function main() {
   // 1. 히어로 before/after — 960x1200 (4:5), 같은 크롭
   await download(HERO.before, tmp('before.png'))
   await download(HERO.after, tmp('after.png'))
-  await sharp(tmp('before.png')).resize(960, 1200, { fit: 'cover', position: 'top' }).png({ compressionLevel: 9 }).toFile('public/gallery/before-female.png')
-  await sharp(tmp('after.png')).resize(960, 1200, { fit: 'cover', position: 'top' }).png({ compressionLevel: 9 }).toFile('public/gallery/after-female-date.png')
+  await sharp(tmp('before.png')).resize(960, 1200, { fit: 'cover', position: 'top' }).webp({ quality: 86 }).toFile('public/gallery/before-female.webp')
+  await sharp(tmp('after.png')).resize(960, 1200, { fit: 'cover', position: 'top' }).webp({ quality: 86 }).toFile('public/gallery/after-female-date.webp')
   console.log('hero before/after placed (960x1200)')
 
   // 2. 서비스 카드 — 1600x1000, 얼굴이 잘리지 않게 위쪽 기준
