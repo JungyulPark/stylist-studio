@@ -38,6 +38,18 @@ const SHOWCASE = [
   `${CDN}/hf_20261103_063648_10f8ec87-b18b-4801-a110-6745f436e267.png`, // M evening
 ]
 
+// 주간 트렌드 에디트 — 에디션 slug별 [여자 컷, 남자 컷]. functions/lib/edit-data.ts의 slug와 같아야 한다.
+const EDIT = {
+  'quiet-but-seen': ['hf_20261109_232552_8dab927e-3216-43f5-9767-ea0db18d8917', 'hf_20261109_232551_7f24f2fc-0203-42b0-a9d0-cec14e804413'],
+  'the-texture-season': ['hf_20261109_232551_fdd6dd19-3222-4628-aa82-5902d7f1ce34', 'hf_20261109_232712_1b09923a-a4bd-482f-beb1-f77c3187f31a'],
+  'plum-and-berry': ['hf_20261109_232552_f716fedf-33e0-492a-a954-49551b7999f9', 'hf_20261109_232552_b43b4be6-0300-4ca2-a98f-477f92355cb2'],
+  'the-scarf-leads': ['hf_20261109_232713_1671a8d3-c713-400d-99e2-45f68d65abb7', 'hf_20261109_232551_1f79b0f9-d50f-415b-a2ec-612f120522c6'],
+  'checks-calmly': ['hf_20261109_232713_d91b340e-b048-410e-bd8f-3ce470ca8d7f', 'hf_20261109_232713_8de48d2b-00ba-4d13-ac42-11f7a5c033df'],
+  'the-long-coat-returns': ['hf_20261109_232713_1dfe88ed-11a1-4411-996d-6f6b30d5f0a5', 'hf_20261109_232857_69fc79e5-d7d7-4324-b482-3b135445f104'],
+  'the-suit-softened': ['hf_20261109_232856_ebe640b6-8220-45b4-b891-f2de96a5b66d', 'hf_20261109_232856_0dd9cabb-fb0e-4950-9124-a19818f304a5'],
+  'knit-over-knit': ['hf_20261109_232857_b9bee439-5748-411e-9233-26c4413952b1', 'hf_20261109_232857_b6c4a798-27c0-4b7d-985c-1677bec98bec'],
+}
+
 async function download(url, dest) {
   const res = await fetch(url)
   if (!res.ok) throw new Error(`${url} -> ${res.status}`)
@@ -53,8 +65,8 @@ async function main() {
   // 1. 히어로 before/after — 960x1200 (4:5), 같은 크롭
   await download(HERO.before, tmp('before.png'))
   await download(HERO.after, tmp('after.png'))
-  await sharp(tmp('before.png')).resize(960, 1200, { fit: 'cover', position: 'top' }).png({ compressionLevel: 9 }).toFile('public/gallery/before-female.png')
-  await sharp(tmp('after.png')).resize(960, 1200, { fit: 'cover', position: 'top' }).png({ compressionLevel: 9 }).toFile('public/gallery/after-female-date.png')
+  await sharp(tmp('before.png')).resize(960, 1200, { fit: 'cover', position: 'top' }).webp({ quality: 86 }).toFile('public/gallery/before-female.webp')
+  await sharp(tmp('after.png')).resize(960, 1200, { fit: 'cover', position: 'top' }).webp({ quality: 86 }).toFile('public/gallery/after-female-date.webp')
   console.log('hero before/after placed (960x1200)')
 
   // 2. 서비스 카드 — 1600x1000, 얼굴이 잘리지 않게 위쪽 기준
@@ -69,6 +81,18 @@ async function main() {
       .toFile(`public/gallery/showcase/look-0${i + 1}.webp`)
   }
   console.log('showcase placed (6 × 800x1000)')
+
+  // 3b. 트렌드 에디트 — 에디션당 2컷, 800x1000 webp
+  mkdirSync('public/gallery/edit', { recursive: true })
+  for (const [slug, [her, him]] of Object.entries(EDIT)) {
+    for (const [who, id] of [['her', her], ['him', him]]) {
+      const src = tmp(`edit-${slug}-${who}.png`)
+      await download(`${CDN}/${id}.png`, src)
+      await sharp(src).resize(800, 1000, { fit: 'cover', position: 'top' }).webp({ quality: 82 })
+        .toFile(`public/gallery/edit/${slug}-${who}.webp`)
+    }
+  }
+  console.log(`edit images placed (${Object.keys(EDIT).length * 2} × 800x1000)`)
 
   // 4. 히어로 패션 필름 — 3:4 카드에 맞춰 720x960, 무음, 빠른 시작
   let hasFfmpeg = true

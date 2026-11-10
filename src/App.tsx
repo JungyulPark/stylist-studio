@@ -4922,6 +4922,11 @@ ${styleImgs.length > 1 ? `<div class="section"><h2>${styleSection}</h2><div clas
               ? '이번 시즌의 흐름과, 그것을 내 색으로 입는 법.'
               : 'What the season is doing — and how to wear it in your own colors.'}
           </p>
+          <a className="journal-edit-link" href={lang === 'ko' ? '/ko/edit' : '/edit'} onClick={() => trackEvent('journal_edit_click')}>
+            <span className="journal-edit-kicker">{lang === 'ko' ? '매주 월요일 새 글' : 'New every Monday'}</span>
+            <span className="journal-edit-title">{lang === 'ko' ? '주간 트렌드 에디트: 이번 주 트렌드와 입는 법' : 'The Edit: this week\'s trend, and how to wear it'}</span>
+            <span className="journal-edit-arrow" aria-hidden="true">→</span>
+          </a>
           <div className="journal-grid">
             {journalPosts.map((post) => (
               <article
@@ -4944,7 +4949,7 @@ ${styleImgs.length > 1 ? `<div class="section"><h2>${styleSection}</h2><div clas
           <div className="journal-signup journal-signup-page">
             {journalSignup === 'done' ? (
               <p className="journal-signup-done">
-                {lang === 'ko' ? '구독 완료 — 매주 목요일에 보내드릴게요.' : "You're in — the journal lands every Thursday."}
+                {lang === 'ko' ? '구독 완료. 매주 월요일, 트렌드 에디트를 보내드릴게요.' : "You're in. The Edit lands every Monday."}
               </p>
             ) : (
               <>
@@ -6466,7 +6471,7 @@ ${styleImgs.length > 1 ? `<div class="section"><h2>${styleSection}</h2><div clas
               loop={heroFilms.length === 1}
               playsInline
               preload="metadata"
-              poster="/gallery/after-female-date.png"
+              poster="/gallery/after-female-date.webp"
               onEnded={() => setHeroFilmIdx(i => i + 1)}
               onError={() => {
                 const bad = heroFilms[heroFilmIdx % heroFilms.length]
@@ -6482,9 +6487,9 @@ ${styleImgs.length > 1 ? `<div class="section"><h2>${styleSection}</h2><div clas
             onMouseDown={handleHeroSliderMouseDown}
             onTouchStart={handleHeroSliderTouchStart}
           >
-            <img src="/gallery/after-female-date.png" alt="After" className="ba-img ba-after" />
+            <img src="/gallery/after-female-date.webp" alt="After" className="ba-img ba-after" />
             <div className="ba-before-clip" style={{ width: `${heroSliderPos}%` }}>
-              <img src="/gallery/before-female.png" alt="Before" className="ba-img ba-before" style={{ width: `${heroSliderRef.current?.offsetWidth || 480}px` }} />
+              <img src="/gallery/before-female.webp" alt="Before" className="ba-img ba-before" style={{ width: `${10000 / Math.max(heroSliderPos, 1)}%` }} />
             </div>
             <div className="ba-handle" style={{ left: `${heroSliderPos}%` }}>
               <div className="ba-handle-line"></div>
@@ -6542,7 +6547,7 @@ ${styleImgs.length > 1 ? `<div class="section"><h2>${styleSection}</h2><div clas
           <div className="service-split">
             {/* 좌: 대형 트랜스포메이션 카드 (풀블리드 이미지 + 절제된 타입) */}
             <div className="service-hero-card fade-in-up" onClick={() => { trackEvent('select_item', { item_category: 'premium_report' }); setPage('input') }}>
-              <img src="/gallery/service-wide.webp" alt="AI Style Transformation" className="service-hero-img" loading="lazy" onError={(e) => { (e.target as HTMLImageElement).src = '/gallery/after-female-date.png' }} />
+              <img src="/gallery/service-wide.webp" alt="AI Style Transformation" className="service-hero-img" loading="lazy" onError={(e) => { (e.target as HTMLImageElement).src = '/gallery/after-female-date.webp' }} />
               <div className="service-hero-overlay"></div>
               <div className="service-hero-content">
                 <span className="service-hero-tag">SERVICE — TRANSFORM</span>
@@ -6767,6 +6772,9 @@ ${styleImgs.length > 1 ? `<div class="section"><h2>${styleSection}</h2><div clas
                 <h5>{lang === 'ko' ? '가이드' : 'Guides'}</h5>
                 <a href={lang === 'ko' ? '/ko/what-to-wear' : '/what-to-wear'}>
                   {lang === 'ko' ? '오늘 뭐 입지? 기온별 옷차림' : 'What to wear today'}
+                </a>
+                <a href={lang === 'ko' ? '/ko/edit' : '/edit'}>
+                  {lang === 'ko' ? '주간 트렌드 에디트' : 'The Edit: weekly trends'}
                 </a>
               </div>
             </div>
@@ -7154,7 +7162,7 @@ ${styleImgs.length > 1 ? `<div class="section"><h2>${styleSection}</h2><div clas
                 <div className="journal-signup">
                   {journalSignup === 'done' ? (
                     <p className="journal-signup-done">
-                      {lang === 'ko' ? '구독 완료 — 매주 목요일에 보내드릴게요.' : "You're in — the journal lands every Thursday."}
+                      {lang === 'ko' ? '구독 완료. 매주 월요일, 트렌드 에디트를 보내드릴게요.' : "You're in. The Edit lands every Monday."}
                     </p>
                   ) : (
                     <>

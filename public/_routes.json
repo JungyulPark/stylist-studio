@@ -8,7 +8,11 @@
     "/what-to-wear",
     "/what-to-wear/*",
     "/ko/what-to-wear",
-    "/ko/what-to-wear/*"
+    "/ko/what-to-wear/*",
+    "/edit",
+    "/edit/*",
+    "/ko/edit",
+    "/ko/edit/*"
   ],
   "exclude": [
     "/robots.txt",

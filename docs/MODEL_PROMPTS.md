@@ -28,7 +28,7 @@ in their late 20s, natural confident pose, photorealistic, shot on medium format
 
 | 항목 | 값 |
 |---|---|
-| 경로 | `public/gallery/before-female.png` → 교체 시 동일 파일명 (또는 App.tsx 5xxx의 src 변경) |
+| 경로 | `public/gallery/before-female.webp` → 교체 시 동일 파일명 (또는 App.tsx 5xxx의 src 변경) |
 | 사이즈 | **960 × 1200 (4:5 세로)** — before/after 둘 다 동일 |
 | 핵심 | **같은 인물·같은 포즈·같은 프레이밍**이어야 슬라이더가 성립. before를 먼저 만들고, 그 이미지를 이미지-편집 모델(gpt-image-1.5 edit 등)에 넣어 after를 생성하는 방식 권장 |
 
@@ -46,7 +46,7 @@ subtly and add soft warm rim lighting. No logos.
 
 | 항목 | 값 |
 |---|---|
-| 경로 | `public/gallery/after-female-date.png` (App.tsx `service-hero-card`의 src) |
+| 경로 | `public/gallery/after-female-date.webp` (App.tsx `service-hero-card`의 src) |
 | 사이즈 | **1600 × 1000 (16:10 가로)** 권장 — 카드가 와이드 크롭 |
 | 분위기 | 라이트 섹션이므로 warm cream 배경, 룩 전신이 좌우 여백을 두고 보이게 |
 

@@ -123,10 +123,10 @@ const STYLE = `
 body{margin:0;background:var(--bg);color:var(--ink);font-family:Manrope,-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;line-height:1.6;-webkit-font-smoothing:antialiased}
 a{color:inherit}
 .wrap{max-width:880px;margin:0 auto;padding:0 16px}
-.top{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:18px 0;border-bottom:1px solid var(--rule)}
-.brand{font-family:'Playfair Display',Georgia,serif;letter-spacing:.32em;font-size:14px;color:var(--gold);text-decoration:none}
+.top{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:8px 12px;padding:18px 0;border-bottom:1px solid var(--rule)}
+.brand{font-family:'Playfair Display',Georgia,serif;letter-spacing:.32em;font-size:14px;color:var(--gold);text-decoration:none;white-space:nowrap}
 .top nav{display:flex;gap:16px;align-items:center;font-size:13px}
-.top nav a{text-decoration:none;color:var(--muted)}
+.top nav a{text-decoration:none;color:var(--muted);white-space:nowrap}
 .top nav a:hover{color:var(--ink)}
 .crumbs{font-size:12px;color:var(--muted);margin:18px 0 0}
 .crumbs a{text-decoration:none}
@@ -171,19 +171,31 @@ a:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
 @media (max-width:560px){.formula dl{grid-template-columns:1fr}.formula dt{padding-bottom:0;border-bottom:0}.live .t{font-size:52px}}
 `
 
-interface ShellInput {
+export interface ShellInput {
   lang: WtwLang
   slug: string
   title: string
   description: string
   jsonLd: object[]
   body: string
+  /** 이 페이지 묶음의 경로 규칙 (기본: 오늘 뭐 입지). 언어 전환·canonical·hreflang에 쓰인다 */
+  pathFor?: (lang: WtwLang, slug?: string) => string
+  /** 사이트 기준 절대 경로. 없으면 기본 OG 이미지 */
+  ogImage?: string
+  extraStyle?: string
 }
 
-function shell(p: ShellInput): string {
+/** 트렌드 에디트 경로 — 셸 내비게이션이 쓰므로 여기에 둔다 */
+export function editPath(lang: WtwLang, slug = ''): string {
+  const base = lang === 'ko' ? '/ko/edit' : '/edit'
+  return slug ? `${base}/${slug}` : base
+}
+
+export function renderShell(p: ShellInput): string {
   const other: WtwLang = p.lang === 'en' ? 'ko' : 'en'
   const ui = UI[p.lang]
-  const canonical = abs(wtwPath(p.lang, p.slug))
+  const pathFor = p.pathFor || wtwPath
+  const canonical = abs(pathFor(p.lang, p.slug))
   return `<!DOCTYPE html>
 <html lang="${p.lang}">
 <head>
@@ -192,21 +204,21 @@ function shell(p: ShellInput): string {
 <title>${esc(p.title)}</title>
 <meta name="description" content="${esc(p.description)}">
 <link rel="canonical" href="${canonical}">
-<link rel="alternate" hreflang="en" href="${abs(wtwPath('en', p.slug))}">
-<link rel="alternate" hreflang="ko" href="${abs(wtwPath('ko', p.slug))}">
-<link rel="alternate" hreflang="x-default" href="${abs(wtwPath('en', p.slug))}">
+<link rel="alternate" hreflang="en" href="${abs(pathFor('en', p.slug))}">
+<link rel="alternate" hreflang="ko" href="${abs(pathFor('ko', p.slug))}">
+<link rel="alternate" hreflang="x-default" href="${abs(pathFor('en', p.slug))}">
 <meta property="og:type" content="article">
 <meta property="og:site_name" content="ATELIER HUE">
 <meta property="og:title" content="${esc(p.title)}">
 <meta property="og:description" content="${esc(p.description)}">
 <meta property="og:url" content="${canonical}">
-<meta property="og:image" content="${SITE}/og-image.png">
+<meta property="og:image" content="${SITE}${p.ogImage || '/og-image.png'}">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="theme-color" content="#FAFAF8">
 <link rel="icon" href="/favicon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600&family=Playfair+Display:wght@500&display=swap" rel="stylesheet">
-<style>${STYLE}</style>
+<style>${STYLE}${p.extraStyle || ''}</style>
 ${p.jsonLd.map(j => `<script type="application/ld+json">${JSON.stringify(j).replace(/</g, '\\u003c')}</script>`).join('\n')}
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-42DC8CJX3E"></script>
 <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('js',new Date());gtag('config','G-42DC8CJX3E');</script>
@@ -217,14 +229,14 @@ ${p.jsonLd.map(j => `<script type="application/ld+json">${JSON.stringify(j).repl
   <a class="brand" href="/">ATELIER HUE</a>
   <nav aria-label="${p.lang === 'ko' ? '사이트' : 'Site'}">
     <a href="${wtwPath(p.lang)}">${esc(ui.hub)}</a>
-    <a href="/#journal">${p.lang === 'ko' ? '저널' : 'Journal'}</a>
-    <a href="${wtwPath(other, p.slug)}" hreflang="${other}" lang="${other}">${esc(ui.switchLang)}</a>
+    <a href="${editPath(p.lang)}">${p.lang === 'ko' ? '트렌드 에디트' : 'The Edit'}</a>
+    <a href="${pathFor(other, p.slug)}" hreflang="${other}" lang="${other}">${esc(ui.switchLang)}</a>
   </nav>
 </header>
 <main>
 ${p.body}
 </main>
-<footer>ATELIER HUE · <a href="/">kstylist.cc</a> · <a href="${wtwPath(p.lang)}">${esc(ui.hub)}</a></footer>
+<footer>ATELIER HUE · <a href="/">kstylist.cc</a> · <a href="${wtwPath(p.lang)}">${esc(ui.hub)}</a> · <a href="${editPath(p.lang)}">${p.lang === 'ko' ? '트렌드 에디트' : 'The Edit'}</a></footer>
 </div>
 </body>
 </html>`
@@ -312,7 +324,7 @@ function cityGrid(lang: WtwLang, current?: string): string {
 </section>`
 }
 
-function ctaBlock(lang: WtwLang, campaign: string): string {
+export function ctaBlock(lang: WtwLang, campaign: string): string {
   const ui = UI[lang]
   return `<section class="cta">
   <h2>${esc(ui.ctaTitle)}</h2>
@@ -362,7 +374,7 @@ ${chartBlock(lang, band)}
 ${degreeGrid(lang, c)}
 ${cityGrid(lang)}`
 
-  return shell({
+  return renderShell({
     lang, slug, title, description, body,
     jsonLd: [
       crumbs.ld,
@@ -449,7 +461,7 @@ ${ctaBlock(lang, city.slug)}
 ${chartBlock(lang, band || undefined)}
 ${cityGrid(lang, city.slug)}`
 
-  return shell({
+  return renderShell({
     lang, slug: city.slug, title, description, body,
     jsonLd: [crumbs.ld],
   })
@@ -485,7 +497,7 @@ ${degreeGrid(lang)}
 ${cityGrid(lang)}
 ${ctaBlock(lang, 'hub')}`
 
-  return shell({ lang, slug: '', title, description, body, jsonLd: [crumbs.ld] })
+  return renderShell({ lang, slug: '', title, description, body, jsonLd: [crumbs.ld] })
 }
 
 export function renderNotFoundPage(lang: WtwLang): string {
@@ -495,7 +507,7 @@ export function renderNotFoundPage(lang: WtwLang): string {
 <p class="lede">${esc(ui.notFoundBody)}</p>
 ${chartBlock(lang)}
 ${cityGrid(lang)}`
-  return shell({ lang, slug: '', title: `${ui.notFound} | ATELIER HUE`, description: ui.notFoundBody, body, jsonLd: [] })
+  return renderShell({ lang, slug: '', title: `${ui.notFound} | ATELIER HUE`, description: ui.notFoundBody, body, jsonLd: [] })
 }
 
 // ─── Live weather (edge-cached) ──────────────────────────────────

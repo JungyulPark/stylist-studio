@@ -9,6 +9,7 @@ import {
   wtwSitemapSlugs,
 } from './wtw-render'
 import { onRequestGet as sitemapGet } from '../sitemap.xml'
+import { editSitemapEntries } from './edit-render'
 
 const EMOJI = /\p{Extended_Pictographic}/u
 const BRANDS = /herm[eè]s|loro piana|auralee|cucinelli|bottega|tom ford|celine|zegna|max mara|dior|the row|jil sander|louis vuitton|prada|chanel|gucci|uniqlo|zara/i
@@ -150,7 +151,9 @@ describe('sitemap', () => {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const xml = await (await sitemapGet({} as any)).text()
     const locs = [...xml.matchAll(/<loc>(.*?)<\/loc>/g)].map(m => m[1])
-    expect(locs.length).toBe(1 + wtwSitemapSlugs().length * 2)
+    expect(locs.length).toBe(1 + wtwSitemapSlugs().length * 2 + editSitemapEntries().length * 2)
+    expect(locs).toContain('https://kstylist.cc/edit')
+    expect(locs).toContain('https://kstylist.cc/ko/edit/quiet-but-seen')
     expect(locs).toContain('https://kstylist.cc/ko/what-to-wear/15-degrees')
     expect(locs).toContain('https://kstylist.cc/what-to-wear/new-york')
     expect(new Set(locs).size).toBe(locs.length)

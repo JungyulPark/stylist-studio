@@ -1,4 +1,5 @@
-import { wtwPath, wtwSitemapSlugs } from './lib/wtw-render'
+import { editPath, wtwPath, wtwSitemapSlugs } from './lib/wtw-render'
+import { editSitemapEntries } from './lib/edit-render'
 
 // Serve sitemap.xml directly via Functions to bypass Cloudflare edge processing.
 // "오늘 뭐 입지" 페이지는 데이터에서 생성 — 페이지를 추가하면 사이트맵도 자동으로 따라온다.
@@ -18,12 +19,23 @@ export const onRequestGet: PagesFunction = async () => {
   </url>`
   }))
 
+  // 트렌드 에디트 — 발행일이 지난 것만
+  const edits = editSitemapEntries().flatMap(e => (['en', 'ko'] as const).map(lang => `  <url>
+    <loc>${SITE}${editPath(lang, e.slug)}</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="${SITE}${editPath('en', e.slug)}"/>
+    <xhtml:link rel="alternate" hreflang="ko" href="${SITE}${editPath('ko', e.slug)}"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="${SITE}${editPath('en', e.slug)}"/>
+    <changefreq>${e.slug ? 'monthly' : 'weekly'}</changefreq>
+    <lastmod>${e.lastmod}</lastmod>
+  </url>`))
+
   const sitemap = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
     <loc>${SITE}/</loc>
     <lastmod>${LASTMOD}</lastmod>
   </url>
+${edits.join('\n')}
 ${wtw.join('\n')}
 </urlset>`
 
