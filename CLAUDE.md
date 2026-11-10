@@ -144,6 +144,9 @@ When comparing dates for subscriber delivery (daily-style-cron), always use `get
 ### 8. CSP header must be updated when adding new external domains
 `public/_headers` contains a strict Content-Security-Policy. Any new external script, font, image source, or API endpoint requires updating the CSP directive.
 
+### 9. Never overwrite a deployed image in place
+`public/_headers` serves every `.webp` and `.avif` with `max-age=31536000, immutable`. Replacing a file under the same name leaves the old image in the CDN and in visitors' browsers for up to a year. When an image changes, export it to a new path (for example `gallery/showcase/v3/…` or `…-v3.webp`) and update the references.
+
 ---
 
 ## Build & Development Commands

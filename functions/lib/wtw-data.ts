@@ -37,7 +37,8 @@ export interface Band {
 export const DEGREE_MIN = -10
 export const DEGREE_MAX = 35
 
-const LOOK = (n: number) => `/gallery/showcase/look-0${n}.webp`
+// v2 = 2026-11 브랜드 모델. /*.webp는 1년 immutable 캐시라, 이미지를 바꿀 때는 경로를 새로 판다
+const LOOK = (n: number) => `/gallery/showcase/v2/look-0${n}.webp`
 
 // 따뜻한 순서 → 추운 순서
 export const BANDS: Band[] = [

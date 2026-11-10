@@ -6547,7 +6547,7 @@ ${styleImgs.length > 1 ? `<div class="section"><h2>${styleSection}</h2><div clas
           <div className="service-split">
             {/* 좌: 대형 트랜스포메이션 카드 (풀블리드 이미지 + 절제된 타입) */}
             <div className="service-hero-card fade-in-up" onClick={() => { trackEvent('select_item', { item_category: 'premium_report' }); setPage('input') }}>
-              <img src="/gallery/service-wide.webp" alt="AI Style Transformation" className="service-hero-img" loading="lazy" onError={(e) => { (e.target as HTMLImageElement).src = '/gallery/after-female-date.webp' }} />
+              <img src="/gallery/service-wide-v2.webp" alt="AI Style Transformation" className="service-hero-img" loading="lazy" onError={(e) => { (e.target as HTMLImageElement).src = '/gallery/after-female-date.webp' }} />
               <div className="service-hero-overlay"></div>
               <div className="service-hero-content">
                 <span className="service-hero-tag">SERVICE — TRANSFORM</span>
@@ -6653,7 +6653,7 @@ ${styleImgs.length > 1 ? `<div class="section"><h2>${styleSection}</h2><div clas
           <div className="showcase-grid">
             {['look-01', 'look-02', 'look-03', 'look-04', 'look-05', 'look-06'].map((look, i) => (
               <figure key={look} className="showcase-item fade-in-up">
-                <img src={`/gallery/showcase/${look}.webp`} alt="" loading="lazy" width="800" height="1000" />
+                <img src={`/gallery/showcase/v2/${look}.webp`} alt="" loading="lazy" width="800" height="1000" />
                 <figcaption className="showcase-cap">
                   {lang === 'ko'
                     ? ['럭셔리', '비즈니스', '베스트 매치', '캐주얼', '데이트', '이브닝'][i]

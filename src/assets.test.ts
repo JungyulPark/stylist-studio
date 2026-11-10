@@ -44,8 +44,12 @@ describe('static asset references', () => {
   })
 
   it('the showcase set is complete (6 looks)', () => {
+    // 디렉터리는 앱이 실제로 쓰는 템플릿에서 읽는다 — 캐시 때문에 세트를 바꿀 때마다 경로가 바뀐다 (v2, v3…)
+    const app = readFileSync(join(ROOT, 'src/App.tsx'), 'utf8')
+    const dir = /`(\/gallery\/showcase\/[a-z0-9/-]*)\$\{look\}\.webp`/.exec(app)?.[1]
+    expect(dir, 'showcase image template not found in App.tsx').toBeTruthy()
     const missing = ['look-01', 'look-02', 'look-03', 'look-04', 'look-05', 'look-06']
-      .filter(l => !existsSync(join(PUBLIC, 'gallery/showcase', `${l}.webp`)))
+      .filter(l => !existsSync(join(PUBLIC, dir!, `${l}.webp`)))
     expect(missing).toEqual([])
   })
 })

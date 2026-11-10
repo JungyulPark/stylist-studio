@@ -50,6 +50,9 @@ const EDIT = {
   'knit-over-knit': ['hf_20261109_232857_b9bee439-5748-411e-9233-26c4413952b1', 'hf_20261109_232857_b6c4a798-27c0-4b7d-985c-1677bec98bec'],
 }
 
+// 주의: public/_headers가 모든 .webp에 1년 immutable 캐시를 건다.
+// 이미 배포된 파일을 같은 이름으로 덮어쓰면 CDN과 방문자 브라우저에 옛 이미지가 남는다.
+// 컷을 교체할 때는 반드시 새 경로(v3/…, …-v3.webp)로 내보내고 코드의 참조도 함께 바꾼다.
 async function download(url, dest) {
   const res = await fetch(url)
   if (!res.ok) throw new Error(`${url} -> ${res.status}`)
@@ -70,15 +73,16 @@ async function main() {
   console.log('hero before/after placed (960x1200)')
 
   // 2. 서비스 카드 — 1600x1000, 얼굴이 잘리지 않게 위쪽 기준
-  await sharp(tmp('after.png')).resize(1600, 1000, { fit: 'cover', position: 'attention' }).webp({ quality: 84 }).toFile('public/gallery/service-wide.webp')
+  await sharp(tmp('after.png')).resize(1600, 1000, { fit: 'cover', position: 'attention' }).webp({ quality: 84 }).toFile('public/gallery/service-wide-v2.webp')
   console.log('service card placed (1600x1000)')
 
   // 3. 쇼케이스 6컷 — 800x1000 webp
+  mkdirSync('public/gallery/showcase/v2', { recursive: true })
   for (let i = 0; i < SHOWCASE.length; i++) {
     const src = tmp(`look-${i + 1}.png`)
     await download(SHOWCASE[i], src)
     await sharp(src).resize(800, 1000, { fit: 'cover', position: 'top' }).webp({ quality: 82 })
-      .toFile(`public/gallery/showcase/look-0${i + 1}.webp`)
+      .toFile(`public/gallery/showcase/v2/look-0${i + 1}.webp`)
   }
   console.log('showcase placed (6 × 800x1000)')
 
